@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { startStore } from "../core/stores/startStore";
+import { startStore } from "../app/stores/startStore";
 
 const StartMenuButton = ({
   className,

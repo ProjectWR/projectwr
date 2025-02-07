@@ -1,8 +1,11 @@
-import WritingApp from "./modules/core/components/WritingApp";
+import { DeviceTypeProvider } from "./modules/app/ConfigProviders/DeviceTypeProvider";
+import WritingApp from "./modules/app/components/WritingApp";
 
 function App() {
   return (
-    <WritingApp />
+    <DeviceTypeProvider>
+      <WritingApp />
+    </DeviceTypeProvider>
   );
 }
 

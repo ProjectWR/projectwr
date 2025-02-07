@@ -8,7 +8,6 @@ import { addDynamicIconSelectors } from "@iconify/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["selector", "class"],
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   safelist: [
     "bg-zinc-200",
@@ -42,71 +41,55 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        shadow: {
-          DEFAULT: "hsl(var(--shadow))",
-          partial: "hsl(var(--shadow-partial))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        toolbar: "hsl(var(--toolbar))",
-        border: {
-          DEFAULT: "hsl(var(--border))",
-          bright: "hsl(var(--border-bright))",
-        },
-        input: {
-          DEFAULT: "hsl(var(--input))",
-          background: "hsl(var(--input-background))",
-        },
-        ring: "hsl(var(--ring))",
-        text: {
-          DEFAULT: "hsl(var(--text))",
-          ambient: "hsl(var(--text-ambient))",
-          muted: "hsl(var(--text-muted))",
-        },
-        hover: "hsl(var(--hover))",
-        chart: {
-          1: "hsl(var(--chart-1))",
-          2: "hsl(var(--chart-2))",
-          3: "hsl(var(--chart-3))",
-          4: "hsl(var(--chart-4))",
-          5: "hsl(var(--chart-5))",
-        },
-        brand: {
-          DEFAULT: "hsl(var(--brand))",
-          foreground: "hsl(var(--brand-foreground))",
-        },
-        highlight: {
-          DEFAULT: "hsl(var(--highlight))",
-          foreground: "hsl(var(--highlight-foreground))",
-        },
+        appBackground: "hsl(var(--appBackground))",
+        appLayoutBorder: "hsl(var(--appLayoutBorder))",
+        appLayoutText: "hsl(var(--appLayoutText))",
+        appLayoutTextMuted: "hsl(var(--appLayoutTextMuted))",
+        appLayoutShadow: "hsl(var(--appLayoutShadow))",
+        appLayoutGentleShadow: "hsl(var(--appLayoutGentleShadow))",
+        appLayoutHover: "hsl(var(--appLayoutHover))",
+        appLayoutHoverLight: "hsl(var(--appLayoutHoverLight))",
+        appLayoutInverseHover: "hsl(var(--appLayoutInverseHover))",
+        appLayout: "hsl(var(--appLayoutInverseHover))",
+        appLayoutInputBackground: "hsl(var(--appLayoutInputBackground))",
+        appLayoutPressed: "hsl(var(--appLayoutPressed))",
+        appLayoutDestruct: "hsl(var(--appLayoutDestruct))",
+        appLayoutHighlight: "hsl(var(--appLayoutHighlight))",
+        activitySelectLine: "hsl(var(--activitySelectLine))",
+        appLayoutSubmitButton: "hsl(var(--appLayoutSubmitButton))",
+      },
+      spacing: {
+        actionBarHeight: "var(--actionBarHeight)",
+        actionBarLogoSize: "var(--actionBarLogoSize)",
+        activityBarWidth: "var(--activityBarWidth)",
+        activityBarHeight: "var(--activityBarHeight)",
+        activityButtonHeight: "var(--activityButtonHeight)",
+        sidePanelWidth: "var(--sidePanelWidth)",
+        libraryManagerHeaderHeight: "var(--libraryManagerHeaderHeight)",
+        libraryManagerNodeHeight: "var(--libraryManagerNodeHeight)",
+        libraryManagerAddButtonSize: "var(--libraryManagerAddButtonSize)",
+        libraryManagerNodeEditButtonWidth: "var(--libraryManagerNodeEditButtonWidth)",
+        libraryManagerNodeIconSize: "var(--libraryManagerNodeIconSize)",
+        detailsPanelHeaderHeight: "var(--detailsPanelHeaderHeight)",
+        detailsPanelPropLabelHeight: "var(--detailsPanelPropLabelHeight)",
+        libraryDirectoryBookNodeHeight: "var(--libraryDirectoryBookNodeHeight)",
+        libraryDirectoryPaperNodeHeight: "var(--libraryDirectoryPaperNodeHeight)",
+        libraryDirectorySectionNodeHeight: "var(--libraryDirectorySectionNodeHeight)",
+        libraryDirectoryBookNodeIconSize: "var(--libraryDirectoryBookNodeIconSize)",
+        libraryDirectoryPaperNodeIconSize: "var(--libraryDirectoryPaperNodeIconSize)",
+        libraryDirectorySectionNodeIconSize: "var(--libraryDirectorySectionNodeIconSize)",
+
+      },
+      fontSize: {
+        libraryManagerHeaderText: "var(--libraryManagerHeaderText)",
+        libraryManagerNodeText: "var(--libraryManagerNodeText)",
+        detailsPanelNameFontSize: "var(--detailsPanelNameFontSize)",
+        detailsPanelPropsFontSize: "var(--detailsPanelPropsFontSize)",
+        detailsPanelPropLabelFontSize: "var(--detailsPanelPropLabelFontSize)",
+        detailsPanelSaveButtonFontSize: "var(--detailsPanelSaveButtonFontSize)",
+        libraryDirectoryBookNodeFontSize: "var(--libraryDirectoryBookNodeFontSize)",
+        libraryDirectoryPaperNodeFontSize: "var(--libraryDirectoryPaperNodeFontSize)",
+        libraryDirectorySectionNodeFontSize: "var(--libraryDirectorySectionNodeFontSize)",
       },
       fontFamily: {
         heading: [
@@ -143,11 +126,6 @@ export default {
         "main-hover": {
           raw: "(hover: hover)",
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
       },
     },
   },

@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "projectwr-dev",
-        "width": 900,
-        "height": 900,
+        "width": 365,
+        "height": 667,
         "resizable": true,
         "fullscreen": false,
         "dragDropEnabled": false,

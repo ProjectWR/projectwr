@@ -23,42 +23,15 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Image from "@tiptap/extension-image";
 import OrderedList from "@tiptap/extension-ordered-list";
 import TabIndentExtension from "./Extensions/TabIndentExtension";
-import Typography from '@tiptap/extension-typography'
-import TextAlign from '@tiptap/extension-text-align'
+import Typography from "@tiptap/extension-typography";
+import TextAlign from "@tiptap/extension-text-align";
+import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 
 const content = "<p>Hello World!</p>";
 
-// const editorPreferences = {
-//   paperPreferences: {
-//     width: 55,
-//     gapTop: 2,
-//     marginTop: 5,
-//     marginLeft: 6,
-//     marginRight: 6,
-//     font: "serif",
-//     fontSize: 1.25,
-//     lineHeight: 1.75,
-//     backgroundColor: "#171717",
-//     paperColor: "#171717",
-//     paperBorderColor: "#e5e5e5",
-//     roundRadius: 0.75,
-//     paperShadow: "xl",
-//     paperShadowColor: "#000",
-//   },
-//   toolbarPreferences: {
-//     marginTop: 0.25,
-//     marginBottom: 0.25,
-//     marginLeft: 0.25,
-//     marginRight: 0.25,
-//     buttonHeight: 2.3,
-//     buttonWidth: 2,
-//     backgroundColor: "#171717",
-//     buttonColor: "#171717",
-//     dividerColor: "#232323",
-//   },
-// };
+const TiptapEditor = ({ yXmlFragment }) => {
+  const { deviceType } = useDeviceType();
 
-const TiptapEditor = ({ yDoc }) => {
   console.log("editor rendered");
 
   const [editorPreferencesState, setEditorPreferencesState] = useState({
@@ -75,11 +48,12 @@ const TiptapEditor = ({ yDoc }) => {
       paperBorderWidth: 1,
       paperColor: "#171717",
       paperBorderColor: "#525252",
-      roundRadius: 0.75,
+      roundRadius: 0,
       paperShadow: "xl",
       paperShadowColor: "#000",
     },
     toolbarPreferences: {
+      toolbarHeight: 3.3,
       marginTop: 0.25,
       marginBottom: 0.25,
       marginLeft: 0.25,
@@ -100,7 +74,7 @@ const TiptapEditor = ({ yDoc }) => {
         Paragraph,
         Text,
         Collaboration.configure({
-          fragment: yDoc.getXmlFragment("body"),
+          fragment: yXmlFragment,
         }),
         VirtualCursor,
         TabIndentExtension.configure({
@@ -126,7 +100,7 @@ const TiptapEditor = ({ yDoc }) => {
         Image,
         Typography,
         TextAlign.configure({
-          types: ['heading', 'paragraph'],
+          types: ["heading", "paragraph"],
         }),
       ],
       /**
@@ -188,8 +162,8 @@ const TiptapEditor = ({ yDoc }) => {
 
         // Calculate selection's position relative to the container
         const relativeY = coords.top - containerRect.top;
-        const buffer = 200; // Pixels from the edge before scrolling
-        const bottomBuffer = 400;
+        const buffer = 100; // Pixels from the edge before scrolling
+        const bottomBuffer = 200;
 
         // Calculate scroll adjustment
         let scrollAdjustment = 0;
@@ -211,7 +185,7 @@ const TiptapEditor = ({ yDoc }) => {
         }
       },
     },
-    [yDoc]
+    [yXmlFragment]
   );
 
   const editorState = useEditorState({
@@ -229,16 +203,34 @@ const TiptapEditor = ({ yDoc }) => {
       isBlockQuote: editor.isActive("blockquote"),
       isBulletList: editor.isActive("bulletList"),
       isOrderedList: editor.isActive("orderedList"),
-      isAlign: editor.isActive("textAlign")
+      isAlign: editor.isActive("textAlign"),
     }),
   });
 
-  const { fontSize, lineHeight } = editorPreferencesState.paperPreferences;
+  const { fontSize, lineHeight, marginTop, marginRight, marginLeft } =
+    editorPreferencesState.paperPreferences;
 
   return (
     <div id="EditorContainer" className="h-full w-full flex flex-col">
       <style>
         {`
+          .tiptap {
+            min-height: 20rem;
+            padding: ${deviceType === "mobile" ? "1.2" : marginTop}rem 
+                      ${deviceType === "mobile" ? "1.7" : marginRight}rem 
+                      ${deviceType === "mobile" ? "10" : "20"}rem 
+                      ${deviceType === "mobile" ? "1.7" : marginLeft}rem;
+
+            :nth-child(2) {
+              margin-top: 0;
+            }
+
+            blockquote {
+              margin: 1rem 0;
+              padding-left: 3rem;
+            }
+          }
+
           #EditorContainer h1 {
             font-size: ${fontSize * 2}rem;
             line-height: ${lineHeight * 2}rem;
@@ -304,40 +296,85 @@ const TiptapEditor = ({ yDoc }) => {
           #EditorContainer hr {
             cursor: pointer;
             margin: 2rem 0;
-            border-top: 1px solid hsl(var(--border-bright));
+            border-top: 1px solid white);
 
-            
+          }
+
+          #EditableToolbar {
+            height: ${
+              editorPreferencesState.toolbarPreferences.toolbarHeight
+            }rem;
+            min-height: ${
+              editorPreferencesState.toolbarPreferences.toolbarHeight
+            }rem
           }
         `}
       </style>
       <div
         id="EditableToolbar"
-        className={`h-fit px-1 pt-1 pb-2 border-border rounded-t-[0.5rem]`}
+        style={{
+          boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))", // Right shadow          
+        }}
+        className={`
+            w-full min-w-0  border-appLayoutBorder border-t
+            no-scrollbar ${
+              deviceType === "mobile" ? "order-last" : "order-first"
+            }
+          `}
       >
-        <TipTapToolbar editor={editor} />
+        <TipTapToolbar
+          editor={editor}
+          toolbarPreferences={editorPreferencesState.toolbarPreferences}
+        />
       </div>
       <div
         id="EditableContainer"
-        className="flex-grow w-full flex justify-center border-t border-border-bright overflow-y-scroll min-h-0 text-neutral-200 shadow-inner shadow-shadow"
+        className={`flex-grow w-full flex justify-center 
+           overflow-y-scroll min-h-0 text-neutral-200 z-1 ${
+             deviceType === "mobile"
+               ? "no-scrollbar border-white"
+               : "pl-[0.75rem] border-t border-white"
+           }`}
       >
         <EditorContent
           editor={editor}
-          className={`caret-transparent h-fit outline-none focus:outline-none relative
-            shadow-${editorPreferencesState.paperPreferences.paperShadow}
-            shadow-xl
+          className={`caret-transparent h-fit outline-none focus:outline-none
+            shadow-${
+              deviceType === "mobile"
+                ? "none"
+                : editorPreferencesState.paperPreferences.paperShadow
+            }
             shadow-black
             font-serif
             `}
           style={{
-            width: `${editorPreferencesState.paperPreferences.width}rem`,
-            borderTopWidth: `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderRightWidth: `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderBottomWidth: `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderLeftWidth: `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            width:
+              deviceType === "mobile"
+                ? "100%"
+                : `${editorPreferencesState.paperPreferences.width}rem`,
+            borderTopWidth:
+              deviceType === "mobile"
+                ? "0"
+                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            borderRightWidth:
+              deviceType === "mobile"
+                ? "0"
+                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            borderBottomWidth:
+              deviceType === "mobile"
+                ? "0"
+                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            borderLeftWidth:
+              deviceType === "mobile"
+                ? "0"
+                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
             borderTopColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
             borderLeftColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
             borderRightColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
-            marginTop: `${editorPreferencesState.paperPreferences.gapTop}rem`,
+            marginTop:
+              deviceType === "mobile"
+                ? "0"
+                : `${editorPreferencesState.paperPreferences.gapTop}rem`,
             fontSize: `${editorPreferencesState.paperPreferences.fontSize}rem`,
             lineHeight: `${editorPreferencesState.paperPreferences.lineHeight}rem`,
             borderTopRightRadius: `${editorPreferencesState.paperPreferences.roundRadius}rem`,

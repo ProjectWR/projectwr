@@ -1,13 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "esnext",
-    "allowSyntheticDefaultImports": true,
+    "module": "ESNext", // Use ESNext for ES modules
     "baseUrl": ".",
-    // "paths": {
-    //   "@/*": ["./src/*"]
-    // }
+    "moduleResolution": "node" // Ensure Node.js understands ES modules
   },
-
   "include": ["src/**/*"]
 }

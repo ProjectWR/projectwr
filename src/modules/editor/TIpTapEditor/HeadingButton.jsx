@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import useOuterClick from "../../design-system/useOuterClick";
-import WritingAppButton from "../../design-system/WritingAppButton";
+import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
+import { AnimatePresence, motion } from "motion/react";
 
 const formats = {
   p: {
@@ -10,7 +11,14 @@ const formats = {
 
 const TextFormatButton = ({ editor }) => {
   console.log("textformat button rerendered");
+
+  const { deviceType } = useDeviceType();
+
   const [isOpened, setIsOpened] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+
+  const headerRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const innerRef = useOuterClick(() => {
     setIsOpened(false);
@@ -35,78 +43,126 @@ const TextFormatButton = ({ editor }) => {
     };
   }, [editor, onSelectionUpdate]);
 
+  useEffect(() => {
+    if (isOpened && headerRef.current && dropdownRef.current) {
+      const headerRect = headerRef.current.getBoundingClientRect();
+      const dropdownHeight = dropdownRef.current.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate the top position for the dropdown
+      let top = headerRect.bottom;
+
+      // Check if the dropdown would go past the bottom of the viewport
+      if (top + dropdownHeight > viewportHeight) {
+        // Adjust the top position to ensure the dropdown stays within the viewport
+        top = headerRect.top - dropdownHeight;
+      }
+
+      // Calculate the left position for the dropdown (centered below the header)
+      const left =
+        headerRect.left +
+        (headerRect.width - dropdownRef.current.offsetWidth) / 2;
+
+      setDropdownPosition({ top: top - 18, left: left > 0 ? left : 0 });
+    }
+  }, [isOpened]);
+
   return (
     <div className="relative" ref={innerRef}>
-      <div className="h-[2rem] w-[12rem] px-1">
-        <WritingAppButton
-          className={`w-full h-full px-[0.35rem] hover:bg-hover rounded-[0.35rem] `}
-          buttonContent={
-            <div className="w-full h-full flex items-center justify-between">
-              <div className="flex-grow h-full flex items-center justify-center py-[0.3rem]">
-                <ReturnPlainElementForFormat format={activeHeading} />
-              </div>
-              <ReturnArrowIcon isUp={!isOpened} />
-            </div>
-          }
+      <div
+        id="TextFormatButtonHeader"
+        ref={headerRef}
+        className="h-[2rem] w-[12rem] px-1"
+      >
+        <button
+          className={`w-full h-full px-[0.35rem] hover:bg-appLayoutHover rounded-[0.35rem] `}
           onClick={() => setIsOpened(!isOpened)}
-        />
+        >
+          <div className="w-full h-full flex items-center justify-between">
+            <div className="flex-grow h-full flex items-center justify-center py-[0.3rem]">
+              <ReturnPlainElementForFormat format={activeHeading} />
+            </div>
+            <motion.span
+              animate={{
+                rotate: isOpened ^ (deviceType === "mobile") ? 180 : 0,
+              }}
+              className={`icon-[material-symbols-light--keyboard-arrow-up] mt-px h-full w-[2rem]`}
+            ></motion.span>
+          </div>
+        </button>
       </div>
 
-      <div
-        className={`w-[12rem] h-fit p-1 bg-background z-30 bg-opacity-100 ${
-          isOpened ? "flex " : "hidden"
-        } absolute items-center flex-col rounded-[0.2rem] border-border border left-[50%] -translate-x-1/2 top-[35px] shadow-shadow shadow-md`}
-      >
-        <WritingAppButton
-          className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-hover border-b border-border flex items-center justify-center relative`}
-          buttonContent={<ReturnElementForFormat format={"p"} />}
-          onClick={() => {
-            setFormat("p", editor);
-          }}
-        />
-        <WritingAppButton
-          className={`w-full h-[4rem] px-[0.35rem] py-[0.3rem] hover:bg-hover border-b border-border flex items-center justify-center`}
-          buttonContent={<ReturnElementForFormat format={"h1"} />}
-          onClick={() => {
-            setFormat("h1", editor);
-          }}
-        />
-        <WritingAppButton
-          className={`w-full h-[3rem] px-[0.35rem] py-[0.3rem] hover:bg-hover border-b border-border flex items-center justify-center`}
-          buttonContent={<ReturnElementForFormat format={"h2"} />}
-          onClick={() => {
-            setFormat("h2", editor);
-          }}
-        />
-        <WritingAppButton
-          className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-hover border-b border-border flex items-center justify-center`}
-          buttonContent={<ReturnElementForFormat format={"h3"} />}
-          onClick={() => {
-            setFormat("h3", editor);
-          }}
-        />
-        <WritingAppButton
-          className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-hover border-b border-border flex items-center justify-center`}
-          buttonContent={<ReturnElementForFormat format={"h4"} />}
-          onClick={() => {
-            setFormat("h4", editor);
-          }}
-        />
-        <WritingAppButton
-          className={`w-full h-[2 rem] px-[0.35rem] py-[0.3rem] hover:bg-hover flex items-center justify-center`}
-          buttonContent={<ReturnElementForFormat format={"h5"} />}
-          onClick={() => {
-            setFormat("h5", editor);
-          }}
-        />
-      </div>
+      <AnimatePresence>
+        {isOpened && (
+          <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 10, opacity: 0 }}
+            ref={dropdownRef}
+            className={`w-[12rem] h-fit p-1 bg-appBackground z-30 bg-opacity-100 flex fixed items-center flex-col rounded-[0.2rem] border-appLayoutBorder border shadow-black shadow-md`}
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`,
+            }}
+          >
+            <button
+              className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center relative`}
+              onClick={() => {
+                setFormat("p", editor);
+              }}
+            >
+              <ReturnElementForFormat format={"p"} />
+            </button>
+            <button
+              className={`w-full h-[4rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              onClick={() => {
+                setFormat("h1", editor);
+              }}
+            >
+              <ReturnElementForFormat format={"h1"} />
+            </button>
+            <button
+              className={`w-full h-[3rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              onClick={() => {
+                setFormat("h2", editor);
+              }}
+            >
+              <ReturnElementForFormat format={"h2"} />
+            </button>
+            <button
+              className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              onClick={() => {
+                setFormat("h3", editor);
+              }}
+            >
+              <ReturnElementForFormat format={"h3"} />
+            </button>
+            <button
+              className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              onClick={() => {
+                setFormat("h4", editor);
+              }}
+            >
+              <ReturnElementForFormat format={"h4"} />
+            </button>
+            <button
+              className={`w-full h-[2 rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover flex items-center justify-center`}
+              onClick={() => {
+                setFormat("h5", editor);
+              }}
+            >
+              <ReturnElementForFormat format={"h5"} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export default TextFormatButton;
 
-const ReturnPlainElementForFormat = ({format}) => {
+const ReturnPlainElementForFormat = ({ format }) => {
   switch (format) {
     case "h1":
       console.log("Inside plain element renderer: ", format);
@@ -198,21 +254,5 @@ const getActiveHeading = (editor) => {
 
     default:
       return "p";
-  }
-};
-
-const ReturnArrowIcon = ({ isUp }) => {
-  if (isUp) {
-    return (
-      <span
-        className={`icon-[material-symbols-light--keyboard-arrow-up] mt-px h-full w-[2rem]`}
-      ></span>
-    );
-  } else {
-    return (
-      <span
-        className={`icon-[material-symbols-light--keyboard-arrow-down] mt-px h-full w-[2rem]`}
-      ></span>
-    );
   }
 };
