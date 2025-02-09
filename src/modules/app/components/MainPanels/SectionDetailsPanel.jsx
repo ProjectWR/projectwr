@@ -84,10 +84,10 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
         id="CreateLibraryBody"
         className="flex-grow w-full flex flex-col items-end justify-start border-b border-appLayoutBorder py-3 gap-3 px-4"
       >
-        <div className="prop w-full h-[15rem] relative">
+        <div className="prop w-full h-detailsPanelDescriptionInputSize relative">
           <textarea
             id="libraryDescription"
-            className="bg-appBackground w-full h-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
+            className="resize-none bg-appBackground w-full h-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
             name="section_description"
             onChange={handleChange}
             value={sectionProperties.section_description}

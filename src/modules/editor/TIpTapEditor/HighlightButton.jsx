@@ -15,7 +15,7 @@ const colors = [
   "#FFB6C1", // Pastel pink
 ];
 
-const HighlightButton = ({ editor }) => {
+const HighlightButton = ({ editor, toolbarPreferences }) => {
   const { deviceType } = useDeviceType();
 
   const [lastPickedColor, setLastPickedColor] = useState(colors[0]);
@@ -33,6 +33,20 @@ const HighlightButton = ({ editor }) => {
     if (editor.getAttributes("highlight").color)
       setLastPickedColor(editor.getAttributes("highlight").color);
   }, [editor]);
+
+  const {
+    toolbarHeight,
+    toolbarButtonHeight,
+    marginTop,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    buttonHeight,
+    buttonWidth,
+    backgroundColor,
+    buttonColor,
+    dividerColor,
+  } = toolbarPreferences;
 
   useEffect(() => {
     if (!editor) {
@@ -77,24 +91,22 @@ const HighlightButton = ({ editor }) => {
       if (right > window.outerWidth) {
         setDropdownPosition({
           top: top - 18,
-          left: window.innerWidth - dropdownRef.current.offsetWidth
+          left: window.innerWidth - dropdownRef.current.offsetWidth,
         });
         return;
       }
 
-      setDropdownPosition({ top: top - 18, left: left });
+      setDropdownPosition({ top: top - 10, left: left });
     }
   }, [isOpened]);
 
   return (
     <div className="relative" ref={innerRef}>
-      <div
-        ref={headerRef}
-        className="w-[4.6rem] h-[2rem] border-appLayoutBorder"
-      >
-        <div className="w-full h-full flex items-center justify-center">
+      <div ref={headerRef} className="w-fit h-fit border-appLayoutBorder">
+        <div className="w-fit h-fit flex items-center justify-center">
           <button
-            className={`w-1/2 h-full px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover rounded-[0.35rem]`}
+            style={{ height: `${buttonHeight}rem`, width: `${buttonWidth}rem` }}
+            className={`px-[0.35rem] py-[0.3rem] toolbarButton rounded-[0.35rem]`}
             onClick={() => setIsOpened(!isOpened)}
           >
             <div
@@ -104,7 +116,8 @@ const HighlightButton = ({ editor }) => {
           </button>
 
           <button
-            className={`w-1/2 h-full py-px rounded-[0.3rem] hover:bg-appLayoutHover`}
+            style={{ height: `${buttonHeight}rem`, width: `${buttonWidth}rem` }}
+            className={`py-px rounded-[0.3rem] toolbarButton`}
             onClick={() =>
               editor
                 .chain()
@@ -128,16 +141,23 @@ const HighlightButton = ({ editor }) => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
             ref={dropdownRef}
-            className={`w-[9rem] h-[9rem] p-2 bg-background z-30 bg-opacity-100 grid fixed items-center grid-cols-3 gap-1 rounded-[0.2rem] border-appLayoutBorder border shadow-black shadow-md`}
+            className={`p-1 bg-background z-30 bg-opacity-100  fixed items-center grid grid-cols-3 gap-[0.125rem] rounded-[0.2rem]`}
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
+              width: `${buttonWidth * 3.6}rem`,
+              height: `${buttonHeight * 3.6}rem`,
+              border: `1px solid ${dividerColor}`,
             }}
           >
             {colors.map((color) => (
               <button
+                style={{
+                  height: `${buttonHeight}rem`,
+                  width: `${buttonWidth}rem`,
+                }}
                 key={color}
-                className="w-full h-full hover:bg-appLayoutHover p-1"
+                className="w-full h-full toolbarButton p-1"
                 reversed
                 onClick={() => {
                   editor.chain().focus().toggleHighlight({ color }).run();
@@ -153,13 +173,19 @@ const HighlightButton = ({ editor }) => {
             ))}
 
             <button
-              className="w-full h-full hover:bg-appLayoutHover"
+              style={{
+                height: `${buttonHeight}rem`,
+                width: `${buttonWidth}rem`,
+              }}
+              className="toolbarButton"
               reversed
               onClick={() => {
                 editor.chain().focus().unsetHighlight().run();
                 setIsOpened(!isOpened);
               }}
-            ></button>
+            >
+              <span className="icon-[material-symbols-light--ink-eraser-rounded] h-full w-full"></span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -5,7 +5,7 @@ import Text from "@tiptap/extension-text";
 import Highlight from "@tiptap/extension-highlight";
 import Collaboration from "@tiptap/extension-collaboration";
 import Bold from "@tiptap/extension-bold";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import VirtualCursor from "./Extensions/VirtualCursorExtension";
 import TipTapToolbar from "./TipTapToolbar";
 import Italic from "@tiptap/extension-italic";
@@ -29,42 +29,120 @@ import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 
 const content = "<p>Hello World!</p>";
 
-const TiptapEditor = ({ yXmlFragment }) => {
+// Separate default preferences for desktop
+const desktopDefaultPreferences = {
+  paperPreferences: {
+    width: 55,
+    gapTop: 3,
+    paddingTop: 5, // Updated from marginTop
+    paddingLeft: 6, // Updated from marginLeft
+    paddingRight: 6, // Updated from marginRight
+    paddingBottom: 40, // Updated from marginBottom
+    font: "serif",
+    fontSize: 1.25,
+    lineHeight: 1.75,
+    backgroundColor: "#171717",
+    paperBorderWidth: 1,
+    paperColor: "#171717",
+    paperBorderColor: "#525252",
+    roundRadius: 0,
+    paperShadow: "xl",
+    paperShadowColor: "#000",
+    listPaddingLeft: 1,
+    listMarginTop: 1.25,
+    listMarginBottom: 1.25,
+    hrMarginTop: 2,
+    hrMarginBottom: 2,
+    hrBorderColor: "white",
+  },
+  toolbarPreferences: {
+    toolbarHeight: 3.3,
+    toolbarButtonHeight: 2.3,
+    marginTop: 0.25,
+    marginBottom: 0.25,
+    marginLeft: 0.25,
+    marginRight: 0.25,
+    buttonHeight: 2.3,
+    buttonWidth: 2,
+    backgroundColor: "#171717",
+    buttonColor: "#171717",
+    dividerColor: "#232323",
+    hoverColor: "#121212",
+  },
+};
+
+// Mobile preferences updated with padding
+const mobileDefaultPreferences = {
+  paperPreferences: {
+    width: 55,
+    gapTop: 0,
+    paddingTop: 1.2, // Updated from marginTop
+    paddingLeft: 1.2, // Updated from marginLeft
+    paddingRight: 1.2, // Updated from marginRight
+    paddingBottom: 20, // Updated from marginBottom
+    font: "serif",
+    fontSize: 1.1,
+    lineHeight: 1.5,
+    backgroundColor: "#171717",
+    paperBorderWidth: 1,
+    paperColor: "#171717",
+    paperBorderColor: "#525252",
+    roundRadius: 0,
+    paperShadow: "none",
+    paperShadowColor: "#000",
+    listPaddingLeft: 1,
+    listMarginTop: 1.25,
+    listMarginBottom: 1.25,
+    hrMarginTop: 2,
+    hrMarginBottom: 2,
+    hrBorderColor: "white",
+  },
+  toolbarPreferences: {
+    toolbarHeight: 2.8,
+    toolbarButtonHeight: 2.3,
+    marginTop: 0.25,
+    marginBottom: 0.25,
+    marginLeft: 0.25,
+    marginRight: 0.25,
+    buttonHeight: 2.3,
+    buttonWidth: 3,
+    backgroundColor: "#171717",
+    buttonColor: "#171717",
+    dividerColor: "#232323",
+    textFormatButtonWidth: 10,
+    hoverColor: "#121212",
+    pressedColor: "#080808",
+  },
+};
+
+const TiptapEditor = ({ yXmlFragment, setHeaderOpened }) => {
   const { deviceType } = useDeviceType();
+  const isMobile = deviceType === "mobile";
 
-  console.log("editor rendered");
+  const lastScrollTopRef = useRef(0); // Stores last scroll position
 
-  const [editorPreferencesState, setEditorPreferencesState] = useState({
-    paperPreferences: {
-      width: 55,
-      gapTop: 3,
-      marginTop: 5,
-      marginLeft: 6,
-      marginRight: 6,
-      font: "serif",
-      fontSize: 1.25,
-      lineHeight: 1.75,
-      backgroundColor: "#171717",
-      paperBorderWidth: 1,
-      paperColor: "#171717",
-      paperBorderColor: "#525252",
-      roundRadius: 0,
-      paperShadow: "xl",
-      paperShadowColor: "#000",
-    },
-    toolbarPreferences: {
-      toolbarHeight: 3.3,
-      marginTop: 0.25,
-      marginBottom: 0.25,
-      marginLeft: 0.25,
-      marginRight: 0.25,
-      buttonHeight: 2.3,
-      buttonWidth: 2,
-      backgroundColor: "#171717",
-      buttonColor: "#171717",
-      dividerColor: "#232323",
-    },
-  });
+  const [editorPreferencesState, setEditorPreferencesState] = useState(
+    isMobile ? mobileDefaultPreferences : desktopDefaultPreferences
+  );
+
+  useEffect(() => {
+    const container = document.getElementById("EditableContainer");
+    if (!container || !isMobile) return;
+
+    const handleScroll = () => {
+      const currentScrollTop = container.scrollTop;
+
+      // Detect scrolling up
+      if (currentScrollTop < lastScrollTopRef.current) {
+        setHeaderOpened(true);
+      }
+
+      lastScrollTopRef.current = currentScrollTop;
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [isMobile, setHeaderOpened]);
 
   const editor = useEditor(
     {
@@ -78,7 +156,7 @@ const TiptapEditor = ({ yXmlFragment }) => {
         }),
         VirtualCursor,
         TabIndentExtension.configure({
-          spaces: 8, // Set the tab size to 4 spaces
+          spaces: 8,
         }),
         Strike,
         Bold,
@@ -103,85 +181,71 @@ const TiptapEditor = ({ yXmlFragment }) => {
           types: ["heading", "paragraph"],
         }),
       ],
-      /**
-       * This option gives us the control to enable the default behavior of rendering the editor immediately.
-       */
       immediatelyRender: true,
-      /**
-       * This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
-       */
       shouldRerenderOnTransaction: false,
-      onUpdate({ editor }) {
-        const selection = editor.state.selection;
-        if (!selection.empty) {
-          editor.commands.hideVirtualCursor();
-
-          return;
-        }
-        updateVirtualCursor(
-          editor,
-          editorPreferencesState.paperPreferences.fontSize
-        );
-      },
-
-      onFocus({ editor }) {
-        const selection = editor.state.selection;
-        if (!selection.empty) {
-          editor.commands.hideVirtualCursor();
-
-          return;
-        }
-        updateVirtualCursor(
-          editor,
-          editorPreferencesState.paperPreferences.fontSize
-        );
-      },
-
-      onBlur({ editor }) {
-        editor.commands.hideVirtualCursor();
-      },
-
       onSelectionUpdate({ editor }) {
         const selection = editor.state.selection;
         if (!selection.empty) {
           editor.commands.hideVirtualCursor();
-
           return;
         }
-
         updateVirtualCursor(
           editor,
           editorPreferencesState.paperPreferences.fontSize
         );
+      },
+      onFocus({ editor }) {
+        const selection = editor.state.selection;
+        if (!selection.empty) {
+          editor.commands.hideVirtualCursor();
+          return;
+        }
+        updateVirtualCursor(
+          editor,
+          editorPreferencesState.paperPreferences.fontSize
+        );
+      },
+      onBlur({ editor }) {
+        editor.commands.hideVirtualCursor();
+      },
+      onUpdate({ editor }) {
+        console.log("Editor Updated");
+        const selection = editor.state.selection;
+        if (selection.empty) {
+          updateVirtualCursor(
+            editor,
+            editorPreferencesState.paperPreferences.fontSize
+          );
+        } else {
+          editor.commands.hideVirtualCursor();
+        }
 
         const coords = editor.view.coordsAtPos(selection.from);
-
-        // Reference the scrollable container
         const container = document.getElementById("EditableContainer");
         const containerRect = container.getBoundingClientRect();
-
-        // Calculate selection's position relative to the container
         const relativeY = coords.top - containerRect.top;
-        const buffer = 100; // Pixels from the edge before scrolling
-        const bottomBuffer = 200;
 
-        // Calculate scroll adjustment
+        let buffer = isMobile ? 100 : 200;
+        let bottomBuffer = isMobile ? 200 : 400;
+
         let scrollAdjustment = 0;
 
         if (relativeY + bottomBuffer > container.clientHeight) {
-          // Selection is too close to the bottom
           scrollAdjustment = relativeY + bottomBuffer - container.clientHeight;
+          setHeaderOpened(false);
         } else if (relativeY < buffer) {
-          // Selection is too close to the top
           scrollAdjustment = relativeY - buffer;
         }
 
-        // Scroll the container if necessary
         if (scrollAdjustment !== 0) {
-          container.scrollBy({
-            top: scrollAdjustment,
-            behavior: "smooth",
-          });
+          console.log("Scroll adjustment: ", scrollAdjustment);
+
+          setTimeout(() => {
+            container.scrollBy({
+              top: scrollAdjustment,
+              behavior: "smooth",
+            });
+          }, 2);
         }
       },
     },
@@ -190,9 +254,7 @@ const TiptapEditor = ({ yXmlFragment }) => {
 
   const editorState = useEditorState({
     editor,
-    // This function will be called every time the editor state changes
     selector: ({ editor }) => ({
-      // It will only re-render if the when these markings or nodes change
       isBold: editor.isActive("bold"),
       isItalic: editor.isActive("italic"),
       isHighlighted: editor.isActive("highlight"),
@@ -207,8 +269,20 @@ const TiptapEditor = ({ yXmlFragment }) => {
     }),
   });
 
-  const { fontSize, lineHeight, marginTop, marginRight, marginLeft } =
-    editorPreferencesState.paperPreferences;
+  const {
+    fontSize,
+    lineHeight,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+    listPaddingLeft,
+    listMarginTop,
+    listMarginBottom,
+    hrMarginTop,
+    hrMarginBottom,
+    hrBorderColor,
+  } = editorPreferencesState.paperPreferences;
 
   return (
     <div id="EditorContainer" className="h-full w-full flex flex-col">
@@ -216,19 +290,10 @@ const TiptapEditor = ({ yXmlFragment }) => {
         {`
           .tiptap {
             min-height: 20rem;
-            padding: ${deviceType === "mobile" ? "1.2" : marginTop}rem 
-                      ${deviceType === "mobile" ? "1.7" : marginRight}rem 
-                      ${deviceType === "mobile" ? "10" : "20"}rem 
-                      ${deviceType === "mobile" ? "1.7" : marginLeft}rem;
-
-            :nth-child(2) {
-              margin-top: 0;
-            }
-
-            blockquote {
-              margin: 1rem 0;
-              padding-left: 3rem;
-            }
+            padding: ${paddingTop}rem 
+                      ${paddingRight}rem 
+                      ${paddingBottom}rem 
+                      ${paddingLeft}rem;
           }
 
           #EditorContainer h1 {
@@ -266,60 +331,33 @@ const TiptapEditor = ({ yXmlFragment }) => {
           #EditorContainer {
             font-size: ${fontSize}rem;
             line-height: ${lineHeight}rem;
-            margin: 0;
           }
 
-          #EditorContainer ol {
-            padding: 0 1rem;
-            margin: 1.25rem 1rem 1.25rem 0.4rem;
-            list-style-type: decimal;
-
-
-            li p {
-              margin-top: 0.25em;
-              margin-bottom: 0.25em;
-            }
-          }
-
-          #EditorContainer ul {
-            padding: 0 1rem;
-            margin: 1.25rem 1rem 1.25rem 0.4rem;
-            list-style-type: disc;
-
-
-            li p {
-              margin-top: 0.25em;
-              margin-bottom: 0.25em;
-            }
+          #EditorContainer ol, #EditorContainer ul {
+            padding-left: ${listPaddingLeft}rem;
+            margin: ${listMarginTop}rem 1rem ${listMarginBottom}rem 0.4rem;
           }
 
           #EditorContainer hr {
             cursor: pointer;
-            margin: 2rem 0;
-            border-top: 1px solid white);
-
-          }
-
-          #EditableToolbar {
-            height: ${
-              editorPreferencesState.toolbarPreferences.toolbarHeight
-            }rem;
-            min-height: ${
-              editorPreferencesState.toolbarPreferences.toolbarHeight
-            }rem
+            margin: ${hrMarginTop}rem 0 ${hrMarginBottom}rem 0;
+            border-top: 1px solid ${hrBorderColor};
           }
         `}
       </style>
+
       <div
         id="EditableToolbar"
         style={{
-          boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))", // Right shadow          
+          boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))",
+          height: `${editorPreferencesState.toolbarPreferences.toolbarHeight}rem`,
+          minHeight: `${editorPreferencesState.toolbarPreferences.toolbarHeight}rem`,
+          backgroundColor: `${editorPreferencesState.toolbarPreferences.backgroundColor}`,
+          borderTop: `1px solid ${editorPreferencesState.toolbarPreferences.dividerColor}`,
         }}
         className={`
-            w-full min-w-0  border-appLayoutBorder border-t
-            no-scrollbar ${
-              deviceType === "mobile" ? "order-last" : "order-first"
-            }
+            w-full min-w-0
+            no-scrollbar ${isMobile ? "order-last" : "order-first"}
           `}
       >
         <TipTapToolbar
@@ -331,7 +369,7 @@ const TiptapEditor = ({ yXmlFragment }) => {
         id="EditableContainer"
         className={`flex-grow w-full flex justify-center 
            overflow-y-scroll min-h-0 text-neutral-200 z-1 ${
-             deviceType === "mobile"
+             isMobile
                ? "no-scrollbar border-white"
                : "pl-[0.75rem] border-t border-white"
            }`}
@@ -340,7 +378,7 @@ const TiptapEditor = ({ yXmlFragment }) => {
           editor={editor}
           className={`caret-transparent h-fit outline-none focus:outline-none
             shadow-${
-              deviceType === "mobile"
+              isMobile
                 ? "none"
                 : editorPreferencesState.paperPreferences.paperShadow
             }
@@ -348,33 +386,27 @@ const TiptapEditor = ({ yXmlFragment }) => {
             font-serif
             `}
           style={{
-            width:
-              deviceType === "mobile"
-                ? "100%"
-                : `${editorPreferencesState.paperPreferences.width}rem`,
-            borderTopWidth:
-              deviceType === "mobile"
-                ? "0"
-                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderRightWidth:
-              deviceType === "mobile"
-                ? "0"
-                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderBottomWidth:
-              deviceType === "mobile"
-                ? "0"
-                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderLeftWidth:
-              deviceType === "mobile"
-                ? "0"
-                : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            width: isMobile
+              ? "100%"
+              : `${editorPreferencesState.paperPreferences.width}rem`,
+            borderTopWidth: isMobile
+              ? "0"
+              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            borderRightWidth: isMobile
+              ? "0"
+              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            borderBottomWidth: isMobile
+              ? "0"
+              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+            borderLeftWidth: isMobile
+              ? "0"
+              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
             borderTopColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
             borderLeftColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
             borderRightColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
-            marginTop:
-              deviceType === "mobile"
-                ? "0"
-                : `${editorPreferencesState.paperPreferences.gapTop}rem`,
+            marginTop: isMobile
+              ? "0"
+              : `${editorPreferencesState.paperPreferences.gapTop}rem`,
             fontSize: `${editorPreferencesState.paperPreferences.fontSize}rem`,
             lineHeight: `${editorPreferencesState.paperPreferences.lineHeight}rem`,
             borderTopRightRadius: `${editorPreferencesState.paperPreferences.roundRadius}rem`,
@@ -399,12 +431,10 @@ const updateVirtualCursor = (editor, fontSize) => {
   const editableRect = editable.getBoundingClientRect();
   const coords = editor.view.coordsAtPos(selection.from);
 
-  // Get the font size of the current selection
   const domSelection = window.getSelection();
   const anchorNode = domSelection.anchorNode;
 
   if (anchorNode?.parentElement) {
-    console.log("element and parent: ", anchorNode, anchorNode.parentElement);
     if (anchorNode.parentElement.tagName === "DIV") {
       const computedStyle = getComputedStyle(anchorNode);
       fontSize = parseFloat(computedStyle.fontSize) || fontSize;

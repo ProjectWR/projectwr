@@ -9,7 +9,7 @@ const formats = {
   },
 };
 
-const TextFormatButton = ({ editor }) => {
+const TextFormatButton = ({ editor, toolbarPreferences }) => {
   console.log("textformat button rerendered");
 
   const { deviceType } = useDeviceType();
@@ -29,6 +29,23 @@ const TextFormatButton = ({ editor }) => {
   const onSelectionUpdate = useCallback(() => {
     setActiveHeading(getActiveHeading(editor));
   }, [editor]);
+
+  const {
+    toolbarHeight,
+    toolbarButtonHeight,
+    marginTop,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    buttonHeight,
+    buttonWidth,
+    backgroundColor,
+    buttonColor,
+    dividerColor,
+    textFormatButtonWidth,
+    hoverColor,
+    pressedColor,
+  } = toolbarPreferences;
 
   useEffect(() => {
     if (!editor) {
@@ -63,23 +80,25 @@ const TextFormatButton = ({ editor }) => {
         headerRect.left +
         (headerRect.width - dropdownRef.current.offsetWidth) / 2;
 
-      setDropdownPosition({ top: top - 18, left: left > 0 ? left : 0 });
+      setDropdownPosition({ top: top - 10, left: left > 0 ? left : 0 });
     }
   }, [isOpened]);
 
   return (
     <div className="relative" ref={innerRef}>
       <div
+        style={{ height: `${buttonHeight}rem` }}
         id="TextFormatButtonHeader"
         ref={headerRef}
-        className="h-[2rem] w-[12rem] px-1"
+        className="px-1"
       >
         <button
-          className={`w-full h-full px-[0.35rem] hover:bg-appLayoutHover rounded-[0.35rem] `}
+          style={{ minWidth: `${textFormatButtonWidth}rem` }}
+          className={`h-full px-[0.35rem] toolbarButton rounded-[0.35rem] `}
           onClick={() => setIsOpened(!isOpened)}
         >
           <div className="w-full h-full flex items-center justify-between">
-            <div className="flex-grow h-full flex items-center justify-center py-[0.3rem]">
+            <div className="flex-grow px-2 h-full py-[0.3rem] flex justify-center items-center">
               <ReturnPlainElementForFormat format={activeHeading} />
             </div>
             <motion.span
@@ -99,14 +118,16 @@ const TextFormatButton = ({ editor }) => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
             ref={dropdownRef}
-            className={`w-[12rem] h-fit p-1 bg-appBackground z-30 bg-opacity-100 flex fixed items-center flex-col rounded-[0.2rem] border-appLayoutBorder border shadow-black shadow-md`}
+            className={`h-fit p-1 px-1 bg-appBackground z-30 bg-opacity-100 flex fixed items-center flex-col rounded-[0.2rem]`}
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
+              width: `${textFormatButtonWidth}rem`,
+              border: `1px solid ${dividerColor}`,
             }}
           >
             <button
-              className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center relative`}
+              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center relative`}
               onClick={() => {
                 setFormat("p", editor);
               }}
@@ -114,7 +135,7 @@ const TextFormatButton = ({ editor }) => {
               <ReturnElementForFormat format={"p"} />
             </button>
             <button
-              className={`w-full h-[4rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h1", editor);
               }}
@@ -122,7 +143,7 @@ const TextFormatButton = ({ editor }) => {
               <ReturnElementForFormat format={"h1"} />
             </button>
             <button
-              className={`w-full h-[3rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h2", editor);
               }}
@@ -130,7 +151,7 @@ const TextFormatButton = ({ editor }) => {
               <ReturnElementForFormat format={"h2"} />
             </button>
             <button
-              className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h3", editor);
               }}
@@ -138,7 +159,7 @@ const TextFormatButton = ({ editor }) => {
               <ReturnElementForFormat format={"h3"} />
             </button>
             <button
-              className={`w-full h-[2.5rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover border-b border-appLayoutBorder flex items-center justify-center`}
+              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h4", editor);
               }}
@@ -146,7 +167,7 @@ const TextFormatButton = ({ editor }) => {
               <ReturnElementForFormat format={"h4"} />
             </button>
             <button
-              className={`w-full h-[2 rem] px-[0.35rem] py-[0.3rem] hover:bg-appLayoutHover flex items-center justify-center`}
+              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h5", editor);
               }}
@@ -166,22 +187,22 @@ const ReturnPlainElementForFormat = ({ format }) => {
   switch (format) {
     case "h1":
       console.log("Inside plain element renderer: ", format);
-      return <p>Title</p>;
+      return <p className="min-w-fit w-fit">Title</p>;
 
     case "h2":
-      return <p>Heading 1</p>;
+      return <p className="min-w-fit w-fit">Heading 1</p>;
 
     case "h3":
-      return <p>Heading 2</p>;
+      return <p className="min-w-fit w-fit">Heading 2</p>;
 
     case "h4":
-      return <p>Heading 3</p>;
+      return <p className="min-w-fit w-fit">Heading 3</p>;
 
     case "h5":
-      return <p>Heading 4</p>;
+      return <p className="min-w-fit w-fit">Heading 4</p>;
 
     default:
-      return <p>Normal Text</p>;
+      return <p className="min-w-fit w-fit">Normal Text</p>;
   }
 };
 

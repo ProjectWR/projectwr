@@ -1,5 +1,4 @@
 {
-    "name": "Default Name",
-    "phone": "1111-1111-1111",
-    "email": "default email"
+  "theme": "dark",
+  "uisize": "medium"
 }

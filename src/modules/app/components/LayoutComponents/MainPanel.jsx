@@ -9,6 +9,7 @@ import BookDetailsPanel from "../MainPanels/BookDetailsPanel";
 import SectionDetailsPanel from "../MainPanels/SectionDetailsPanel";
 import LibraryDetailsPanel from "../MainPanels/LibraryDetailsPanel";
 import PaperPanel from "../MainPanels/PaperPanel";
+import SettingsPanel from "../MainPanels/SettingsPanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -92,6 +93,11 @@ const MainPanel = ({}) => {
     if (activity === "templates") {
       key.current = "templates";
       return <p>templates main panel</p>;
+    }
+
+    if (activity === "settings") {
+      key.current = "settings";
+      return <SettingsPanel />;
     }
 
     key.current = "empty";

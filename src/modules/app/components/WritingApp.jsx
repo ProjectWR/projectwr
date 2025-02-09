@@ -32,11 +32,11 @@ const WritingApp = () => {
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
   const setLibraryListStore = appStore((state) => state.setLibraryListStore);
+  const settings = settingsStore((state) => state.settings);
 
   const [sidePanelScope, sidePanelAnimate] = useAnimate();
 
   useEffect(() => {
-    console.log("HRE!!!");
     if (sidePanelScope.current) {
       sidePanelAnimate(
         sidePanelScope.current,
@@ -87,26 +87,6 @@ const WritingApp = () => {
 
         console.log("libraries: ", libraries);
 
-        // // Check if the database with the given name exists
-        // for (const [, [libraryId]] of libraries.entries()) {
-        //   const exists = databases.some((db) => db.name === libraryId);
-
-        //   if (!exists) {
-        //     console.log(`Database with name ${libraryId} does not exist.`);
-        //     await userLibraryStore.delete(libraryId);
-        //     continue;
-        //   }
-
-        //   dataManagerSubdocs.initLibrary(libraryId);
-        //   const ydoc = dataManagerSubdocs.getLibrary(libraryId);
-
-        //   console.log("ydoc", ydoc);
-
-        //   console.log("Before persistence: ", ydoc.guid, ydoc);
-        //   await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
-        //   console.log(ydoc.guid, ydoc);
-        // }
-
         // Set loading to false once everything is loaded
         setLoading(false);
       } catch (error) {
@@ -118,11 +98,13 @@ const WritingApp = () => {
     initializeApp();
   }, [setDefaultSettings, setSettings, setLibraryListStore]);
 
+  useEffect(() => {
+    
+  }, [settings]);
+
   // Render loading screen if loading is true
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <SizingProvider defaultSizingMode="normal" storageKey="vite-ui-sizing">
-        <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={HTML5Backend}>
           {loading ? (
             <div className="flex justify-center items-center h-screen max-h-screen w-screen max-w-screen bg-appBackground text-appLayoutText">
               <div>Loading...</div>
@@ -194,8 +176,7 @@ const WritingApp = () => {
             </motion.div>
           )}
         </DndProvider>
-      </SizingProvider>
-    </ThemeProvider>
+     
   );
 };
 

@@ -13,7 +13,7 @@ const SizingProviderContext = createContext(initialSizingState);
 export function SizingProvider({
   children,
   defaultSizingMode = "normal",
-  storageKey = "vite-ui-sizing",
+  storageKey = "uisize",
   ...props
 }) {
   const [sizingMode, setSizingMode] = useState(

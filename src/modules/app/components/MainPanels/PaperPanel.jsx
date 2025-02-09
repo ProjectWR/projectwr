@@ -6,6 +6,7 @@ import { appStore } from "../../stores/appStore";
 import { libraryStore } from "../../stores/libraryStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
+import { AnimatePresence, motion } from "motion/react";
 
 /**
  *
@@ -20,6 +21,8 @@ const PaperPanel = ({ ytree, paperId }) => {
   const paperMapState = useYMap(ytree.getNodeValueFromKey(paperId));
 
   console.log("Paper Props Map STATE: ", paperMapState);
+
+  const [headerOpened, setHeaderOpened] = useState(true);
 
   const [paperProperties, setPaperProperties] = useState({
     item_title: "",
@@ -51,47 +54,55 @@ const PaperPanel = ({ ytree, paperId }) => {
       id="PaperDetailContainer"
       className="w-full h-full flex flex-col items-center justify-start"
     >
-      <div
-        id="CreatePaperHeader"
-        className="h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow py-2 px-1 gap-1"
-      >
-        <button
-          className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+      <AnimatePresence>
+        <motion.div
+          animate={{
+            height: headerOpened ? "var(--detailsPanelHeaderHeight)" : "0",
+            maxHeight: headerOpened ? "var(--detailsPanelHeaderHeight)" : "0",
+          }}
+          transition={{ duration: 0.1 }}
+          id="CreatePaperHeader"
+          className="w-full flex items-center justify-start border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow px-1 gap-1 overflow-hidden"
+        >
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
              order-first
           `}
-          onClick={() => {
-            setPanelOpened(true);
-            setItemId("unselected");
-          }}
-        >
-          <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-        </button>
+            onClick={() => {
+              setPanelOpened(true);
+              setItemId("unselected");
+            }}
+          >
+            <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
 
-        <input
-          className="bg-appBackground flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 pb-2 px-2 pr-1 transition-colors duration-200"
-          name="item_title"
-          onChange={handleChange}
-          value={paperProperties.item_title}
-        />
+          <input
+            className="bg-appBackground flex-grow text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 my-2 pb-2 px-2 pr-1 transition-colors duration-200"
+            name="item_title"
+            onChange={handleChange}
+            value={paperProperties.item_title}
+          />
 
-        <button
-          className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-2 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-2 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
              order-last
           `}
-          onClick={handleSave}
-        >
-          <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-        </button>
-      </div>
+            onClick={handleSave}
+          >
+            <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+        </motion.div>
+      </AnimatePresence>
 
-      <div
+      <motion.div
         id="CreatePaperBody"
         className="w-full flex-grow min-h-0 min-w-0 basis-0"
       >
         <TipTapEditor
           yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
+          setHeaderOpened={setHeaderOpened}
         />
-      </div>
+      </motion.div>
     </div>
   );
 };

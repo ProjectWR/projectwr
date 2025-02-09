@@ -34,13 +34,6 @@ export function DeviceTypeProvider({ children }) {
     // Determine the device type on initial load
     determineDeviceType();
 
-    // // Update the device type when the window is resized
-    // window.addEventListener("resize", determineDeviceType);
-
-    // // Cleanup the event listener on unmount
-    // return () => {
-    //   window.removeEventListener("resize", determineDeviceType);
-    // };
   }, []);
 
   useEffect(() => {

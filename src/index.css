@@ -31,9 +31,13 @@
 
     --actionBarHeight: 2rem;
     --actionBarLogoSize: 7rem;
+
     --activityBarWidth: 4.5rem;
+    --activityBarHeight: 3.3rem;
     --activityButtonHeight: 4.5rem;
     --sidePanelWidth: 10rem;
+    --activitySelectLine: 0 0% 100%;
+    --activityBarIconSize: 2.2rem;
 
     --libraryManagerHeaderText: 1.4rem;
     --libraryManagerHeaderHeight: 4rem;
@@ -44,6 +48,7 @@
     --detailsPanelPropLabelFontSize: 1rem;
     --detailsPanelPropLabelHeight: 2rem;
     --detailsPanelSaveButtonFontSize: 1.2rem;
+    --detailsPanelDescriptionInputHeight: 15rem;
 
     --libraryManagerNodeHeight: 4rem;
     --libraryManagerNodeText: 1.25rem;
@@ -79,14 +84,9 @@
     --appLayoutSubmitButton: 0 0% 80%;
   }
   .mobile {
-    --actionBarHeight: 3rem;
-    --actionBarLogoSize: 2rem;
-    --activityBarWidth: 10rem;
-    --activityBarHeight: 3.3rem;
     --libraryManagerNodeHeight: 3.5rem;
     --libraryManagerNodeIconSize: 2rem;
     --libraryManagerHeaderHeight: 3.5rem;
-
     --detailsPanelHeaderHeight: 3.5rem;
   }
 }
