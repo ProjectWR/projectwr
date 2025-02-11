@@ -5,7 +5,7 @@ import Text from "@tiptap/extension-text";
 import Highlight from "@tiptap/extension-highlight";
 import Collaboration from "@tiptap/extension-collaboration";
 import Bold from "@tiptap/extension-bold";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import VirtualCursor from "./Extensions/VirtualCursorExtension";
 import TipTapToolbar from "./TipTapToolbar";
 import Italic from "@tiptap/extension-italic";
@@ -26,103 +26,103 @@ import TabIndentExtension from "./Extensions/TabIndentExtension";
 import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
+import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
+import loremIpsum from "../lorem";
 
 const content = "<p>Hello World!</p>";
 
-// Separate default preferences for desktop
-const desktopDefaultPreferences = {
-  paperPreferences: {
-    width: 55,
-    gapTop: 3,
-    paddingTop: 5, // Updated from marginTop
-    paddingLeft: 6, // Updated from marginLeft
-    paddingRight: 6, // Updated from marginRight
-    paddingBottom: 40, // Updated from marginBottom
-    font: "serif",
-    fontSize: 1.25,
-    lineHeight: 1.75,
-    backgroundColor: "#171717",
-    paperBorderWidth: 1,
-    paperColor: "#171717",
-    paperBorderColor: "#525252",
-    roundRadius: 0,
-    paperShadow: "xl",
-    paperShadowColor: "#000",
-    listPaddingLeft: 1,
-    listMarginTop: 1.25,
-    listMarginBottom: 1.25,
-    hrMarginTop: 2,
-    hrMarginBottom: 2,
-    hrBorderColor: "white",
-  },
-  toolbarPreferences: {
-    toolbarHeight: 3.3,
-    toolbarButtonHeight: 2.3,
-    marginTop: 0.25,
-    marginBottom: 0.25,
-    marginLeft: 0.25,
-    marginRight: 0.25,
-    buttonHeight: 2.3,
-    buttonWidth: 2,
-    backgroundColor: "#171717",
-    buttonColor: "#171717",
-    dividerColor: "#232323",
-    hoverColor: "#121212",
-  },
-};
+const { desktopDefaultPreferences, mobileDefaultPreferences } =
+  TipTapEditorDefaultPreferences;
 
-// Mobile preferences updated with padding
-const mobileDefaultPreferences = {
-  paperPreferences: {
-    width: 55,
-    gapTop: 0,
-    paddingTop: 1.2, // Updated from marginTop
-    paddingLeft: 1.2, // Updated from marginLeft
-    paddingRight: 1.2, // Updated from marginRight
-    paddingBottom: 20, // Updated from marginBottom
-    font: "serif",
-    fontSize: 1.1,
-    lineHeight: 1.5,
-    backgroundColor: "#171717",
-    paperBorderWidth: 1,
-    paperColor: "#171717",
-    paperBorderColor: "#525252",
-    roundRadius: 0,
-    paperShadow: "none",
-    paperShadowColor: "#000",
-    listPaddingLeft: 1,
-    listMarginTop: 1.25,
-    listMarginBottom: 1.25,
-    hrMarginTop: 2,
-    hrMarginBottom: 2,
-    hrBorderColor: "white",
-  },
-  toolbarPreferences: {
-    toolbarHeight: 2.8,
-    toolbarButtonHeight: 2.3,
-    marginTop: 0.25,
-    marginBottom: 0.25,
-    marginLeft: 0.25,
-    marginRight: 0.25,
-    buttonHeight: 2.3,
-    buttonWidth: 3,
-    backgroundColor: "#171717",
-    buttonColor: "#171717",
-    dividerColor: "#232323",
-    textFormatButtonWidth: 10,
-    hoverColor: "#121212",
-    pressedColor: "#080808",
-  },
-};
+const TiptapEditor = ({
+  yXmlFragment,
+  setHeaderOpened,
+  mode = "editPaper",
+  preferences,
+}) => {
+  console.log("Tiptap Editor Rendering");
 
-const TiptapEditor = ({ yXmlFragment, setHeaderOpened }) => {
+  const extensions = useMemo(() => {
+    return [
+      Document,
+      Paragraph,
+      Text,
+      Collaboration.configure({
+        fragment: yXmlFragment,
+      }),
+      VirtualCursor,
+      TabIndentExtension.configure({
+        spaces: 8,
+      }),
+      Strike,
+      Bold,
+      Italic,
+      Underline,
+      Subscript,
+      Superscript,
+      TextStyle.configure({ mergeNestedSpanStyles: true }),
+      Highlight.configure({ multicolor: true }),
+      Blockquote,
+      ListItem,
+      BulletList,
+      OrderedList,
+      HardBreak,
+      Heading.configure({
+        levels: [1, 2, 3, 4, 5],
+      }),
+      HorizontalRule,
+      Image,
+      Typography,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+    ];
+  }, [yXmlFragment]);
+
+  const previewTemplateExtensions = useMemo(() => {
+    return [
+      Document,
+      Paragraph,
+      Text,
+      VirtualCursor,
+      TabIndentExtension.configure({
+        spaces: 8,
+      }),
+      Strike,
+      Bold,
+      Italic,
+      Underline,
+      Subscript,
+      Superscript,
+      TextStyle.configure({ mergeNestedSpanStyles: true }),
+      Highlight.configure({ multicolor: true }),
+      Blockquote,
+      ListItem,
+      BulletList,
+      OrderedList,
+      HardBreak,
+      Heading.configure({
+        levels: [1, 2, 3, 4, 5],
+      }),
+      HorizontalRule,
+      Image,
+      Typography,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+    ];
+  }, []);
+
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
 
   const lastScrollTopRef = useRef(0); // Stores last scroll position
 
+  const defaultPreferences = isMobile
+    ? mobileDefaultPreferences
+    : desktopDefaultPreferences;
   const [editorPreferencesState, setEditorPreferencesState] = useState(
-    isMobile ? mobileDefaultPreferences : desktopDefaultPreferences
+    preferences || defaultPreferences
   );
 
   useEffect(() => {
@@ -146,41 +146,9 @@ const TiptapEditor = ({ yXmlFragment, setHeaderOpened }) => {
 
   const editor = useEditor(
     {
-      content,
-      extensions: [
-        Document,
-        Paragraph,
-        Text,
-        Collaboration.configure({
-          fragment: yXmlFragment,
-        }),
-        VirtualCursor,
-        TabIndentExtension.configure({
-          spaces: 8,
-        }),
-        Strike,
-        Bold,
-        Italic,
-        Underline,
-        Subscript,
-        Superscript,
-        TextStyle.configure({ mergeNestedSpanStyles: true }),
-        Highlight.configure({ multicolor: true }),
-        Blockquote,
-        ListItem,
-        BulletList,
-        OrderedList,
-        HardBreak,
-        Heading.configure({
-          levels: [1, 2, 3, 4, 5],
-        }),
-        HorizontalRule,
-        Image,
-        Typography,
-        TextAlign.configure({
-          types: ["heading", "paragraph"],
-        }),
-      ],
+      content: mode === "previewTemplate" ? loremIpsum : content,
+      extensions:
+        mode === "previewTemplate" ? previewTemplateExtensions : extensions,
       immediatelyRender: true,
       shouldRerenderOnTransaction: false,
       onSelectionUpdate({ editor }) {
@@ -276,6 +244,27 @@ const TiptapEditor = ({ yXmlFragment, setHeaderOpened }) => {
     paddingRight,
     paddingBottom,
     paddingLeft,
+
+    h1FontSize,
+    h1LineHeight,
+    h1MarginBottom,
+
+    h2FontSize,
+    h2LineHeight,
+    h2MarginBottom,
+
+    h3FontSize,
+    h3LineHeight,
+    h3MarginBottom,
+
+    h4FontSize,
+    h4LineHeight,
+    h4MarginBottom,
+
+    h5FontSize,
+    h5LineHeight,
+    h5MarginBottom,
+
     listPaddingLeft,
     listMarginTop,
     listMarginBottom,
@@ -297,29 +286,29 @@ const TiptapEditor = ({ yXmlFragment, setHeaderOpened }) => {
           }
 
           #EditorContainer h1 {
-            font-size: ${fontSize * 2}rem;
-            line-height: ${lineHeight * 2}rem;
-            margin-bottom: ${lineHeight}rem;
+            font-size: ${h1FontSize}rem;
+            line-height: ${h1LineHeight}rem;
+            margin-bottom: ${h1MarginBottom}rem;
           }
           #EditorContainer h2 {
-            font-size: ${fontSize * 1.5}rem;
-            line-height: ${lineHeight * 1.5}rem;
-            margin-bottom: ${lineHeight * 0.75}rem;
+            font-size: ${h2FontSize}rem;
+            line-height: ${h2LineHeight}rem;
+            margin-bottom: ${h2MarginBottom}rem;
           }
           #EditorContainer h3 {
-            font-size: ${fontSize * 1.3}rem;
-            line-height: ${lineHeight * 1.3}rem;
-            margin-bottom: ${lineHeight * 0.65}rem;
+            font-size: ${h3FontSize}rem;
+            line-height: ${h3LineHeight}rem;
+            margin-bottom: ${h3MarginBottom}rem;
           }
           #EditorContainer h4 {
-            font-size: ${fontSize * 1.2}rem;
-            line-height: ${lineHeight * 1.2}rem;
-            margin-bottom: ${lineHeight * 0.55}rem;
+            font-size: ${h4FontSize}rem;
+            line-height: ${h4LineHeight}rem;
+            margin-bottom: ${h4MarginBottom}rem;
           }
           #EditorContainer h5 {
-            font-size: ${fontSize * 1.1}rem;
-            line-height: ${lineHeight * 1.1}rem;
-            margin-bottom: ${lineHeight * 0.45}rem;
+            font-size: ${h5FontSize}rem;
+            line-height: ${h5LineHeight}rem;
+            margin-bottom: ${h5MarginBottom}rem;
           }
 
           #EditorContainer p {

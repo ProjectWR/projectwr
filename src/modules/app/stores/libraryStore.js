@@ -11,6 +11,11 @@ export const libraryStore = create((set) => ({
     return set({ itemId: itemId });
   },
 
+  itemMode: 'details',
+  setItemMode: (itemMode) => {
+    return set({ itemMode: itemMode });
+  },
+
   // doc: null,
   // setDoc: (doc) => {
   //   return set({ doc: doc });

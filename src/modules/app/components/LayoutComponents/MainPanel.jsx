@@ -10,11 +10,19 @@ import SectionDetailsPanel from "../MainPanels/SectionDetailsPanel";
 import LibraryDetailsPanel from "../MainPanels/LibraryDetailsPanel";
 import PaperPanel from "../MainPanels/PaperPanel";
 import SettingsPanel from "../MainPanels/SettingsPanel";
+import PaperSettingsPanel from "../MainPanels/PaperSettingsPanel";
+import { templateStore } from "../../stores/templateStore";
+import TemplateViewPanel from "../MainPanels/TemplateViewPanel";
+import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
   const libraryId = libraryStore((state) => state.libraryId);
   const itemId = libraryStore((state) => state.itemId);
+  const itemMode = libraryStore((state) => state.itemMode);
+
+  const templateId = templateStore((state) => state.templateId);
+  const templateMode = templateStore((state) => state.templateMode);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
 
@@ -45,8 +53,6 @@ const MainPanel = ({}) => {
   }, [libraryId]);
 
   const renderMainPanel = () => {
-    setShowActivityBar(true);
-
     if (activity === "libraries") {
       if (libraryId !== "unselected") {
         if (itemId !== "unselected") {
@@ -74,10 +80,24 @@ const MainPanel = ({}) => {
             }
 
             if (itemMap.get("type") === "paper") {
-              setShowActivityBar(false);
-              return (
-                <PaperPanel ytree={libraryYTreeRef.current} paperId={itemId} />
-              );
+              if (itemMode === "details") {
+                return (
+                  <PaperPanel
+                    ytree={libraryYTreeRef.current}
+                    paperId={itemId}
+                    key={itemId}
+                  />
+                );
+              }
+
+              if (itemMode === "settings") {
+                return (
+                  <PaperSettingsPanel
+                    ytree={libraryYTreeRef.current}
+                    paperId={itemId}
+                  />
+                );
+              }
             }
           }
         }
@@ -91,6 +111,16 @@ const MainPanel = ({}) => {
     }
 
     if (activity === "templates") {
+      if (templateId !== "unselected") {
+        key.current = "templateDetails-" + templateId + "-" + templateMode;
+        if (templateMode === "details") {
+          return <TemplateDetailsPanel templateId={templateId} />;
+        }
+        if (templateMode === "preview") {
+          return <TemplateViewPanel templateId={templateId} />;
+        }
+      }
+
       key.current = "templates";
       return <p>templates main panel</p>;
     }
@@ -105,7 +135,7 @@ const MainPanel = ({}) => {
   };
 
   return deviceType === "mobile" ? (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <motion.div
         key={key.current}
         initial={{ y: 10, opacity: 0 }}

@@ -5,13 +5,13 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import LibraryManager from "../SidePanels/LibraryManager/LibraryManager";
 import { AnimatePresence, motion } from "motion/react";
 import LibraryDirectory from "../SIdePanels/LibraryDirectory/LibraryDirectory";
+import { templateStore } from "../../stores/templateStore";
+import TemplateManager from "../SIdePanels/TemplateManager/TemplateManager";
 
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
-  const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const setLibraryId = libraryStore((state) => state.setLibraryId);
-
   const libraryId = libraryStore((state) => state.libraryId);
+  const templateId = templateStore((state) => state.templateId);
   const activity = appStore((state) => state.activity);
 
   const key = useRef("empty");
@@ -26,8 +26,13 @@ const SidePanel = ({}) => {
         return <LibraryManager />;
       }
     } else if (activity === "templates") {
-      key.current = "templates";
-      return <p>templates side panel</p>;
+      if (templateId !== "unselected") {
+        key.current = "templateSelected-" + templateId;
+        return <TemplateManager templateId={templateId} />;
+      } else {
+        key.current = "templateManager";
+        return <TemplateManager />;
+      }
     } else {
       key.current = "empty";
       return <p>Nothing</p>;

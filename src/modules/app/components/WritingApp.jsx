@@ -164,7 +164,7 @@ const WritingApp = () => {
                         }
                       }}
                       initial={{ x: -500 }}
-                      transition={{ type: "easeOut", duration: 0.3 }}
+                      transition={{ type: "circ", duration: 0.2 }}
                     >
                       <SidePanel />
                     </motion.div>

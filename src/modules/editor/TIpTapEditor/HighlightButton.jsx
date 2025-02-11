@@ -145,9 +145,10 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
-              width: `${buttonWidth * 3.6}rem`,
+              width: `${buttonWidth * 3.4}rem`,
               height: `${buttonHeight * 3.6}rem`,
               border: `1px solid ${dividerColor}`,
+              backgroundColor: backgroundColor,
             }}
           >
             {colors.map((color) => (

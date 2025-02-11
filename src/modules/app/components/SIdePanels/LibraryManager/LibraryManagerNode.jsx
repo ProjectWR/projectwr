@@ -21,6 +21,7 @@ import { appStore } from "../../../stores/appStore";
 const LibraryManagerNode = ({ libraryId, className }) => {
   const setLibraryId = libraryStore((state) => state.setLibraryId);
   const setItemId = libraryStore((state) => state.setItemId);
+
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const libraryPropsMapRef = useRef(

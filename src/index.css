@@ -12,6 +12,16 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .grow-1 {
+    flex-grow: 1;
+  }
+  .grow-2 {
+    flex-grow: 2;
+  }
+  .grow-3 {
+    flex-grow: 3;
+  }
 }
 
 @layer base {
@@ -38,6 +48,7 @@
     --sidePanelWidth: 10rem;
     --activitySelectLine: 0 0% 100%;
     --activityBarIconSize: 2.2rem;
+    --activityBarFontSize: 1.2rem;
 
     --libraryManagerHeaderText: 1.4rem;
     --libraryManagerHeaderHeight: 4rem;

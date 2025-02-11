@@ -32,6 +32,9 @@ export default {
     {
       pattern: /w-*/,
     },
+    {
+      pattern: /grow-*/,
+    }
   ],
   variants: {
     extend: {
@@ -83,6 +86,7 @@ export default {
 
       },
       fontSize: {
+        activityBarFontSize: "var(--activityBarFontSize)",
         libraryManagerHeaderText: "var(--libraryManagerHeaderText)",
         libraryManagerNodeText: "var(--libraryManagerNodeText)",
         detailsPanelNameFontSize: "var(--detailsPanelNameFontSize)",
@@ -92,6 +96,7 @@ export default {
         libraryDirectoryBookNodeFontSize: "var(--libraryDirectoryBookNodeFontSize)",
         libraryDirectoryPaperNodeFontSize: "var(--libraryDirectoryPaperNodeFontSize)",
         libraryDirectorySectionNodeFontSize: "var(--libraryDirectorySectionNodeFontSize)",
+
       },
       fontFamily: {
         heading: [

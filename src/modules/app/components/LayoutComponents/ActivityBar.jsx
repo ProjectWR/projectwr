@@ -18,11 +18,11 @@ const ActivityBar = ({}) => {
       {showActivityBar && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex items-center ${
+          className={`flex gap-px items-center ${
             deviceType === "mobile"
               ? "w-full h-activityBarHeight order-last flex-row"
               : "h-full w-activityBarWidth order-first flex-col"
-          } border-t border-appLayoutBorder z-[100]`}
+          } border-t border-appLayoutBorder z-[50]`}
           style={{
             boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))", // Right shadow
             clipPath: "inset(-10px 0 0 0)", // Clip the shadow on the bottom
@@ -48,8 +48,8 @@ const ActivityBar = ({}) => {
             buttonContent={
               <span className="icon-[ion--library-sharp] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
             }
+            flexValue={"grow-3"}
           />
-          <div className="w-px h-[60%] bg-appLayoutBorder"></div>
 
           <ActivityButton
             onClick={() => {
@@ -62,10 +62,21 @@ const ActivityBar = ({}) => {
             buttonContent={
               <span className="icon-[material-symbols-light--home] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
             }
+            flexValue={"grow-1"}
           />
-
-          <div className="w-px h-[60%] bg-appLayoutBorder"></div>
-
+          <ActivityButton
+            onClick={() => {
+              setActivity("templates");
+              setPanelOpened(true);
+            }}
+            activity={activity}
+            selectedActivity={"templates"}
+            deviceType={deviceType}
+            buttonContent={
+              <span className="icon-[carbon--template] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+            }
+            flexValue={"grow-1"}
+          />
           <ActivityButton
             onClick={() => {
               setActivity("settings");
@@ -77,6 +88,7 @@ const ActivityBar = ({}) => {
             buttonContent={
               <span className="icon-[material-symbols-light--settings] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
             }
+            flexValue={"grow-1"}
           />
         </motion.div>
       )}
@@ -93,48 +105,46 @@ const ActivityButton = ({
   selectedActivity,
   activity,
   deviceType,
+  flexValue,
 }) => {
   return (
-    <motion.button
+    <button
       key={activity}
       className={`relative 
         ${
           deviceType === "mobile"
-            ? "h-full flex-grow"
+            ? `h-full ${flexValue}`
             : "w-full h-activityButtonHeight"
         } 
      
-
         ${
           selectedActivity === activity
-            ? "text-appLayoutHighlight"
-            : "text-appLayoutTextMuted  hover:text-appLayoutHighlight"
+            ? "text-appLayoutHighlight bg-appLayoutPressed z-[100] shadow-md shadow-appLayoutShadow"
+            : "text-appLayoutTextMuted  hover:text-appLayoutHighlight bg-appBackground"
         }
 
+        transition-colors duration-500
+       
         ${className}`}
       onClick={onClick}
-      initial={false}
-      animate={{
-        backgroundColor:
-          selectedActivity === activity
-            ? "hsl(var(--appLayoutPressed))"
-            : "hsl(var(--appBackground))",
-      }}
-      transition={{ duration: 0.2 }}
     >
       {buttonContent}
-      {selectedActivity === activity ? (
-        <motion.div
-          id="ActivitySelectLine"
-          layoutId="ActivitySelectLine"
-          transition={{ duration: 0.1 }}
-          className={`absolute ${
-            deviceType === "mobile"
-              ? "h-px w-full top-0"
-              : "w-px h-full left-full top-0"
-          } bg-white`}
-        />
-      ) : null}
-    </motion.button>
+      <AnimatePresence>
+        {selectedActivity === activity && (
+          <motion.div
+            id="ActivitySelectLine"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className={`absolute ${
+              deviceType === "mobile"
+                ? "h-px w-full top-0"
+                : "w-px h-full left-full top-0"
+            } bg-white`}
+          />
+        )}
+      </AnimatePresence>
+    </button>
   );
 };

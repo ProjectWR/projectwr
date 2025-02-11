@@ -6,14 +6,11 @@ import dataManagerSubdocs, {
 } from "../../../lib/dataSubDoc";
 import { YMapEvent } from "yjs";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-import { appStore } from "../../../stores/appStore";
 
+
+// TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
   const { deviceType } = useDeviceType();
-
-  const setPanelOpened = appStore((state) => state.setPanelOpened);
-
-  const setActivity = appStore((state) => state.setActivity);
 
   const [libraryIds, setLibraryIds] = useState(
     getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap)
@@ -103,23 +100,6 @@ const LibraryManager = () => {
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
         </button>
 
-        {/* {deviceType === "mobile" && (
-          <>
-            <button
-              className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
-             order-1
-          `}
-              onClick={() => {
-                setPanelOpened(false);
-                setActivity('home')
-              }}
-            >
-              <span className="icon-[material-symbols-light--home] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-
-            <span className="flex-grow order-3"></span>
-          </>
-        )} */}
       </div>
 
       <div
@@ -134,14 +114,18 @@ const LibraryManager = () => {
         >
           {sortedLibraryIds.length > 0 &&
             sortedLibraryIds.map(
-              ([libraryId, order_index], index) =>
+              ([libraryId, ], index) =>
                 dataManagerSubdocs.getLibrary(libraryId) && (
                   <div
                     key={libraryId}
                     id={`LibraryListNode-${index}`}
                     className="w-full h-libraryManagerNodeHeight min-h-libraryManagerNodeHeight border-b border-appLayoutBorder "
                   >
-                    <LibraryManagerNode libraryId={libraryId} className="" />
+                    <LibraryManagerNode
+                      libraryId={libraryId}
+                      className=""
+                      key={libraryId}
+                    />
                   </div>
                 )
             )}

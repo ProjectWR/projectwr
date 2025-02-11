@@ -18,6 +18,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = libraryStore((state) => state.setItemId);
+  const setItemMode = libraryStore((state) => state.setItemMode);
 
   const dndRef = useRef(null);
 
@@ -225,16 +226,32 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
         `}
       >
         {itemMapRef.current.get("type") == "paper" && (
-          <button
-            className="flex-grow flex items-center justify-start h-full pl-5"
-            onClick={() => {
-              console.log("edit paper button");
-              setItemId(itemId);
-              setPanelOpened(false);
-            }}
-          >
-            <span>{itemMapState.item_title}</span>
-          </button>
+          <>
+            <button
+              className="flex-grow flex items-center justify-start h-full pl-5"
+              onClick={() => {
+                console.log("edit paper button");
+                setItemId(itemId);
+                setItemMode("details");
+                setPanelOpened(false);
+              }}
+            >
+              <span>{itemMapState.item_title}</span>
+            </button>
+            <button
+              className={`hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex justify-center p-1 rounded-full
+                          transition-colors duration-100 items-center 
+                          h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize`}
+              onClick={() => {
+                console.log("edit paper editor button");
+                setItemId(itemId);
+                setItemMode("settings");
+                setPanelOpened(false);
+              }}
+            >
+              <span className="icon-[hugeicons--customize] h-full w-full transition-colors duration-100"></span>
+            </button>
+          </>
         )}
 
         {(itemMapRef.current.get("type") === "section" ||
@@ -275,6 +292,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
               onClick={() => {
                 console.log("edit section details button");
                 setItemId(itemId);
+                setItemMode("details");
                 setPanelOpened(false);
               }}
             >

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
@@ -13,8 +13,19 @@ import { AnimatePresence, motion } from "motion/react";
  * @param {{ytree: YTree, paperId: string}} param0
  * @returns
  */
-const PaperPanel = ({ ytree, paperId }) => {
+const PaperPanel = ({ ytree, paperId}) => {
   console.log("library details panel rendering: ", paperId);
+
+  const setShowActivityBar = appStore((state) => state.setShowActivityBar);
+
+  useEffect(() => {
+    setShowActivityBar(false);
+
+    return () => {
+      setShowActivityBar(true);
+    };
+  }, [setShowActivityBar]);
+
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = libraryStore((state) => state.setItemId);
 
@@ -28,11 +39,13 @@ const PaperPanel = ({ ytree, paperId }) => {
     item_title: "",
   });
 
+  const original_title = useRef(paperMapState.item_title);
+
   useEffect(() => {
     setPaperProperties({
       item_title: paperMapState.item_title,
     });
-  }, [paperId, paperMapState]);
+  }, [paperMapState]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,12 +97,26 @@ const PaperPanel = ({ ytree, paperId }) => {
           />
 
           <button
-            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-2 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-2 rounded-full ${
+              original_title.current == paperProperties.item_title
+                ? ""
+                : " hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight "
+            } flex items-center justify-center
              order-last
           `}
             onClick={handleSave}
           >
-            <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            <motion.span
+              animate={{
+                opacity:
+                  original_title.current == paperProperties.item_title ? 0 : 1,
+              }}
+              className={`icon-[material-symbols-light--check-rounded] ${
+                original_title.current == paperProperties.item_title
+                  ? ""
+                  : "hover:text-appLayoutHighlight"
+              } rounded-full w-full h-full`}
+            ></motion.span>
           </button>
         </motion.div>
       </AnimatePresence>
