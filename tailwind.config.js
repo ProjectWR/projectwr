@@ -83,7 +83,11 @@ export default {
         libraryDirectoryBookNodeIconSize: "var(--libraryDirectoryBookNodeIconSize)",
         libraryDirectoryPaperNodeIconSize: "var(--libraryDirectoryPaperNodeIconSize)",
         libraryDirectorySectionNodeIconSize: "var(--libraryDirectorySectionNodeIconSize)",
-
+        templateDetailsPanelDeviceHeaderHeight: "var(--templateDetailsPanelDeviceHeaderHeight)",
+        templateDetailsPanelSectionHeaderHeight: "var(--templateDetailsPanelSectionHeaderHeight)",
+        templateDetailsPreferenceInputHeight: "var(--templateDetailsPreferenceInputHeight)",
+        templateDetailsPreferenceLabelWidth: "var(--templateDetailsPreferenceLabelWidth)",
+        templateDetailsPreferencesColorInputSize: "var(--templateDetailsPreferencesColorInputSize)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",
@@ -96,7 +100,8 @@ export default {
         libraryDirectoryBookNodeFontSize: "var(--libraryDirectoryBookNodeFontSize)",
         libraryDirectoryPaperNodeFontSize: "var(--libraryDirectoryPaperNodeFontSize)",
         libraryDirectorySectionNodeFontSize: "var(--libraryDirectorySectionNodeFontSize)",
-
+        templateDetailsPanelPreferenceFontSize: "var(--templateDetailsPanelPreferenceFontSize)",
+        templateDetailsPanelPreferenceInputFontSize: "var(--templateDetailsPanelPreferenceInputFontSize)",
       },
       fontFamily: {
         heading: [

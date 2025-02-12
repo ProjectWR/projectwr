@@ -78,6 +78,14 @@
     --libraryDirectoryBookNodeIconSize: 2rem;
     --libraryDirectoryPaperNodeIconSize: 2rem;
     --libraryDirectorySectionNodeIconSize: 2rem;
+
+    --templateDetailsPanelDeviceHeaderHeight: 4rem;
+    --templateDetailsPanelSectionHeaderHeight: 4rem;
+    --templateDetailsPreferenceInputHeight: 2.7rem;
+    --templateDetailsPreferenceLabelWidth: 15rem;
+    --templateDetailsPreferencesColorInputSize: 1.8rem;
+    --templateDetailsPanelPreferenceFontSize: 1.2rem;
+    --templateDetailsPanelPreferenceInputFontSize: 1.2rem;
   }
   .dark {
     --appBackground: 0 0% 8.9%;

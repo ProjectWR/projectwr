@@ -346,7 +346,7 @@ const TiptapEditor = ({
         }}
         className={`
             w-full min-w-0
-            no-scrollbar ${isMobile ? "order-last" : "order-first"}
+            ${isMobile ? "order-last" : "order-first"}
           `}
       >
         <TipTapToolbar
@@ -359,7 +359,7 @@ const TiptapEditor = ({
         className={`flex-grow w-full flex justify-center 
            overflow-y-scroll min-h-0 text-neutral-200 z-1 ${
              isMobile
-               ? "no-scrollbar border-white"
+               ? "pl-[0.75rem]  border-white"
                : "pl-[0.75rem] border-t border-white"
            }`}
       >

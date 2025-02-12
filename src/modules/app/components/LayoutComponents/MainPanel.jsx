@@ -114,10 +114,12 @@ const MainPanel = ({}) => {
       if (templateId !== "unselected") {
         key.current = "templateDetails-" + templateId + "-" + templateMode;
         if (templateMode === "details") {
-          return <TemplateDetailsPanel templateId={templateId} />;
+          return (
+            <TemplateDetailsPanel templateId={templateId} key={templateId} />
+          );
         }
         if (templateMode === "preview") {
-          return <TemplateViewPanel templateId={templateId} />;
+          return <TemplateViewPanel templateId={templateId} key={templateId} />;
         }
       }
 
