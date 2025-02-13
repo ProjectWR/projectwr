@@ -7,6 +7,7 @@ import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
+import itemLocalStateManager from "../../../lib/itemLocalState";
 
 /**
  *
@@ -33,12 +34,35 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
     ytree.getNodeChildrenFromKey(itemId)
   );
 
-  // "areaSelected" determines the hover area: top, middle, or bottom.
-  const [areaSelected, setAreaSelected] = useState("top");
-  const [isSelfSelected, setIsSelfSelected] = useState(false);
-  const [isAncestor, setIsAncestor] = useState(false);
+  const [isOpened, setIsOpened] = useState(
+    itemLocalStateManager.isItemOpened(itemId)
+  );
 
-  const [isOpened, setIsOpened] = useState(false);
+  useEffect(() => {
+    const updateisOpened = (isOpened) => {
+      setIsOpened(isOpened);
+    };
+
+    const itemMap = itemMapRef.current;
+    const type = itemMap.get("type");
+
+    if (!itemLocalStateManager.hasItemLocalState(itemId)) {
+      itemLocalStateManager.createItemLocalState(itemId, {
+        type: type,
+        props: {},
+      });
+    }
+
+    if (type === "section" || type === "book") {
+      itemLocalStateManager.on(itemId, updateisOpened);
+    }
+
+    return () => {
+      if (type === "section" || type === "book") {
+        itemLocalStateManager.off(itemId, updateisOpened);
+      }
+    };
+  }, [itemId]);
 
   // Update the header label (title) and children when the underlying Yjs node changes.
   useEffect(() => {
@@ -56,11 +80,13 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
   const onCreateSectionClick = useCallback(() => {
     dataManagerSubdocs.createEmptySection(ytree, itemId);
     setIsOpened(true);
+    itemLocalStateManager.setItemOpened(itemId, true);
   }, [ytree, itemId]);
 
   const onCreatePaperClick = useCallback(() => {
     dataManagerSubdocs.createEmptyPaper(ytree, itemId);
     setIsOpened(true);
+    itemLocalStateManager.setItemOpened(itemId, true);
   }, [ytree, itemId]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -73,6 +99,11 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
       isDragging: monitor.isDragging(),
     }),
   }));
+
+  // "areaSelected" determines the hover area: top, middle, or bottom.
+  const [areaSelected, setAreaSelected] = useState("top");
+  const [isSelfSelected, setIsSelfSelected] = useState(false);
+  const [isAncestor, setIsAncestor] = useState(false);
 
   const [{ isOverCurrent }, drop] = useDrop({
     accept: "ITEM",
@@ -260,7 +291,9 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
             <button
               className="flex-grow flex items-center justify-start h-full pl-2"
               onClick={() => {
-                setIsOpened(!isOpened);
+                const newOpenedState = !isOpened;
+                setIsOpened(newOpenedState);
+                itemLocalStateManager.setItemOpened(itemId, newOpenedState);
               }}
             >
               <motion.span

@@ -137,7 +137,7 @@ const LibraryDirectory = ({ libraryId }) => {
             sortedChildrenState.length > 0 &&
             sortedChildrenState.map((bookId) => (
               <motion.div
-                id={`BookNode-${bookId}`}
+                id={`Node-${bookId}`}
                 key={bookId}
                 className="w-full h-fit"
                 initial={{ opacity: 0 }}
