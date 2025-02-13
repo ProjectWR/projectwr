@@ -1,28 +1,36 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { templateStore } from "../../../stores/templateStore";
 import { appStore } from "../../../stores/appStore";
 import templateManager from "../../../lib/templates";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "../../../../editor/TIpTapEditor/TipTapEditorDefaultPreferences";
+import { equalityDeep } from "lib0/function";
 
 const TemplateManager = () => {
+  console.log("Template Manager was rendered");
   const { deviceType } = useDeviceType();
-  const [templates, setTemplates] = useState(templateManager.getTemplates());
 
-  // Handle template changes (added, removed, updated)
-  const handleTemplateChange = useCallback((eventType, template) => {
-    console.log(`Template change detected: Event = ${eventType}`, template);
-    setTemplates(templateManager.getTemplates());
-  }, []);
+  const prevTemplatesRef = useRef(null);
+  
+  const templates = useSyncExternalStore(
+    (callback) => {
+      templateManager.addCallback(callback);
 
-  // Add callback to listen for template changes
-  useEffect(() => {
-    templateManager.addCallback(handleTemplateChange);
-
-    return () => {
-      templateManager.removeCallback(handleTemplateChange);
-    };
-  }, [handleTemplateChange]);
+      return () => {
+        templateManager.removeCallback(callback);
+      };
+    },
+    () => {
+      const templates = templateManager.getTemplates();
+      if (prevTemplatesRef.current !== null && prevTemplatesRef.current !== undefined && equalityDeep(prevTemplatesRef.current, templates)) {
+        return prevTemplatesRef.current;
+      }
+      else {
+        prevTemplatesRef.current = templates;
+        return prevTemplatesRef.current;
+      }
+    }
+  );
 
   // Create a new template
   const handleCreateTemplate = () => {
