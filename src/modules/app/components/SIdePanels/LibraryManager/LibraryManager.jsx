@@ -1,85 +1,85 @@
-import { useCallback, useEffect, useState } from "react";
-import { sortArrayByOrder } from "../../../utils/orderUtil";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import {
+  sortArrayByOrder,
+  sortArrayWithPropsByOrder,
+} from "../../../utils/orderUtil";
 import LibraryManagerNode from "./LibraryManagerNode";
 import dataManagerSubdocs, {
   getArrayFromYDocMap,
 } from "../../../lib/dataSubDoc";
 import { YMapEvent } from "yjs";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-
+import { useY } from "react-yjs";
+import { equalityDeep, equalityFlat } from "lib0/function";
 
 // TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
+  console.log("Library Manager Node was rendered");
   const { deviceType } = useDeviceType();
 
-  const [libraryIds, setLibraryIds] = useState(
-    getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap)
-  );
+  const prevLibraryIdsWithPropsRef = useRef(null);
 
-  const [sortedLibraryIds, setSortedLibraryIds] = useState(
-    sortArrayByOrder([...libraryIds])
-  );
-
-  const handleLibraryYDocMapChange = useCallback((action, key, value) => {
-    console.log(
-      `Change detected: Action = ${action}, Key = ${key}, Value =`,
-      value
-    );
-
-    setLibraryIds(getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap));
-  }, []);
-
-  useEffect(() => {
-    handleLibraryYDocMapChange();
-    dataManagerSubdocs.addLibraryYDocMapCallback(handleLibraryYDocMapChange);
-
-    return () => {
-      dataManagerSubdocs.removeLibraryYDocMapCallback(
-        handleLibraryYDocMapChange
-      );
-    };
-  }, [handleLibraryYDocMapChange]);
-
-  useEffect(() => {
-    setSortedLibraryIds(
-      sortArrayByOrder(getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap))
-    );
-    /**
-     *
-     * @param {YMapEvent} event
-     */
-    const callback = (event) => {
-      console.log("CALLBACKED!!");
-      if (!event.changes.keys.has("order_index")) return;
-
-      setSortedLibraryIds(
-        sortArrayByOrder(getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap))
-      );
-      console.log("sorted library ids: ", sortedLibraryIds);
-    };
-
-    console.log("libraryIDs: ", libraryIds, dataManagerSubdocs.libraryYDocMap);
-
-    for (const [libraryId] of libraryIds.values()) {
-      console.log(
-        dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-      );
-
-      dataManagerSubdocs
-        .getLibrary(libraryId)
-        .getMap("library_props")
-        .observe(callback);
-    }
-
-    return () => {
+  const libraryIdsWithProps = useSyncExternalStore(
+    (callback) => {
+      dataManagerSubdocs.addLibraryYDocMapCallback(callback);
+      const libraryIds = getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap);
       for (const [libraryId] of libraryIds.values()) {
         dataManagerSubdocs
           .getLibrary(libraryId)
           .getMap("library_props")
-          .unobserve(callback);
+          .observe(callback);
       }
-    };
-  }, [libraryIds]);
+
+      return () => {
+        dataManagerSubdocs.removeLibraryYDocMapCallback(callback);
+        for (const [libraryId] of libraryIds.values()) {
+          dataManagerSubdocs
+            .getLibrary(libraryId)
+            .getMap("library_props")
+            .unobserve(callback);
+        }
+      };
+    },
+    () => {
+      const libraryIds = getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap);
+
+      const libraryIdsWithProps = [];
+      for (const [libraryId] of libraryIds) {
+        libraryIdsWithProps.push([
+          libraryId,
+          dataManagerSubdocs
+            .getLibrary(libraryId)
+            .getMap("library_props")
+            .toJSON(),
+        ]);
+      }
+
+      console.log("library Ids with props: ", libraryIdsWithProps);
+
+      if (
+        prevLibraryIdsWithPropsRef.current !== null &&
+        prevLibraryIdsWithPropsRef.current !== undefined &&
+        equalityDeep(prevLibraryIdsWithPropsRef.current, libraryIdsWithProps)
+      ) {
+        return prevLibraryIdsWithPropsRef.current;
+      } else {
+        prevLibraryIdsWithPropsRef.current = libraryIdsWithProps;
+        return prevLibraryIdsWithPropsRef.current;
+      }
+    }
+  );
+
+  const sortedLibraryIds = useMemo(
+    () => sortArrayWithPropsByOrder([...libraryIdsWithProps]),
+    [libraryIdsWithProps]
+  );
 
   return (
     <div id="LibraryManagerContainer" className={`h-full w-full flex flex-col`}>
@@ -99,7 +99,6 @@ const LibraryManager = () => {
         >
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
         </button>
-
       </div>
 
       <div
@@ -114,7 +113,7 @@ const LibraryManager = () => {
         >
           {sortedLibraryIds.length > 0 &&
             sortedLibraryIds.map(
-              ([libraryId, ], index) =>
+              ([libraryId], index) =>
                 dataManagerSubdocs.getLibrary(libraryId) && (
                   <div
                     key={libraryId}

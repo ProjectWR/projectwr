@@ -118,6 +118,23 @@ export function sortArrayByOrder(array) {
 }
 
 /**
+ * Constructs an ordered array of objects based on their positions.
+ *
+ * @param {[[string, {}]]} array - The array of objects to be ordered.
+ * @returns {[[string, {}]]} - An array of objects sorted by their positions.
+ */
+export function sortArrayWithPropsByOrder(array) {
+  return array.sort((a, b) => {
+    // Sort by position using the object identifier as a tie-breaker
+    if (a[1]['order_index'] < b[1]['order_index']) return -1;
+    if (a[1]['order_index'] > b[1]['order_index']) return 1;
+    if (a[0] < b[0]) return -1;
+    if (a[0] > b[0]) return 1;
+    return 0;
+  });
+}
+
+/**
  * gets the highest order index in the array
  *
  * @param {[[]]} array -

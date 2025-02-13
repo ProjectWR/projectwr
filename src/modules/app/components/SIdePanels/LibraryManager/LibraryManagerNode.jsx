@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDrag, useDrop } from "react-dnd";
 import {
@@ -35,8 +35,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
   const [isTopSelected, setIsTopSelected] = useState(false);
   const [isSelfSelected, setIsSelfSelected] = useState(false);
-
-  const [isOpened, setIsOpened] = useState(false);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "LIBRARY",
@@ -204,4 +202,4 @@ LibraryManagerNode.propTypes = {
   className: PropTypes.string,
 };
 
-export default LibraryManagerNode;
+export default React.memo(LibraryManagerNode);
