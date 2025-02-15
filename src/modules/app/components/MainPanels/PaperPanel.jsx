@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
@@ -17,6 +17,9 @@ const PaperPanel = ({ ytree, paperId}) => {
   console.log("library details panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
+  const setItemId = libraryStore((state) => state.setItemId);
+  const [headerOpened, setHeaderOpened] = useState(true);
 
   useEffect(() => {
     setShowActivityBar(false);
@@ -26,18 +29,13 @@ const PaperPanel = ({ ytree, paperId}) => {
     };
   }, [setShowActivityBar]);
 
-  const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const setItemId = libraryStore((state) => state.setItemId);
+  const [paperProperties, setPaperProperties] = useState({
+    item_title: "",
+  });
 
   const paperMapState = useYMap(ytree.getNodeValueFromKey(paperId));
 
   console.log("Paper Props Map STATE: ", paperMapState);
-
-  const [headerOpened, setHeaderOpened] = useState(true);
-
-  const [paperProperties, setPaperProperties] = useState({
-    item_title: "",
-  });
 
   const original_title = useRef(paperMapState.item_title);
 

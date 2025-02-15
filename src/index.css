@@ -86,6 +86,8 @@
     --templateDetailsPreferencesColorInputSize: 1.8rem;
     --templateDetailsPanelPreferenceFontSize: 1.2rem;
     --templateDetailsPanelPreferenceInputFontSize: 1.2rem;
+
+    --loadingSpinnerSize: 5rem;
   }
   .dark {
     --appBackground: 0 0% 8.9%;

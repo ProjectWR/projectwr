@@ -111,7 +111,7 @@ function GroupEditor({ config, data, onChange }) {
                 <div className="h-templateDetailsPreferencesColorInputSize w-templateDetailsPreferencesColorInputSize">
                   <ColorPicker
                     color={data[key]}
-                    onChangeComplete={(color) => handleChange(key, color.hex)}
+                    onChangeComplete={(color) => handleChange(key, color)}
                   />
                 </div>
               </div>
@@ -189,6 +189,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
 
   // Update a subgroup in template_content by calling setNewTemplate.
   const handleGroupChange = (groupKey, subGroupKey, newData) => {
+    console.log("new Template", newTemplate);
     setNewTemplate((prev) => ({
       ...prev,
       template_content: {

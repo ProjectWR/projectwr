@@ -88,6 +88,8 @@ export default {
         templateDetailsPreferenceInputHeight: "var(--templateDetailsPreferenceInputHeight)",
         templateDetailsPreferenceLabelWidth: "var(--templateDetailsPreferenceLabelWidth)",
         templateDetailsPreferencesColorInputSize: "var(--templateDetailsPreferencesColorInputSize)",
+        loadingSpinnerSize: "var(--loadingSpinnerSize)",
+
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",
