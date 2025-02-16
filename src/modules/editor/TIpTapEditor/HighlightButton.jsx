@@ -18,6 +18,20 @@ const colors = [
 const HighlightButton = ({ editor, toolbarPreferences }) => {
   const { deviceType } = useDeviceType();
 
+  const {
+    toolbarHeight,
+    toolbarButtonHeight,
+    marginTop,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    buttonHeight,
+    buttonWidth,
+    backgroundColor,
+    buttonColor,
+    dividerColor,
+  } = toolbarPreferences;
+
   const [lastPickedColor, setLastPickedColor] = useState(colors[0]);
   const [isOpened, setIsOpened] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
@@ -34,20 +48,6 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
       setLastPickedColor(editor.getAttributes("highlight").color);
   }, [editor]);
 
-  const {
-    toolbarHeight,
-    toolbarButtonHeight,
-    marginTop,
-    marginBottom,
-    marginLeft,
-    marginRight,
-    buttonHeight,
-    buttonWidth,
-    backgroundColor,
-    buttonColor,
-    dividerColor,
-  } = toolbarPreferences;
-
   useEffect(() => {
     if (!editor) {
       console.log("No Editor");
@@ -61,6 +61,7 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
     };
   }, [editor, onSelectionUpdate]);
 
+  // This is a bad use of useEffect, need to change this to useMemo. 
   useEffect(() => {
     if (isOpened && headerRef.current && dropdownRef.current) {
       const headerRect = headerRef.current.getBoundingClientRect();

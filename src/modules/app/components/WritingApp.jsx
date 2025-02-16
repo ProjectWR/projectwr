@@ -81,7 +81,6 @@ const WritingApp = () => {
           console.log("Before persistence: ", ydoc.guid, ydoc);
           await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
           console.log(ydoc.guid, ydoc);
-          setLoading(false);
         }
 
         const libraries = await userLibraryStore.entries();
@@ -89,6 +88,7 @@ const WritingApp = () => {
         console.log("libraries: ", libraries);
 
         // Set loading to false once everything is loaded
+        setLoading(false);
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -98,7 +98,9 @@ const WritingApp = () => {
     initializeApp();
   }, [setDefaultSettings, setSettings, setLibraryListStore]);
 
-  useEffect(() => {}, [settings]);
+  useEffect(() => {
+    
+  }, [settings]);
 
   // Render loading screen if loading is true
   return (

@@ -82,10 +82,10 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: uuid });
 
     const libraryPropertiesYMap = ydoc.getMap("library_props");
-    libraryPropertiesYMap.set("library_name", "Library Name");
+    libraryPropertiesYMap.set("library_name", "New library name");
     libraryPropertiesYMap.set(
       "library_description",
-      "Library Description"
+      "New library description"
     );
 
     libraryPropertiesYMap.set(
@@ -107,6 +107,8 @@ class DataManagerSubdocs {
       await librariesStore.set(uuid, "");
       console.log("set library in store");
     })();
+
+    return uuid;
   }
 
   /**

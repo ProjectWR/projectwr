@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDrag, useDrop } from "react-dnd";
 import {
@@ -12,6 +12,8 @@ import dataManagerSubdocs, {
 } from "../../../lib/dataSubDoc";
 import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
+import { AnimatePresence, motion } from "motion/react";
+import { max, min } from "lib0/math";
 
 /**
  *
@@ -19,6 +21,8 @@ import { appStore } from "../../../stores/appStore";
  * @returns
  */
 const LibraryManagerNode = ({ libraryId, className }) => {
+  console.log("library node rendered: ", libraryId);
+
   const setLibraryId = libraryStore((state) => state.setLibraryId);
   const setItemId = libraryStore((state) => state.setItemId);
 
@@ -28,13 +32,22 @@ const LibraryManagerNode = ({ libraryId, className }) => {
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
   );
 
-  console.log("library node rendered: ", libraryId, libraryPropsMapRef.current);
   const ref = useRef(null);
+
+  const textContainerRef = useRef(null);
+  const textRef = useRef(null);
+  const [fontSize, setFontSize] = useState(
+    getComputedStyle(document.documentElement).getPropertyValue(
+      "--libraryManagerNodeText"
+    )
+  );
 
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
   const [isTopSelected, setIsTopSelected] = useState(false);
   const [isSelfSelected, setIsSelfSelected] = useState(false);
+
+  const [isDoorOpen, setIsDoorOpen] = useState(false);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "LIBRARY",
@@ -138,6 +151,49 @@ const LibraryManagerNode = ({ libraryId, className }) => {
   });
   drag(drop(ref));
 
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (textContainerRef.current && textRef.current) {
+        const containerWidth = textContainerRef.current.offsetWidth - 20;
+        const textWidth = textRef.current.scrollWidth;
+
+        console.log("widths: ", containerWidth, textWidth);
+
+        // Decrease/Increase the font size until the text fits
+        let newFontSize = parseFloat(fontSize);
+
+        newFontSize = newFontSize * (containerWidth / textWidth);
+
+        newFontSize = min(
+          newFontSize,
+          parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--libraryManagerNodeText"
+            )
+          )
+        );
+
+        newFontSize = max(newFontSize, 0.8);
+
+        console.log("new Font size: ", newFontSize);
+
+        setFontSize(`${newFontSize}rem`);
+      }
+    };
+
+    checkOverflow();
+
+    const observer = new ResizeObserver(checkOverflow);
+    if (textContainerRef.current) {
+      observer.observe(textContainerRef.current);
+    }
+    return () => {
+      if (textContainerRef.current) {
+      observer.unobserve(textContainerRef.current);
+      }
+    };
+  }, [fontSize]);
+
   return (
     <div
       ref={ref}
@@ -145,7 +201,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         w-full h-full
         library-${libraryId}  
 
-        transition-all ease-in-out duration-200
+        transition-colors ease-in-out duration-200
 
         ${isDragging ? "opacity-20" : ""} 
         
@@ -162,10 +218,10 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         ${className}
       `}
     >
-      <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-200">
+      <div className="w-full max-w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 ease-out">
         <button
           className={
-            "flex-grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-200"
+            "flex-grow min-w-0 h-full flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-100"
           }
           onClick={() => {
             console.log("Library Entry when clicked: ", libraryPropsMapState);
@@ -173,16 +229,54 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             setItemId("unselected");
             setPanelOpened(true);
           }}
+          onMouseEnter={() => {
+            setIsDoorOpen(true);
+          }}
+          onMouseLeave={() => {
+            setIsDoorOpen(false);
+          }}
         >
-          <div className="flex items-center gap-2">
-            <span className="icon-[arcticons--khatabook] h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize transition-colors duration-100"></span>
-            <p className="transition-colors duration-100">
+          <div className="relative h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize min-w-libraryManagerNodeIconSize">
+            <AnimatePresence mode="sync">
+              {isDoorOpen && (
+                <motion.span
+                  initial={{ opacity: 0.6 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0.6 }}
+                  transition={{ duration: 0.1 }}
+                  key="doorOpen"
+                  className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                ></motion.span>
+              )}
+
+              {!isDoorOpen && (
+                <motion.span
+                  initial={{ opacity: 0.6 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0.6 }}
+                  transition={{ duration: 0.1 }}
+                  key="doorClose"
+                  className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                ></motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div
+            ref={textContainerRef}
+            style={{ fontSize }}
+            className="flex-grow min-w-0 flex justify-start items-center  transition-colors duration-100 pb-px ml-3"
+          >
+            <p
+              className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+              ref={textRef}
+            >
               {libraryPropsMapState.library_name}
             </p>
           </div>
         </button>
         <button
-          className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth px-2 rounded-full m-2 hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-200"
+          className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth min-w-libraryManagerNodeEditButtonWidth px-2 rounded-full m-2  text-appLayoutTextMuted hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-100 ease-out"
           onClick={() => {
             setLibraryId(libraryId);
             setItemId("unselected");

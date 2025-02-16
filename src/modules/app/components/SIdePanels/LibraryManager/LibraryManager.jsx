@@ -18,11 +18,16 @@ import { YMapEvent } from "yjs";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { useY } from "react-yjs";
 import { equalityDeep, equalityFlat } from "lib0/function";
+import { libraryStore } from "../../../stores/libraryStore";
+import { appStore } from "../../../stores/appStore";
 
 // TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
   console.log("Library Manager Node was rendered");
   const { deviceType } = useDeviceType();
+
+  const setLibraryId = libraryStore((state) => state.setLibraryId);
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const prevLibraryIdsWithPropsRef = useRef(null);
 
@@ -85,16 +90,21 @@ const LibraryManager = () => {
     <div id="LibraryManagerContainer" className={`h-full w-full flex flex-col`}>
       <div
         id="LibraryManagerHeader"
-        className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow`}
+        className={`flex items-center justify-start gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow`}
       >
-        <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-libraryManagerHeaderText text-neutral-300 order-2">
+        <span className="icon-[ion--library-sharp] ml-3 h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize"></span>
+        
+        <h1 className="h-fit flex-grow pt-1 text-libraryManagerHeaderText text-neutral-300 order-2">
           Your Libraries
         </h1>
+
+
         <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center order-4
+          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize text-appLayoutTextMuted transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
  `}
           onClick={() => {
-            dataManagerSubdocs.createEmptyLibrary();
+            setLibraryId(dataManagerSubdocs.createEmptyLibrary());
+            setPanelOpened(false);
           }}
         >
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
