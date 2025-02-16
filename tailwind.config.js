@@ -90,6 +90,8 @@ export default {
         templateDetailsPreferencesColorInputSize: "var(--templateDetailsPreferencesColorInputSize)",
         loadingSpinnerSize: "var(--loadingSpinnerSize)",
 
+        optionsDropdownWidth: "var(--optionsDropdownWidth)",
+        optionsDropdownOptionHeight: "var(--optionsDropdownOptionHeight)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",
@@ -104,6 +106,8 @@ export default {
         libraryDirectorySectionNodeFontSize: "var(--libraryDirectorySectionNodeFontSize)",
         templateDetailsPanelPreferenceFontSize: "var(--templateDetailsPanelPreferenceFontSize)",
         templateDetailsPanelPreferenceInputFontSize: "var(--templateDetailsPanelPreferenceInputFontSize)",
+        optionsDropdownOptionFont: "var(--optionsDropdownOptionFont)",
+
       },
       fontFamily: {
         heading: [

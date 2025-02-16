@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @extends Map
+ */
 export default class ObservableMap extends Map {
     constructor() {
         super();

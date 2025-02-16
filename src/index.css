@@ -88,6 +88,10 @@
     --templateDetailsPanelPreferenceInputFontSize: 1.2rem;
 
     --loadingSpinnerSize: 5rem;
+
+    --optionsDropdownWidth: 12rem;
+    --optionsDropdownOptionHeight: 2.5rem;
+    --optionsDropdownOptionFont: 1.2rem;
   }
   .dark {
     --appBackground: 0 0% 8.9%;

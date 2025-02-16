@@ -82,10 +82,10 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: uuid });
 
     const libraryPropertiesYMap = ydoc.getMap("library_props");
-    libraryPropertiesYMap.set("library_name", "New library name");
+    libraryPropertiesYMap.set("library_name", `Untitled Library #${this.libraryYDocMap.size}`);
     libraryPropertiesYMap.set(
       "library_description",
-      "New library description"
+      ""
     );
 
     libraryPropertiesYMap.set(

@@ -173,7 +173,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
           )
         );
 
-        newFontSize = max(newFontSize, 0.8);
+        newFontSize = max(newFontSize, 1);
 
         console.log("new Font size: ", newFontSize);
 
@@ -189,7 +189,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
     }
     return () => {
       if (textContainerRef.current) {
-      observer.unobserve(textContainerRef.current);
+        observer.unobserve(textContainerRef.current);
       }
     };
   }, [fontSize]);
