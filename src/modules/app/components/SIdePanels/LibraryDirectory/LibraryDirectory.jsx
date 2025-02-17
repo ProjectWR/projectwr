@@ -149,27 +149,6 @@ const LibraryDirectory = ({ libraryId }) => {
             {libraryPropsMapState.library_name}
           </p>
         </div>
-        {/* <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center order-5
- `}
-          onClick={() => {
-            console.log("Create Book!");
-            dataManagerSubdocs.createEmptyBook(libraryYTreeRef.current);
-          }}
-        >
-          <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-        </button> */}
-
-        {/* <button
-          className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth px-2 rounded-full hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-200 order-4"
-          onClick={() => {
-            setLibraryId(libraryId);
-            setItemId("unselected");
-            setPanelOpened(false);
-          }}
-        >
-          <span className="icon-[mdi--edit-outline] h-full w-full transition-colors duration-100"></span>
-        </button> */}
 
         <OptionsButton
           className={`order-5`}
@@ -199,7 +178,7 @@ const LibraryDirectory = ({ libraryId }) => {
         />
 
         <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
              order-1
           `}
           onClick={() => {
@@ -213,7 +192,7 @@ const LibraryDirectory = ({ libraryId }) => {
       </div>
       <div
         id="libraryDirectoryBody"
-        className={`flex-grow w-full overflow-y-scroll ${
+        className={`flex-grow w-full overflow-y-scroll px-2 ${
           deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
         }`}
       >
@@ -273,7 +252,7 @@ const OptionsButton = ({ options, className }) => {
           setIsOpened(!isOpened);
         }}
       >
-        <span className="icon-[lineicons--menu-hamburger-1] h-full w-full"></span>
+        <span className="icon-[line-md--menu] h-full w-full"></span>
       </button>
       <AnimatePresence>
         {isOpened && (
@@ -281,7 +260,7 @@ const OptionsButton = ({ options, className }) => {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ease: "easeOut", duration: 0.1}}
+            transition={{ ease: "easeOut", duration: 0.1 }}
             className="absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow top-0 right-0 origin-top-right"
           >
