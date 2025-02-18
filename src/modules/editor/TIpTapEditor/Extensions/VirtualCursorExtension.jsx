@@ -1,4 +1,5 @@
 import { Extension } from "@tiptap/core";
+import { max } from "lib0/math";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 

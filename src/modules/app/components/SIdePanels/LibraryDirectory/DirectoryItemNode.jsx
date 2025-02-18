@@ -539,13 +539,13 @@ const OptionsButton = ({ options, className }) => {
                   setIsOpened(false);
                   option.callback();
                 }}
-                className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 gap-px
+                className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 py-1 gap-px
                            hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight transition-colors duration-200"
               >
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}
                 </span>
-                <span className="flex-grow h-full text-optionsDropdownOptionFont flex items-center justify-start">
+                <span className="flex-grow pl-1 h-full text-optionsDropdownOptionFont flex items-center justify-start">
                   {option.label}
                 </span>
               </motion.button>

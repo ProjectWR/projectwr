@@ -13,7 +13,7 @@ import { AnimatePresence, motion } from "motion/react";
  * @param {{ytree: YTree, paperId: string}} param0
  * @returns
  */
-const PaperPanel = ({ ytree, paperId}) => {
+const PaperPanel = ({ ytree, paperId }) => {
   console.log("library details panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
@@ -124,6 +124,7 @@ const PaperPanel = ({ ytree, paperId}) => {
         className="w-full flex-grow min-h-0 min-w-0 basis-0"
       >
         <TipTapEditor
+          key={paperId}
           yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
           setHeaderOpened={setHeaderOpened}
         />

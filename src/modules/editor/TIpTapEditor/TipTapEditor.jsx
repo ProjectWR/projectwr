@@ -42,77 +42,6 @@ const TiptapEditor = ({
 }) => {
   console.log("Tiptap Editor Rendering");
 
-  const extensions = useMemo(() => {
-    return [
-      Document,
-      Paragraph,
-      Text,
-      Collaboration.configure({
-        fragment: yXmlFragment,
-      }),
-      VirtualCursor,
-      TabIndentExtension.configure({
-        spaces: 8,
-      }),
-      Strike,
-      Bold,
-      Italic,
-      Underline,
-      Subscript,
-      Superscript,
-      TextStyle.configure({ mergeNestedSpanStyles: true }),
-      Highlight.configure({ multicolor: true }),
-      Blockquote,
-      ListItem,
-      BulletList,
-      OrderedList,
-      HardBreak,
-      Heading.configure({
-        levels: [1, 2, 3, 4, 5],
-      }),
-      HorizontalRule,
-      Image,
-      Typography,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-    ];
-  }, [yXmlFragment]);
-
-  const previewTemplateExtensions = useMemo(() => {
-    return [
-      Document,
-      Paragraph,
-      Text,
-      VirtualCursor,
-      TabIndentExtension.configure({
-        spaces: 8,
-      }),
-      Strike,
-      Bold,
-      Italic,
-      Underline,
-      Subscript,
-      Superscript,
-      TextStyle.configure({ mergeNestedSpanStyles: true }),
-      Highlight.configure({ multicolor: true }),
-      Blockquote,
-      ListItem,
-      BulletList,
-      OrderedList,
-      HardBreak,
-      Heading.configure({
-        levels: [1, 2, 3, 4, 5],
-      }),
-      HorizontalRule,
-      Image,
-      Typography,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-    ];
-  }, []);
-
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
 
@@ -124,6 +53,109 @@ const TiptapEditor = ({
   const [editorPreferencesState, setEditorPreferencesState] = useState(
     preferences || defaultPreferences
   );
+
+  const {
+    fontSize,
+    lineHeight,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+
+    h1FontSize,
+    h1LineHeight,
+    h1MarginBottom,
+
+    h2FontSize,
+    h2LineHeight,
+    h2MarginBottom,
+
+    h3FontSize,
+    h3LineHeight,
+    h3MarginBottom,
+
+    h4FontSize,
+    h4LineHeight,
+    h4MarginBottom,
+
+    h5FontSize,
+    h5LineHeight,
+    h5MarginBottom,
+
+    listPaddingLeft,
+    listMarginTop,
+    listMarginBottom,
+    hrMarginTop,
+    hrMarginBottom,
+    hrBorderColor,
+  } = editorPreferencesState.paperPreferences;
+
+  const extensions = useRef([
+    Document,
+    Paragraph,
+    Text,
+    Collaboration.configure({
+      fragment: yXmlFragment,
+    }),
+    VirtualCursor,
+    TabIndentExtension.configure({
+      spaces: 8,
+    }),
+    Strike,
+    Bold,
+    Italic,
+    Underline,
+    Subscript,
+    Superscript,
+    TextStyle.configure({ mergeNestedSpanStyles: true }),
+    Highlight.configure({ multicolor: true }),
+    Blockquote,
+    ListItem,
+    BulletList,
+    OrderedList,
+    HardBreak,
+    Heading.configure({
+      levels: [1, 2, 3, 4, 5],
+    }),
+    HorizontalRule,
+    Image,
+    Typography,
+    TextAlign.configure({
+      types: ["heading", "paragraph"],
+    }),
+  ]);
+
+  const previewTemplateExtensions = useRef([
+    Document,
+    Paragraph,
+    Text,
+    VirtualCursor,
+    TabIndentExtension.configure({
+      spaces: 8,
+    }),
+    Strike,
+    Bold,
+    Italic,
+    Underline,
+    Subscript,
+    Superscript,
+    TextStyle.configure({ mergeNestedSpanStyles: true }),
+    Highlight.configure({ multicolor: true }),
+    Blockquote,
+    ListItem,
+    BulletList,
+    OrderedList,
+    HardBreak,
+    Heading.configure({
+      levels: [1, 2, 3, 4, 5],
+    }),
+    HorizontalRule,
+    Image,
+    Typography,
+    TextAlign.configure({
+      types: ["heading", "paragraph"],
+    }),
+  ]);
 
   useEffect(() => {
     const container = document.getElementById("EditableContainer");
@@ -148,7 +180,9 @@ const TiptapEditor = ({
     {
       content: mode === "previewTemplate" ? loremIpsum : content,
       extensions:
-        mode === "previewTemplate" ? previewTemplateExtensions : extensions,
+        mode === "previewTemplate"
+          ? previewTemplateExtensions.current
+          : extensions.current,
       immediatelyRender: true,
       shouldRerenderOnTransaction: false,
       onSelectionUpdate({ editor }) {
@@ -159,7 +193,7 @@ const TiptapEditor = ({
         }
         updateVirtualCursor(
           editor,
-          editorPreferencesState.paperPreferences.fontSize
+          fontSize + 2
         );
       },
       onFocus({ editor }) {
@@ -170,7 +204,7 @@ const TiptapEditor = ({
         }
         updateVirtualCursor(
           editor,
-          editorPreferencesState.paperPreferences.fontSize
+          fontSize + 2
         );
       },
       onBlur({ editor }) {
@@ -182,7 +216,7 @@ const TiptapEditor = ({
         if (selection.empty) {
           updateVirtualCursor(
             editor,
-            editorPreferencesState.paperPreferences.fontSize
+            fontSize + 2
           );
         } else {
           editor.commands.hideVirtualCursor();
@@ -236,42 +270,6 @@ const TiptapEditor = ({
       isAlign: editor.isActive("textAlign"),
     }),
   });
-
-  const {
-    fontSize,
-    lineHeight,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
-
-    h1FontSize,
-    h1LineHeight,
-    h1MarginBottom,
-
-    h2FontSize,
-    h2LineHeight,
-    h2MarginBottom,
-
-    h3FontSize,
-    h3LineHeight,
-    h3MarginBottom,
-
-    h4FontSize,
-    h4LineHeight,
-    h4MarginBottom,
-
-    h5FontSize,
-    h5LineHeight,
-    h5MarginBottom,
-
-    listPaddingLeft,
-    listMarginTop,
-    listMarginBottom,
-    hrMarginTop,
-    hrMarginBottom,
-    hrBorderColor,
-  } = editorPreferencesState.paperPreferences;
 
   return (
     <div id="EditorContainer" className="h-full w-full flex flex-col">
@@ -428,10 +426,13 @@ const updateVirtualCursor = (editor, fontSize) => {
       const computedStyle = getComputedStyle(anchorNode);
       fontSize = parseFloat(computedStyle.fontSize) || fontSize;
     } else {
+      console.log("HERRE IN UPDATE VIRTUAL CURSOR: ");
       const computedStyle = getComputedStyle(anchorNode.parentElement);
       fontSize = parseFloat(computedStyle.fontSize) || fontSize;
     }
   }
+
+  console.log("Font size in uvc: ", fontSize);
 
   editor.commands.addVirtualCursor({
     top: coords.top - editableRect.top,

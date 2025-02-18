@@ -141,6 +141,7 @@ class DataManagerSubdocs {
     sectionMap.set("item_title", "Section Title");
     sectionMap.set("section_description", "Section Description")
     ytree.createNode(bookId, uuid, sectionMap);
+    return uuid;
   }
 
   /**
@@ -156,6 +157,7 @@ class DataManagerSubdocs {
     paperMap.set("item_title", "Paper Title");
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
+    return uuid;
   }
 }
 
