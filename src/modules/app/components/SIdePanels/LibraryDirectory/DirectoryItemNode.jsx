@@ -433,6 +433,9 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 return "";
               })()}
               `}
+              buttonIcon={
+                <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
+              }
             />
           </>
         )}
@@ -490,17 +493,62 @@ DirectoryItemNode.propTypes = {
 
 export default DirectoryItemNode;
 
-const OptionsButton = ({ options, className }) => {
+const OptionsButton = ({
+  options,
+  className,
+  buttonIcon,
+  origin = "topRight",
+}) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const buttonContainerRef = useOuterClick(() => {
     setIsOpened(false);
   });
 
+  const buttonRef = useRef(null);
+
+  const [shouldDropdownGoUp, setShouldDropdownGoUp] = useState(false);
+  const [top, setTop] = useState(0);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpened) {
+      if (dropdownRef.current) {
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const dropdownRect = dropdownRef.current.getBoundingClientRect();
+        const containerRect = document
+          .querySelector("#libraryDirectoryBody")
+          .getBoundingClientRect();
+
+        console.log("all rects: ", buttonRect, dropdownRect, containerRect);
+
+        console.log("button rect something: ", buttonRect.top + window.scrollY);
+
+        const bottomLimit = containerRect.bottom;
+        const bottomOfDropdown =
+          buttonRect.top + window.scrollY + dropdownRect.height * 2 + 3;
+
+        const distanceOverflowed = bottomOfDropdown - bottomLimit;
+
+        console.log("values: ", bottomLimit, bottomOfDropdown);
+
+        if (distanceOverflowed > 0) {
+          setShouldDropdownGoUp(true);
+          setTop(0 - distanceOverflowed);
+        } else {
+          setShouldDropdownGoUp(false);
+        }
+      }
+    }
+  }, [isOpened]);
+
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
       ref={buttonContainerRef}
-      className={`relative transition-colors duration-200 p-[0.4rem]
+      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1
                   text-appLayoutText
                   ${
                     isOpened
@@ -508,26 +556,48 @@ const OptionsButton = ({ options, className }) => {
                       : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
                   }
 
+                  flex items-center justify-center
+
                   ${className}
       `}
     >
       <button
+        ref={buttonRef}
         className="w-full h-full"
         onClick={() => {
           setIsOpened(!isOpened);
         }}
       >
-        <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
+        {buttonIcon}
       </button>
       <AnimatePresence>
         {isOpened && (
           <motion.div
+            ref={dropdownRef}
+            style={{ top: `${top}px` }}
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ ease: "easeOut", duration: 0.1 }}
-            className="absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth flex flex-col items-center 
-                       rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow top-0 right-0 origin-top-right z-[99]"
+            className={`z-50 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
+                       rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
+                       ${
+                         shouldDropdownGoUp
+                           ? `                      
+                              ${
+                                origin === "topRight" &&
+                                "origin-bottom-right right-0"
+                              } 
+                              ${origin === "topMiddle" && "origin-bottom"}`
+                           : `                       
+                              ${
+                                origin === "topRight" &&
+                                "origin-top-right right-0"
+                              } 
+                              ${origin === "topMiddle" && "origin-top"}`
+                       }
+
+                       `}
           >
             {options?.map((option) => (
               <motion.button
@@ -545,7 +615,7 @@ const OptionsButton = ({ options, className }) => {
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}
                 </span>
-                <span className="flex-grow pl-1 h-full text-optionsDropdownOptionFont flex items-center justify-start">
+                <span className="flex-grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
                   {option.label}
                 </span>
               </motion.button>
@@ -553,6 +623,6 @@ const OptionsButton = ({ options, className }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
