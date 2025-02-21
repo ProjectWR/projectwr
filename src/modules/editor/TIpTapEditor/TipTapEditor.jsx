@@ -1,13 +1,14 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import VirtualCursor from "./Extensions/VirtualCursorExtension";
+import TipTapToolbar from "./TipTapToolbar"
+
 import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Highlight from "@tiptap/extension-highlight";
 import Collaboration from "@tiptap/extension-collaboration";
-import Bold from "@tiptap/extension-bold";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import VirtualCursor from "./Extensions/VirtualCursorExtension";
-import TipTapToolbar from "./TipTapToolbar";
+import Bold from "@tiptap/extension-bold";;
 import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
@@ -25,9 +26,11 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import TabIndentExtension from "./Extensions/TabIndentExtension";
 import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
+
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
 import loremIpsum from "../lorem";
+import { max } from "lib0/math";
 
 const content = "<p>Hello World!</p>";
 
@@ -121,7 +124,7 @@ const TiptapEditor = ({
     Image,
     Typography,
     TextAlign.configure({
-      types: ["heading", "paragraph"],
+      types: ["heading", "paragraph"],  
     }),
   ]);
 
@@ -421,6 +424,8 @@ const updateVirtualCursor = (editor, fontSize) => {
   const domSelection = window.getSelection();
   const anchorNode = domSelection.anchorNode;
 
+  const minFontSize = fontSize + 2;
+
   if (anchorNode?.parentElement) {
     if (anchorNode.parentElement.tagName === "DIV") {
       const computedStyle = getComputedStyle(anchorNode);
@@ -437,6 +442,6 @@ const updateVirtualCursor = (editor, fontSize) => {
   editor.commands.addVirtualCursor({
     top: coords.top - editableRect.top,
     left: coords.left - editableRect.left,
-    fontSize: fontSize,
+    fontSize: max(fontSize, minFontSize),
   });
 };

@@ -1,11 +1,36 @@
+import { Editor } from '@tiptap/core'
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import Highlight from "@tiptap/extension-highlight";
+import Collaboration from "@tiptap/extension-collaboration";
+import Bold from "@tiptap/extension-bold";;
+import Italic from "@tiptap/extension-italic";
+import Strike from "@tiptap/extension-strike";
+import Underline from "@tiptap/extension-underline";
+import TextStyle from "@tiptap/extension-text-style";
+import Superscript from "@tiptap/extension-superscript";
+import Subscript from "@tiptap/extension-subscript";
+import Blockquote from "@tiptap/extension-blockquote";
+import ListItem from "@tiptap/extension-list-item";
+import BulletList from "@tiptap/extension-bullet-list";
+import HardBreak from "@tiptap/extension-hard-break";
+import Heading from "@tiptap/extension-heading";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import Image from "@tiptap/extension-image";
+import OrderedList from "@tiptap/extension-ordered-list";
+import Typography from "@tiptap/extension-typography";
+import TextAlign from "@tiptap/extension-text-align";
+
 import * as Y from "yjs";
 import { generateUUID } from "../utils/uuidUtil";
-import { getHighestOrderIndex, insertBetween } from "../utils/orderUtil";
+import { getHighestOrderIndex, insertBetween, sortArrayByOrder } from "../utils/orderUtil";
 import { YTree } from "yjs-orderedtree";
 import persistenceManagerForSubdocs from "./persistenceSubDocs";
 import { fetchUserLibraryListStore } from "./libraries";
 import { IndexeddbPersistence } from "y-indexeddb";
 import ObservableMap from "./ObservableMap";
+
 
 let instance;
 
@@ -158,6 +183,128 @@ class DataManagerSubdocs {
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
     return uuid;
+  }
+
+  /**
+  * 
+  * @param {YTree} ytree 
+  * @param {string} parentId 
+  */
+  exportAllChildren(ytree, parentId) {
+    /**
+     * @param {string} nodeId 
+     */
+    const processNode = (nodeId) => {
+      const nodeMap = ytree.getNodeValueFromKey(nodeId);
+      if (nodeMap.get("type") === 'paper') {
+        console.log(this.getHtmlFromPaper(ytree, nodeId));
+      }
+    }
+
+    const nodeDescendants = [parentId];
+    while (nodeDescendants.length > 0) {
+      const nodeChild = nodeDescendants.shift();
+      processNode(nodeChild);
+      const nodeGrandChildren = ytree.sortChildrenByOrder(ytree.getNodeChildrenFromKey(nodeChild), nodeChild);
+      nodeDescendants.unshift(...nodeGrandChildren);
+    }
+  }
+
+  /**
+  * 
+  * @param {YTree} ytree 
+  * @param {string} paperId 
+  * 
+  * @returns {string}
+  */
+  getHtmlFromPaper(ytree, paperId) {
+    const paperMap = ytree.getNodeValueFromKey(paperId);
+
+    const editor = new Editor({
+      content: '<p>Getting HTML from paper</p>',
+      extensions: [
+        Collaboration.configure({
+          fragment: paperMap.get("paper_xml"),
+        }),
+        Document,
+        Paragraph,
+        Text,
+        Strike,
+        Bold,
+        Italic,
+        Underline,
+        Subscript,
+        Superscript,
+        TextStyle.configure({ mergeNestedSpanStyles: true }),
+        Highlight.configure({ multicolor: true }),
+        Blockquote,
+        ListItem,
+        BulletList,
+        OrderedList,
+        HardBreak,
+        Heading.configure({
+          levels: [1, 2, 3, 4, 5],
+        }),
+        HorizontalRule,
+        Image,
+        Typography,
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+      ]
+    });
+
+    return editor.getHTML();
+  }
+
+  /**
+  * 
+  * @param {YTree} ytree 
+  * @param {string} paperId 
+  * @param {string} html 
+  * 
+  * @returns {string}
+  */
+  setHtmlToPaper(ytree, paperId, html) {
+    const paperMap = ytree.getNodeValueFromKey(paperId);
+
+    const editor = new Editor({
+      content: '<p>Getting HTML from paper</p>',
+      extensions: [
+        Collaboration.configure({
+          fragment: paperMap.get("paper_xml"),
+        }),
+        Document,
+        Paragraph,
+        Text,
+        Strike,
+        Bold,
+        Italic,
+        Underline,
+        Subscript,
+        Superscript,
+        TextStyle.configure({ mergeNestedSpanStyles: true }),
+        Highlight.configure({ multicolor: true }),
+        Blockquote,
+        ListItem,
+        BulletList,
+        OrderedList,
+        HardBreak,
+        Heading.configure({
+          levels: [1, 2, 3, 4, 5],
+        }),
+        HorizontalRule,
+        Image,
+        Typography,
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+      ]
+    });
+
+    editor.commands.setContent(html);
+
+    return editor.getHTML();
   }
 }
 

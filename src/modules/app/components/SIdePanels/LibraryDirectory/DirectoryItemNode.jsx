@@ -156,23 +156,25 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
       // If a nested drop already handled this event, do nothing.
       if (monitor.didDrop()) return;
 
-      if (draggedItem.id === itemId) {
-        setIsSelfSelected(true);
-      } else {
-        setIsSelfSelected(false);
-      }
+      // if (draggedItem.id === itemId) {
+      //   setIsSelfSelected(true);
+      // } else {
+      //   setIsSelfSelected(false);
+      // }
 
-      if (ytree.isNodeUnderOtherNode(itemId, draggedItem.id)) {
-        setIsAncestor(true);
-      } else {
-        setIsAncestor(false);
-      }
+      // if (ytree.isNodeUnderOtherNode(itemId, draggedItem.id)) {
+      //   setIsAncestor(true);
+      // } else {
+      //   setIsAncestor(false);
+      // }
 
       if (isAncestor || isSelfSelected) return;
 
       // Get the parent of the current node.
       const parentId = ytree.getNodeParentFromKey(itemId);
       const parentChildren = ytree.getNodeChildrenFromKey(parentId);
+
+      const type = ytree.getNodeValueFromKey(draggedItem.id).get("type");
 
       if (areaSelected !== "middle") {
         if (parentChildren.includes(draggedItem.id)) {
@@ -187,6 +189,8 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
           }
         } else {
           console.log("not sibling");
+          if (type === "book") return;
+
           ytree.moveChildToParent(draggedItem.id, parentId);
 
           if (areaSelected === "top") {
@@ -199,6 +203,8 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
         }
       } else {
         console.log("dropped middle");
+        if (type === "book") return;
+
         if (ytree.getNodeChildrenFromKey(itemId).includes(draggedItem.id)) {
           ytree.setNodeOrderToEnd(draggedItem.id, itemId);
         } else {
@@ -266,21 +272,23 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
       id="DirectoryItemNodeContainer"
       ref={dndRef}
       className={`
-        bg-appBackground
 
         flex flex-col
 
         w-full h-fit
-        
+         
         ${isDragging ? "opacity-20" : ""}
+
+        border border-transparent
 
         ${(() => {
           if (!isSelfSelected && !isAncestor && isOverCurrent) {
             if (areaSelected === "top")
-              return "border-t border-b border-b-transparent border-t-blue-500";
+              return "border-t border-b border-t-appLayoutDirectoryNodeHover";
             if (areaSelected === "bottom")
-              return "border-b border-t border-t-transparent border-b-blue-500";
-            if (areaSelected === "middle") return "bg-blue-500 bg-opacity-50";
+              return "border-b border-t border-b-appLayoutDirectoryNodeHover";
+            if (areaSelected === "middle")
+              return "bg-appLayoutDirectoryNodeHover";
           }
           return "border-y border-appBackground";
         })()}
@@ -291,7 +299,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
     >
       <div
         id="DirectoryItemNodeHeader"
-        className={`flex justify-between items-center  hover:bg-appLayoutHover bg-appBackground
+        className={`flex justify-between items-center  hover:bg-appLayoutHover
 
           ${(() => {
             const type = itemMapRef.current.get("type");
@@ -342,9 +350,42 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                     setPanelOpened(false);
                   },
                 },
+
+                {
+                  label: "Export Paper",
+                  icon: (
+                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                  ),
+                  callback: () => {
+                    console.log("export paper button");
+                    console.log(
+                      dataManagerSubdocs.getHtmlFromPaper(ytree, itemId)
+                    );
+                  },
+                },
+
+                {
+                  label: "Import Paper",
+                  icon: (
+                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                  ),
+                  callback: () => {
+                    console.log("import paper button");
+                    console.log(
+                      dataManagerSubdocs.setHtmlToPaper(
+                        ytree,
+                        itemId,
+                        "<p> Imported Content </p>"
+                      )
+                    );
+                  },
+                },
               ]}
               className={
                 "h-libraryDirectoryPaperNodeHeight w-libraryDirectoryPaperNodeHeight min-w-libraryDirectoryPaperNodeHeight"
+              }
+              buttonIcon={
+                <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
               }
             />
           </>
@@ -421,6 +462,17 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                   callback: () => {
                     console.log("create paper button");
                     onCreatePaperClick();
+                  },
+                },
+                {
+                  label: "Export Section",
+                  icon: (
+                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                  ),
+                  callback: () => {
+                    console.log("export section button");
+
+                    dataManagerSubdocs.exportAllChildren(ytree, itemId);
                   },
                 },
               ]}
@@ -537,6 +589,7 @@ const OptionsButton = ({
           setTop(0 - distanceOverflowed);
         } else {
           setShouldDropdownGoUp(false);
+          setTop(3);
         }
       }
     }

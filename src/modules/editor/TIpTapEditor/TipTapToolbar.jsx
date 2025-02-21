@@ -54,11 +54,11 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--redo] w-full h-full text-white"></span>
         </button>
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        {/* <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
         <TextFormatButton
           editor={editor}
           toolbarPreferences={toolbarPreferences}
-        />
+        /> */}
         <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
         <button
           className="toolbarButton"

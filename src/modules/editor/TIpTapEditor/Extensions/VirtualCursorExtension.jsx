@@ -2,6 +2,8 @@ import { Extension } from "@tiptap/core";
 import { max } from "lib0/math";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
+import { motion } from "motion/react";
+import { animate } from "motion";
 
 const virtualCursorPluginKey = new PluginKey("virtualCursor");
 
@@ -56,6 +58,7 @@ const VirtualCursor = Extension.create({
                   cursor.style.top = `${pos.top - 1}px`;
                   cursor.style.left = `${pos.left - 1}px`;
                   cursor.style.height = `${pos.fontSize + 2}px`;
+
                   // Store reference to the DOM element
                   virtualCursorElement = cursor;
 

@@ -38,6 +38,7 @@
     --appLayoutInputBackground: 0 0% 14.9%;
     --appLayoutPressed: 0 0% 3%;
     --appLayoutDestruct: 0 62.8% 30.6%;
+    --appLayoutDirectoryNodeHover: 0 0% 100% / 15%;
 
     --actionBarHeight: 2rem;
     --actionBarLogoSize: 7rem;

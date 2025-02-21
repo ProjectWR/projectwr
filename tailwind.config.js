@@ -60,6 +60,7 @@ export default {
         appLayoutHighlight: "hsl(var(--appLayoutHighlight))",
         activitySelectLine: "hsl(var(--activitySelectLine))",
         appLayoutSubmitButton: "hsl(var(--appLayoutSubmitButton))",
+        appLayoutDirectoryNodeHover: "hsl(var(--appLayoutDirectoryNodeHover))"
       },
       spacing: {
         actionBarHeight: "var(--actionBarHeight)",
