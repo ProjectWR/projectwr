@@ -30,7 +30,9 @@ import persistenceManagerForSubdocs from "./persistenceSubDocs";
 import { fetchUserLibraryListStore } from "./libraries";
 import { IndexeddbPersistence } from "y-indexeddb";
 import ObservableMap from "./ObservableMap";
+import { min } from 'lib0/math';
 
+import { saveAs } from 'file-saver';
 
 let instance;
 
@@ -190,24 +192,42 @@ class DataManagerSubdocs {
   * @param {YTree} ytree 
   * @param {string} parentId 
   */
-  exportAllChildren(ytree, parentId) {
+  async exportAllChildrenToDocx(ytree, parentId) {
+
+    let finalHTML = "";
+
     /**
      * @param {string} nodeId 
      */
-    const processNode = (nodeId) => {
+    const processNode = (nodeId, nodeLevel) => {
+      const level = min(nodeLevel, 6);
       const nodeMap = ytree.getNodeValueFromKey(nodeId);
       if (nodeMap.get("type") === 'paper') {
-        console.log(this.getHtmlFromPaper(ytree, nodeId));
+        const html = this.getHtmlFromPaper(ytree, nodeId);
+        finalHTML += `<h${level}> ${nodeMap.get("item_title")} </h${level}>`
+        finalHTML += html;
+      }
+      else if (nodeMap.get("type") === 'section') {
+        finalHTML += `<h${level}> ${nodeMap.get("item_title")} </h${level}>`
+      }
+      else if (nodeMap.get("type") === 'book') {
+        finalHTML += `<h1> ${nodeMap.get("item_title")} </h1>`
       }
     }
 
-    const nodeDescendants = [parentId];
+    const nodeDescendants = [[parentId, 0]];
     while (nodeDescendants.length > 0) {
       const nodeChild = nodeDescendants.shift();
-      processNode(nodeChild);
-      const nodeGrandChildren = ytree.sortChildrenByOrder(ytree.getNodeChildrenFromKey(nodeChild), nodeChild);
+      if (nodeChild[0] != parentId) finalHTML += "<br>"
+      processNode(nodeChild[0], nodeChild[1]);
+      const nodeGrandChildren = ytree.sortChildrenByOrder(ytree.getNodeChildrenFromKey(nodeChild[0]), nodeChild[0])
+        .map((nodeId) => [nodeId, nodeChild[1] + 1]);
       nodeDescendants.unshift(...nodeGrandChildren);
     }
+
+    console.log("Final HTML:", finalHTML);
+    const blob = await HTMLtoDOCX(finalHTML);
+    saveAs(blob);
   }
 
   /**

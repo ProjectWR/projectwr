@@ -472,7 +472,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                   callback: () => {
                     console.log("export section button");
 
-                    dataManagerSubdocs.exportAllChildren(ytree, itemId);
+                    dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
                   },
                 },
               ]}
