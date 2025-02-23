@@ -22,7 +22,8 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 const WritingApp = () => {
-  const [loading, setLoading] = useState(true);
+  const loading = appStore((state) => state.loading);
+  const setLoading = appStore((state) => state.setLoading);
 
   const { deviceType } = useDeviceType();
 
@@ -38,14 +39,15 @@ const WritingApp = () => {
 
   useEffect(() => {
     if (sidePanelScope.current) {
+      console.log("triggering side panel");
       sidePanelAnimate(
         sidePanelScope.current,
-        { x: panelOpened ? 0 : -500 },
+        { x: panelOpened ? 0 : -500 }, 
         { ease: "circInOut" },
         { duration: 0.2 }
       );
     }
-  }, [panelOpened, sidePanelAnimate, sidePanelScope]);
+  }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
   useEffect(() => {
     const initializeApp = async () => {

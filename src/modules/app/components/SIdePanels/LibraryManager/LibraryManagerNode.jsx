@@ -14,6 +14,8 @@ import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
 import { max, min } from "lib0/math";
+import useOuterClick from "../../../../design-system/useOuterClick";
+import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 
 /**
  *
@@ -23,8 +25,11 @@ import { max, min } from "lib0/math";
 const LibraryManagerNode = ({ libraryId, className }) => {
   console.log("library node rendered: ", libraryId);
 
+  const [loading, setLoading] = useState(false);
+
   const setLibraryId = libraryStore((state) => state.setLibraryId);
   const setItemId = libraryStore((state) => state.setItemId);
+  const setActivity = appStore((state) => state.setActivity);
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
@@ -157,8 +162,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         const containerWidth = textContainerRef.current.offsetWidth - 20;
         const textWidth = textRef.current.scrollWidth;
 
-        console.log("widths: ", containerWidth, textWidth);
-
         // Decrease/Increase the font size until the text fits
         let newFontSize = parseFloat(fontSize);
 
@@ -174,8 +177,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         );
 
         newFontSize = max(newFontSize, 1);
-
-        console.log("new Font size: ", newFontSize);
 
         setFontSize(`${newFontSize}rem`);
       }
@@ -218,74 +219,207 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         ${className}
       `}
     >
-      <div className="w-full max-w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 ease-out">
-        <button
-          className={
-            "flex-grow min-w-0 h-full flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-100"
-          }
-          onClick={() => {
-            console.log("Library Entry when clicked: ", libraryPropsMapState);
-            setLibraryId(libraryId);
-            setItemId("unselected");
-            setPanelOpened(true);
-          }}
-          onMouseEnter={() => {
-            setIsDoorOpen(true);
-          }}
-          onMouseLeave={() => {
-            setIsDoorOpen(false);
-          }}
-        >
-          <div className="relative h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize min-w-libraryManagerNodeIconSize">
-            <AnimatePresence mode="sync">
-              {isDoorOpen && (
-                <motion.span
-                  initial={{ opacity: 0.6 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0.6 }}
-                  transition={{ duration: 0.1 }}
-                  key="doorOpen"
-                  className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-100"
-                ></motion.span>
-              )}
-
-              {!isDoorOpen && (
-                <motion.span
-                  initial={{ opacity: 0.6 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0.6 }}
-                  transition={{ duration: 0.1 }}
-                  key="doorClose"
-                  className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-100"
-                ></motion.span>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div
-            ref={textContainerRef}
-            style={{ fontSize }}
-            className="flex-grow min-w-0 flex justify-start items-center  transition-colors duration-100 pb-px ml-3"
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <motion.div
+            key={`libraryManagerNodeSpinner-${libraryId}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+            className="flex flex-col justify-center items-center h-full w-full bg-appBackground text-appLayoutText"
           >
-            <p
-              className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-              ref={textRef}
+            <div
+              className={`relative w-libraryManagerNodeEditButtonWidth h-libraryManagerNodeEditButtonWidth`}
             >
-              {libraryPropsMapState.library_name}
-            </p>
-          </div>
-        </button>
-        <button
-          className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth min-w-libraryManagerNodeEditButtonWidth px-2 rounded-full m-2  text-appLayoutTextMuted hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-100 ease-out"
-          onClick={() => {
-            setLibraryId(libraryId);
-            setItemId("unselected");
-            setPanelOpened(false);
-          }}
-        >
-          <span className="icon-[mdi--edit-outline] h-full w-full transition-colors duration-100"></span>
-        </button>
-      </div>
+              <span
+                className="w-full h-full"
+                // animate={{ rotate: 360 }}
+                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={"100%"}
+                  height={"100%"}
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    fill="none"
+                    stroke="#fff"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={0.3}
+                  >
+                    <path
+                      strokeDasharray={16}
+                      strokeDashoffset={16}
+                      d="M12 3c4.97 0 9 4.03 9 9"
+                    >
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        dur="0.3s"
+                        values="16;0"
+                      ></animate>
+                      <animateTransform
+                        attributeName="transform"
+                        dur="1.5s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      ></animateTransform>
+                    </path>
+                    <path
+                      strokeDasharray={64}
+                      strokeDashoffset={64}
+                      strokeOpacity={0.3}
+                      d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                    >
+                      <animate
+                        fill="freeze"
+                        attributeName="stroke-dashoffset"
+                        dur="1.2s"
+                        values="64;0"
+                      ></animate>
+                    </path>
+                  </g>
+                </svg>
+              </span>
+              <motion.div
+                initial={{ opacity: 0.4 }}
+                animate={{ opacity: 1 }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  duration: 1.2,
+                  ease: "linear",
+                }}
+                className="absolute w-full h-full p-[20%] top-0 left-0"
+              >
+                <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+              </motion.div>
+            </div>
+
+            {/* Add a spinner or animation here */}
+          </motion.div>
+        ) : (
+          <motion.div
+            key={`libraryManagerNode-${libraryId}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+            className="w-full max-w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 ease-out"
+          >
+            <button
+              className={
+                "flex-grow min-w-0 h-full flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-100"
+              }
+              onClick={() => {
+                console.log(
+                  "Library Entry when clicked: ",
+                  libraryPropsMapState
+                );
+                setLibraryId(libraryId);
+                setItemId("unselected");
+                setPanelOpened(true);
+              }}
+              onMouseEnter={() => {
+                setIsDoorOpen(true);
+              }}
+              onMouseLeave={() => {
+                setIsDoorOpen(false);
+              }}
+            >
+              <div className="relative h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize min-w-libraryManagerNodeIconSize">
+                <AnimatePresence mode="sync">
+                  {isDoorOpen && (
+                    <motion.span
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.6 }}
+                      transition={{ duration: 0.1 }}
+                      key="doorOpen"
+                      className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                    ></motion.span>
+                  )}
+
+                  {!isDoorOpen && (
+                    <motion.span
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.6 }}
+                      transition={{ duration: 0.1 }}
+                      key="doorClose"
+                      className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                    ></motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div
+                ref={textContainerRef}
+                style={{ fontSize }}
+                className="flex-grow min-w-0 flex justify-start items-center  transition-colors duration-100 pb-px ml-3"
+              >
+                <p
+                  className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                  ref={textRef}
+                >
+                  {libraryPropsMapState.library_name}
+                </p>
+              </div>
+            </button>
+
+            <OptionsButton
+              className={`h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth min-w-libraryManagerNodeEditButtonWidth px-2 rounded-full ml-1 mr-2 
+                          text-appLayoutTextMuted hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-100 ease-out`}
+              buttonIcon={
+                <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
+              }
+              options={[
+                {
+                  label: "Edit Properties",
+                  icon: (
+                    <span className="icon-[mdi--edit-outline] h-full w-full transition-colors duration-100"></span>
+                  ),
+                  callback: () => {
+                    setLibraryId(libraryId);
+                    setItemId("unselected");
+                    setPanelOpened(false);
+                  },
+                },
+                {
+                  label: "Save As",
+                  icon: (
+                    <span className="icon-[line-md--download] h-full w-full transition-colors duration-100"></span>
+                  ),
+                  callback: () => {
+                    console.log("Saving Archive");
+                    persistenceManagerForSubdocs.saveArchive(
+                      dataManagerSubdocs.getLibrary(libraryId)
+                    );
+                  },
+                },
+                {
+                  label: "Load",
+                  icon: (
+                    <span className="icon-[line-md--upload] h-full w-full transition-colors duration-100"></span>
+                  ),
+                  callback: async () => {
+                    console.log("Loading Archive");
+                    setLoading(true);
+                    await persistenceManagerForSubdocs.loadArchive(
+                      dataManagerSubdocs.getLibrary(libraryId)
+                    );
+                    setLoading(false);
+                  },
+                },
+              ]}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -297,3 +431,138 @@ LibraryManagerNode.propTypes = {
 };
 
 export default React.memo(LibraryManagerNode);
+
+const OptionsButton = ({
+  options,
+  className,
+  buttonIcon,
+  origin = "topRight",
+}) => {
+  const [isOpened, setIsOpened] = useState(false);
+
+  const buttonContainerRef = useOuterClick(() => {
+    setIsOpened(false);
+  });
+
+  const buttonRef = useRef(null);
+
+  const [shouldDropdownGoUp, setShouldDropdownGoUp] = useState(false);
+  const [top, setTop] = useState(0);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpened) {
+      if (dropdownRef.current) {
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const dropdownRect = dropdownRef.current.getBoundingClientRect();
+        const containerRect = document
+          .querySelector("#LibraryManagerBody")
+          .getBoundingClientRect();
+
+        console.log("all rects: ", buttonRect, dropdownRect, containerRect);
+
+        console.log("button rect something: ", buttonRect.top + window.scrollY);
+
+        const bottomLimit = containerRect.bottom;
+        const bottomOfDropdown =
+          buttonRect.top + window.scrollY + dropdownRect.height * 2 + 3;
+
+        const distanceOverflowed = bottomOfDropdown - bottomLimit;
+
+        console.log("values: ", bottomLimit, bottomOfDropdown);
+
+        if (distanceOverflowed > 0) {
+          setShouldDropdownGoUp(true);
+          setTop(0 - distanceOverflowed);
+        } else {
+          setShouldDropdownGoUp(false);
+          setTop(3);
+        }
+      }
+    }
+  }, [isOpened]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      ref={buttonContainerRef}
+      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200
+                  text-appLayoutText
+                  ${
+                    isOpened
+                      ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
+                      : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
+                  }
+
+                  flex items-center justify-center
+
+                  ${className}
+      `}
+    >
+      <button
+        ref={buttonRef}
+        className="w-full h-full"
+        onClick={() => {
+          setIsOpened(!isOpened);
+        }}
+      >
+        {buttonIcon}
+      </button>
+      <AnimatePresence>
+        {isOpened && (
+          <motion.div
+            ref={dropdownRef}
+            style={{ top: `${top}px` }}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ ease: "easeOut", duration: 0.1 }}
+            className={`z-50 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
+                       rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
+                       ${
+                         shouldDropdownGoUp
+                           ? `                      
+                              ${
+                                origin === "topRight" &&
+                                "origin-bottom-right right-0"
+                              } 
+                              ${origin === "topMiddle" && "origin-bottom"}`
+                           : `                       
+                              ${
+                                origin === "topRight" &&
+                                "origin-top-right right-0"
+                              } 
+                              ${origin === "topMiddle" && "origin-top"}`
+                       }
+
+                       `}
+          >
+            {options?.map((option) => (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                key={option.label}
+                onClick={() => {
+                  setIsOpened(false);
+                  option.callback();
+                }}
+                className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 py-1 gap-px
+                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight text-appLayoutText transition-colors duration-200"
+              >
+                <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
+                  {option.icon}
+                </span>
+                <span className="flex-grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
+                  {option.label}
+                </span>
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};

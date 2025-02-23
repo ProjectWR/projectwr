@@ -1,12 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
+    <script type="module">
+      import { Buffer } from "buffer/"; // <-- no typo here ("/")
+      import process from "process";
+
+      window.Buffer = Buffer;
+      window.process = process;
+    </script>
   </head>
   <body style="overflow: hidden">
-    <div id="root" style="background-color: #00000000;"></div>
+    <div id="root" style="background-color: #00000000"></div>
     <script type="module" src="src/main.jsx"></script>
   </body>
 </html>

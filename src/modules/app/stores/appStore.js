@@ -1,6 +1,11 @@
 import { create } from "zustand";
 
 export const appStore = create((set) => ({
+  loading: true,
+  setLoading: (loading) => {
+    return set({ loading: loading });
+  },
+
   activity: "home",
   setActivity: (activity) => {
     return set({ activity: activity });

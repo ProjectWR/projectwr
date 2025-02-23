@@ -358,9 +358,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                   ),
                   callback: () => {
                     console.log("export paper button");
-                    console.log(
-                      dataManagerSubdocs.getHtmlFromPaper(ytree, itemId)
-                    );
+                    dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
                   },
                 },
 

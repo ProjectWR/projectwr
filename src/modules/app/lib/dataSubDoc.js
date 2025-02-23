@@ -32,7 +32,17 @@ import { IndexeddbPersistence } from "y-indexeddb";
 import ObservableMap from "./ObservableMap";
 import { min } from 'lib0/math';
 
-import { saveAs } from 'file-saver';
+import {
+  writeDocx,
+  DocxSerializer,
+  defaultNodes,
+  defaultMarks
+} from "prosemirror-docx";
+
+import { Buffer } from 'buffer/';
+import { save } from '@tauri-apps/plugin-dialog';
+import { writeFile, BaseDirectory } from '@tauri-apps/plugin-fs';
+import { Packer } from 'docx';
 
 let instance;
 
@@ -71,7 +81,7 @@ class DataManagerSubdocs {
    * Initialize a library with a new Y.Doc
    * @param {string} libraryId
    */
-  initLibrary(libraryId) {
+  async initLibrary(libraryId) {
 
     if (this.libraryYDocMap.has(libraryId)) {
       console.log("library already intitiated: ", libraryId);
@@ -89,6 +99,8 @@ class DataManagerSubdocs {
    * @param {string} libraryId
    */
   destroyLibrary(libraryId) {
+    const ydoc = this.getLibrary(libraryId);
+    ydoc.destroy();
     this.libraryYDocMap.delete(libraryId);
   }
 
@@ -226,8 +238,82 @@ class DataManagerSubdocs {
     }
 
     console.log("Final HTML:", finalHTML);
-    const blob = await HTMLtoDOCX(finalHTML);
-    saveAs(blob);
+
+    const editor = new Editor({
+      content: finalHTML,
+      extensions: [
+        Document,
+        Paragraph,
+        Text,
+        Strike,
+        Bold,
+        Italic,
+        Underline,
+        Subscript,
+        Superscript,
+        TextStyle.configure({ mergeNestedSpanStyles: true }),
+        Highlight.configure({ multicolor: true }),
+        Blockquote,
+        ListItem,
+        BulletList,
+        OrderedList,
+        HardBreak,
+        Heading.configure({
+          levels: [1, 2, 3, 4, 5],
+        }),
+        HorizontalRule,
+        Image,
+        Typography,
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+      ]
+    });
+
+    // If there are images, we will need to preload the buffers
+    const opts = {
+      getImageBuffer(src) {
+        return Buffer.from(src);
+      }
+    };
+
+    const nodeSerializer = {
+      ...defaultNodes,
+      hardBreak: defaultNodes.hard_break,
+      codeBlock: defaultNodes.code_block,
+      orderedList: defaultNodes.ordered_list,
+      listItem: defaultNodes.list_item,
+      bulletList: defaultNodes.bullet_list,
+      horizontalRule: defaultNodes.horizontal_rule,
+      image(state, node) {
+        // No image
+        state.renderInline(node);
+        state.closeBlock(node);
+      }
+    };
+
+    const docxSerializer = new DocxSerializer(nodeSerializer, defaultMarks);
+
+    const wordDoc = docxSerializer.serialize(editor.state.doc, opts);
+
+    // Prompt to save a 'My Filter' with extension .png or .jpeg
+    const path = await save({
+      filters: [
+        {
+          name: 'docx',
+          extensions: ['docx'],
+        },
+      ],
+    });
+
+    console.log(path);
+
+    const data = await Packer.toBuffer(wordDoc)
+
+    await writeFile(
+      path,
+      data
+    );
   }
 
   /**
@@ -331,6 +417,8 @@ class DataManagerSubdocs {
 const dataManagerSubdocs = Object.freeze(new DataManagerSubdocs());
 
 export default dataManagerSubdocs;
+
+
 
 /**
  * Convert a Y.Doc Map to an array of [id, order_index] pairs

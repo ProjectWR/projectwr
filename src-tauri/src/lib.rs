@@ -22,6 +22,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             tauri::async_runtime::block_on(async {
                 let settings_data = std::fs::read_to_string("resources/default_settings.json")

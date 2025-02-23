@@ -20,6 +20,7 @@ import { useY } from "react-yjs";
 import { equalityDeep, equalityFlat } from "lib0/function";
 import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
+import { wait } from "lib0/promise";
 
 // TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
@@ -43,13 +44,16 @@ const LibraryManager = () => {
       }
 
       return () => {
-        dataManagerSubdocs.removeLibraryYDocMapCallback(callback);
-        for (const [libraryId] of libraryIds.values()) {
+        const newLibraryIds = getArrayFromYDocMap(
+          dataManagerSubdocs.libraryYDocMap
+        );
+        for (const [libraryId] of newLibraryIds.values()) {
           dataManagerSubdocs
             .getLibrary(libraryId)
             .getMap("library_props")
             .unobserve(callback);
         }
+        dataManagerSubdocs.removeLibraryYDocMapCallback(callback);
       };
     },
     () => {
@@ -65,8 +69,6 @@ const LibraryManager = () => {
             .toJSON(),
         ]);
       }
-
-      console.log("library Ids with props: ", libraryIdsWithProps);
 
       if (
         prevLibraryIdsWithPropsRef.current !== null &&
@@ -93,11 +95,10 @@ const LibraryManager = () => {
         className={`flex items-center justify-start gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow`}
       >
         <span className="icon-[ion--library-sharp] ml-3 h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize"></span>
-        
+
         <h1 className="h-fit flex-grow pt-1 text-libraryManagerHeaderText text-neutral-300 order-2">
           Your Libraries
         </h1>
-
 
         <button
           className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize text-appLayoutTextMuted transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
