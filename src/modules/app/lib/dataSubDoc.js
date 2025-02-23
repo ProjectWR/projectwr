@@ -24,16 +24,14 @@ import TextAlign from "@tiptap/extension-text-align";
 
 import * as Y from "yjs";
 import { generateUUID } from "../utils/uuidUtil";
-import { getHighestOrderIndex, insertBetween, sortArrayByOrder } from "../utils/orderUtil";
+import { getHighestOrderIndex, insertBetween } from "../utils/orderUtil";
 import { YTree } from "yjs-orderedtree";
 import persistenceManagerForSubdocs from "./persistenceSubDocs";
 import { fetchUserLibraryListStore } from "./libraries";
-import { IndexeddbPersistence } from "y-indexeddb";
 import ObservableMap from "./ObservableMap";
 import { min } from 'lib0/math';
 
 import {
-  writeDocx,
   DocxSerializer,
   defaultNodes,
   defaultMarks
@@ -41,7 +39,7 @@ import {
 
 import { Buffer } from 'buffer/';
 import { save } from '@tauri-apps/plugin-dialog';
-import { writeFile, BaseDirectory } from '@tauri-apps/plugin-fs';
+import { writeFile} from '@tauri-apps/plugin-fs';
 import { Packer } from 'docx';
 
 let instance;
@@ -135,7 +133,7 @@ class DataManagerSubdocs {
       )
     );
 
-    const libraryDirectoryYTree = new YTree(ydoc.getMap("library_directory"));
+    new YTree(ydoc.getMap("library_directory"));
 
     this.libraryYDocMap.set(uuid, ydoc);
     persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);

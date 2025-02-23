@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { settingsStore } from "../stores/settingsStore";
 import { useDeviceType } from "../ConfigProviders/DeviceTypeProvider";
@@ -42,7 +43,7 @@ const WritingApp = () => {
       console.log("triggering side panel");
       sidePanelAnimate(
         sidePanelScope.current,
-        { x: panelOpened ? 0 : -500 }, 
+        { x: panelOpened ? 0 : -500 },
         { ease: "circInOut" },
         { duration: 0.2 }
       );
@@ -50,7 +51,7 @@ const WritingApp = () => {
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
   useEffect(() => {
-    const initializeApp = async () => {
+    const initializeWritingApp = async () => {
       try {
         // Load settings
         const loadedSettings = await loadSettings();
@@ -97,7 +98,7 @@ const WritingApp = () => {
       }
     };
 
-    initializeApp();
+    initializeWritingApp();
   }, [setDefaultSettings, setSettings, setLibraryListStore]);
 
   useEffect(() => {}, [settings]);

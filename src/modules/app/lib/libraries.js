@@ -1,4 +1,4 @@
-import { load, Store } from "@tauri-apps/plugin-store";
+import { load } from "@tauri-apps/plugin-store";
 
 /**
  * 
