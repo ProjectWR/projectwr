@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import VirtualCursor from "./Extensions/VirtualCursorExtension";
-import TipTapToolbar from "./TipTapToolbar"
+import TipTapToolbar from "./TipTapToolbar";
 
 import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
@@ -8,7 +8,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Highlight from "@tiptap/extension-highlight";
 import Collaboration from "@tiptap/extension-collaboration";
-import Bold from "@tiptap/extension-bold";;
+import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
@@ -53,9 +53,9 @@ const TiptapEditor = ({
   const defaultPreferences = isMobile
     ? mobileDefaultPreferences
     : desktopDefaultPreferences;
-  const [editorPreferencesState, setEditorPreferencesState] = useState(
-    preferences || defaultPreferences
-  );
+
+  const editorPreferences = preferences || defaultPreferences;
+  
 
   const {
     fontSize,
@@ -91,7 +91,7 @@ const TiptapEditor = ({
     hrMarginTop,
     hrMarginBottom,
     hrBorderColor,
-  } = editorPreferencesState.paperPreferences;
+  } = editorPreferences.paperPreferences;
 
   const extensions = useRef([
     Document,
@@ -124,7 +124,7 @@ const TiptapEditor = ({
     Image,
     Typography,
     TextAlign.configure({
-      types: ["heading", "paragraph"],  
+      types: ["heading", "paragraph"],
     }),
   ]);
 
@@ -179,83 +179,75 @@ const TiptapEditor = ({
     return () => container.removeEventListener("scroll", handleScroll);
   }, [isMobile, setHeaderOpened]);
 
-  const editor = useEditor(
-    {
-      content: mode === "previewTemplate" ? loremIpsum : content,
-      extensions:
-        mode === "previewTemplate"
-          ? previewTemplateExtensions.current
-          : extensions.current,
-      immediatelyRender: true,
-      shouldRerenderOnTransaction: false,
-      onSelectionUpdate({ editor }) {
-        const selection = editor.state.selection;
-        if (!selection.empty) {
-          editor.commands.hideVirtualCursor();
-          return;
-        }
-        updateVirtualCursor(
-          editor,
-          fontSize + 2
-        );
-      },
-      onFocus({ editor }) {
-        const selection = editor.state.selection;
-        if (!selection.empty) {
-          editor.commands.hideVirtualCursor();
-          return;
-        }
-        updateVirtualCursor(
-          editor,
-          fontSize + 2
-        );
-      },
-      onBlur({ editor }) {
+  const editor = useEditor({
+    content: mode === "previewTemplate" ? loremIpsum : content,
+    extensions:
+      mode === "previewTemplate"
+        ? previewTemplateExtensions.current
+        : extensions.current,
+    immediatelyRender: true,
+    shouldRerenderOnTransaction: false,
+    onSelectionUpdate({ editor }) {
+      console.log("UPDATE!");
+      const selection = editor.state.selection;
+      if (!selection.empty) {
         editor.commands.hideVirtualCursor();
-      },
-      onUpdate({ editor }) {
-        console.log("Editor Updated");
-        const selection = editor.state.selection;
-        if (selection.empty) {
-          updateVirtualCursor(
-            editor,
-            fontSize + 2
-          );
-        } else {
-          editor.commands.hideVirtualCursor();
-        }
-
-        const coords = editor.view.coordsAtPos(selection.from);
-        const container = document.getElementById("EditableContainer");
-        const containerRect = container.getBoundingClientRect();
-        const relativeY = coords.top - containerRect.top;
-
-        let buffer = isMobile ? 100 : 200;
-        let bottomBuffer = isMobile ? 200 : 400;
-
-        let scrollAdjustment = 0;
-
-        if (relativeY + bottomBuffer > container.clientHeight) {
-          scrollAdjustment = relativeY + bottomBuffer - container.clientHeight;
-          setHeaderOpened(false);
-        } else if (relativeY < buffer) {
-          scrollAdjustment = relativeY - buffer;
-        }
-
-        if (scrollAdjustment !== 0) {
-          console.log("Scroll adjustment: ", scrollAdjustment);
-
-          setTimeout(() => {
-            container.scrollBy({
-              top: scrollAdjustment,
-              behavior: "smooth",
-            });
-          }, 2);
-        }
-      },
+        return;
+      }
+      updateVirtualCursor(editor, fontSize + 2);
     },
-    [yXmlFragment]
-  );
+    onFocus({ editor }) {
+      console.log("UPDATE!");
+      const selection = editor.state.selection;
+      if (!selection.empty) {
+        editor.commands.hideVirtualCursor();
+        return;
+      }
+      updateVirtualCursor(editor, fontSize + 2);
+    },
+    onBlur({ editor }) {
+      console.log("UPDATE!");
+      editor.commands.hideVirtualCursor();
+    },
+    onUpdate({ editor }) {
+      console.log("UPDATE!");
+      console.log("Editor Updated");
+      const selection = editor.state.selection;
+      if (selection.empty) {
+        updateVirtualCursor(editor, fontSize + 2);
+      } else {
+        editor.commands.hideVirtualCursor();
+      }
+
+      const coords = editor.view.coordsAtPos(selection.from);
+      const container = document.getElementById("EditableContainer");
+      const containerRect = container.getBoundingClientRect();
+      const relativeY = coords.top - containerRect.top;
+
+      let buffer = isMobile ? 100 : 200;
+      let bottomBuffer = isMobile ? 200 : 400;
+
+      let scrollAdjustment = 0;
+
+      if (relativeY + bottomBuffer > container.clientHeight) {
+        scrollAdjustment = relativeY + bottomBuffer - container.clientHeight;
+        setHeaderOpened(false);
+      } else if (relativeY < buffer) {
+        scrollAdjustment = relativeY - buffer;
+      }
+
+      if (scrollAdjustment !== 0) {
+        console.log("Scroll adjustment: ", scrollAdjustment);
+
+        setTimeout(() => {
+          container.scrollBy({
+            top: scrollAdjustment,
+            behavior: "smooth",
+          });
+        }, 2);
+      }
+    },
+  });
 
   const editorState = useEditorState({
     editor,
@@ -340,10 +332,10 @@ const TiptapEditor = ({
         id="EditableToolbar"
         style={{
           boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))",
-          height: `${editorPreferencesState.toolbarPreferences.toolbarHeight}rem`,
-          minHeight: `${editorPreferencesState.toolbarPreferences.toolbarHeight}rem`,
-          backgroundColor: `${editorPreferencesState.toolbarPreferences.backgroundColor}`,
-          borderTop: `1px solid ${editorPreferencesState.toolbarPreferences.dividerColor}`,
+          height: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
+          minHeight: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
+          backgroundColor: `${editorPreferences.toolbarPreferences.backgroundColor}`,
+          borderTop: `1px solid ${editorPreferences.toolbarPreferences.dividerColor}`,
         }}
         className={`
             w-full min-w-0
@@ -352,7 +344,7 @@ const TiptapEditor = ({
       >
         <TipTapToolbar
           editor={editor}
-          toolbarPreferences={editorPreferencesState.toolbarPreferences}
+          toolbarPreferences={editorPreferences.toolbarPreferences}
         />
       </div>
       <div
@@ -370,7 +362,7 @@ const TiptapEditor = ({
             shadow-${
               isMobile
                 ? "none"
-                : editorPreferencesState.paperPreferences.paperShadow
+                : editorPreferences.paperPreferences.paperShadow
             }
             shadow-black
             font-serif
@@ -378,29 +370,29 @@ const TiptapEditor = ({
           style={{
             width: isMobile
               ? "100%"
-              : `${editorPreferencesState.paperPreferences.width}rem`,
+              : `${editorPreferences.paperPreferences.width}rem`,
             borderTopWidth: isMobile
               ? "0"
-              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
             borderRightWidth: isMobile
               ? "0"
-              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
             borderBottomWidth: isMobile
               ? "0"
-              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
+              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
             borderLeftWidth: isMobile
               ? "0"
-              : `${editorPreferencesState.paperPreferences.paperBorderWidth}px`,
-            borderTopColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
-            borderLeftColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
-            borderRightColor: `${editorPreferencesState.paperPreferences.paperBorderColor}`,
+              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
+            borderTopColor: `${editorPreferences.paperPreferences.paperBorderColor}`,
+            borderLeftColor: `${editorPreferences.paperPreferences.paperBorderColor}`,
+            borderRightColor: `${editorPreferences.paperPreferences.paperBorderColor}`,
             marginTop: isMobile
               ? "0"
-              : `${editorPreferencesState.paperPreferences.gapTop}rem`,
-            fontSize: `${editorPreferencesState.paperPreferences.fontSize}rem`,
-            lineHeight: `${editorPreferencesState.paperPreferences.lineHeight}rem`,
-            borderTopRightRadius: `${editorPreferencesState.paperPreferences.roundRadius}rem`,
-            borderTopLeftRadius: `${editorPreferencesState.paperPreferences.roundRadius}rem`,
+              : `${editorPreferences.paperPreferences.gapTop}rem`,
+            fontSize: `${editorPreferences.paperPreferences.fontSize}rem`,
+            lineHeight: `${editorPreferences.paperPreferences.lineHeight}rem`,
+            borderTopRightRadius: `${editorPreferences.paperPreferences.roundRadius}rem`,
+            borderTopLeftRadius: `${editorPreferences.paperPreferences.roundRadius}rem`,
           }}
         />
       </div>

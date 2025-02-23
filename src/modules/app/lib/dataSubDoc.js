@@ -227,7 +227,7 @@ class DataManagerSubdocs {
       }
     }
 
-    const nodeDescendants = [[parentId, 0]];
+    const nodeDescendants = [[parentId, 1]];
     while (nodeDescendants.length > 0) {
       const nodeChild = nodeDescendants.shift();
       if (nodeChild[0] != parentId) finalHTML += "<br>"
