@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { settingsStore } from "../stores/settingsStore";
 import { useDeviceType } from "../ConfigProviders/DeviceTypeProvider";
 import { appStore } from "../stores/appStore";
@@ -21,8 +20,11 @@ import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { SizingProvider } from "../ConfigProviders/SizingThemeProvider";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import firebaseApp from "../lib/Firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const WritingApp = () => {
+  console.log("rendering writing app");
   const loading = appStore((state) => state.loading);
   const setLoading = appStore((state) => state.setLoading);
 
@@ -35,6 +37,19 @@ const WritingApp = () => {
   const setSettings = settingsStore((state) => state.setSettings);
   const setLibraryListStore = appStore((state) => state.setLibraryListStore);
   const settings = settingsStore((state) => state.settings);
+
+  const setUser = appStore((state) => state.setUser);
+  useEffect(() => {
+    onAuthStateChanged(getAuth(firebaseApp), (user) => {
+      if (user) {
+        console.log("User logged in: ", user);
+        setUser(user);
+      } else {
+        console.log("User not logged in");
+        setUser(null);
+      }
+    });
+  }, [setUser]);
 
   const [sidePanelScope, sidePanelAnimate] = useAnimate();
 
@@ -70,6 +85,15 @@ const WritingApp = () => {
 
         for (const db of databases) {
           const libraryId = db.name;
+          if (
+            [
+              "firebase-heartbeat-database",
+              "firebase-installations-database",
+              "firebaseLocalStorageDb",
+            ].find((value) => value === libraryId)
+          ) {
+            continue;
+          }
           console.log("Database: ", libraryId);
           const exists = await userLibraryStore.has(libraryId);
           if (!exists) {

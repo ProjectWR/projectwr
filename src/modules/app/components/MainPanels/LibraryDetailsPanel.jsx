@@ -150,7 +150,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
         <div className="prop w-full h-detailsPanelDescriptionInputSize relative">
           <textarea
             id="libraryDescription"
-            className="resize-none bg-appBackground w-full h-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
+            className="resize-none bg-appBackground text-detailsPanelPropsFontSize w-full h-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
             name="library_description"
             placeholder="Enter Description"
             onChange={handleChange}

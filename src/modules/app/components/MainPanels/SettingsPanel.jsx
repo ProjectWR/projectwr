@@ -1,10 +1,26 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { settingsStore } from "../../stores/settingsStore";
 import { loadSettings, saveSettings } from "../../lib/settings";
+import { AnimatePresence, motion } from "motion/react";
+import { appStore } from "../../stores/appStore";
+
+import { getAuth, validatePassword } from "firebase/auth";
+import firebaseApp from "../../lib/Firebase";
+
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+const uppercaseRegex = /[A-Z]/;
+const lowercaseRegex = /[a-z]/;
+const digitRegex = /\d/;
+const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+const minLengthRegex = /^.{8,}$/;
+const maxLengthRegex = /^.{,128}$/;
 
 const SettingsPanel = () => {
+  console.log("rendering settings panel");
   const { deviceType } = useDeviceType();
+  const user = appStore((state) => state.user);
+
   const defaultSettings = settingsStore((state) => state.defaultSettings);
   const settings = settingsStore((state) => state.settings);
 
@@ -13,6 +29,35 @@ const SettingsPanel = () => {
   const [newSettings, setNewSettings] = useState(settings);
   const [isSaveLoading, setIsSaveLoading] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
+
+  const [authProps, setAuthProps] = useState({
+    email: "",
+    password: "",
+  });
+
+  const isValidEmail = useMemo(() => {
+    return authProps.email === "" || emailRegex.test(authProps.email);
+  }, [authProps]);
+
+  const passwordValidityStatus = useMemo(() => {
+    const pwd = authProps.password;
+    return {
+      uppercase: pwd === "" || uppercaseRegex.test(pwd),
+      lowercase: pwd === "" || lowercaseRegex.test(pwd),
+      digit: pwd === "" || digitRegex.test(pwd),
+      specialChar: pwd === "" || specialCharRegex.test(pwd),
+      minLength: pwd === "" || minLengthRegex.test(pwd),
+      maxLength: pwd === "" || maxLengthRegex.test(pwd),
+    };
+  }, [authProps]);
+
+  const handleAuthPropChange = (e) => {
+    const { name, value } = e.target;
+    setAuthProps({
+      ...authProps,
+      [name]: value,
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,9 +110,9 @@ const SettingsPanel = () => {
       >
         <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-libraryManagerHeaderText text-neutral-300 order-2">
           Settings
-        </h1>{" "}
+        </h1>
         <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
+          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
  `}
           onClick={handleResetToDefault}
         >
@@ -84,12 +129,150 @@ const SettingsPanel = () => {
 
       <div
         id="SettingsBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll ${
+        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll py-3 px-4 gap-3 ${
           deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
         }`}
       >
-        
+        <motion.div
+          id="AuthContainer"
+          animate={{ height: "fit-content" }}
+          className="w-full flex flex-col items-start rounded-md gap-2"
+        >
+          <AnimatePresence mode="wait">
+            {!user && (
+              <>
+                <div className="w-full h-fit border border-appLayoutBorder rounded-md">
+                  <p className="w-full h-fit flex justify-center items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground ">
+                    You are not logged in
+                  </p>
+                </div>
 
+                <motion.div
+                  animate={{ height: "fit-content" }}
+                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding`}
+                >
+                  <input
+                    id="emailInput"
+                    name="email"
+                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 "
+                    onChange={handleAuthPropChange}
+                    value={authProps.email}
+                  />
+                  <label
+                    htmlFor="emailInput"
+                    className="absolute top-1 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none"
+                  >
+                    Email
+                  </label>
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !isValidEmail
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
+                  >
+                    Email is not valid
+                  </motion.p>
+                </motion.div>
+
+                <motion.div
+                  animate={{ height: "fit-content" }}
+                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding`}
+                >
+                  <input
+                    id="passwordInput"
+                    name="password"
+                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight rounded-t-md bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 "
+                    onChange={handleAuthPropChange}
+                    value={authProps.password}
+                  />
+                  <label
+                    htmlFor="passwordInput"
+                    className="absolute top-1 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none"
+                  >
+                    Password
+                  </label>
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !passwordValidityStatus.lowercase
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden `}
+                  >
+                    should contain lowercase letter *
+                  </motion.p>
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !passwordValidityStatus.uppercase
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
+                  >
+                    should contain uppercase letter *
+                  </motion.p>
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !passwordValidityStatus.digit
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
+                  >
+                    should contain digit *
+                  </motion.p>
+
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !passwordValidityStatus.specialChar
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
+                  >
+                    should contain special character *
+                  </motion.p>
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !passwordValidityStatus.minLength
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
+                  >
+                    should be more than 8 characters long *
+                  </motion.p>
+                  <motion.p
+                    initial={{ height: 0 }}
+                    animate={{
+                      height: !passwordValidityStatus.maxLength
+                        ? "var(--detailsPanelPropLabelHeight)"
+                        : 0,
+                    }}
+                    exit={{ height: 0 }}
+                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
+                  >
+                    should be less than 128 characters long *
+                  </motion.p>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );

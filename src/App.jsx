@@ -8,7 +8,7 @@ function App() {
     <DeviceTypeProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <SizingProvider defaultSizingMode="normal" storageKey="vite-ui-sizing">
-          <WritingApp />
+          <WritingApp key={'WritingApp'} />
         </SizingProvider>
       </ThemeProvider>
     </DeviceTypeProvider>

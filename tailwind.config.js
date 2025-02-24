@@ -60,7 +60,8 @@ export default {
         appLayoutHighlight: "hsl(var(--appLayoutHighlight))",
         activitySelectLine: "hsl(var(--activitySelectLine))",
         appLayoutSubmitButton: "hsl(var(--appLayoutSubmitButton))",
-        appLayoutDirectoryNodeHover: "hsl(var(--appLayoutDirectoryNodeHover))"
+        appLayoutDirectoryNodeHover: "hsl(var(--appLayoutDirectoryNodeHover))",
+        validationErrorText: "hsl(var(--validationErrorText))",
       },
       spacing: {
         actionBarHeight: "var(--actionBarHeight)",
@@ -90,7 +91,7 @@ export default {
         templateDetailsPreferenceLabelWidth: "var(--templateDetailsPreferenceLabelWidth)",
         templateDetailsPreferencesColorInputSize: "var(--templateDetailsPreferencesColorInputSize)",
         loadingSpinnerSize: "var(--loadingSpinnerSize)",
-
+        authInputHeight: "var(--authInputHeight)",
         optionsDropdownWidth: "var(--optionsDropdownWidth)",
         optionsDropdownOptionHeight: "var(--optionsDropdownOptionHeight)",
       },

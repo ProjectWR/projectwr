@@ -56,11 +56,14 @@
 
     --detailsPanelHeaderHeight: 4rem;
     --detailsPanelNameFontSize: 1.4rem;
-    --detailsPanelPropsFontSize: 1.5rem;
+    --detailsPanelPropsFontSize: 1.2rem;
     --detailsPanelPropLabelFontSize: 1rem;
-    --detailsPanelPropLabelHeight: 2rem;
+    --detailsPanelPropLabelHeight: 1.5rem;
     --detailsPanelSaveButtonFontSize: 1.2rem;
     --detailsPanelDescriptionInputHeight: 15rem;
+
+    --authInputHeight: 4rem;
+    --validationErrorText: 0 45% 41%;
 
     --libraryManagerNodeHeight: 4rem;
     --libraryManagerNodeText: 1.25rem;

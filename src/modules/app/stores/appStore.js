@@ -6,6 +6,11 @@ export const appStore = create((set) => ({
     return set({ loading: loading });
   },
 
+  user: null,
+  setUser: (user) => {
+    return set({ user: user });
+  },
+
   activity: "home",
   setActivity: (activity) => {
     return set({ activity: activity });
