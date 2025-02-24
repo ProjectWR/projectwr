@@ -129,7 +129,7 @@ const SettingsPanel = () => {
 
       <div
         id="SettingsBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll py-3 px-4 gap-3 ${
+        className={`flex-grow flex flex-col w-full justify-start items-end overflow-y-scroll py-3 px-4 gap-3 ${
           deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
         }`}
       >
@@ -269,6 +269,18 @@ const SettingsPanel = () => {
                     should be less than 128 characters long *
                   </motion.p>
                 </motion.div>
+                <div className={`w-full flex gap-2`}>
+                  <div className="w-1/2 h-fit border border-appLayoutBorder rounded-md">
+                    <button className="w-full py-2 text-detailsPanelPropsFontSize">
+                      Register
+                    </button>
+                  </div>
+                  <div className="w-1/2 h-fit border border-appLayoutBorder rounded-md">
+                    <button className="w-full py-2 text-detailsPanelPropsFontSize">
+                      Login
+                    </button>
+                  </div>
+                </div>
               </>
             )}
           </AnimatePresence>
