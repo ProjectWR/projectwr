@@ -1,20 +1,24 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { settingsStore } from "../../stores/settingsStore";
 import { loadSettings, saveSettings } from "../../lib/settings";
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../stores/appStore";
 
-import { getAuth, validatePassword } from "firebase/auth";
+import {
+  getAuth,
+  validatePassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import firebaseApp from "../../lib/Firebase";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-const uppercaseRegex = /[A-Z]/;
-const lowercaseRegex = /[a-z]/;
-const digitRegex = /\d/;
-const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-const minLengthRegex = /^.{8,}$/;
-const maxLengthRegex = /^.{,128}$/;
+const uppercaseRegex = /[A-Z]/g;
+const lowercaseRegex = /[a-z]/g;
+const digitRegex = /\d/g;
+const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g;
+const minLengthRegex = /^.{8,}$/g;
+const maxLengthRegex = /^.{1,128}$/g;
 
 const SettingsPanel = () => {
   console.log("rendering settings panel");
@@ -49,6 +53,31 @@ const SettingsPanel = () => {
       minLength: pwd === "" || minLengthRegex.test(pwd),
       maxLength: pwd === "" || maxLengthRegex.test(pwd),
     };
+  }, [authProps]);
+
+  const createUser = useCallback(async () => {
+    const email = authProps.email;
+    const password = authProps.password;
+
+    if (!emailRegex.test(authProps.email)) {
+      throw new Error("Invalid Email");
+    }
+
+    const passwordStatus = await validatePassword(
+      getAuth(firebaseApp),
+      password
+    );
+
+    if (!passwordStatus.isValid) {
+      console.log(passwordStatus);
+      throw new Error("Invalid Password");
+    }
+
+    const user = await createUserWithEmailAndPassword(
+      getAuth(firebaseApp),
+      email,
+      password
+    );
   }, [authProps]);
 
   const handleAuthPropChange = (e) => {
@@ -271,7 +300,10 @@ const SettingsPanel = () => {
                 </motion.div>
                 <div className={`w-full flex gap-2`}>
                   <div className="w-1/2 h-fit border border-appLayoutBorder rounded-md">
-                    <button className="w-full py-2 text-detailsPanelPropsFontSize">
+                    <button
+                      className="w-full py-2 text-detailsPanelPropsFontSize"
+                      onClick={createUser}
+                    >
                       Register
                     </button>
                   </div>
@@ -281,6 +313,25 @@ const SettingsPanel = () => {
                     </button>
                   </div>
                 </div>
+              </>
+            )}
+            {user && (
+              <>
+                <div className="relative w-full h-fit border border-appLayoutBorder rounded-md">
+                  <p
+                    id="loggedInUserDisplay"
+                    className="w-full h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight rounded-md bg-appBackground "
+                  >
+                    {user.email}
+                  </p>
+                  <label
+                    htmlFor="loggedInUserDisplay"
+                    className="absolute top-1 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none"
+                  >
+                    Logged in as:
+                  </label>
+                </div>
+
               </>
             )}
           </AnimatePresence>

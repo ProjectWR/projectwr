@@ -137,7 +137,7 @@ const MainPanel = ({}) => {
   };
 
   return deviceType === "mobile" ? (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <motion.div
         key={key.current}
         initial={{ y: 10, opacity: 0 }}
