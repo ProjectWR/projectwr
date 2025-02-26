@@ -62,6 +62,9 @@ export default {
         appLayoutSubmitButton: "hsl(var(--appLayoutSubmitButton))",
         appLayoutDirectoryNodeHover: "hsl(var(--appLayoutDirectoryNodeHover))",
         validationErrorText: "hsl(var(--validationErrorText))",
+        specialButton: "hsl(var(--specialButton))",
+        specialButtonHover: "hsl(var(--specialButtonHover))",
+        specialButtonDisabled: "hsl(var(--specialButtonDisabled))",
       },
       spacing: {
         actionBarHeight: "var(--actionBarHeight)",
@@ -94,6 +97,8 @@ export default {
         authInputHeight: "var(--authInputHeight)",
         optionsDropdownWidth: "var(--optionsDropdownWidth)",
         optionsDropdownOptionHeight: "var(--optionsDropdownOptionHeight)",
+        authButtonLoadingSize: "var(--authButtonLoadingSize)",
+        authButtonSize: "var(--authButtonSize)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",

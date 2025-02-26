@@ -39,6 +39,9 @@
     --appLayoutPressed: 0 0% 3%;
     --appLayoutDestruct: 0 62.8% 30.6%;
     --appLayoutDirectoryNodeHover: 0 0% 100% / 15%;
+    --specialButton: 0 0% 90%;
+    --specialButtonHover: 0 0% 60%;
+    --specialButtonDisabled: 0 0% 50%;
 
     --actionBarHeight: 2rem;
     --actionBarLogoSize: 7rem;
@@ -64,6 +67,9 @@
 
     --authInputHeight: 4rem;
     --validationErrorText: 0 45% 41%;
+    --authButtonSize: 1.6rem;
+    --authButtonLoadingSize: 1.5rem;
+
 
     --libraryManagerNodeHeight: 4rem;
     --libraryManagerNodeText: 1.25rem;
