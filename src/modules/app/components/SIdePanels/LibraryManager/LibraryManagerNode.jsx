@@ -16,6 +16,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { max, min } from "lib0/math";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
+import syncManager from "../../../lib/sync";
 
 /**
  *
@@ -413,6 +414,18 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                       dataManagerSubdocs.getLibrary(libraryId)
                     );
                     setLoading(false);
+                  },
+                },
+                {
+                  label: "Init Sync",
+                  icon: (
+                    <span className="icon-[line-md--cloud-alt-upload] h-full w-full transition-colors duration-100"></span>
+                  ),
+                  callback: () => {
+
+                    syncManager.initFireSync(
+                      dataManagerSubdocs.getLibrary(libraryId)
+                    );
                   },
                 },
               ]}

@@ -7,7 +7,6 @@ import {
   loadDefaultSettings,
   loadSettings,
 } from "../lib/settings";
-import { fetchUserLibraryListStore } from "../lib/libraries";
 import dataManagerSubdocs from "../lib/dataSubDoc";
 import persistenceManagerForSubdocs from "../lib/persistenceSubDocs";
 import { ThemeProvider } from "../ConfigProviders/ThemeProvider";
@@ -22,6 +21,8 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import firebaseApp from "../lib/Firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collection, getDocs, getDocsFromServer } from "firebase/firestore";
+import syncManager from "../lib/sync";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -38,6 +39,7 @@ const WritingApp = () => {
   const setLibraryListStore = appStore((state) => state.setLibraryListStore);
   const settings = settingsStore((state) => state.settings);
 
+  const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
   useEffect(() => {
     onAuthStateChanged(getAuth(firebaseApp), (user) => {
@@ -77,11 +79,9 @@ const WritingApp = () => {
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
 
-        // Fetch user library store
-        const userLibraryStore = await fetchUserLibraryListStore();
-        setLibraryListStore(userLibraryStore);
-
         const databases = await indexedDB.databases();
+
+        const localLibraries = [];
 
         for (const db of databases) {
           const libraryId = db.name;
@@ -90,15 +90,14 @@ const WritingApp = () => {
               "firebase-heartbeat-database",
               "firebase-installations-database",
               "firebaseLocalStorageDb",
+              "keyval-store",
             ].find((value) => value === libraryId)
           ) {
             continue;
           }
           console.log("Database: ", libraryId);
-          const exists = await userLibraryStore.has(libraryId);
-          if (!exists) {
-            await userLibraryStore.set(libraryId, "");
-          }
+
+          localLibraries.push(libraryId);
 
           dataManagerSubdocs.initLibrary(libraryId);
           const ydoc = dataManagerSubdocs.getLibrary(libraryId);
@@ -110,10 +109,39 @@ const WritingApp = () => {
           console.log(ydoc.guid, ydoc);
         }
 
-        const libraries = await userLibraryStore.entries();
+        console.log("Local Libraries: ", localLibraries);
 
-        console.log("libraries: ", libraries);
+        if (user) {
+          console.log("path: ", `users/${user.uid}/docs/`);
 
+          const querySnapshot = await getDocsFromServer(
+            collection(getFirestore(firebaseApp), `users/${user.uid}/docs/`)
+          );
+
+          const documentNames = querySnapshot.docs.map((doc) => doc.id);
+
+          console.log("firebase document names: ", documentNames);
+
+          for await (const guid of documentNames) {
+
+            let ydoc = dataManagerSubdocs.getLibrary(guid);
+
+            if (!ydoc) {
+              dataManagerSubdocs.initLibrary(guid);
+              ydoc = dataManagerSubdocs.getLibrary(guid);
+
+              console.log("ydoc", ydoc);
+
+              await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(
+                ydoc
+              );
+            }
+
+            console.log("firesync lib: ", ydoc.guid, ydoc);
+
+            await syncManager.initFireSync(ydoc);
+          }
+        }
         // Set loading to false once everything is loaded
         setLoading(false);
       } catch (error) {
@@ -123,9 +151,7 @@ const WritingApp = () => {
     };
 
     initializeWritingApp();
-  }, [setDefaultSettings, setSettings, setLibraryListStore]);
-
-  useEffect(() => {}, [settings]);
+  }, [setDefaultSettings, setSettings, setLibraryListStore, setLoading, user]);
 
   // Render loading screen if loading is true
   return (

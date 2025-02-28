@@ -11,7 +11,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  sendEmailVerification 
+  sendEmailVerification,
 } from "firebase/auth";
 import firebaseApp from "../../lib/Firebase";
 
@@ -27,6 +27,7 @@ const SettingsPanel = () => {
   console.log("rendering settings panel");
   const { deviceType } = useDeviceType();
   const user = appStore((state) => state.user);
+  const setUser = appStore((state) => state.setUser);
 
   const defaultSettings = settingsStore((state) => state.defaultSettings);
   const settings = settingsStore((state) => state.settings);
@@ -283,20 +284,20 @@ const SettingsPanel = () => {
                 exit={{ y: -10, opacity: 0 }}
                 className="w-full flex flex-col items-start rounded-md gap-2"
               >
-                <div className="w-full h-fit border border-appLayoutBorder rounded-md">
-                  <p className="w-full h-fit flex justify-center items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground ">
+                <div className="w-full h-fit border border-appLayoutBorder rounded-md shadow-sm shadow-appLayoutShadow">
+                  <p className="w-full h-fit flex justify-center items-center text-detailsPanelPropsFontSize text-appLayoutTextMuted px-3 py-2 rounded-md bg-appBackground ">
                     You are not logged in
                   </p>
                 </div>
 
                 <motion.div
                   animate={{ height: "fit-content" }}
-                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding`}
+                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding shadow-sm shadow-appLayoutShadow`}
                 >
                   <input
                     id="emailInput"
                     name="email"
-                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 "
+                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 shadow-inner shadow-appLayoutGentleShadow"
                     onChange={handleAuthPropChange}
                     value={authProps.email}
                   />
@@ -323,12 +324,12 @@ const SettingsPanel = () => {
 
                 <motion.div
                   animate={{ height: "fit-content" }}
-                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding`}
+                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding shadow-sm shadow-appLayoutShadow`}
                 >
                   <input
                     id="passwordInput"
                     name="password"
-                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight rounded-t-md bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 "
+                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight rounded-t-md bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 shadow-inner shadow-appLayoutGentleShadow"
                     onChange={handleAuthPropChange}
                     value={authProps.password}
                   />
@@ -430,10 +431,10 @@ const SettingsPanel = () => {
                             : ""
                         }
                           
+                        shadow-sm shadow-appLayoutShadow
                         bg-specialButton text-appLayoutHover transition-colors duration-200`}
                         onClick={registerUser}
                         disabled={isRegisterLoading}
-
                       >
                         <motion.span
                           key={
@@ -463,6 +464,7 @@ const SettingsPanel = () => {
                         
                         ${!isLoginLoading ? "hover:bg-specialButtonHover" : ""}
                           
+                        shadow-sm shadow-appLayoutShadow
                         bg-specialButton text-appLayoutHover transition-colors duration-200`}
                         onClick={loginUser}
                         disabled={isLoginLoading}
@@ -512,6 +514,26 @@ const SettingsPanel = () => {
                   </label>
                 </div>
 
+                <div className="relative w-full h-fit border border-appLayoutBorder rounded-md flex items-center">
+                  <p
+                    id="loggedInUserDisplay"
+                    className="flex-grow h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
+                  >
+                    {user.emailVerified ? "Free Plan" : "Email is not verified"}
+                  </p>
+                  <button
+                    className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                    onClick={async () => {
+                      const user = getAuth(firebaseApp).currentUser;
+                      await user.reload();
+                      console.log("user:", user);
+                      setUser({...user});
+                    }}
+                  >
+                    <span className="icon-[line-md--rotate-270] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+                  </button>
+                </div>
+
                 <div
                   className={`w-full h-fit flex gap-2 rounded-md border border-appLayoutBorder`}
                 >
@@ -524,7 +546,6 @@ const SettingsPanel = () => {
                         bg-specialButton text-appLayoutHover transition-colors duration-200`}
                       onClick={logoutUser}
                       disabled={isLogoutLoading}
-
                     >
                       <motion.span
                         key={

@@ -1,4 +1,6 @@
+import { getAuth } from "firebase/auth";
 import { create } from "zustand";
+import firebaseApp from "../lib/Firebase";
 
 export const appStore = create((set) => ({
   loading: true,
@@ -6,7 +8,7 @@ export const appStore = create((set) => ({
     return set({ loading: loading });
   },
 
-  user: null,
+  user: getAuth(firebaseApp).currentUser,
   setUser: (user) => {
     return set({ user: user });
   },

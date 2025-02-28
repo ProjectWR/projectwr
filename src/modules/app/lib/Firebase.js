@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
 
 import { FirebaseConfig } from "../../../FirebaseConfig";
 
@@ -14,8 +16,10 @@ import { FirebaseConfig } from "../../../FirebaseConfig";
 
 const firebaseApp = initializeApp(FirebaseConfig);
 
-const analytics = getAnalytics(firebaseApp);
+const analytics = getAnalytics();
 
 const auth = getAuth();
+
+const firestore = getFirestore();
 
 export default firebaseApp;

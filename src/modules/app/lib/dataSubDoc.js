@@ -27,7 +27,6 @@ import { generateUUID } from "../utils/uuidUtil";
 import { getHighestOrderIndex, insertBetween } from "../utils/orderUtil";
 import { YTree } from "yjs-orderedtree";
 import persistenceManagerForSubdocs from "./persistenceSubDocs";
-import { fetchUserLibraryListStore } from "./libraries";
 import ObservableMap from "./ObservableMap";
 import { min } from 'lib0/math';
 
@@ -138,12 +137,6 @@ class DataManagerSubdocs {
     this.libraryYDocMap.set(uuid, ydoc);
     persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
 
-    (async () => {
-      console.log("starting to put library in store");
-      const librariesStore = await fetchUserLibraryListStore();
-      await librariesStore.set(uuid, "");
-      console.log("set library in store");
-    })();
 
     return uuid;
   }

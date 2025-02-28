@@ -24,7 +24,7 @@ import { wait } from "lib0/promise";
 
 // TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
-  console.log("Library Manager Node was rendered");
+  console.log("Library Manager was rendered");
   const { deviceType } = useDeviceType();
 
   const setLibraryId = libraryStore((state) => state.setLibraryId);
