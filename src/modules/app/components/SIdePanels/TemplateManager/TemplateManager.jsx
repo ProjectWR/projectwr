@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { templateStore } from "../../../stores/templateStore";
 import { appStore } from "../../../stores/appStore";
 import templateManager from "../../../lib/templates";
@@ -11,7 +17,7 @@ const TemplateManager = () => {
   const { deviceType } = useDeviceType();
 
   const prevTemplatesRef = useRef(null);
-  
+
   const templates = useSyncExternalStore(
     (callback) => {
       templateManager.addCallback(callback);
@@ -22,10 +28,13 @@ const TemplateManager = () => {
     },
     () => {
       const templates = templateManager.getTemplates();
-      if (prevTemplatesRef.current !== null && prevTemplatesRef.current !== undefined && equalityDeep(prevTemplatesRef.current, templates)) {
+      if (
+        prevTemplatesRef.current !== null &&
+        prevTemplatesRef.current !== undefined &&
+        equalityDeep(prevTemplatesRef.current, templates)
+      ) {
         return prevTemplatesRef.current;
-      }
-      else {
+      } else {
         prevTemplatesRef.current = templates;
         return prevTemplatesRef.current;
       }
@@ -47,7 +56,14 @@ const TemplateManager = () => {
       {/* Header */}
       <div
         id="TemplateManagerHeader"
-        className="flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow"
+        className="flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder"
+        style={{
+          boxShadow:
+            deviceType === "desktop"
+              ? "0 1px 6px -1px hsl(var(--appLayoutShadow))"
+              : "", // bottom shadow
+          clipPath: deviceType === "desktop" ? "inset(0 0 -10px 0)" : "", // Clip the shadow except at bottom
+        }}
       >
         <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-libraryManagerHeaderText text-neutral-300 order-2">
           Your Templates
@@ -63,8 +79,8 @@ const TemplateManager = () => {
       {/* Body */}
       <div
         id="TemplateManagerBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll ${
-          deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
+        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-auto ${
+          deviceType === "mobile" ? "no-scrollbar" : ""
         }`}
       >
         <div

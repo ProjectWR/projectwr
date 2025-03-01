@@ -65,6 +65,7 @@ export default {
         specialButton: "hsl(var(--specialButton))",
         specialButtonHover: "hsl(var(--specialButtonHover))",
         specialButtonDisabled: "hsl(var(--specialButtonDisabled))",
+        sidePanelDragHandle: "hsl(var(--sidePanelDragHandle))",
       },
       spacing: {
         actionBarHeight: "var(--actionBarHeight)",
@@ -99,6 +100,7 @@ export default {
         optionsDropdownOptionHeight: "var(--optionsDropdownOptionHeight)",
         authButtonLoadingSize: "var(--authButtonLoadingSize)",
         authButtonSize: "var(--authButtonSize)",
+        actionBarButtonIconSize: "var(--actionBarButtonIconSize)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",

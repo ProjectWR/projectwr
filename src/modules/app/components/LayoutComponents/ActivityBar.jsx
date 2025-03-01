@@ -14,18 +14,21 @@ const ActivityBar = ({}) => {
   const showActivityBar = appStore((state) => state.showActivityBar);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {showActivityBar && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex gap-px items-center ${
+          className={`flex gap-px items-center bg-appBackground ${
             deviceType === "mobile"
-              ? "w-full h-activityBarHeight order-last flex-row"
-              : "h-full w-activityBarWidth order-first flex-col"
-          } border-t border-appLayoutBorder z-[50]`}
+              ? "w-full h-activityBarHeight order-last flex-row border-t"
+              : "h-full w-activityBarWidth min-w-activityBarWidth order-first flex-col border-r"
+          } border-appLayoutBorder z-5`}
           style={{
-            boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))", // Right shadow
-            clipPath: "inset(-10px 0 0 0)", // Clip the shadow on the bottom
+            boxShadow:
+              deviceType === "mobile"
+                ? "0 -1px 6px -1px hsl(var(--appLayoutShadow))"
+                : "", // Right shadow
+            clipPath: deviceType === "mobile" ? "inset(-10px 0 0 0)" : "", // Clip the shadow on the bottom
           }}
           key={`${showActivityBar}`}
           initial={deviceType !== "mobile" ? { height: "100%" } : { height: 0 }}
@@ -54,7 +57,7 @@ const ActivityBar = ({}) => {
           <ActivityButton
             onClick={() => {
               setActivity("home");
-              setPanelOpened(false);
+              setPanelOpened(true);
             }}
             activity={activity}
             selectedActivity={"home"}
@@ -108,7 +111,7 @@ const ActivityButton = ({
   flexValue,
 }) => {
   return (
-    <button
+    <motion.button
       key={activity}
       className={`relative 
         ${
@@ -119,17 +122,15 @@ const ActivityButton = ({
      
         ${
           selectedActivity === activity
-            ? "text-appLayoutHighlight bg-appLayoutPressed z-[100] shadow-md shadow-appLayoutShadow"
-            : "text-appLayoutTextMuted  hover:text-appLayoutHighlight bg-appBackground"
+            ? "text-appLayoutHighlight bg-appLayoutPressed z-[100] shadow-sm shadow-appLayoutShadow"
+            : "text-appLayoutTextMuted bg-appBackground hover:text-appLayoutHighlight"
         }
-
-        transition-colors duration-500
        
         ${className}`}
       onClick={onClick}
     >
       {buttonContent}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {selectedActivity === activity && (
           <motion.div
             id="ActivitySelectLine"
@@ -141,10 +142,10 @@ const ActivityButton = ({
               deviceType === "mobile"
                 ? "h-px w-full top-0"
                 : "w-px h-full left-full top-0"
-            } bg-white`}
+            } bg-activitySelectLine`}
           />
         )}
       </AnimatePresence>
-    </button>
+    </motion.button>
   );
 };

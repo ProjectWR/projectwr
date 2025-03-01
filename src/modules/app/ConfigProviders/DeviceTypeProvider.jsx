@@ -11,30 +11,10 @@ const DeviceTypeContext = createContext(initialDeviceTypeState);
 
 // DeviceTypeProvider component
 export function DeviceTypeProvider({ children }) {
-  const [deviceType, setDeviceType] = useState("desktop");
+  const [deviceType, setDeviceType] = useState("desktop"); // desktop, androidTab, iPad, android, iPhone 
 
-  useEffect(() => {
-    // Function to determine the device type based on screen width
-    const determineDeviceType = () => {
-      if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      ) {
-        // true for mobile device
-        console.log("mobile device");
-      } else {
-        // false for not mobile device
-        console.log("not mobile device");
-      }
-
-      setDeviceType("mobile");
-    };
-
-    // Determine the device type on initial load
-    determineDeviceType();
-
-  }, []);
+   // phone: 365 x 667
+   // desktop: 1024 x 768
 
   useEffect(() => {
     const root = window.document.documentElement;

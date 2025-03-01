@@ -53,6 +53,14 @@ class PersistenceManagerForSubdocs {
 
   async closeConnectionForYDoc(ydoc) {
     await this.indexeddbProviderMap.get(ydoc.guid).destroy();
+    await this.indexeddbProviderMap.delete(ydoc.guid);
+  }
+
+  async closeAllConnections() {
+    for (const guid in this.indexeddbProviderMap.keys()) {
+      await this.indexeddbProviderMap.get(guid).destroy();
+      await this.indexeddbProviderMap.delete(guid);
+    }
   }
 
   clearLocalPersistence() {

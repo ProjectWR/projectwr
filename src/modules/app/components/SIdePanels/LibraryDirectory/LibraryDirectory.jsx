@@ -106,7 +106,7 @@ const LibraryDirectory = ({ libraryId }) => {
             getComputedStyle(document.documentElement).getPropertyValue(
               "--libraryManagerHeaderText"
             )
-          )
+          ) * 1.5
         );
 
         newFontSize = max(newFontSize, 1);
@@ -135,61 +135,67 @@ const LibraryDirectory = ({ libraryId }) => {
       id="LibraryDirectoryContainer"
       className={`h-full w-full flex flex-col`}
     >
-      <div
-        id="LibraryDirectoryHeader"
-        className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow z-[1]`}
-      >
+      {deviceType === "desktop" && (
         <div
-          ref={textContainerRef}
-          style={{ fontSize }}
-          className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-100 pb-px order-2"
+          id="LibraryDirectoryHeader"
+          className={`flex flex-col items-center justify-between h-fit min-h-fit border-b border-appLayoutBorder  z-[1]`}
         >
-          <p
-            ref={textRef}
-            className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-          >
-            {libraryPropsMapState.library_name}
-          </p>
-        </div>
+          <div className="h-fit min-h-fit py-1 px-1 w-full flex flex-row items-center">
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-1
+                        `}
+              onClick={() => {
+                setLibraryId("unselected");
+              }}
+            >
+              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
 
-        <OptionsButton
-          className={`order-5`}
-          container={libraryDirectoryBodyRef.current}
-          buttonIcon={
-            <span className="icon-[line-md--menu] h-full w-full"></span>
-          }
-          options={[
-            {
-              label: "Edit Properties",
-              icon: (
-                <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-100"></span>
-              ),
-              callback: () => {
+            <span className="h-full flex-grow order-2"></span>
+
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-3
+                        `}
+              onClick={() => {
                 setLibraryId(libraryId);
                 setItemId("unselected");
-                setPanelOpened(false);
-              },
-            },
-            {
-              label: "Create Book",
-              icon: (
-                <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
-              ),
-              callback: () => {
+                if (deviceType === "mobile") {
+                  setPanelOpened(false);
+                }
+
+                setPanelOpened(true);
+              }}
+            >
+              <span className="icon-[bitcoin-icons--edit-outline] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-4
+                        `}
+              onClick={() => {
                 console.log("Create Book!");
                 const bookId = dataManagerSubdocs.createEmptyBook(
                   libraryYTreeRef.current
                 );
                 setItemId(bookId);
-                setPanelOpened(false);
-              },
-            },
-            {
-              label: "Create Section",
-              icon: (
-                <span className="icon-[mdi--folder-add-outline] h-full w-full"></span>
-              ),
-              callback: () => {
+                if (deviceType === "mobile") {
+                  setPanelOpened(false);
+                }
+
+                setPanelOpened(true);
+              }}
+            >
+              <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                        order-5
+                        `}
+              onClick={() => {
                 console.log("create section button");
                 const sectionId = dataManagerSubdocs.createEmptySection(
                   libraryYTreeRef.current,
@@ -197,15 +203,21 @@ const LibraryDirectory = ({ libraryId }) => {
                 );
 
                 setItemId(sectionId);
-                setPanelOpened(false);
-              },
-            },
-            {
-              label: "Create Paper",
-              icon: (
-                <span className="icon-[mdi--paper-add-outline] h-full w-full"></span>
-              ),
-              callback: () => {
+                if (deviceType === "mobile") {
+                  setPanelOpened(false);
+                }
+
+                setPanelOpened(true);
+              }}
+            >
+              <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-6
+                          `}
+              onClick={() => {
                 console.log("create paper button");
                 const paperId = dataManagerSubdocs.createEmptyPaper(
                   libraryYTreeRef.current,
@@ -213,25 +225,149 @@ const LibraryDirectory = ({ libraryId }) => {
                 );
 
                 setItemId(paperId);
-                setPanelOpened(false);
-              },
-            },
-          ]}
-        />
+                if (deviceType === "mobile") {
+                  setPanelOpened(false);
+                }
 
-        <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                setPanelOpened(true);
+              }}
+            >
+              <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+          </div>
+
+
+          <div className="h-fit min-h-fit pb-3 px-3 w-full flex items-center justify-center">
+            <div
+              ref={textContainerRef}
+              style={{ fontSize }}
+              className="flex-grow min-w-0 flex justify-center items-center transition-colors duration-100 pb-px order-2"
+            >
+              <p
+                ref={textRef}
+                className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+              >
+                {libraryPropsMapState.library_name}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deviceType === "mobile" && (
+        <div
+          id="LibraryDirectoryHeader"
+          className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder  z-[1]`}
+        >
+          <OptionsButton
+            className={`order-5`}
+            container={libraryDirectoryBodyRef.current}
+            buttonIcon={
+              <span className="icon-[line-md--menu] h-full w-full"></span>
+            }
+            options={[
+              {
+                label: "Edit Properties",
+                icon: (
+                  <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-100"></span>
+                ),
+                callback: () => {
+                  setLibraryId(libraryId);
+                  setItemId("unselected");
+                  if (deviceType === "mobile") {
+                    setPanelOpened(false);
+                  }
+
+                  setPanelOpened(true);
+                },
+              },
+              {
+                label: "Create Book",
+                icon: (
+                  <span className="icon-[fluent--document-one-book-add-24-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
+                ),
+                callback: () => {
+                  console.log("Create Book!");
+                  const bookId = dataManagerSubdocs.createEmptyBook(
+                    libraryYTreeRef.current
+                  );
+                  setItemId(bookId);
+                  if (deviceType === "mobile") {
+                    setPanelOpened(false);
+                  }
+
+                  setPanelOpened(true);
+                },
+              },
+              {
+                label: "Create Section",
+                icon: (
+                  <span className="icon-[fluent--document-one-folder-add-24-regular] h-full w-full"></span>
+                ),
+                callback: () => {
+                  console.log("create section button");
+                  const sectionId = dataManagerSubdocs.createEmptySection(
+                    libraryYTreeRef.current,
+                    "root"
+                  );
+
+                  setItemId(sectionId);
+                  if (deviceType === "mobile") {
+                    setPanelOpened(false);
+                  }
+
+                  setPanelOpened(true);
+                },
+              },
+              {
+                label: "Create Paper",
+                icon: (
+                  <span className="icon-[fluent--document-one-page-add-24-regular] h-full w-full"></span>
+                ),
+                callback: () => {
+                  console.log("create paper button");
+                  const paperId = dataManagerSubdocs.createEmptyPaper(
+                    libraryYTreeRef.current,
+                    "root"
+                  );
+
+                  setItemId(paperId);
+                  if (deviceType === "mobile") {
+                    setPanelOpened(false);
+                  }
+
+                  setPanelOpened(true);
+                },
+              },
+            ]}
+          />
+
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
              order-1
           `}
-          onClick={() => {
-            setLibraryId("unselected");
-          }}
-        >
-          <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-        </button>
+            onClick={() => {
+              setLibraryId("unselected");
+            }}
+          >
+            <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
 
-        <span className="flex-grow order-3"></span>
-      </div>
+          <div
+            ref={textContainerRef}
+            style={{ fontSize }}
+            className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-100 pb-px order-2"
+          >
+            <p
+              ref={textRef}
+              className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+            >
+              {libraryPropsMapState.library_name}
+            </p>
+          </div>
+        </div>
+      )}
+
       <div
         id="libraryDirectoryBodyContainer"
         className={`flex-grow min-h-0 w-full`}
@@ -239,8 +375,8 @@ const LibraryDirectory = ({ libraryId }) => {
         <div
           id="libraryDirectoryBody"
           ref={libraryDirectoryBodyRef}
-          className={`h-full w-full overflow-y-scroll px-2 ${
-            deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
+          className={`h-full w-full overflow-y-auto ${
+            deviceType === "mobile" ? "no-scrollbar" : ""
           }`}
         >
           <div
@@ -277,7 +413,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 {
                   label: "Create Book",
                   icon: (
-                    <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
+                    <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
                   ),
                   callback: () => {
                     console.log("Create Book!");
@@ -285,13 +421,17 @@ const LibraryDirectory = ({ libraryId }) => {
                       libraryYTreeRef.current
                     );
                     setItemId(bookId);
-                    setPanelOpened(false);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
                   },
                 },
                 {
                   label: "Create Section",
                   icon: (
-                    <span className="icon-[mdi--folder-add-outline] h-full w-full"></span>
+                    <span className="icon-[fluent--folder-add-20-regular] h-full w-full"></span>
                   ),
                   callback: () => {
                     console.log("create section button");
@@ -301,13 +441,17 @@ const LibraryDirectory = ({ libraryId }) => {
                     );
 
                     setItemId(sectionId);
-                    setPanelOpened(false);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
                   },
                 },
                 {
                   label: "Create Paper",
                   icon: (
-                    <span className="icon-[mdi--paper-add-outline] h-full w-full"></span>
+                    <span className="icon-[fluent--document-one-page-add-20-regular] h-full w-full"></span>
                   ),
                   callback: () => {
                     console.log("create paper button");
@@ -317,7 +461,11 @@ const LibraryDirectory = ({ libraryId }) => {
                     );
 
                     setItemId(paperId);
-                    setPanelOpened(false);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
                   },
                 },
               ]}
@@ -389,7 +537,7 @@ const OptionsButton = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
       ref={buttonContainerRef}
-      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full 
+      className={`relative w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full 
                   text-appLayoutText
                   ${
                     isOpened

@@ -13,14 +13,17 @@
     "windows": [
       {
         "title": "projectwr-dev",
-        "width": 365,
-        "height": 667,
+        "width": 1024,
+        "height": 768,
+        "minHeight": 768,
+        "minWidth": 1024,
         "resizable": true,
         "fullscreen": false,
         "dragDropEnabled": false,
         "decorations": false,
         "shadow": false,
-        "transparent": true
+        "transparent": true,
+        "additionalBrowserArgs": "--enable-features=OverlayScrollbar"
       }
     ],
     "security": {

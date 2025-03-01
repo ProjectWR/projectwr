@@ -18,36 +18,19 @@ const ActionBar = () => {
         id="actionBar"
         className="w-full h-full flex justify-start items-center font-sans"
       >
-        <ActionButton
-          className={`ml-1`}
-          buttonContent={deviceType === "mobile" ? <p>H</p> : <p>Home</p>}
-          onClick={() => {
-            console.log("home");
-          }}
-        />
         <div
-          className={`logo h-full w-actionBarLogoSize flex items-center justify-center ml-1 font-serif`}
+          className={`logo h-full w-actionBarLogoSize flex items-center justify-center ml-3 mr-px font-serif pointer-events-none select-none`}
         >
-          <h1>
-            {deviceType === "mobile" ? <span>D</span> : <span>ProjectWr</span>}
-          </h1>
+          <span className="icon-[ph--flower-tulip-thin] h-actionBarLogoSize w-actionBarLogoSize"></span>
         </div>
-        <ActionButton
-          className={`ml-1`}
-          buttonContent={deviceType === "mobile" ? <p>H</p> : <p>Home</p>}
-          onClick={() => {
-            console.log("home");
-          }}
-        />
-
-        <ActionButton
-          buttonContent={deviceType === "mobile" ? <p>S</p> : <p>Settings</p>}
-        />
-        <ActionButton
-          buttonContent={deviceType === "mobile" ? <p>H</p> : <p>Help</p>}
-        />
 
         <div className="flex-grow"></div>
+
+        <ActionButton
+          buttonContent={
+            <span className="icon-[line-md--question] h-actionBarButtonIconSize w-actionBarButtonIconSize"></span>
+          }
+        />
 
         {deviceType !== "mobile" && (
           <>
@@ -115,7 +98,7 @@ export default ActionBar;
 const ActionButton = ({ onClick, className, buttonContent }) => {
   return (
     <button
-      className={`h-full px-4 pb-px w-fit ml-1 hover:bg-appLayoutHover ${className}`}
+      className={`h-full px-4 w-fit ml-1 hover:bg-appLayoutInverseHover flex items-center justify-center ${className}`}
       onClick={onClick}
     >
       {buttonContent}

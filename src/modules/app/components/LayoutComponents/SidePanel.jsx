@@ -13,6 +13,7 @@ const SidePanel = ({}) => {
   const libraryId = libraryStore((state) => state.libraryId);
   const templateId = templateStore((state) => state.templateId);
   const activity = appStore((state) => state.activity);
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const key = useRef("empty");
 
@@ -35,11 +36,16 @@ const SidePanel = ({}) => {
       }
     } else {
       key.current = "empty";
-      return <p>Nothing</p>;
+      setPanelOpened(false);
+      return (
+        <div className="h-full w-full flex items-center justify-center">
+          <p>Nothing</p>
+        </div>
+      );
     }
   };
 
-  return deviceType === "mobile" ? (
+  return (
     <AnimatePresence mode="wait">
       <motion.div
         key={key.current}
@@ -47,15 +53,14 @@ const SidePanel = ({}) => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -10, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full h-full bg-appBackground  border-appLayoutBorder"
+        style={{
+          minWidth: `calc(var(--sidePanelWidth) * 0.75)`
+        }}
+        className="w-full h-full bg-appBackground border-appLayoutBorder"
       >
         {renderSidePanel()}
       </motion.div>
     </AnimatePresence>
-  ) : (
-    <div className="w-sidePanelWidth h-full bg-red-500">
-      {renderSidePanel()}
-    </div>
   );
 };
 

@@ -136,24 +136,20 @@ const MainPanel = ({}) => {
     return <p>Home</p>;
   };
 
-  return deviceType === "mobile" ? (
+  return(
     <AnimatePresence mode="wait">
       <motion.div
         key={key.current}
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 10, opacity: 0 }}
+        initial={{ x: -10, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: -10, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full h-full bg-appBackground"
+        className="w-full h-full bg-appBackground overflow-hidden z-3"
       >
         {renderMainPanel()}
       </motion.div>
     </AnimatePresence>
-  ) : (
-    <div className="flex-grow h-full bg-yellow-500">
-      <p>Main</p>
-    </div>
-  );
+  )
 };
 
 export default MainPanel;

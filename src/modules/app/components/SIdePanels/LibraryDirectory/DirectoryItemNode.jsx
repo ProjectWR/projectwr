@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import { min, max } from "lib0/math";
+import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 
 /**
  *
@@ -18,6 +19,7 @@ import { min, max } from "lib0/math";
  */
 const DirectoryItemNode = ({ ytree, itemId }) => {
   console.log("Directory item node rendered: ", itemId);
+  const { deviceType } = useDeviceType();
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = libraryStore((state) => state.setItemId);
@@ -272,7 +274,6 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
       id="DirectoryItemNodeContainer"
       ref={dndRef}
       className={`
-
         flex flex-col
 
         w-full h-fit
@@ -300,13 +301,15 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
       <div
         id="DirectoryItemNodeHeader"
         className={`flex justify-between items-center  hover:bg-appLayoutHover
+            pl-1
+          
 
           ${(() => {
             const type = itemMapRef.current.get("type");
             if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
             if (type === "section")
               return "h-libraryDirectorySectionNodeHeight ";
-            if (type === "book") return "h-libraryDirectoryBookNodeHeight ";
+            if (type === "book") return "h-libraryDirectoryBookNodeHeight";
             return "";
           })()}
 
@@ -325,7 +328,11 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 console.log("edit paper button");
                 setItemId(itemId);
                 setItemMode("details");
-                setPanelOpened(false);
+                if (deviceType === "mobile") {
+                  setPanelOpened(false);
+                }
+
+                setPanelOpened(true);
               }}
             >
               <span
@@ -347,7 +354,11 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                     console.log("edit paper editor button");
                     setItemId(itemId);
                     setItemMode("settings");
-                    setPanelOpened(false);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
                   },
                 },
 
@@ -439,7 +450,11 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                     console.log("edit section details button");
                     setItemId(itemId);
                     setItemMode("details");
-                    setPanelOpened(false);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
                   },
                 },
                 {
@@ -511,9 +526,13 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 className={`w-full flex flex-row justify-start`}
               >
                 <div
-                  className={`w-libraryDirectoryBookNodeIconSize flex items-center justify-center`}
+                  style={{
+                    marginLeft:
+                      "calc(3px + var(--libraryDirectoryBookNodeIconSize) / 2)",
+                  }}
+                  className={`w-px flex items-center justify-center`}
                 >
-                  <span className={`h-full w-px bg-appLayoutBorder`}></span>
+                  <span className={`h-full w-full bg-appLayoutBorder`}></span>
                 </div>
                 <div
                   id="DirectoryItemNodeBody"
@@ -599,7 +618,7 @@ const OptionsButton = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
       ref={buttonContainerRef}
-      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1
+      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1
                   text-appLayoutText
                   ${
                     isOpened

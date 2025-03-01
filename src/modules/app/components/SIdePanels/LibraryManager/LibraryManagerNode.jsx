@@ -17,6 +17,7 @@ import { max, min } from "lib0/math";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 import syncManager from "../../../lib/sync";
+import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 
 /**
  *
@@ -25,6 +26,8 @@ import syncManager from "../../../lib/sync";
  */
 const LibraryManagerNode = ({ libraryId, className }) => {
   console.log("library node rendered: ", libraryId);
+
+  const { deviceType } = useDeviceType();
 
   const [loading, setLoading] = useState(false);
 
@@ -387,7 +390,11 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                   callback: () => {
                     setLibraryId(libraryId);
                     setItemId("unselected");
-                    setPanelOpened(false);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
                   },
                 },
                 {
@@ -421,11 +428,14 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                   icon: (
                     <span className="icon-[line-md--cloud-alt-upload] h-full w-full transition-colors duration-100"></span>
                   ),
-                  callback: () => {
+                  callback: async () => {
+                    setLoading(true);
 
-                    syncManager.initFireSync(
+                    await syncManager.initFireSync(
                       dataManagerSubdocs.getLibrary(libraryId)
                     );
+
+                    setLoading(false);
                   },
                 },
               ]}

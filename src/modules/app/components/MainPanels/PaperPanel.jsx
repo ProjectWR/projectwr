@@ -14,6 +14,7 @@ import { AnimatePresence, motion } from "motion/react";
  * @returns
  */
 const PaperPanel = ({ ytree, paperId }) => {
+  const { deviceType } = useDeviceType();
   console.log("library details panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
@@ -22,7 +23,9 @@ const PaperPanel = ({ ytree, paperId }) => {
   const [headerOpened, setHeaderOpened] = useState(true);
 
   useEffect(() => {
-    setShowActivityBar(false);
+    if (deviceType === 'mobile') {
+      setShowActivityBar(false);
+    }
 
     return () => {
       setShowActivityBar(true);

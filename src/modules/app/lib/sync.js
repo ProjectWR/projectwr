@@ -35,6 +35,10 @@ class SyncManager {
       throw new Error("Yjs document is required to initialize persistence");
     }
 
+    if (this.fireProviderMap.has(ydoc.guid)) {
+      return;
+    }
+
     const path = `users/${getAuth(firebaseApp).currentUser.uid}/docs/${ydoc.guid}`;
     console.log("path: ", path);
 
@@ -42,9 +46,9 @@ class SyncManager {
       firebaseApp,
       ydoc,
       path: `users/${getAuth(firebaseApp).currentUser.uid}/docs/${ydoc.guid}`,
-      maxUpdatesThreshold: 1,
-      maxWaitTime: 1,
-      maxWaitFirestoreTime: 1
+      maxUpdatesThreshold: 40,
+      maxWaitTime: 90,
+      maxWaitFirestoreTime: 30 * 1000
     });
 
     // Wait until the provider's `uid` is set (indicating initialization is complete)

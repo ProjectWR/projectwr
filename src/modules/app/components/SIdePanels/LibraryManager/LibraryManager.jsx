@@ -92,7 +92,14 @@ const LibraryManager = () => {
     <div id="LibraryManagerContainer" className={`h-full w-full flex flex-col`}>
       <div
         id="LibraryManagerHeader"
-        className={`flex items-center justify-start gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow`}
+        className={`flex items-center justify-start gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder`}
+        style={{
+          boxShadow:
+            deviceType === "desktop"
+              ? "0 1px 6px -1px hsl(var(--appLayoutShadow))"
+              : "", // bottom shadow
+          clipPath: deviceType === "desktop" ? "inset(0 0 -10px 0)" : "", // Clip the shadow except at bottom
+        }}
       >
         <span className="icon-[ion--library-sharp] ml-3 h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize"></span>
 
@@ -105,7 +112,11 @@ const LibraryManager = () => {
  `}
           onClick={() => {
             setLibraryId(dataManagerSubdocs.createEmptyLibrary());
-            setPanelOpened(false);
+            if (deviceType === "mobile") {
+              setPanelOpened(false);
+            }
+
+            setPanelOpened(true);
           }}
         >
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -114,8 +125,8 @@ const LibraryManager = () => {
 
       <div
         id="LibraryManagerBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll ${
-          deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
+        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-auto ${
+          deviceType === "mobile" ? "no-scrollbar" : ""
         }`}
       >
         <div

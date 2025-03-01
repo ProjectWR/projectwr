@@ -38,7 +38,7 @@ import {
 
 import { Buffer } from 'buffer/';
 import { save } from '@tauri-apps/plugin-dialog';
-import { writeFile} from '@tauri-apps/plugin-fs';
+import { writeFile } from '@tauri-apps/plugin-fs';
 import { Packer } from 'docx';
 
 let instance;
@@ -99,6 +99,12 @@ class DataManagerSubdocs {
     const ydoc = this.getLibrary(libraryId);
     ydoc.destroy();
     this.libraryYDocMap.delete(libraryId);
+  }
+
+  destroyAll() {
+    for (const libraryId in this.libraryYDocMap.keys()) {
+      this.destroyLibrary(libraryId);
+    }
   }
 
   /**
