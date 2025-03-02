@@ -89,21 +89,19 @@ const LibraryManager = () => {
   );
 
   return (
-    <div id="LibraryManagerContainer" className={`h-full w-full flex flex-col`}>
+    <div
+      id="LibraryManagerContainer"
+      className={`h-full w-full flex flex-col items-center`}
+    >
       <div
         id="LibraryManagerHeader"
-        className={`flex items-center justify-start gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder`}
-        style={{
-          boxShadow:
-            deviceType === "desktop"
-              ? "0 1px 6px -1px hsl(var(--appLayoutShadow))"
-              : "", // bottom shadow
-          clipPath: deviceType === "desktop" ? "inset(0 0 -10px 0)" : "", // Clip the shadow except at bottom
-        }}
+        className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder`}
       >
-        <span className="icon-[ion--library-sharp] ml-3 h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize"></span>
+        {deviceType === "mobile" && (
+          <span className="icon-[ion--library-sharp] ml-3 h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize"></span>
+        )}
 
-        <h1 className="h-fit flex-grow pt-1 text-libraryManagerHeaderText text-neutral-300 order-2">
+        <h1 className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${deviceType === 'mobile' ? 'ml-3' : 'ml-6'}`}>
           Your Libraries
         </h1>
 
@@ -123,11 +121,16 @@ const LibraryManager = () => {
         </button>
       </div>
 
+      <div className="w-[92.5%] h-px bg-appLayoutBorder"></div>
+
       <div
         id="LibraryManagerBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-auto ${
+        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${
           deviceType === "mobile" ? "no-scrollbar" : ""
         }`}
+        style={{
+          paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+        }}
       >
         <div
           id="LibraryListContainer"
@@ -140,7 +143,7 @@ const LibraryManager = () => {
                   <div
                     key={libraryId}
                     id={`LibraryListNode-${index}`}
-                    className="w-full h-libraryManagerNodeHeight min-h-libraryManagerNodeHeight border-b border-appLayoutBorder "
+                    className="w-full h-libraryManagerNodeHeight min-h-libraryManagerNodeHeight border-appLayoutBorder "
                   >
                     <LibraryManagerNode
                       libraryId={libraryId}

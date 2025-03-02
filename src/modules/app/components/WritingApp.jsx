@@ -204,7 +204,7 @@ const WritingApp = () => {
 
         await wait(1000);
         setLoadingStage("Finished Loading");
-        setLoading(false);
+        setLoading(false  );
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -220,7 +220,7 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className="h-screen max-h-screen w-screen max-w-screen bg-appBackground"
+          className="h-screen max-h-screen w-screen max-w-screen bg-appBackground font-serif"
         >
           {loading && (
             <motion.div

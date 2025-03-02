@@ -303,6 +303,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
         className={`flex justify-between items-center  hover:bg-appLayoutHover
             pl-1
           
+            rounded-md
 
           ${(() => {
             const type = itemMapRef.current.get("type");
@@ -314,16 +315,14 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
           })()}
 
           transition-colors
-          duration-200
+          duration-0
 
         `}
       >
         {itemMapRef.current.get("type") == "paper" && (
           <>
             <button
-              ref={textContainerRef}
-              style={{ fontSize }}
-              className="flex-grow min-w-0 flex items-center justify-start h-full pl-2"
+              className="flex-grow min-w-0 flex items-center justify-start h-full"
               onClick={() => {
                 console.log("edit paper button");
                 setItemId(itemId);
@@ -335,12 +334,26 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 setPanelOpened(true);
               }}
             >
-              <span
-                ref={textRef}
-                className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+              <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
+                <motion.span
+                  animate={{ rotate: isOpened ? 90 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`icon-[fluent--book-20-regular] h-full w-full`}
+                ></motion.span>
+              </div>
+
+              <div
+                style={{ fontSize }}
+                ref={textContainerRef}
+                className="flex-grow min-w-0 h-full flex items-center justify-start"
               >
-                {itemMapState.item_title}
-              </span>
+                <span
+                  ref={textRef}
+                  className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                >
+                  {itemMapState.item_title}
+                </span>
+              </div>
             </button>
 
             <OptionsButton
@@ -618,7 +631,7 @@ const OptionsButton = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
       ref={buttonContainerRef}
-      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1
+      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1
                   text-appLayoutText
                   ${
                     isOpened
@@ -633,7 +646,7 @@ const OptionsButton = ({
     >
       <button
         ref={buttonRef}
-        className="w-full h-full"
+        className="w-full h-full p-1"
         onClick={() => {
           setIsOpened(!isOpened);
         }}
@@ -680,7 +693,7 @@ const OptionsButton = ({
                   option.callback();
                 }}
                 className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 py-1 gap-px
-                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight transition-colors duration-200"
+                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight transition-colors duration-0"
               >
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}

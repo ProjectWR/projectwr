@@ -133,119 +133,32 @@ const LibraryDirectory = ({ libraryId }) => {
   return (
     <div
       id="LibraryDirectoryContainer"
-      className={`h-full w-full flex flex-col`}
+      className={`h-full w-full flex flex-col items-center`}
     >
       {deviceType === "desktop" && (
         <div
           id="LibraryDirectoryHeader"
-          className={`flex flex-col items-center justify-between h-fit min-h-fit border-b border-appLayoutBorder  z-[1]`}
+          className={`flex flex-col w-full items-center justify-center h-fit min-h-libraryDirectoryHeaderHeight border-appLayoutBorder  z-[1]`}
         >
-          <div className="h-fit min-h-fit py-1 px-1 w-full flex flex-row items-center">
+          <div className="h-fit min-h-fit py-3 pr-3 w-full flex items-center justify-center order-2">
             <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
                           order-1
                         `}
               onClick={() => {
                 setLibraryId("unselected");
               }}
             >
-              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+              <span className="icon-[material-symbols-light--keyboard-arrow-left] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
             </button>
-
-            <span className="h-full flex-grow order-2"></span>
-
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
-                          order-3
-                        `}
-              onClick={() => {
-                setLibraryId(libraryId);
-                setItemId("unselected");
-                if (deviceType === "mobile") {
-                  setPanelOpened(false);
-                }
-
-                setPanelOpened(true);
-              }}
-            >
-              <span className="icon-[bitcoin-icons--edit-outline] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
-                          order-4
-                        `}
-              onClick={() => {
-                console.log("Create Book!");
-                const bookId = dataManagerSubdocs.createEmptyBook(
-                  libraryYTreeRef.current
-                );
-                setItemId(bookId);
-                if (deviceType === "mobile") {
-                  setPanelOpened(false);
-                }
-
-                setPanelOpened(true);
-              }}
-            >
-              <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
-                        order-5
-                        `}
-              onClick={() => {
-                console.log("create section button");
-                const sectionId = dataManagerSubdocs.createEmptySection(
-                  libraryYTreeRef.current,
-                  "root"
-                );
-
-                setItemId(sectionId);
-                if (deviceType === "mobile") {
-                  setPanelOpened(false);
-                }
-
-                setPanelOpened(true);
-              }}
-            >
-              <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
-                          order-6
-                          `}
-              onClick={() => {
-                console.log("create paper button");
-                const paperId = dataManagerSubdocs.createEmptyPaper(
-                  libraryYTreeRef.current,
-                  "root"
-                );
-
-                setItemId(paperId);
-                if (deviceType === "mobile") {
-                  setPanelOpened(false);
-                }
-
-                setPanelOpened(true);
-              }}
-            >
-              <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-          </div>
-
-
-          <div className="h-fit min-h-fit pb-3 px-3 w-full flex items-center justify-center">
             <div
               ref={textContainerRef}
               style={{ fontSize }}
-              className="flex-grow min-w-0 flex justify-center items-center transition-colors duration-100 pb-px order-2"
+              className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-0 pt-px order-2"
             >
               <p
                 ref={textRef}
-                className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                className="w-fit max-w-full overflow-hidden overflow-ellipsis"
               >
                 {libraryPropsMapState.library_name}
               </p>
@@ -257,7 +170,7 @@ const LibraryDirectory = ({ libraryId }) => {
       {deviceType === "mobile" && (
         <div
           id="LibraryDirectoryHeader"
-          className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder  z-[1]`}
+          className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  z-[1]`}
         >
           <OptionsButton
             className={`order-5`}
@@ -269,7 +182,7 @@ const LibraryDirectory = ({ libraryId }) => {
               {
                 label: "Edit Properties",
                 icon: (
-                  <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-100"></span>
+                  <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-0"></span>
                 ),
                 callback: () => {
                   setLibraryId(libraryId);
@@ -284,7 +197,7 @@ const LibraryDirectory = ({ libraryId }) => {
               {
                 label: "Create Book",
                 icon: (
-                  <span className="icon-[fluent--document-one-book-add-24-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
+                  <span className="icon-[fluent--one-book-add-24-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
                 ),
                 callback: () => {
                   console.log("Create Book!");
@@ -302,7 +215,7 @@ const LibraryDirectory = ({ libraryId }) => {
               {
                 label: "Create Section",
                 icon: (
-                  <span className="icon-[fluent--document-one-folder-add-24-regular] h-full w-full"></span>
+                  <span className="icon-[fluent--one-folder-add-24-regular] h-full w-full"></span>
                 ),
                 callback: () => {
                   console.log("create section button");
@@ -343,7 +256,7 @@ const LibraryDirectory = ({ libraryId }) => {
           />
 
           <button
-            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
              order-1
           `}
             onClick={() => {
@@ -356,7 +269,7 @@ const LibraryDirectory = ({ libraryId }) => {
           <div
             ref={textContainerRef}
             style={{ fontSize }}
-            className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-100 pb-px order-2"
+            className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-0 pb-px order-2"
           >
             <p
               ref={textRef}
@@ -368,6 +281,95 @@ const LibraryDirectory = ({ libraryId }) => {
         </div>
       )}
 
+      <div className="w-[92.5%] h-px bg-appLayoutBorder"></div>
+      <div
+        id="LibraryDirectoryHeader"
+        className={`flex flex-col items-center justify-between h-fit min-h-fit mt-1 border-appLayoutBorder   z-[1]`}
+      >
+        <div className="h-fit min-h-fit py-1 px-1 w-full flex flex-row gap-2 items-center order-2">
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-[6px]  rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-3
+                        `}
+            onClick={() => {
+              setLibraryId(libraryId);
+              setItemId("unselected");
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              setPanelOpened(true);
+            }}
+          >
+            <span className="icon-[bitcoin-icons--edit-outline] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-[6px]  rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-4
+                        `}
+            onClick={() => {
+              console.log("Create Book!");
+              const bookId = dataManagerSubdocs.createEmptyBook(
+                libraryYTreeRef.current
+              );
+              setItemId(bookId);
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              setPanelOpened(true);
+            }}
+          >
+            <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-[6px]  rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                        order-5
+                        `}
+            onClick={() => {
+              console.log("create section button");
+              const sectionId = dataManagerSubdocs.createEmptySection(
+                libraryYTreeRef.current,
+                "root"
+              );
+
+              setItemId(sectionId);
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              setPanelOpened(true);
+            }}
+          >
+            <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-[6px]  rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-6
+                          `}
+            onClick={() => {
+              console.log("create paper button");
+              const paperId = dataManagerSubdocs.createEmptyPaper(
+                libraryYTreeRef.current,
+                "root"
+              );
+
+              setItemId(paperId);
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              setPanelOpened(true);
+            }}
+          >
+            <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+        </div>
+      </div>
+
       <div
         id="libraryDirectoryBodyContainer"
         className={`flex-grow min-h-0 w-full`}
@@ -375,7 +377,10 @@ const LibraryDirectory = ({ libraryId }) => {
         <div
           id="libraryDirectoryBody"
           ref={libraryDirectoryBodyRef}
-          className={`h-full w-full overflow-y-auto ${
+          style={{
+            paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+          }}
+          className={`h-full w-full overflow-y-scroll ${
             deviceType === "mobile" ? "no-scrollbar" : ""
           }`}
         >
@@ -401,79 +406,81 @@ const LibraryDirectory = ({ libraryId }) => {
                 </motion.div>
               ))}
 
-            <OptionsButton
-              id="DirectoryItemAddButton"
-              container={libraryDirectoryBodyRef.current}
-              className={`mt-3 bg-appBackground rounded-full w-libraryDirectoryBookNodeHeight h-libraryDirectoryBookNodeHeight p-1 hover:bg-appLayoutInverseHover`}
-              buttonIcon={
-                <span className="icon-[material-symbols-light--add-2-rounded] h-full w-full"></span>
-              }
-              origin={"topMiddle"}
-              options={[
-                {
-                  label: "Create Book",
-                  icon: (
-                    <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("Create Book!");
-                    const bookId = dataManagerSubdocs.createEmptyBook(
-                      libraryYTreeRef.current
-                    );
-                    setItemId(bookId);
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
+            {deviceType === "mobile" && (
+              <OptionsButton
+                id="DirectoryItemAddButton"
+                container={libraryDirectoryBodyRef.current}
+                className={`mt-3 bg-appBackground rounded-full w-libraryDirectoryBookNodeHeight h-libraryDirectoryBookNodeHeight p-1 hover:bg-appLayoutInverseHover`}
+                buttonIcon={
+                  <span className="icon-[material-symbols-light--add-2-rounded] h-full w-full"></span>
+                }
+                origin={"topMiddle"}
+                options={[
+                  {
+                    label: "Create Book",
+                    icon: (
+                      <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("Create Book!");
+                      const bookId = dataManagerSubdocs.createEmptyBook(
+                        libraryYTreeRef.current
+                      );
+                      setItemId(bookId);
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
 
-                    setPanelOpened(true);
+                      setPanelOpened(true);
+                    },
                   },
-                },
-                {
-                  label: "Create Section",
-                  icon: (
-                    <span className="icon-[fluent--folder-add-20-regular] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("create section button");
-                    const sectionId = dataManagerSubdocs.createEmptySection(
-                      libraryYTreeRef.current,
-                      "root"
-                    );
+                  {
+                    label: "Create Section",
+                    icon: (
+                      <span className="icon-[fluent--folder-add-20-regular] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("create section button");
+                      const sectionId = dataManagerSubdocs.createEmptySection(
+                        libraryYTreeRef.current,
+                        "root"
+                      );
 
-                    setItemId(sectionId);
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
+                      setItemId(sectionId);
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
 
-                    setPanelOpened(true);
+                      setPanelOpened(true);
+                    },
                   },
-                },
-                {
-                  label: "Create Paper",
-                  icon: (
-                    <span className="icon-[fluent--document-one-page-add-20-regular] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("create paper button");
-                    const paperId = dataManagerSubdocs.createEmptyPaper(
-                      libraryYTreeRef.current,
-                      "root"
-                    );
+                  {
+                    label: "Create Paper",
+                    icon: (
+                      <span className="icon-[fluent--document-one-page-add-20-regular] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("create paper button");
+                      const paperId = dataManagerSubdocs.createEmptyPaper(
+                        libraryYTreeRef.current,
+                        "root"
+                      );
 
-                    setItemId(paperId);
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
+                      setItemId(paperId);
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
 
-                    setPanelOpened(true);
+                      setPanelOpened(true);
+                    },
                   },
-                },
-              ]}
-            >
-              <span
-                className={`icon-[material-symbols-light--add-2-rounded] h-full w-full`}
-              ></span>
-            </OptionsButton>
+                ]}
+              >
+                <span
+                  className={`icon-[material-symbols-light--add-2-rounded] h-full w-full`}
+                ></span>
+              </OptionsButton>
+            )}
           </div>
         </div>
       </div>
@@ -537,7 +544,7 @@ const OptionsButton = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
       ref={buttonContainerRef}
-      className={`relative w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full 
+      className={`relative w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mr-1 rounded-full 
                   text-appLayoutText
                   ${
                     isOpened
@@ -599,7 +606,7 @@ const OptionsButton = ({
                   option.callback();
                 }}
                 className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 py-1 gap-px
-                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight transition-colors duration-200"
+                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight transition-colors duration-0"
               >
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}

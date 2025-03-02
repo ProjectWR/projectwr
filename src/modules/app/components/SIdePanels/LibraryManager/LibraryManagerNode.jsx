@@ -230,8 +230,8 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.1 }}
-            className="flex flex-col justify-center items-center h-full w-full bg-appBackground text-appLayoutText"
+            transition={{ duration: 0.05 }}
+            className="flex flex-col justify-center rounded-lg overflow-hidden items-center h-full w-full bg-appBackground text-appLayoutText"
           >
             <div
               className={`relative w-libraryManagerNodeEditButtonWidth h-libraryManagerNodeEditButtonWidth`}
@@ -312,12 +312,12 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.1 }}
-            className="w-full max-w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 ease-out"
+            transition={{ duration: 0.05 }}
+            className="w-full max-w-full h-full rounded-lg flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 ease-out"
           >
             <button
               className={
-                "flex-grow min-w-0 h-full flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-100"
+                "flex-grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
               }
               onClick={() => {
                 console.log(
@@ -342,9 +342,9 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                       initial={{ opacity: 0.6 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0.6 }}
-                      transition={{ duration: 0.1 }}
+                      transition={{ duration: 0.05 }}
                       key="doorOpen"
-                      className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                      className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-0"
                     ></motion.span>
                   )}
 
@@ -353,9 +353,9 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                       initial={{ opacity: 0.6 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0.6 }}
-                      transition={{ duration: 0.1 }}
+                      transition={{ duration: 0.05 }}
                       key="doorClose"
-                      className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                      className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-0"
                     ></motion.span>
                   )}
                 </AnimatePresence>
@@ -364,7 +364,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
               <div
                 ref={textContainerRef}
                 style={{ fontSize }}
-                className="flex-grow min-w-0 flex justify-start items-center  transition-colors duration-100 pb-px ml-3"
+                className="flex-grow min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
               >
                 <p
                   className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
@@ -377,7 +377,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
             <OptionsButton
               className={`h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth min-w-libraryManagerNodeEditButtonWidth px-2 rounded-full ml-1 mr-2 
-                          text-appLayoutTextMuted hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-100 ease-out`}
+                          text-appLayoutTextMuted hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-0 ease-out`}
               buttonIcon={
                 <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
               }
@@ -385,7 +385,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Edit Properties",
                   icon: (
-                    <span className="icon-[mdi--edit-outline] h-full w-full transition-colors duration-100"></span>
+                    <span className="icon-[mdi--edit-outline] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: () => {
                     setLibraryId(libraryId);
@@ -400,7 +400,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Save As",
                   icon: (
-                    <span className="icon-[line-md--download] h-full w-full transition-colors duration-100"></span>
+                    <span className="icon-[line-md--download] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: () => {
                     console.log("Saving Archive");
@@ -412,7 +412,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Load",
                   icon: (
-                    <span className="icon-[line-md--upload] h-full w-full transition-colors duration-100"></span>
+                    <span className="icon-[line-md--upload] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: async () => {
                     console.log("Loading Archive");
@@ -426,7 +426,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Init Sync",
                   icon: (
-                    <span className="icon-[line-md--cloud-alt-upload] h-full w-full transition-colors duration-100"></span>
+                    <span className="icon-[line-md--cloud-alt-upload] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: async () => {
                     setLoading(true);
@@ -541,7 +541,7 @@ const OptionsButton = ({
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ ease: "easeOut", duration: 0.1 }}
+            transition={{ ease: "easeOut", duration: 0.05 }}
             className={`z-50 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
                        ${

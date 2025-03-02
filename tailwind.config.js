@@ -101,6 +101,7 @@ export default {
         authButtonLoadingSize: "var(--authButtonLoadingSize)",
         authButtonSize: "var(--authButtonSize)",
         actionBarButtonIconSize: "var(--actionBarButtonIconSize)",
+        libraryDirectoryHeaderHeight: "var(--libraryDirectoryHeaderHeight)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",

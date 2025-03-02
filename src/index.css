@@ -64,11 +64,13 @@
   .desktop {
     --libraryManagerNodeHeight: 3.5rem;
     --libraryManagerNodeIconSize: 2rem;
-    --libraryManagerHeaderHeight: 3.5rem;
+    --libraryManagerHeaderHeight: 4.5rem;
     --detailsPanelHeaderHeight: 3.5rem;
     --actionBarHeight: 2.3rem;
     --actionBarLogoSize: 1.8rem;
     --actionBarButtonIconSize: 1.5rem;
+
+    --libraryDirectoryHeaderHeight: 4.5rem;
 
     --activityBarWidth: 4.5rem;
     --activityBarHeight: 3.3rem;
@@ -78,7 +80,6 @@
     --activityBarFontSize: 1.2rem;
 
     --libraryManagerHeaderText: 1.4rem;
-    --libraryManagerHeaderHeight: 4rem;
 
     --detailsPanelHeaderHeight: 4rem;
     --detailsPanelNameFontSize: 1.4rem;
@@ -199,7 +200,7 @@
 
 *::-webkit-scrollbar {
   display: fixed;
-  width: 0.75rem;
+  width: calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2);
 }
 
 *::-webkit-scrollbar-button {

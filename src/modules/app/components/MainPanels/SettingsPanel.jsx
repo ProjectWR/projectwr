@@ -279,10 +279,10 @@ const SettingsPanel = () => {
             {!user && (
               <motion.div
                 key={"loggedOutComponent"}
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ height: "fit-content", y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                className="w-full flex flex-col items-start rounded-md gap-2"
+                initial={{ x: -10, opacity: 0 }}
+                animate={{ height: "fit-content", x: 0, opacity: 1 }}
+                exit={{ x: -10, opacity: 0 }}
+                className="w-full h-fit flex flex-col items-start rounded-md gap-2"
               >
                 <div className="w-full h-fit border border-appLayoutBorder rounded-md shadow-sm shadow-appLayoutShadow">
                   <p className="w-full h-fit flex justify-center items-center text-detailsPanelPropsFontSize text-appLayoutTextMuted px-3 py-2 rounded-md bg-appBackground ">
@@ -494,9 +494,9 @@ const SettingsPanel = () => {
             {user && (
               <motion.div
                 key={"loggedInComponent"}
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ height: "fit-content", y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
+                initial={{ x: -10, opacity: 0 }}
+                animate={{ height: "fit-content", x: 0, opacity: 1 }}
+                exit={{ x: -10, opacity: 0 }}
                 className="w-full flex flex-col items-start rounded-md gap-2"
               >
                 <div className="relative w-full h-fit border border-appLayoutBorder rounded-md">
