@@ -93,7 +93,12 @@ const LibraryDirectory = ({ libraryId }) => {
         const containerWidth = textContainer.offsetWidth - 20;
         const textWidth = text.scrollWidth;
 
+        const containerHeight = textContainer.offsetHeight - 20;
+        const textHeight = text.scrollHeight;
+
         console.log("widths: ", containerWidth, textWidth);
+
+        console.log("heights: ", containerHeight, textHeight);
 
         // Decrease/Increase the font size until the text fits
         let newFontSize = parseFloat(fontSize);
@@ -119,16 +124,7 @@ const LibraryDirectory = ({ libraryId }) => {
 
     checkOverflow();
 
-    const observer = new ResizeObserver(checkOverflow);
-    if (textContainer) {
-      observer.observe(textContainer);
-    }
-    return () => {
-      if (textContainer) {
-        observer.unobserve(textContainer);
-      }
-    };
-  }, [fontSize]);
+  }, [libraryPropsMapState]);
 
   return (
     <div
@@ -139,8 +135,9 @@ const LibraryDirectory = ({ libraryId }) => {
         <div
           id="LibraryDirectoryHeader"
           className={`flex flex-col w-full items-center justify-center h-fit min-h-libraryDirectoryHeaderHeight border-appLayoutBorder  z-[1]`}
+          style={{maxHeight: `calc(var(--libraryDirectoryHeaderHeight) * 2)`}}
         >
-          <div className="h-fit min-h-fit py-3 pr-3 w-full flex items-center justify-center order-2">
+          <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
             <button
               className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
                           order-1
@@ -154,11 +151,11 @@ const LibraryDirectory = ({ libraryId }) => {
             <div
               ref={textContainerRef}
               style={{ fontSize }}
-              className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-0 pt-px order-2"
+              className="flex-grow min-w-0 max-h-full flex justify-start items-center transition-colors duration-0 pt-px order-2 overflow-ellipsis"
             >
               <p
                 ref={textRef}
-                className="w-fit max-w-full overflow-hidden overflow-ellipsis"
+                className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis"
               >
                 {libraryPropsMapState.library_name}
               </p>
@@ -380,7 +377,7 @@ const LibraryDirectory = ({ libraryId }) => {
           style={{
             paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
           }}
-          className={`h-full w-full overflow-y-scroll ${
+          className={`h-full w-full overflow-y-scroll overflow-x-hidden ${
             deviceType === "mobile" ? "no-scrollbar" : ""
           }`}
         >

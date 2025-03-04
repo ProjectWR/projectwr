@@ -14,6 +14,7 @@ import PaperSettingsPanel from "../MainPanels/PaperSettingsPanel";
 import { templateStore } from "../../stores/templateStore";
 import TemplateViewPanel from "../MainPanels/TemplateViewPanel";
 import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
+import HomePanel from "../MainPanels/HomePanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -107,7 +108,7 @@ const MainPanel = ({}) => {
       }
 
       key.current = "empty";
-      return <p>Home</p>;
+      return <HomePanel />;
     }
 
     if (activity === "templates") {
@@ -123,8 +124,8 @@ const MainPanel = ({}) => {
         }
       }
 
-      key.current = "templates";
-      return <p>templates main panel</p>;
+      key.current = "empty";
+      return <HomePanel />;
     }
 
     if (activity === "settings") {
@@ -133,7 +134,7 @@ const MainPanel = ({}) => {
     }
 
     key.current = "empty";
-    return <p>Home</p>;
+    return <HomePanel />;
   };
 
   return(
@@ -144,7 +145,7 @@ const MainPanel = ({}) => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -10, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full h-full bg-appBackground overflow-hidden z-3"
+        className="w-full h-full bg-appBackground overflow-hidden z-3 flex justify-center"
       >
         {renderMainPanel()}
       </motion.div>

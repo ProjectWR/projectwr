@@ -48,6 +48,8 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
     itemLocalStateManager.isItemOpened(itemId)
   );
 
+  const [isHovered, setIsHovered] = useState(false);
+
   useEffect(() => {
     const updateisOpened = (isOpened) => {
       setIsOpened(isOpened);
@@ -318,6 +320,12 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
           duration-0
 
         `}
+        onMouseEnter={() => {
+          setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+        }}
       >
         {itemMapRef.current.get("type") == "paper" && (
           <>
@@ -357,6 +365,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
             </button>
 
             <OptionsButton
+              mainButtonHovered={isHovered}
               options={[
                 {
                   label: "Paper Settings",
@@ -453,6 +462,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
             </button>
 
             <OptionsButton
+              mainButtonHovered={isHovered}
               options={[
                 {
                   label: "Edit Properties",
@@ -580,6 +590,7 @@ const OptionsButton = ({
   className,
   buttonIcon,
   origin = "topRight",
+  mainButtonHovered,
 }) => {
   const [isOpened, setIsOpened] = useState(false);
 
@@ -632,7 +643,7 @@ const OptionsButton = ({
       transition={{ duration: 0.2 }}
       ref={buttonContainerRef}
       className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1
-                  text-appLayoutText
+                  text-appLayoutText bg-appBackground rounded-lg
                   ${
                     isOpened
                       ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
@@ -640,6 +651,8 @@ const OptionsButton = ({
                   }
 
                   flex items-center justify-center
+
+                  ${mainButtonHovered && "bg-appLayoutHover"}
 
                   ${className}
       `}
@@ -679,6 +692,7 @@ const OptionsButton = ({
                               } 
                               ${origin === "topMiddle" && "origin-top"}`
                        }
+
 
                        `}
           >

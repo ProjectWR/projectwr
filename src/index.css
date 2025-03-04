@@ -24,6 +24,11 @@
   }
 }
 
+.noise {
+  /* ... */
+  background: url(/src/assets/noise.svg);
+  filter: contrast(100%) brightness(100%);}
+
 @layer base {
   :root {
     --appBackground: 0 0% 8.9%;
@@ -81,13 +86,18 @@
 
     --libraryManagerHeaderText: 1.4rem;
 
+    --homePanelHeaderHeight: 6rem;
+    --homePanelHeaderFontSize: 4rem;
+    --homePanelSubtitleFontSize: 1.5rem;
+
     --detailsPanelHeaderHeight: 4rem;
-    --detailsPanelNameFontSize: 1.4rem;
+    --detailsPanelNameFontSize: 2rem;
     --detailsPanelPropsFontSize: 1.2rem;
-    --detailsPanelPropLabelFontSize: 1rem;
-    --detailsPanelPropLabelHeight: 1.5rem;
+    --detailsPanelPropLabelFontSize: 1.15rem;
+    --detailsPanelPropLabelHeight: 2.2rem;
     --detailsPanelSaveButtonFontSize: 1.2rem;
     --detailsPanelDescriptionInputHeight: 15rem;
+    --detailsPanelWidth: 60rem;
 
     --authInputHeight: 4rem;
     --authButtonSize: 1.6rem;
@@ -200,7 +210,10 @@
 
 *::-webkit-scrollbar {
   display: fixed;
-  width: calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2);
+  width: calc(
+    0.25rem + var(--libraryManagerAddButtonSize) / 2 -
+      var(--libraryDirectoryBookNodeIconSize) / 2
+  );
 }
 
 *::-webkit-scrollbar-button {

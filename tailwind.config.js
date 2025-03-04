@@ -102,6 +102,8 @@ export default {
         authButtonSize: "var(--authButtonSize)",
         actionBarButtonIconSize: "var(--actionBarButtonIconSize)",
         libraryDirectoryHeaderHeight: "var(--libraryDirectoryHeaderHeight)",
+        detailsPanelWidth: "var(--detailsPanelWidth)",
+        homePanelHeaderHeight: "var(--homePanelHeaderHeight)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",
@@ -117,7 +119,8 @@ export default {
         templateDetailsPanelPreferenceFontSize: "var(--templateDetailsPanelPreferenceFontSize)",
         templateDetailsPanelPreferenceInputFontSize: "var(--templateDetailsPanelPreferenceInputFontSize)",
         optionsDropdownOptionFont: "var(--optionsDropdownOptionFont)",
-
+        homePanelHeaderFontSize: "var(--homePanelHeaderFontSize)",
+        homePanelSubtitleFontSize: "var(--homePanelSubtitleFontSize)",
       },
       fontFamily: {
         heading: [

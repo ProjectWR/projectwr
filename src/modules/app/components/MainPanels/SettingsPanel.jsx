@@ -279,9 +279,9 @@ const SettingsPanel = () => {
             {!user && (
               <motion.div
                 key={"loggedOutComponent"}
-                initial={{ x: -10, opacity: 0 }}
-                animate={{ height: "fit-content", x: 0, opacity: 1 }}
-                exit={{ x: -10, opacity: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ height: "fit-content", opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className="w-full h-fit flex flex-col items-start rounded-md gap-2"
               >
                 <div className="w-full h-fit border border-appLayoutBorder rounded-md shadow-sm shadow-appLayoutShadow">
@@ -494,9 +494,9 @@ const SettingsPanel = () => {
             {user && (
               <motion.div
                 key={"loggedInComponent"}
-                initial={{ x: -10, opacity: 0 }}
-                animate={{ height: "fit-content", x: 0, opacity: 1 }}
-                exit={{ x: -10, opacity: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ height: "fit-conte t", opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className="w-full flex flex-col items-start rounded-md gap-2"
               >
                 <div className="relative w-full h-fit border border-appLayoutBorder rounded-md">
@@ -527,7 +527,7 @@ const SettingsPanel = () => {
                       const user = getAuth(firebaseApp).currentUser;
                       await user.reload();
                       console.log("user:", user);
-                      setUser({...user});
+                      setUser({ ...user });
                     }}
                   >
                     <span className="icon-[line-md--rotate-270] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>

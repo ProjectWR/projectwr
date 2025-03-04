@@ -70,14 +70,26 @@ const LibraryDetailsPanel = ({ libraryId }) => {
     setPanelOpened(true);
   };
 
+
   return (
     <div
       id="LibraryDetailContainer"
-      className="w-full h-full flex flex-col items-center justify-start"
+      className={`h-full flex flex-col items-center justify-start 
+        ${deviceType === "mobile" && "w-full"}   
+        ${deviceType === "desktop" && "mt-10"}       
+      `}
+      style={
+        deviceType === "desktop" && {
+          width: `var(--detailsPanelWidth)`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.65)`,
+        }
+      }
     >
       <div
         id="CreateLibraryHeader"
-        className="h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow py-2 px-1"
+        className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
+            ${deviceType === 'desktop' && "px-6"}
+          `}
       >
         {deviceType === "mobile" && (
           <>
@@ -136,16 +148,18 @@ const LibraryDetailsPanel = ({ libraryId }) => {
         )}
 
         <input
-          className="bg-appBackground flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 pb-2 px-2 pr-1 transition-colors duration-200 order-2"
+          className="bg-appBackground flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2"
           name="library_name"
           onChange={handleChange}
           value={libraryProperties.library_name}
         />
       </div>
 
+      <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
+
       <div
         id="CreateLibraryBody"
-        className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-3 gap-3 px-4"
+        className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
       >
         <div className="prop w-full h-detailsPanelDescriptionInputSize relative">
           <textarea
@@ -159,7 +173,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
 
           <label
             htmlFor="libraryDescription"
-            className="absolute top-1 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
+            className="absolute top-2 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
           >
             Library Description
           </label>

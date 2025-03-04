@@ -40,6 +40,21 @@ const ActivityBar = ({}) => {
           exit={deviceType !== "mobile" ? { height: "100%" } : { height: 0 }}
           transition={{ duration: 0.1 }}
         >
+          {deviceType === "desktop" && (
+            <ActivityButton
+              onClick={() => {
+                setActivity("home");
+                setPanelOpened(true);
+              }}
+              activity={activity}
+              selectedActivity={"home"}
+              deviceType={deviceType}
+              buttonContent={
+                <span className="icon-[material-symbols-light--home] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+              }
+              flexValue={"grow-1"}
+            />
+          )}
           <ActivityButton
             onClick={() => {
               setPanelOpened(true);
@@ -54,19 +69,21 @@ const ActivityBar = ({}) => {
             flexValue={"grow-3"}
           />
 
-          <ActivityButton
-            onClick={() => {
-              setActivity("home");
-              setPanelOpened(true);
-            }}
-            activity={activity}
-            selectedActivity={"home"}
-            deviceType={deviceType}
-            buttonContent={
-              <span className="icon-[material-symbols-light--home] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
-            }
-            flexValue={"grow-1"}
-          />
+          {deviceType === "mobile" && (
+            <ActivityButton
+              onClick={() => {
+                setActivity("home");
+                setPanelOpened(true);
+              }}
+              activity={activity}
+              selectedActivity={"home"}
+              deviceType={deviceType}
+              buttonContent={
+                <span className="icon-[material-symbols-light--home] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+              }
+              flexValue={"grow-1"}
+            />
+          )}
           <ActivityButton
             onClick={() => {
               setActivity("templates");

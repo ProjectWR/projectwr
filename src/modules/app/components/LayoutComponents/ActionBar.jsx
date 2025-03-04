@@ -19,7 +19,7 @@ const ActionBar = () => {
         className="w-full h-full flex justify-start items-center font-sans"
       >
         <div
-          className={`logo h-full w-actionBarLogoSize flex items-center justify-center ml-3 mr-px font-serif pointer-events-none select-none`}
+          className={`logo h-full w-actionBarLogoSize flex items-center justify-center ml-2 mr-px font-serif pointer-events-none select-none`}
         >
           <span className="icon-[ph--flower-tulip-thin] h-actionBarLogoSize w-actionBarLogoSize"></span>
         </div>

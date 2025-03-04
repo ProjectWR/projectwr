@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -42,9 +43,13 @@ import syncManager from "../lib/sync";
 import { Resizable } from "re-resizable";
 import { wait } from "lib0/promise";
 import { max, min } from "lib0/math";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const WritingApp = () => {
   console.log("rendering writing app");
+
+  const [isMaximized, setIsMaximized] = useState(false);
+
   const loading = appStore((state) => state.loading);
   const setLoading = appStore((state) => state.setLoading);
   const [loadingStage, setLoadingStage] = useState("Loading App");
@@ -56,7 +61,6 @@ const WritingApp = () => {
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
-  const setLibraryListStore = appStore((state) => state.setLibraryListStore);
   const settings = settingsStore((state) => state.settings);
 
   const user = appStore((state) => state.user);
@@ -94,7 +98,6 @@ const WritingApp = () => {
       .getElementById("SidePanelMotionContainer")
       .getBoundingClientRect();
 
-  
     let newWidth = info.point.x - rect.left;
 
     newWidth = min(
@@ -112,7 +115,9 @@ const WritingApp = () => {
         window
           .getComputedStyle(document.body)
           .getPropertyValue("--sidePanelWidth")
-      ) * 12 + 2
+      ) *
+        12 +
+        2
     );
 
     mWidth.set(newWidth);
@@ -204,7 +209,7 @@ const WritingApp = () => {
 
         await wait(1000);
         setLoadingStage("Finished Loading");
-        setLoading(false  );
+        setLoading(false);
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -212,7 +217,24 @@ const WritingApp = () => {
     };
 
     initializeWritingApp();
-  }, [setDefaultSettings, setSettings, setLibraryListStore, setLoading, user]);
+  }, [setDefaultSettings, setSettings, setLoading, user]);
+
+  useEffect(() => {
+    const unlisten = getCurrentWindow().listen(
+      "tauri://resize",
+      async () => {
+        const x = await getCurrentWindow().isMaximized();
+        console.log("fullscreen??", x);
+
+        setIsMaximized(x);
+      }
+    );
+
+    return async () => {
+      await unlisten;
+      unlisten();
+    };
+  }, []);
 
   // Render loading screen if loading is true
   return (
@@ -220,7 +242,7 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className="h-screen max-h-screen w-screen max-w-screen bg-appBackground font-serif"
+          className={`h-screen max-h-screen w-screen max-w-screen bg-appBackground font-serif ${!isMaximized && "border"} border-appLayoutBorder overflow-hidden `}
         >
           {loading && (
             <motion.div
@@ -349,7 +371,7 @@ const WritingApp = () => {
                             exit={{ opacity: 0, width: 0, minWidth: 0 }}
                             transition={{ duration: 0.2 }}
                             style={{
-                              width: mWidth,  
+                              width: mWidth,
                               boxShadow:
                                 deviceType === "desktop"
                                   ? "0px 0px 6px -1px hsl(var(--appLayoutShadow))"
@@ -362,7 +384,7 @@ const WritingApp = () => {
                           >
                             <SidePanel />
                             <motion.div
-                              className="absolute h-full w-[6px] top-0 -right-[3px] z-5 hover:bg-sidePanelDragHandle cursor-w-resize"
+                              className="absolute h-full w-[6px] top-0 -right-[6px] z-5 hover:bg-sidePanelDragHandle cursor-w-resize"
                               drag="x"
                               dragConstraints={{
                                 top: 0,
