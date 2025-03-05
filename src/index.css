@@ -27,7 +27,8 @@
 .noise {
   /* ... */
   background: url(/src/assets/noise.svg);
-  filter: contrast(100%) brightness(100%);}
+  filter: contrast(100%) brightness(100%);
+}
 
 @layer base {
   :root {

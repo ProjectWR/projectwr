@@ -3,6 +3,7 @@ import {
   useMotionValue,
   motion,
   useSpring,
+  AnimatePresence,
 } from "motion/react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -12,52 +13,68 @@ const HomePanel = () => {
   const { deviceType } = useDeviceType();
 
   return (
-    <div
-      id="HomeContainer"
-      className={`h-full flex flex-col items-center justify-center 
-        ${deviceType === "mobile" && "w-full"}   
-        ${deviceType === "desktop" && "mt-0 pb-20"}       
-      `}
-      style={
-        deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-        }
-      }
-    >
+    <AnimatePresence mode="wait">
       <div
-        id="HomeHeader"
-        className={`h-fit min-h-fit w-full flex flex-col items-start
+        id="HomeContainer"
+        className={`h-full flex flex-col items-center justify-center 
+        ${deviceType === "mobile" && "w-full"}   
+        ${deviceType === "desktop" && "mt-0 pb-20 px-8"}       
+      `}
+        style={
+          deviceType === "desktop" && {
+            width: `var(--detailsPanelWidth)`,
+            minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+          }
+        }
+      >
+        <div
+          id="HomeHeader"
+          className={`h-fit min-h-fit w-full flex flex-col items-start
             ${deviceType === "desktop" && "px-6"}
           `}
-      >
-        <h1 className="text-homePanelHeaderFontSize select-none pointer-events-none">
-          Tulip Writer
-        </h1>
-        <p className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1">
-          &nbsp;
-          <q>
-            The problems of the human heart in conflict with itself… alone can
-            make good writing because only that is worth writing about, worth
-            the agony and the sweat.
-          </q>
-        </p>
-        <p className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full">
-          <span className="flex-grow"></span>
-          <span className="w-fit">- William Faulkner</span>
-        </p>
-      </div>
+        >
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ bounce: 0 }}
+            className="text-homePanelHeaderFontSize select-none pointer-events-none"
+          >
+            Tulip Writer
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, bounce: 0 }}
+            className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
+          >
+            &nbsp;
+            <q>
+              The problems of the human heart in conflict with itself… alone can
+              make good writing because only that is worth writing about, worth
+              the agony and the sweat.
+            </q>
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, bounce: 0 }}
+            className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
+          >
+            <span className="flex-grow"></span>
+            <span className="w-fit">- William Faulkner</span>
+          </motion.p>
+        </div>
 
-      <div
-        id="HomeBody"
-        className="h-fit min-h-fit w-full flex flex-col items-center justify-start px-6 mt-12"
-      >
-        {/* <div className="h-[10rem] w-full isolate relative rounded-lg overflow-hidden">
+        <div
+          id="HomeBody"
+          className="h-fit min-h-fit w-full flex flex-col items-center justify-start px-6 mt-12"
+        >
+          {/* <div className="h-[10rem] w-full isolate relative rounded-lg overflow-hidden">
           <div className="h-full w-full noise"></div>
           <div className="h-full w-full absolute top-0 overlay"></div>
         </div> */}
 
-        {/* <div className="w-full h-fit flex flex-row">
+          {/* <div className="w-full h-fit flex flex-row">
           <div className="h-fit flex-grow flex flex-col items-start justify-start">
             <GrainyButton
               className={`h-[5rem] w-[25rem] rounded-lg overflow-hidden border border-appLayoutBorder`}
@@ -93,8 +110,9 @@ const HomePanel = () => {
           </div>
           <div className="h-fit flex-grow flex flex-col items-start justify-start"></div>
         </div> */}
+        </div>
       </div>
-    </div>
+    </AnimatePresence>
   );
 };
 

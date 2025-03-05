@@ -7,6 +7,10 @@ import { libraryStore } from "../../stores/libraryStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import { equalityDeep } from "lib0/function";
+import GrainyButton from "../../../design-system/GrainyButton";
+import syncManager from "../../lib/sync";
+import { wait } from "lib0/promise";
+import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
 
 const LibraryDetailsPanel = ({ libraryId }) => {
   const { deviceType } = useDeviceType();
@@ -15,6 +19,13 @@ const LibraryDetailsPanel = ({ libraryId }) => {
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setLibraryId = libraryStore((state) => state.setLibraryId);
   const [isDoorOpen, setIsDoorOpen] = useState(false);
+
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [loadLoading, setLoadLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const isSynced = syncManager.fireProviderMap.has(libraryId);
 
   const libraryPropsMapState = useYMap(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
@@ -70,7 +81,6 @@ const LibraryDetailsPanel = ({ libraryId }) => {
     setPanelOpened(true);
   };
 
-
   return (
     <div
       id="LibraryDetailContainer"
@@ -81,14 +91,14 @@ const LibraryDetailsPanel = ({ libraryId }) => {
       style={
         deviceType === "desktop" && {
           width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.65)`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
         }
       }
     >
       <div
         id="CreateLibraryHeader"
         className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
-            ${deviceType === 'desktop' && "px-6"}
+            ${deviceType === "desktop" && "px-6"}
           `}
       >
         {deviceType === "mobile" && (
@@ -159,12 +169,12 @@ const LibraryDetailsPanel = ({ libraryId }) => {
 
       <div
         id="CreateLibraryBody"
-        className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
+        className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 px-6"
       >
-        <div className="prop w-full h-detailsPanelDescriptionInputSize relative">
+        <div className="prop w-full h-fit relative">
           <textarea
             id="libraryDescription"
-            className="resize-none bg-appBackground text-detailsPanelPropsFontSize w-full h-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
+            className="bg-appBackground field-sizing-content overflow-hidden text-detailsPanelPropsFontSize w-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
             name="library_description"
             placeholder="Enter Description"
             onChange={handleChange}
@@ -182,13 +192,30 @@ const LibraryDetailsPanel = ({ libraryId }) => {
         <AnimatePresence>
           {unsavedChangesExist && (
             <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full 
+              initial={{
+                height: 0,
+                opacity: 0,
+                marginTop: 0,
+                marginBottom: 0,
+                padding: 0,
+              }}
+              animate={{
+                height: "var(--libraryManagerAddButtonSize) ",
+                opacity: 1,
+                marginTop: `0.75rem`,
+                marginBottom: 0,
+                padding: `0.25rem`,
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                marginTop: 0,
+                marginBottom: 0,
+                padding: 0,
+              }}
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                 flex items-center justify-center
-                order-last
             `}
               onClick={handleSave}
             >
@@ -201,6 +228,394 @@ const LibraryDetailsPanel = ({ libraryId }) => {
             </motion.button>
           )}
         </AnimatePresence>
+        <div className="prop w-full h-fit relative flex flex-row justify-center items-center flex-wrap gap-4 mt-3">
+          <LibraryActionButton
+            onClick={async () => {
+              setSyncLoading(true);
+
+              await syncManager.initFireSync(
+                dataManagerSubdocs.getLibrary(libraryId)
+              );
+
+              await wait(2000);
+
+              setSyncLoading(false);
+            }}
+            disabled={syncLoading || isSynced}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${syncLoading}-${isSynced}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className={`w-full h-full p-4 flex items-center justify-between ${isSynced && "text-appLayoutTextMuted"}`}
+              >
+                {(isSynced && (
+                  <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
+                )) ||
+                  (syncLoading && (
+                    <div className={`relative w-[4rem] h-[4rem]`}>
+                      <span
+                        className="w-full h-full"
+                        // animate={{ rotate: 360 }}
+                        // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width={"100%"}
+                          height={"100%"}
+                          viewBox="0 0 24 24"
+                        >
+                          <g
+                            fill="none"
+                            stroke="#fff"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={0.3}
+                          >
+                            <path
+                              strokeDasharray={16}
+                              strokeDashoffset={16}
+                              d="M12 3c4.97 0 9 4.03 9 9"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="stroke-dashoffset"
+                                dur="0.3s"
+                                values="16;0"
+                              ></animate>
+                              <animateTransform
+                                attributeName="transform"
+                                dur="1.5s"
+                                repeatCount="indefinite"
+                                type="rotate"
+                                values="0 12 12;360 12 12"
+                              ></animateTransform>
+                            </path>
+                            <path
+                              strokeDasharray={64}
+                              strokeDashoffset={64}
+                              strokeOpacity={0.3}
+                              d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                            >
+                              <animate
+                                fill="freeze"
+                                attributeName="stroke-dashoffset"
+                                dur="1.2s"
+                                values="64;0"
+                              ></animate>
+                            </path>
+                          </g>
+                        </svg>
+                      </span>
+                      <motion.div
+                        initial={{ opacity: 0.4 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                          duration: 1.2,
+                          ease: "linear",
+                        }}
+                        className="absolute w-full h-full p-[20%] top-0 left-0"
+                      >
+                        <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                      </motion.div>
+                    </div>
+                  )) || (
+                    <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
+                  )}
+              </motion.div>
+            </AnimatePresence>
+          </LibraryActionButton>
+
+          <LibraryActionButton
+            onClick={async () => {
+              setSaveLoading(true);
+              console.log("Saving Archive");
+              await persistenceManagerForSubdocs.saveArchive(
+                dataManagerSubdocs.getLibrary(libraryId)
+              );
+
+              setSaveLoading(false);
+            }}
+            disabled={saveLoading}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${saveLoading}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="w-full h-full p-4 flex items-center justify-center"
+              >
+                {(saveLoading && (
+                  <div className={`relative w-[4rem] h-[4rem]`}>
+                    <span
+                      className="w-full h-full"
+                      // animate={{ rotate: 360 }}
+                      // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={"100%"}
+                        height={"100%"}
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          fill="none"
+                          stroke="#fff"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={0.3}
+                        >
+                          <path
+                            strokeDasharray={16}
+                            strokeDashoffset={16}
+                            d="M12 3c4.97 0 9 4.03 9 9"
+                          >
+                            <animate
+                              fill="freeze"
+                              attributeName="stroke-dashoffset"
+                              dur="0.3s"
+                              values="16;0"
+                            ></animate>
+                            <animateTransform
+                              attributeName="transform"
+                              dur="1.5s"
+                              repeatCount="indefinite"
+                              type="rotate"
+                              values="0 12 12;360 12 12"
+                            ></animateTransform>
+                          </path>
+                          <path
+                            strokeDasharray={64}
+                            strokeDashoffset={64}
+                            strokeOpacity={0.3}
+                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                          >
+                            <animate
+                              fill="freeze"
+                              attributeName="stroke-dashoffset"
+                              dur="1.2s"
+                              values="64;0"
+                            ></animate>
+                          </path>
+                        </g>
+                      </svg>
+                    </span>
+                    <motion.div
+                      initial={{ opacity: 0.4 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        duration: 1.2,
+                        ease: "linear",
+                      }}
+                      className="absolute w-full h-full p-[20%] top-0 left-0"
+                    >
+                      <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                    </motion.div>
+                  </div>
+                )) || (
+                  <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-0"></span>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </LibraryActionButton>
+          <LibraryActionButton
+            onClick={async () => {
+              setLoadLoading(true);
+              console.log("Loading Archive");
+              await persistenceManagerForSubdocs.loadArchive(
+                dataManagerSubdocs.getLibrary(libraryId)
+              );
+              setLoadLoading(false);
+            }}
+            disabled={loadLoading}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${loadLoading}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="w-full h-full p-4 flex items-center justify-center"
+              >
+                {(loadLoading && (
+                  <div className={`relative w-[4rem] h-[4rem]`}>
+                    <span
+                      className="w-full h-full"
+                      // animate={{ rotate: 360 }}
+                      // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={"100%"}
+                        height={"100%"}
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          fill="none"
+                          stroke="#fff"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={0.3}
+                        >
+                          <path
+                            strokeDasharray={16}
+                            strokeDashoffset={16}
+                            d="M12 3c4.97 0 9 4.03 9 9"
+                          >
+                            <animate
+                              fill="freeze"
+                              attributeName="stroke-dashoffset"
+                              dur="0.3s"
+                              values="16;0"
+                            ></animate>
+                            <animateTransform
+                              attributeName="transform"
+                              dur="1.5s"
+                              repeatCount="indefinite"
+                              type="rotate"
+                              values="0 12 12;360 12 12"
+                            ></animateTransform>
+                          </path>
+                          <path
+                            strokeDasharray={64}
+                            strokeDashoffset={64}
+                            strokeOpacity={0.3}
+                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                          >
+                            <animate
+                              fill="freeze"
+                              attributeName="stroke-dashoffset"
+                              dur="1.2s"
+                              values="64;0"
+                            ></animate>
+                          </path>
+                        </g>
+                      </svg>
+                    </span>
+                    <motion.div
+                      initial={{ opacity: 0.4 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        duration: 1.2,
+                        ease: "linear",
+                      }}
+                      className="absolute w-full h-full p-[20%] top-0 left-0"
+                    >
+                      <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                    </motion.div>
+                  </div>
+                )) || (
+                  <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-0"></span>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </LibraryActionButton>
+          <LibraryActionButton
+            onClick={async () => {
+              setDeleteLoading(true);
+              console.log("Deleting Library");
+              await wait(1000);
+              setDeleteLoading(false);
+            }}
+            disabled={deleteLoading}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`${deleteLoading}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="w-full h-full p-4 flex items-center justify-center"
+              >
+                {(deleteLoading && (
+                  <div className={`relative w-[4rem] h-[4rem]`}>
+                    <span
+                      className="w-full h-full"
+                      // animate={{ rotate: 360 }}
+                      // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width={"100%"}
+                        height={"100%"}
+                        viewBox="0 0 24 24"
+                      >
+                        <g
+                          fill="none"
+                          stroke="#fff"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={0.3}
+                        >
+                          <path
+                            strokeDasharray={16}
+                            strokeDashoffset={16}
+                            d="M12 3c4.97 0 9 4.03 9 9"
+                          >
+                            <animate
+                              fill="freeze"
+                              attributeName="stroke-dashoffset"
+                              dur="0.3s"
+                              values="16;0"
+                            ></animate>
+                            <animateTransform
+                              attributeName="transform"
+                              dur="1.5s"
+                              repeatCount="indefinite"
+                              type="rotate"
+                              values="0 12 12;360 12 12"
+                            ></animateTransform>
+                          </path>
+                          <path
+                            strokeDasharray={64}
+                            strokeDashoffset={64}
+                            strokeOpacity={0.3}
+                            d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                          >
+                            <animate
+                              fill="freeze"
+                              attributeName="stroke-dashoffset"
+                              dur="1.2s"
+                              values="64;0"
+                            ></animate>
+                          </path>
+                        </g>
+                      </svg>
+                    </span>
+                    <motion.div
+                      initial={{ opacity: 0.4 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        duration: 1.2,
+                        ease: "linear",
+                      }}
+                      className="absolute w-full h-full p-[20%] top-0 left-0"
+                    >
+                      <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                    </motion.div>
+                  </div>
+                )) || (
+                  <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-0"></span>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </LibraryActionButton>
+        </div>
       </div>
     </div>
   );
@@ -210,3 +625,14 @@ LibraryDetailsPanel.propTypes = {
 };
 
 export default LibraryDetailsPanel;
+
+const LibraryActionButton = ({ children, onClick, disabled = false }) => (
+  <GrainyButton
+    disabled={disabled}
+    size={10}
+    onClick={onClick}
+    className={`h-[5rem] min-w-[4rem] max-w-[8rem] flex-grow rounded-lg overflow-hidden border border-appLayoutBorder`}
+  >
+    <div className="h-full w-full">{children}</div>
+  </GrainyButton>
+);

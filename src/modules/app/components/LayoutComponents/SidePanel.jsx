@@ -51,8 +51,8 @@ const SidePanel = ({}) => {
         key={key.current}
         initial={{ x: -10, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        exit={{ x: -10, opacity: 0 }}
-        transition={{ duration: 0.1 }}
+        exit={{ x: 10, opacity: 0 }}
+        transition={{ duration: 0.1, bounce: 0 }}
         style={{
           minWidth: `calc(var(--sidePanelWidth) * 0.75)`
         }}

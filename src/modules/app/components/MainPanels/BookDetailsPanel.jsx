@@ -80,7 +80,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
       style={
         deviceType === "desktop" && {
           width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.65)`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
         }
       }
     >
