@@ -133,8 +133,8 @@
     --loadingSpinnerSize: 7.5rem;
 
     --optionsDropdownWidth: 12rem;
-    --optionsDropdownOptionHeight: 2.5rem;
-    --optionsDropdownOptionFont: 1.2rem;
+    --optionsDropdownOptionHeight: 2rem;
+    --optionsDropdownOptionFont: 1rem;
   }
   .mobile {
     --libraryManagerNodeHeight: 3.5rem;

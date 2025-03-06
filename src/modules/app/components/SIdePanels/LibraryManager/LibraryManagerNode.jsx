@@ -385,7 +385,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Edit Properties",
                   icon: (
-                    <span className="icon-[mdi--edit-outline] h-full w-full transition-colors duration-0"></span>
+                    <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: () => {
                     setLibraryId(libraryId);
@@ -400,7 +400,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Save As",
                   icon: (
-                    <span className="icon-[line-md--download] h-full w-full transition-colors duration-0"></span>
+                    <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: () => {
                     console.log("Saving Archive");
@@ -412,7 +412,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 {
                   label: "Load",
                   icon: (
-                    <span className="icon-[line-md--upload] h-full w-full transition-colors duration-0"></span>
+                    <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-0"></span>
                   ),
                   callback: async () => {
                     console.log("Loading Archive");
@@ -424,9 +424,9 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                   },
                 },
                 {
-                  label: "Init Sync",
+                  label: "Sync",
                   icon: (
-                    <span className="icon-[line-md--cloud-alt-upload] h-full w-full transition-colors duration-0"></span>
+                    <span className="icon-[iconamoon--cloud-upload-thin] h-full w-full transition-colors duration-200"></span>
                   ),
                   callback: async () => {
                     setLoading(true);
@@ -520,7 +520,6 @@ const OptionsButton = ({
                   }
 
                   flex items-center justify-center
-
                   ${className}
       `}
     >
@@ -543,7 +542,7 @@ const OptionsButton = ({
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ ease: "easeOut", duration: 0.05 }}
             className={`z-50 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
-                       rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
+                       rounded-lg bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow p-1
                        ${
                          shouldDropdownGoUp
                            ? `                      
@@ -572,13 +571,13 @@ const OptionsButton = ({
                   setIsOpened(false);
                   option.callback();
                 }}
-                className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 py-1 gap-px
-                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight text-appLayoutText transition-colors duration-200"
+                className="flex items-center justify-start w-full h-optionsDropdownOptionHeight py-1 gap-2 px-2
+                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight text-appLayoutText transition-colors duration-200 rounded-lg"
               >
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}
                 </span>
-                <span className="flex-grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
+                <span className="flex-grow h-full text-optionsDropdownOptionFont flex pt-px items-center justify-start">
                   {option.label}
                 </span>
               </motion.button>

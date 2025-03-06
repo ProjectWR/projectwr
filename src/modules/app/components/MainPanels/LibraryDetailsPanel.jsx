@@ -250,7 +250,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className={`w-full h-full p-4 flex items-center justify-between ${isSynced && "text-appLayoutTextMuted"}`}
+                className={`w-full h-full p-4 flex items-center justify-center ${isSynced && "text-appLayoutTextMuted"}`}
               >
                 {(isSynced && (
                   <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
