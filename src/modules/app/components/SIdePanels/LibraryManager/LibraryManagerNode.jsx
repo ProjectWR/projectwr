@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDrag, useDrop } from "react-dnd";
 import {
@@ -18,6 +18,7 @@ import useOuterClick from "../../../../design-system/useOuterClick";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 import syncManager from "../../../lib/sync";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
+import useComputedCssVar from "../../../hooks/useComputedCssVar";
 
 /**
  *
@@ -45,11 +46,12 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
   const textContainerRef = useRef(null);
   const textRef = useRef(null);
-  const [fontSize, setFontSize] = useState(
-    getComputedStyle(document.documentElement).getPropertyValue(
-      "--libraryManagerNodeText"
-    )
+
+  const computedLibraryManagerNodeTextSize = useComputedCssVar(
+    "--libraryManagerNodeText"
   );
+
+  const [fontSize, setFontSize] = useState(computedLibraryManagerNodeTextSize);
 
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
@@ -173,16 +175,15 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
         newFontSize = min(
           newFontSize,
-          parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue(
-              "--libraryManagerNodeText"
-            )
-          )
+          parseFloat(computedLibraryManagerNodeTextSize)
         );
 
-        newFontSize = max(newFontSize, 1);
+        newFontSize = max(
+          newFontSize,
+          16
+        );
 
-        setFontSize(`${newFontSize}rem`);
+        setFontSize(`${newFontSize}px`);
       }
     };
 
@@ -197,7 +198,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         observer.unobserve(textContainerRef.current);
       }
     };
-  }, [fontSize]);
+  }, [fontSize, computedLibraryManagerNodeTextSize]);
 
   return (
     <div

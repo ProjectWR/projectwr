@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../../stores/appStore";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import { max, min } from "lib0/math";
+import useComputedCssVar from "../../../hooks/useComputedCssVar";
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
@@ -33,10 +34,12 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const textContainerRef = useRef(null);
   const textRef = useRef(null);
+
+  const computedLibraryManagerHeaderTextSize = useComputedCssVar(
+    "--libraryManagerHeaderText"
+  );
   const [fontSize, setFontSize] = useState(
-    getComputedStyle(document.documentElement).getPropertyValue(
-      "--libraryManagerHeaderText"
-    )
+    computedLibraryManagerHeaderTextSize
   );
 
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
@@ -107,24 +110,19 @@ const LibraryDirectory = ({ libraryId }) => {
 
         newFontSize = min(
           newFontSize,
-          parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue(
-              "--libraryManagerHeaderText"
-            )
-          ) * 1.5
+          computedLibraryManagerHeaderTextSize * 1.5
         );
 
         newFontSize = max(newFontSize, 1);
 
         console.log("new Font size: ", newFontSize);
 
-        setFontSize(`${newFontSize}rem`);
+        setFontSize(`${newFontSize}px`);
       }
     };
 
     checkOverflow();
-
-  }, [libraryPropsMapState]);
+  }, [libraryPropsMapState, fontSize, computedLibraryManagerHeaderTextSize]);
 
   return (
     <div
@@ -135,7 +133,7 @@ const LibraryDirectory = ({ libraryId }) => {
         <div
           id="LibraryDirectoryHeader"
           className={`flex flex-col w-full items-center justify-center h-fit min-h-libraryDirectoryHeaderHeight border-appLayoutBorder  z-[1]`}
-          style={{maxHeight: `calc(var(--libraryDirectoryHeaderHeight) * 2)`}}
+          style={{ maxHeight: `calc(var(--libraryDirectoryHeaderHeight) * 2)` }}
         >
           <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
             <button

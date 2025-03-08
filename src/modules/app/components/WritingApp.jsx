@@ -28,7 +28,6 @@ import {
   useAnimate,
   useMotionValue,
 } from "motion/react";
-import { SizingProvider } from "../ConfigProviders/SizingThemeProvider";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import firebaseApp from "../lib/Firebase";
@@ -46,9 +45,13 @@ import { max, min } from "lib0/math";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import templateManager from "../lib/templates";
 import fontManager from "../lib/font";
+import useZoom from "../hooks/useZoom";
+import useComputedCssVar from "../hooks/useComputedCssVar";
 
 const WritingApp = () => {
   console.log("rendering writing app");
+
+  const zoom = useZoom();
 
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -60,6 +63,8 @@ const WritingApp = () => {
 
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+  const computedPanelWidth = useComputedCssVar('--sidePanelWidth');
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
@@ -102,26 +107,11 @@ const WritingApp = () => {
 
     let newWidth = info.point.x - rect.left;
 
-    newWidth = min(
-      newWidth,
-      parseFloat(
-        window
-          .getComputedStyle(document.body)
-          .getPropertyValue("--sidePanelWidth")
-      ) * 18
-    );
+    const MIN_WIDTH = 0.75 * computedPanelWidth;
+    const MAX_WIDTH = 2 * computedPanelWidth;
 
-    newWidth = max(
-      newWidth,
-      parseFloat(
-        window
-          .getComputedStyle(document.body)
-          .getPropertyValue("--sidePanelWidth")
-      ) *
-        12 +
-        2
-    );
-
+    newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+    
     mWidth.set(newWidth);
   };
 
@@ -370,7 +360,7 @@ const WritingApp = () => {
                             initial={{ opacity: 0, width: 0, minWidth: 0 }}
                             animate={{
                               opacity: 1,
-                              width: "var(--sidePanelWidth)",
+                              width: `${computedPanelWidth}px`,
                             }}
                             exit={{ opacity: 0, width: 0, minWidth: 0 }}
                             transition={{ duration: 0.2 }}

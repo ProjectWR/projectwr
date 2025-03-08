@@ -109,7 +109,10 @@ export default {
         detailsPanelHeaderTwoHeight: "var(--detailsPanelHeaderTwoHeight)",
         fontContainerHeight: "var(--fontContainerHeight)",
         fontAddButtonSize: "var(--fontAddButtonSize)",
-        fontItemHeight: "var(--fontItemHeight)"
+        fontItemHeight: "var(--fontItemHeight)",
+        libraryDetailsActionButtonHeight: "var(--libraryDetailsActionButtonHeight)",
+        libraryDetailsActionButtonWidth: "var(--libraryDetailsActionButtonWidth)"
+
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",

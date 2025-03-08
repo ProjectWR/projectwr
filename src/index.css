@@ -32,6 +32,8 @@
 
 @layer base {
   :root {
+    --uiScale: 1;
+
     --appBackground: 0 0% 8.9%;
     --appLayoutBorder: 0 0% 14.9%;
     --appLayoutText: 0 0% 80%;
@@ -68,86 +70,90 @@
     --appLayoutSubmitButton: 0 0% 80%;
   }
   .desktop {
-    --libraryManagerNodeHeight: 3.5rem;
-    --libraryManagerNodeIconSize: 2rem;
-    --libraryManagerHeaderHeight: 4.5rem;
-    --detailsPanelHeaderHeight: 3.5rem;
-    --actionBarHeight: 2.3rem;
-    --actionBarLogoSize: 1.8rem;
-    --actionBarButtonIconSize: 1.5rem;
+    --libraryManagerNodeIconSize: calc(var(--uiScale) * 2rem);
+    --libraryManagerHeaderHeight: calc(var(--uiScale) * 4.5rem);
+    --detailsPanelHeaderHeight: calc(var(--uiScale) * 3.5rem);
+    --actionBarHeight: calc(var(--uiScale) * 2.3rem);
+    --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
+    --actionBarButtonIconSize: calc(var(--uiScale) * 1.5rem);
 
-    --footerHeight: 0.8rem;
+    --footerHeight: calc(var(--uiScale) * 0.8rem);
 
-    --libraryDirectoryHeaderHeight: 4.5rem;
+    --libraryDirectoryHeaderHeight: calc(var(--uiScale) * 4.5rem);
 
-    --activityBarWidth: 4.5rem;
-    --activityBarHeight: 3.3rem;
-    --activityButtonHeight: 4.5rem;
-    --sidePanelWidth: 25em;
-    --activityBarIconSize: 2.2rem;
-    --activityBarFontSize: 1.2rem;
+    --activityBarWidth: calc(var(--uiScale) * 4.5rem);
+    --activityBarHeight: calc(var(--uiScale) * 3.3rem);
+    --activityButtonHeight: calc(var(--uiScale) * 4.5rem);
+    --sidePanelWidth: calc(var(--uiScale) * 25rem);
+    --activityBarIconSize: calc(var(--uiScale) * 2.2rem);
+    --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
 
-    --libraryManagerHeaderText: 1.4rem;
+    --libraryManagerHeaderText: calc(var(--uiScale) * 1.4rem);
 
-    --homePanelHeaderHeight: 6rem;
-    --homePanelHeaderFontSize: 4rem;
-    --homePanelSubtitleFontSize: 1.5rem;
+    --homePanelHeaderHeight: calc(var(--uiScale) * 6rem);
+    --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
+    --homePanelSubtitleFontSize: calc(var(--uiScale) * 1.5rem);
 
-    --detailsPanelHeaderHeight: 4rem;
-    --detailsPanelNameFontSize: 2rem;
-    --detailsPanelHeaderTwoHeight: 3rem;
-    --detailsPanelHeaderTwoFontSize: 1.5rem;
-    --detailsPanelPropsFontSize: 1.2rem;
-    --detailsPanelPropLabelFontSize: 1.15rem;
-    --detailsPanelPropLabelHeight: 2.2rem;
-    --detailsPanelSaveButtonFontSize: 1.2rem;
-    --detailsPanelDescriptionInputHeight: 15rem;
-    --detailsPanelWidth: 60rem;
+    --detailsPanelHeaderHeight: calc(var(--uiScale) * 4rem);
+    --detailsPanelNameFontSize: calc(var(--uiScale) * 2rem);
+    --detailsPanelHeaderTwoHeight: calc(var(--uiScale) * 3rem);
+    --detailsPanelHeaderTwoFontSize: calc(var(--uiScale) * 1.5rem);
+    --detailsPanelPropsFontSize: calc(var(--uiScale) * 1.2rem);
+    --detailsPanelPropLabelFontSize: calc(var(--uiScale) * 1.15rem);
+    --detailsPanelPropLabelHeight: calc(var(--uiScale) * 2.2rem);
+    --detailsPanelSaveButtonFontSize: calc(var(--uiScale) * 1.2rem);
+    --detailsPanelDescriptionInputHeight: calc(var(--uiScale) * 15rem);
+    --detailsPanelWidth: calc(var(--uiScale) * 60rem);
 
-    --authInputHeight: 4rem;
-    --authButtonSize: 1.6rem;
-    --authButtonLoadingSize: 1.5rem;
+    --authInputHeight: calc(var(--uiScale) * 4rem);
+    --authButtonSize: calc(var(--uiScale) * 1.6rem);
+    --authButtonLoadingSize: calc(var(--uiScale) * 1.5rem);
 
-    --libraryManagerNodeHeight: 4rem;
-    --libraryManagerNodeText: 1.25rem;
-    --libraryManagerNodeIconSize: 2rem;
-    --libraryManagerAddButtonSize: 2.5rem;
-    --libraryManagerNodeEditButtonWidth: 2.5rem;
+    --libraryManagerNodeHeight: calc(var(--uiScale) * 3.2rem);
+    --libraryManagerNodeText: calc(var(--uiScale) * 1.25rem);
+    --libraryManagerNodeIconSize: calc(var(--uiScale) * 2rem);
+    --libraryManagerAddButtonSize: calc(var(--uiScale) * 2.5rem);
+    --libraryManagerNodeEditButtonWidth: calc(var(--uiScale) * 2.5rem);
 
-    --libraryDirectoryBookNodeHeight: 2.6rem;
-    --libraryDirectoryPaperNodeHeight: 2.6rem;
-    --libraryDirectorySectionNodeHeight: 2.6rem;
+    --libraryDirectoryBookNodeHeight: calc(var(--uiScale) * 2.6rem);
+    --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 2.6rem);
+    --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 2.6rem);
 
-    --libraryDirectoryBookNodeFontSize: 1.2rem;
-    --libraryDirectoryPaperNodeFontSize: 1.2rem;
-    --libraryDirectorySectionNodeFontSize: 1.2rem;
+    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 1.2rem);
+    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 1.2rem);
+    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 1.2rem);
 
-    --libraryDirectoryBookNodeIconSize: 2rem;
-    --libraryDirectoryPaperNodeIconSize: 2rem;
-    --libraryDirectorySectionNodeIconSize: 2rem;
+    --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 2rem);
+    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 2rem);
+    --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 2rem);
 
-    --templateDetailsPanelDeviceHeaderHeight: 4rem;
-    --templateDetailsPanelSectionHeaderHeight: 4rem;
-    --templateDetailsPreferenceInputHeight: 2.7rem;
-    --templateDetailsPreferenceLabelWidth: 15rem;
-    --templateDetailsPreferencesColorInputSize: 1.8rem;
-    --templateDetailsPanelPreferenceFontSize: 1.2rem;
-    --templateDetailsPanelPreferenceInputFontSize: 1.2rem;
+    --templateDetailsPanelDeviceHeaderHeight: calc(var(--uiScale) * 4rem);
+    --templateDetailsPanelSectionHeaderHeight: calc(var(--uiScale) * 4rem);
+    --templateDetailsPreferenceInputHeight: calc(var(--uiScale) * 2.7rem);
+    --templateDetailsPreferenceLabelWidth: calc(var(--uiScale) * 15rem);
+    --templateDetailsPreferencesColorInputSize: calc(var(--uiScale) * 1.8rem);
+    --templateDetailsPanelPreferenceFontSize: calc(var(--uiScale) * 1.2rem);
+    --templateDetailsPanelPreferenceInputFontSize: calc(
+      var(--uiScale) * 1.2rem
+    );
 
-    --loadingSpinnerSize: 7.5rem;
+    --loadingSpinnerSize: calc(var(--uiScale) * 7.5rem);
 
-    --optionsDropdownWidth: 12rem;
-    --optionsDropdownOptionHeight: 2rem;
-    --optionsDropdownOptionFont: 1rem;
+    --optionsDropdownWidth: calc(var(--uiScale) * 12rem);
+    --optionsDropdownOptionHeight: calc(var(--uiScale) * 2rem);
+    --optionsDropdownOptionFont: calc(var(--uiScale) * 1rem);
 
-    --userPlanDisplayHeight: 3rem;
+    --userPlanDisplayHeight: calc(var(--uiScale) * 3rem);
 
-    --fontContainerHeight: 15rem;
-    --fontAddButtonSize: 2rem;
-    --fontItemHeight: 3rem;
+    --fontContainerHeight: calc(var(--uiScale) * 15rem);
+    --fontAddButtonSize: calc(var(--uiScale) * 2rem);
+    --fontItemHeight: calc(var(--uiScale) * 3rem);
+
+    --libraryDetailsActionButtonHeight: calc(var(--uiScale) * 5rem);
+    --libraryDetailsActionButtonWidth: calc(var(--uiScale) * 8rem);
   }
   .mobile {
-    --libraryManagerNodeHeight: 3.5rem;
+    --libraryManagerNodeHeight: 7rem;
     --libraryManagerNodeIconSize: 2rem;
     --libraryManagerHeaderHeight: 3.5rem;
     --detailsPanelHeaderHeight: 3.5rem;

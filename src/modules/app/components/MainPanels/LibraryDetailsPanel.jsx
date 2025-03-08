@@ -250,7 +250,9 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className={`w-full h-full p-4 flex items-center justify-center ${isSynced && "text-appLayoutTextMuted"}`}
+                className={`w-full h-full p-4 flex items-center justify-center ${
+                  isSynced && "text-appLayoutTextMuted"
+                }`}
               >
                 {(isSynced && (
                   <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
@@ -631,7 +633,7 @@ const LibraryActionButton = ({ children, onClick, disabled = false }) => (
     disabled={disabled}
     size={10}
     onClick={onClick}
-    className={`h-[5rem] min-w-[4rem] max-w-[8rem] flex-grow rounded-lg overflow-hidden border border-appLayoutBorder`}
+    className={`h-libraryDetailsActionButtonHeight w-libraryDetailsActionButtonWidth rounded-lg overflow-hidden border border-appLayoutBorder`}
   >
     <div className="h-full w-full">{children}</div>
   </GrainyButton>

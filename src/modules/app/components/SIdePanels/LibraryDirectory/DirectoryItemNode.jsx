@@ -11,6 +11,7 @@ import itemLocalStateManager from "../../../lib/itemLocalState";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import { min, max } from "lib0/math";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
+import useComputedCssVar from "../../../hooks/useComputedCssVar";
 
 /**
  *
@@ -32,6 +33,10 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
 
   const textContainerRef = useRef(null);
   const textRef = useRef(null);
+
+  const computedLibraryDirectoryBookNodeFontSize = useComputedCssVar(
+    "--libraryDirectoryBookNodeFontSize"
+  );
   const [fontSize, setFontSize] = useState(
     getComputedStyle(document.documentElement).getPropertyValue(
       "--libraryDirectoryBookNodeFontSize"
@@ -243,18 +248,14 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
 
         newFontSize = min(
           newFontSize,
-          parseFloat(
-            getComputedStyle(document.documentElement).getPropertyValue(
-              "--libraryDirectoryBookNodeFontSize"
-            )
-          )
+          computedLibraryDirectoryBookNodeFontSize
         );
 
-        newFontSize = max(newFontSize, 1);
+        newFontSize = max(newFontSize, 16);
 
         console.log("new Font size: ", newFontSize);
 
-        setFontSize(`${newFontSize}rem`);
+        setFontSize(`${newFontSize}px`);
       }
     };
 
@@ -269,7 +270,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
         observer.unobserve(textContainer);
       }
     };
-  }, [fontSize]);
+  }, [fontSize, computedLibraryDirectoryBookNodeFontSize]);
 
   return (
     <div

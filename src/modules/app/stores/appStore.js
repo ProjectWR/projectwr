@@ -27,4 +27,9 @@ export const appStore = create((set) => ({
   setShowActivityBar: (showActivityBar) => {
     return set({ showActivityBar: showActivityBar });
   },
+
+  zoom: 1,
+  setZoom: (zoom) => {
+    return set({ zoom: zoom });
+  }
 }));
