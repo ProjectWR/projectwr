@@ -14,6 +14,9 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import firebaseApp from "../../lib/Firebase";
+import GrainyButton from "../../../design-system/GrainyButton";
+import { useFonts } from "../../hooks/useFonts";
+import fontManager from "../../lib/font";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -28,6 +31,9 @@ const SettingsPanel = () => {
   const { deviceType } = useDeviceType();
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
+
+  const fonts = useFonts();
+  console.log("fonts: ", fonts);
 
   const defaultSettings = settingsStore((state) => state.defaultSettings);
   const settings = settingsStore((state) => state.settings);
@@ -240,35 +246,35 @@ const SettingsPanel = () => {
   };
 
   return (
-    <div id="SettingsContainer" className={`h-full w-full flex flex-col`}>
+    <div
+      id="SettingsContainer"
+      className={`h-full flex flex-col items-center justify-start 
+      ${deviceType === "mobile" && "w-full"}   
+      ${deviceType === "desktop" && "mt-10"}       
+    `}
+      style={
+        deviceType === "desktop" && {
+          width: `var(--detailsPanelWidth)`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+        }
+      }
+    >
       <div
         id="SettingsHeader"
-        className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow`}
+        className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
+          ${deviceType === "desktop" && "px-6"}
+        `}
       >
-        <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-libraryManagerHeaderText text-neutral-300 order-2">
+        <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-detailsPanelNameFontSize text-neutral-300 order-1">
           Settings
         </h1>
-        <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
- `}
-          onClick={handleResetToDefault}
-        >
-          <span className="icon-[material-symbols-light--reset-settings]] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-        </button>
-        <button
-          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
- `}
-          onClick={handleSave}
-        >
-          <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-        </button>
       </div>
+
+      <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
 
       <div
         id="SettingsBody"
-        className={`flex-grow flex flex-col w-full justify-start items-end overflow-y-scroll py-3 px-4 gap-3 ${
-          deviceType === "mobile" ? "no-scrollbar" : "pl-[0.75rem]"
-        }`}
+        className="h-fit w-full flex flex-col items-center justify-start py-4 gap-4 px-6"
       >
         <motion.div
           id="AuthContainer"
@@ -499,10 +505,10 @@ const SettingsPanel = () => {
                 exit={{ opacity: 0 }}
                 className="w-full flex flex-col items-start rounded-md gap-2"
               >
-                <div className="relative w-full h-fit border border-appLayoutBorder rounded-md">
+                <div className="relative w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight  rounded-md">
                   <p
                     id="loggedInUserDisplay"
-                    className="w-full h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight rounded-md bg-appBackground "
+                    className="w-full h-fit overflow-x-hidden overflow-ellipsis flex justify-start items-center text-detailsPanelPropsFontSize px-3 pb-2 rounded-md bg-appBackground "
                   >
                     {user.email}
                   </p>
@@ -514,62 +520,287 @@ const SettingsPanel = () => {
                   </label>
                 </div>
 
-                <div className="relative w-full h-fit border border-appLayoutBorder rounded-md flex items-center">
-                  <p
-                    id="loggedInUserDisplay"
-                    className="flex-grow h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
-                  >
-                    {user.emailVerified ? "Free Plan" : "Email is not verified"}
-                  </p>
-                  <button
-                    className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
-                    onClick={async () => {
-                      const user = getAuth(firebaseApp).currentUser;
-                      await user.reload();
-                      console.log("user:", user);
-                      setUser({ ...user });
-                    }}
-                  >
-                    <span className="icon-[line-md--rotate-270] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-                  </button>
-                </div>
+                {deviceType === "mobile" && (
+                  <>
+                    <div className="relative w-full h-fit border border-appLayoutBorder rounded-md flex items-center">
+                      <p
+                        id="loggedInUserDisplay"
+                        className="flex-grow h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
+                      >
+                        {user.emailVerified
+                          ? "Free Plan"
+                          : "Email is not verified"}
+                      </p>
+                      <button
+                        className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                        onClick={async () => {
+                          const user = getAuth(firebaseApp).currentUser;
+                          await user.reload();
+                          console.log("user:", user);
+                          setUser({ ...user });
+                        }}
+                      >
+                        <span className="icon-[iwwa--reset] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+                      </button>
+                    </div>
 
-                <div
-                  className={`w-full h-fit flex gap-2 rounded-md border border-appLayoutBorder`}
-                >
-                  <AnimatePresence mode="wait">
-                    <button
-                      className={`w-full h-fit py-2 rounded-md text-detailsPanelPropsFontSize 
+                    <div
+                      className={`w-full h-fit flex gap-2 rounded-md border border-appLayoutBorder`}
+                    >
+                      <AnimatePresence mode="wait">
+                        <button
+                          className={`w-full h-fit py-2 rounded-md text-detailsPanelPropsFontSize 
                         
                         ${!isLogoutLoading ? "hover:bg-specialButtonHover" : ""}
                           
                         bg-specialButton text-appLayoutHover transition-colors duration-200`}
-                      onClick={logoutUser}
-                      disabled={isLogoutLoading}
-                    >
-                      <motion.span
-                        key={
-                          isLogoutLoading ? "logoutLoading" : "logoutNotLoading"
-                        }
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="h-authButtonSize flex items-center justify-center"
+                          onClick={logoutUser}
+                          disabled={isLogoutLoading}
+                        >
+                          <motion.span
+                            key={
+                              isLogoutLoading
+                                ? "logoutLoading"
+                                : "logoutNotLoading"
+                            }
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="h-authButtonSize flex items-center justify-center"
+                          >
+                            {!isLogoutLoading ? (
+                              <span>Logout</span>
+                            ) : (
+                              <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize"></span>
+                            )}
+                          </motion.span>
+                        </button>
+                      </AnimatePresence>
+                    </div>
+                  </>
+                )}
+
+                {deviceType === "desktop" && (
+                  <div className="w-full h-fit flex flex-row gap-2">
+                    <div className="relative w-1/2 h-userPlanDisplayHeight border border-appLayoutBorder rounded-md flex items-center">
+                      <p
+                        id="loggedInUserDisplay"
+                        className="flex-grow h-full flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
                       >
-                        {!isLogoutLoading ? (
-                          <span>Logout</span>
-                        ) : (
-                          <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize"></span>
-                        )}
-                      </motion.span>
-                    </button>
-                  </AnimatePresence>
-                </div>
+                        {user.emailVerified
+                          ? "Free Plan"
+                          : "Email is not verified"}
+                      </p>
+                      <button
+                        className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                        onClick={async () => {
+                          const user = getAuth(firebaseApp).currentUser;
+                          await user.reload();
+                          console.log("user:", user);
+                          setUser({ ...user });
+                        }}
+                      >
+                        <span className="icon-[system-uicons--reset-alt] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+                      </button>
+                    </div>
+
+                    <div className={`w-1/2 h-userPlanDisplayHeight`}>
+                      <AnimatePresence mode="wait">
+                        <GrainyButton
+                          className={`w-full h-full border border-appLayoutBorder rounded-md overflow-hidden text-detailsPanelPropsFontSize 
+                        
+                          ${isLogoutLoading ? "text-appLayoutTextMuted" : ""}
+
+                            `}
+                          onClick={logoutUser}
+                          disabled={isLogoutLoading}
+                        >
+                          {(isLogoutLoading && (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <div className={`relative w-[3rem] h-[3rem]`}>
+                                <span
+                                  className="w-full h-full"
+                                  // animate={{ rotate: 360 }}
+                                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width={"100%"}
+                                    height={"100%"}
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <g
+                                      fill="none"
+                                      stroke="#fff"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={0.3}
+                                    >
+                                      <path
+                                        strokeDasharray={16}
+                                        strokeDashoffset={16}
+                                        d="M12 3c4.97 0 9 4.03 9 9"
+                                      >
+                                        <animate
+                                          fill="freeze"
+                                          attributeName="stroke-dashoffset"
+                                          dur="0.3s"
+                                          values="16;0"
+                                        ></animate>
+                                        <animateTransform
+                                          attributeName="transform"
+                                          dur="1.5s"
+                                          repeatCount="indefinite"
+                                          type="rotate"
+                                          values="0 12 12;360 12 12"
+                                        ></animateTransform>
+                                      </path>
+                                      <path
+                                        strokeDasharray={64}
+                                        strokeDashoffset={64}
+                                        strokeOpacity={0.3}
+                                        d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                                      >
+                                        <animate
+                                          fill="freeze"
+                                          attributeName="stroke-dashoffset"
+                                          dur="1.2s"
+                                          values="64;0"
+                                        ></animate>
+                                      </path>
+                                    </g>
+                                  </svg>
+                                </span>
+                                <motion.div
+                                  initial={{ opacity: 0.4 }}
+                                  animate={{ opacity: 1 }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    repeatType: "reverse",
+                                    duration: 1.2,
+                                    ease: "linear",
+                                  }}
+                                  className="absolute w-full h-full p-[20%] top-0 left-0"
+                                >
+                                  <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                                </motion.div>
+                              </div>
+                            </div>
+                          )) || (
+                            <motion.span
+                              key={
+                                isLogoutLoading
+                                  ? "logoutLoading"
+                                  : "logoutNotLoading"
+                              }
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="h-authButtonSize flex items-center justify-center"
+                            >
+                              {!isLogoutLoading ? (
+                                <span>Logout</span>
+                              ) : (
+                                <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize"></span>
+                              )}
+                            </motion.span>
+                          )}
+                        </GrainyButton>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
+
+        <motion.div
+          id="FontContainer"
+          animate={{
+            height: "var(--fontContainerHeight)",
+            paddingTop: "var(--detailsPanelPropLabelHeight)",
+          }}
+          className="w-full flex flex-row gap-2 rounded-lg border border-appLayoutBorder  relative"
+        >
+          <div
+            style={{
+              paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+            }}
+            className="h-full w-full py-2 overflow-y-scroll grid grid-cols-3 gap-2 auto-rows-[--fontItemHeight]"
+          >
+            {fonts.map((font) => {
+              return (
+                <div
+                  key={font.id}
+                  className={`flex items-center justify-between gap-2 pl-3 pr-1 rounded-md bg-appBackground border border-appLayoutBorder`}
+                >
+                  <p className="text-detailsPanelPropsFontSize text-appLayoutTextMuted flex-grow min-w-0 overflow-ellipsis text-nowrap overflow-hidden">
+                    {font.family}
+                  </p>
+                  <button
+                    className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center`}
+                    onClick={async () => {
+                      await fontManager.deleteFont(font.id);
+                    }}
+                  >
+                    <span className="icon-[ph--trash-thin] w-full h-full"></span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <label
+            htmlFor="FontContainer"
+            className="absolute top-1 left-0 px-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit w-full flex items-center justify-between"
+          >
+            <p>Fonts</p>
+            <button
+              onClick={async () => {
+                await fontManager.addFont();
+              }}
+              className="h-fontAddButtonSize w-fontAddButtonSize hover:bg-appLayoutInverseHover rounded-full"
+            >
+              <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
+            </button>
+          </label>
+        </motion.div>
+      </div>
+
+      <div
+        id="PreferencesContainer"
+        className="w-[96%] h-fit flex flex-col items-center"
+      >
+        <div
+          id="PreferencesHeader"
+          className={`h-detailsPanelHeaderTwoHeight min-h-detailsPanelHeaderTwoHeight w-full flex items-center justify-start py-1 px-1 
+          ${deviceType === "desktop" && "px-6"}
+        `}
+        >
+          <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-detailsPanelHeaderTwoFontSize text-neutral-300 order-1">
+            Preferences
+          </h1>
+
+          <div className="flex-grow order-2"></div>
+          <button
+            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
+ `}
+            onClick={handleResetToDefault}
+          >
+            <span className="icon-[material-symbols-light--reset-settings] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+          <button
+            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
+ `}
+            onClick={handleSave}
+          >
+            <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
+        </div>
+
+        <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
       </div>
     </div>
   );

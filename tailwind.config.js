@@ -104,6 +104,12 @@ export default {
         libraryDirectoryHeaderHeight: "var(--libraryDirectoryHeaderHeight)",
         detailsPanelWidth: "var(--detailsPanelWidth)",
         homePanelHeaderHeight: "var(--homePanelHeaderHeight)",
+        userPlanDisplayHeight: "var(--userPlanDisplayHeight)",
+        footerHeight: "var(--footerHeight)",
+        detailsPanelHeaderTwoHeight: "var(--detailsPanelHeaderTwoHeight)",
+        fontContainerHeight: "var(--fontContainerHeight)",
+        fontAddButtonSize: "var(--fontAddButtonSize)",
+        fontItemHeight: "var(--fontItemHeight)"
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",
@@ -121,6 +127,7 @@ export default {
         optionsDropdownOptionFont: "var(--optionsDropdownOptionFont)",
         homePanelHeaderFontSize: "var(--homePanelHeaderFontSize)",
         homePanelSubtitleFontSize: "var(--homePanelSubtitleFontSize)",
+        detailsPanelHeaderTwoFontSize: "var(--detailsPanelHeaderTwoFontSize)",
       },
       fontFamily: {
         heading: [

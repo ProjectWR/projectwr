@@ -44,6 +44,8 @@ import { Resizable } from "re-resizable";
 import { wait } from "lib0/promise";
 import { max, min } from "lib0/math";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import templateManager from "../lib/templates";
+import fontManager from "../lib/font";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -136,6 +138,8 @@ const WritingApp = () => {
 
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
+
+        await fontManager.init();
 
         const databases = await indexedDB.databases();
 

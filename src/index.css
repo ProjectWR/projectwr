@@ -76,6 +76,8 @@
     --actionBarLogoSize: 1.8rem;
     --actionBarButtonIconSize: 1.5rem;
 
+    --footerHeight: 0.8rem;
+
     --libraryDirectoryHeaderHeight: 4.5rem;
 
     --activityBarWidth: 4.5rem;
@@ -93,6 +95,8 @@
 
     --detailsPanelHeaderHeight: 4rem;
     --detailsPanelNameFontSize: 2rem;
+    --detailsPanelHeaderTwoHeight: 3rem;
+    --detailsPanelHeaderTwoFontSize: 1.5rem;
     --detailsPanelPropsFontSize: 1.2rem;
     --detailsPanelPropLabelFontSize: 1.15rem;
     --detailsPanelPropLabelHeight: 2.2rem;
@@ -135,6 +139,12 @@
     --optionsDropdownWidth: 12rem;
     --optionsDropdownOptionHeight: 2rem;
     --optionsDropdownOptionFont: 1rem;
+
+    --userPlanDisplayHeight: 3rem;
+
+    --fontContainerHeight: 15rem;
+    --fontAddButtonSize: 2rem;
+    --fontItemHeight: 3rem;
   }
   .mobile {
     --libraryManagerNodeHeight: 3.5rem;

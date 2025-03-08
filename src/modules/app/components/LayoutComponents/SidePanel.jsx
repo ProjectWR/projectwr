@@ -27,16 +27,10 @@ const SidePanel = ({}) => {
         return <LibraryManager />;
       }
     } else if (activity === "templates") {
-      if (templateId !== "unselected") {
-        key.current = "templateSelected-" + templateId;
-        return <TemplateManager templateId={templateId} />;
-      } else {
-        key.current = "templateManager";
-        return <TemplateManager />;
-      }
+      key.current = "templateManager";
+      return <TemplateManager />;
     } else {
       key.current = "empty";
-      setPanelOpened(false);
       return (
         <div className="h-full w-full flex items-center justify-center">
           <p>Nothing</p>
@@ -54,7 +48,7 @@ const SidePanel = ({}) => {
         exit={{ x: 10, opacity: 0 }}
         transition={{ duration: 0.1, bounce: 0 }}
         style={{
-          minWidth: `calc(var(--sidePanelWidth) * 0.75)`
+          minWidth: `calc(var(--sidePanelWidth) * 0.75)`,
         }}
         className="w-full h-full bg-appBackground border-appLayoutBorder"
       >

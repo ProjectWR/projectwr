@@ -5,6 +5,7 @@ import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor"; // Assumin
 import templateManager from "../../lib/templates";
 import { equalityDeep } from "lib0/function";
 import { templateStore } from "../../stores/templateStore";
+import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 
 /**
  * TemplateViewPanel component for viewing and editing templates.
@@ -12,6 +13,7 @@ import { templateStore } from "../../stores/templateStore";
  * @returns {JSX.Element}
  */
 const TemplateViewPanel = ({ templateId }) => {
+  const { deviceType } = useDeviceType();
   console.log("TemplateViewPanel rendering: ", templateId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
@@ -19,12 +21,13 @@ const TemplateViewPanel = ({ templateId }) => {
 
   // Hide the activity bar when the panel is mounted
   useEffect(() => {
-    setShowActivityBar(false);
-
+    if (deviceType === "mobile") {
+      setShowActivityBar(false);
+    }
     return () => {
       setShowActivityBar(true);
     };
-  }, [setShowActivityBar]);
+  }, [setShowActivityBar, deviceType]);
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const [headerOpened, setHeaderOpened] = useState(true);

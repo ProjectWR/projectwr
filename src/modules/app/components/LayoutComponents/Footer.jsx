@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <div
       id="footerContainer"
-      className="border-t border-appLayoutBorder w-full h-[1.5rem] min-h-[1.5rem] pt-1 pb-1 "
+      className="border-t border-appLayoutBorder w-full h-footerHeight min-h-footerHeight"
     ></div>
   );
 };

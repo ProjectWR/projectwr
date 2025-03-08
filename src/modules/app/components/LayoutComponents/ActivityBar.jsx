@@ -21,7 +21,7 @@ const ActivityBar = ({}) => {
           className={`flex gap-px items-center bg-appBackground ${
             deviceType === "mobile"
               ? "w-full h-activityBarHeight order-last flex-row border-t"
-              : "h-full w-activityBarWidth min-w-activityBarWidth order-first flex-col border-r"
+              : "h-full w-activityBarWidth order-first flex-col border-r"
           } border-appLayoutBorder z-5`}
           style={{
             boxShadow:
@@ -31,20 +31,20 @@ const ActivityBar = ({}) => {
             clipPath: deviceType === "mobile" ? "inset(-10px 0 0 0)" : "", // Clip the shadow on the bottom
           }}
           key={`${showActivityBar}`}
-          initial={deviceType !== "mobile" ? { height: "100%" } : { height: 0 }}
+          initial={deviceType !== "mobile" ? { width: 0 } : { height: 0 }}
           animate={
             deviceType !== "mobile"
-              ? { height: "100%" }
+              ? { width: "var(--activityBarWidth)" }
               : { height: "var(--activityBarHeight)" }
           }
-          exit={deviceType !== "mobile" ? { height: "100%" } : { height: 0 }}
+          exit={deviceType !== "mobile" ? { width: 0 } : { height: 0 }}
           transition={{ duration: 0.1 }}
         >
           {deviceType === "desktop" && (
             <ActivityButton
               onClick={() => {
                 setActivity("home");
-                setPanelOpened(true);
+                setPanelOpened(false);
               }}
               activity={activity}
               selectedActivity={"home"}

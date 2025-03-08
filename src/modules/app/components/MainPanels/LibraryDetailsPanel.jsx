@@ -202,7 +202,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
               animate={{
                 height: "var(--libraryManagerAddButtonSize) ",
                 opacity: 1,
-                marginTop: `0.75rem`,
+                marginTop: `0.25rem`,
                 marginBottom: 0,
                 padding: `0.25rem`,
               }}

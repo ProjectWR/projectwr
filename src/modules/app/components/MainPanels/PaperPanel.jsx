@@ -30,7 +30,7 @@ const PaperPanel = ({ ytree, paperId }) => {
     return () => {
       setShowActivityBar(true);
     };
-  }, [setShowActivityBar]);
+  }, [setShowActivityBar, deviceType]);
 
   const [paperProperties, setPaperProperties] = useState({
     item_title: "",

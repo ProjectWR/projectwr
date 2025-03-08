@@ -39,7 +39,6 @@ export default class ObservableMap extends Map {
   // Override Map methods to trigger callbacks
   set(key, value) {
     super.set(key, value);
-    console.log("Value set!");
     this._triggerCallbacks('set', key, value);
     return this;
   }

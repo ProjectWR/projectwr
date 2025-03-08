@@ -27,9 +27,4 @@ export const appStore = create((set) => ({
   setShowActivityBar: (showActivityBar) => {
     return set({ showActivityBar: showActivityBar });
   },
-
-  libraryListStore: null,
-  setLibraryListStore: (libraryListStore) => {
-    return set({ libraryListStore: libraryListStore });
-  }
 }));
