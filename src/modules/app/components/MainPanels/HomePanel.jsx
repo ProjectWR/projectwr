@@ -9,6 +9,7 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
+
 const HomePanel = () => {
   const { deviceType } = useDeviceType();
 
@@ -26,7 +27,7 @@ const HomePanel = () => {
             minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
           }
         }
-      >
+      >        
         <div
           id="HomeHeader"
           className={`h-fit min-h-fit w-full flex flex-col items-start

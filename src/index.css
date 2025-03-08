@@ -77,7 +77,11 @@
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
     --actionBarButtonIconSize: calc(var(--uiScale) * 1.5rem);
 
-    --footerHeight: calc(var(--uiScale) * 0.8rem);
+    --footerHeight: calc(var(--uiScale) * 2rem);
+    --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
+    --ZoomIconSize: calc(var(--uiScale) * 1.7rem);
+    --ZoomDisplayWidth: calc(var(--uiScale) * 3.5rem);
+    --ZoomDisplayFontSize: calc(var(--uiScale) * 1rem);
 
     --libraryDirectoryHeaderHeight: calc(var(--uiScale) * 4.5rem);
 
@@ -109,7 +113,7 @@
     --authButtonSize: calc(var(--uiScale) * 1.6rem);
     --authButtonLoadingSize: calc(var(--uiScale) * 1.5rem);
 
-    --libraryManagerNodeHeight: calc(var(--uiScale) * 3.2rem);
+    --libraryManagerNodeHeight: calc(var(--uiScale) * 3.5rem);
     --libraryManagerNodeText: calc(var(--uiScale) * 1.25rem);
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 2rem);
     --libraryManagerAddButtonSize: calc(var(--uiScale) * 2.5rem);

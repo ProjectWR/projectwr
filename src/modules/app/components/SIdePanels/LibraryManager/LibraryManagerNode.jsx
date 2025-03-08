@@ -180,7 +180,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
         newFontSize = max(
           newFontSize,
-          16
+          12
         );
 
         setFontSize(`${newFontSize}px`);

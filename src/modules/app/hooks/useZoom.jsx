@@ -20,14 +20,19 @@ const useZoom = () => {
 
   // Update CSS variable and save to localStorage
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--uiScale",
-      scale.toString()
-    );
-    
+    document.documentElement.style.setProperty("--uiScale", scale.toString());
+
     setZoom(scale);
     localStorage.setItem("uiScale", scale.toString());
   }, [scale, setZoom]);
+
+  const zoomIn = () => {
+    setScale((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE));
+  };
+
+  const zoomOut = () => {
+    setScale((prev) => Math.max(prev - SCALE_STEP, MIN_SCALE));
+  };
 
   const handleKeyDown = (e) => {
     if (e.ctrlKey || e.metaKey) {
@@ -35,12 +40,12 @@ const useZoom = () => {
         case "+":
         case "=":
           e.preventDefault();
-          setScale((prev) => Math.min(prev + SCALE_STEP, MAX_SCALE));
+          zoomIn();
           break;
         case "-":
         case "_":
           e.preventDefault();
-          setScale((prev) => Math.max(prev - SCALE_STEP, MIN_SCALE));
+          zoomOut();
           break;
         case "0":
           e.preventDefault();
@@ -55,7 +60,7 @@ const useZoom = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  return { scale, setScale };
+  return { scale, setScale, zoomIn, zoomOut };
 };
 
 export default useZoom;

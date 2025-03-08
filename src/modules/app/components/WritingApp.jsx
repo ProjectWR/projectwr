@@ -64,7 +64,7 @@ const WritingApp = () => {
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-  const computedPanelWidth = useComputedCssVar('--sidePanelWidth');
+  const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
@@ -107,11 +107,11 @@ const WritingApp = () => {
 
     let newWidth = info.point.x - rect.left;
 
-    const MIN_WIDTH = 0.75 * computedPanelWidth;
+    const MIN_WIDTH = 0.77 * computedPanelWidth;
     const MAX_WIDTH = 2 * computedPanelWidth;
 
     newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
-    
+
     mWidth.set(newWidth);
   };
 
@@ -214,15 +214,12 @@ const WritingApp = () => {
   }, [setDefaultSettings, setSettings, setLoading, user]);
 
   useEffect(() => {
-    const unlisten = getCurrentWindow().listen(
-      "tauri://resize",
-      async () => {
-        const x = await getCurrentWindow().isMaximized();
-        console.log("fullscreen??", x);
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      const x = await getCurrentWindow().isMaximized();
+      console.log("fullscreen??", x);
 
-        setIsMaximized(x);
-      }
-    );
+      setIsMaximized(x);
+    });
 
     return async () => {
       await unlisten;
@@ -230,13 +227,17 @@ const WritingApp = () => {
     };
   }, []);
 
+  const [color, setColor] = useState("#a3a3a3");
+
   // Render loading screen if loading is true
   return (
     <DndProvider backend={HTML5Backend}>
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-screen max-h-screen w-screen max-w-screen bg-appBackground font-serif ${!isMaximized && "border"} border-appLayoutBorder overflow-hidden `}
+          className={`h-screen max-h-screen w-screen max-w-screen bg-appBackground font-serif ${
+            !isMaximized && "border"
+          } border-appLayoutBorder overflow-hidden text-appLayoutText`}
         >
           {loading && (
             <motion.div
@@ -262,7 +263,7 @@ const WritingApp = () => {
                   >
                     <g
                       fill="none"
-                      stroke="#fff"
+                      stroke={`${color}`}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={0.3}

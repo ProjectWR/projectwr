@@ -111,7 +111,10 @@ export default {
         fontAddButtonSize: "var(--fontAddButtonSize)",
         fontItemHeight: "var(--fontItemHeight)",
         libraryDetailsActionButtonHeight: "var(--libraryDetailsActionButtonHeight)",
-        libraryDetailsActionButtonWidth: "var(--libraryDetailsActionButtonWidth)"
+        libraryDetailsActionButtonWidth: "var(--libraryDetailsActionButtonWidth)",
+        ZoomButtonWidth: "var(--ZoomButtonWidth)",
+        ZoomIconSize: "var(--ZoomIconSize)",
+        ZoomDisplayWidth: "var(--ZoomDisplayWidth)"
 
       },
       fontSize: {
@@ -131,6 +134,7 @@ export default {
         homePanelHeaderFontSize: "var(--homePanelHeaderFontSize)",
         homePanelSubtitleFontSize: "var(--homePanelSubtitleFontSize)",
         detailsPanelHeaderTwoFontSize: "var(--detailsPanelHeaderTwoFontSize)",
+        ZoomDisplayFontSize: "var(--ZoomDisplayFontSize)",
       },
       fontFamily: {
         heading: [
