@@ -357,7 +357,7 @@ const WritingApp = () => {
                           <motion.div
                             key="SidePanelMotionContainer"
                             id="SidePanelMotionContainer"
-                            className="h-full border-r border-appLayoutBorder z-4 relative"
+                            className="h-full border-r border-appLayoutBorder z-50 relative"
                             initial={{ opacity: 0, width: 0, minWidth: 0 }}
                             animate={{
                               opacity: 1,
@@ -379,7 +379,7 @@ const WritingApp = () => {
                           >
                             <SidePanel />
                             <motion.div
-                              className="absolute h-full w-[6px] top-0 -right-[6px] z-5 hover:bg-sidePanelDragHandle cursor-w-resize"
+                              className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
                               drag="x"
                               dragConstraints={{
                                 top: 0,

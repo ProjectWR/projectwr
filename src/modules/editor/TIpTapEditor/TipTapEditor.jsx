@@ -55,15 +55,25 @@ const TiptapEditor = ({
     : desktopDefaultPreferences;
 
   const editorPreferences = preferences || defaultPreferences;
-  
 
   const {
+    width,
+    gapTop,
+    paddingTop, // Updated from marginTop
+    paddingLeft, // Updated from marginLeft
+    paddingRight, // Updated from marginRight
+    paddingBottom, // Updated from marginBottom
+    font,
     fontSize,
     lineHeight,
-    paddingTop,
-    paddingRight,
-    paddingBottom,
-    paddingLeft,
+    marginBottom,
+    backgroundColor,
+    paperBorderWidth,
+    paperColor,
+    paperBorderColor,
+    roundRadius,
+    paperShadow,
+    paperShadowColor,
 
     h1FontSize,
     h1LineHeight,
@@ -92,6 +102,8 @@ const TiptapEditor = ({
     hrMarginBottom,
     hrBorderColor,
   } = editorPreferences.paperPreferences;
+
+  const { dividerColor } = editorPreferences.toolbarPreferences;
 
   const extensions = useRef([
     Document,
@@ -267,7 +279,10 @@ const TiptapEditor = ({
   });
 
   return (
-    <div id="EditorContainer" className="h-full w-full flex flex-col">
+    <div
+      id="EditorContainer"
+      className="h-full w-full flex flex-col items-center"
+    >
       <style>
         {`
           .tiptap {
@@ -331,15 +346,13 @@ const TiptapEditor = ({
       <div
         id="EditableToolbar"
         style={{
-          boxShadow: "0 -1px 6px -1px hsl(var(--appLayoutShadow))",
           height: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
           minHeight: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
           backgroundColor: `${editorPreferences.toolbarPreferences.backgroundColor}`,
-          borderTop: `1px solid ${editorPreferences.toolbarPreferences.dividerColor}`,
         }}
         className={`
             w-full min-w-0
-            ${isMobile ? "order-last" : "order-first"}
+            ${isMobile ? "order-5" : "order-1"}
           `}
       >
         <TipTapToolbar
@@ -347,52 +360,39 @@ const TiptapEditor = ({
           toolbarPreferences={editorPreferences.toolbarPreferences}
         />
       </div>
+
+      <div
+        className={`w-full h-px ${isMobile ? "order-4" : "order-2"}`}
+        style={{ backgroundColor: `${dividerColor}` }}
+      ></div>
+
       <div
         id="EditableContainer"
         className={`flex-grow w-full flex justify-center 
-           overflow-y-scroll min-h-0 text-neutral-200 z-1 ${
-             isMobile
-               ? "pl-[0.75rem]  border-white"
-               : "pl-[0.75rem] border-t border-white"
-           }`}
+           overflow-y-scroll min-h-0 text-neutral-200 z-1 pl-[0.75rem] order-3
+          `}
       >
         <EditorContent
           editor={editor}
           className={`caret-transparent h-fit outline-none focus:outline-none
-            shadow-${
-              isMobile
-                ? "none"
-                : editorPreferences.paperPreferences.paperShadow
-            }
+            shadow-${isMobile ? "none" : paperShadow}
             shadow-black
             font-serif
             `}
           style={{
-            width: isMobile
-              ? "100%"
-              : `${editorPreferences.paperPreferences.width}rem`,
-            borderTopWidth: isMobile
-              ? "0"
-              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
-            borderRightWidth: isMobile
-              ? "0"
-              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
-            borderBottomWidth: isMobile
-              ? "0"
-              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
-            borderLeftWidth: isMobile
-              ? "0"
-              : `${editorPreferences.paperPreferences.paperBorderWidth}px`,
-            borderTopColor: `${editorPreferences.paperPreferences.paperBorderColor}`,
-            borderLeftColor: `${editorPreferences.paperPreferences.paperBorderColor}`,
-            borderRightColor: `${editorPreferences.paperPreferences.paperBorderColor}`,
-            marginTop: isMobile
-              ? "0"
-              : `${editorPreferences.paperPreferences.gapTop}rem`,
-            fontSize: `${editorPreferences.paperPreferences.fontSize}rem`,
-            lineHeight: `${editorPreferences.paperPreferences.lineHeight}rem`,
-            borderTopRightRadius: `${editorPreferences.paperPreferences.roundRadius}rem`,
-            borderTopLeftRadius: `${editorPreferences.paperPreferences.roundRadius}rem`,
+            width: isMobile ? "100%" : `${width}rem`,
+            borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+            borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+            borderBottomWidth: isMobile ? "0" : `0`,
+            borderLeftWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+            borderTopColor: `${paperBorderColor}`,
+            borderLeftColor: `${paperBorderColor}`,
+            borderRightColor: `${paperBorderColor}`,
+            marginTop: isMobile ? "0" : `${gapTop}rem`,
+            fontSize: `${fontSize}rem`,
+            lineHeight: `${lineHeight}rem`,
+            borderTopRightRadius: `${roundRadius}rem`,
+            borderTopLeftRadius: `${roundRadius}rem`,
           }}
         />
       </div>

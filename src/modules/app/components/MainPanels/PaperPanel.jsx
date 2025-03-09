@@ -7,6 +7,7 @@ import { libraryStore } from "../../stores/libraryStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 import { AnimatePresence, motion } from "motion/react";
+import { equalityDeep } from "lib0/function";
 
 /**
  *
@@ -23,7 +24,7 @@ const PaperPanel = ({ ytree, paperId }) => {
   const [headerOpened, setHeaderOpened] = useState(true);
 
   useEffect(() => {
-    if (deviceType === 'mobile') {
+    if (deviceType === "mobile") {
       setShowActivityBar(false);
     }
 
@@ -40,13 +41,23 @@ const PaperPanel = ({ ytree, paperId }) => {
 
   console.log("Paper Props Map STATE: ", paperMapState);
 
-  const original_title = useRef(paperMapState.item_title);
+  const initialPaperProperties = useRef({
+    item_title: paperMapState.item_title,
+  });
 
   useEffect(() => {
     setPaperProperties({
       item_title: paperMapState.item_title,
     });
-  }, [paperMapState]);
+
+    initialPaperProperties.current = {
+      item_title: paperMapState.item_title,
+    };
+  }, [paperId, paperMapState]);
+
+  const unsavedChangesExist = useMemo(() => {
+    return !equalityDeep(paperProperties, initialPaperProperties.current);
+  }, [paperProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +77,16 @@ const PaperPanel = ({ ytree, paperId }) => {
   return (
     <div
       id="PaperDetailContainer"
-      className="w-full h-full flex flex-col items-center justify-start"
+      className={`h-full flex flex-col items-center justify-start 
+        ${deviceType === "mobile" && "w-full"}   
+        ${deviceType === "desktop" && "mt-2"}       
+      `}
+      style={
+        deviceType === "desktop" && {
+          width: `100%`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+        }
+      }
     >
       <AnimatePresence>
         <motion.div
@@ -76,51 +96,74 @@ const PaperPanel = ({ ytree, paperId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="CreatePaperHeader"
-          className="w-full flex items-center justify-start border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow px-1 gap-1 overflow-hidden"
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
+            ${deviceType === "desktop" && "px-6"}
+          `}
         >
-          <button
-            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+          {deviceType === "mobile" && (
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
              order-first
           `}
-            onClick={() => {
-              setPanelOpened(true);
-              setItemId("unselected");
-            }}
-          >
-            <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-          </button>
+              onClick={() => {
+                setPanelOpened(true);
+                setItemId("unselected");
+              }}
+            >
+              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+          )}
 
           <input
-            className="bg-appBackground flex-grow text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 my-2 pb-2 px-2 pr-1 transition-colors duration-200"
+            className="bg-appBackground text-center flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
             name="item_title"
             onChange={handleChange}
             value={paperProperties.item_title}
           />
 
-          <button
-            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-2 rounded-full ${
-              original_title.current == paperProperties.item_title
-                ? ""
-                : " hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight "
-            } flex items-center justify-center
-             order-last
-          `}
-            onClick={handleSave}
-          >
-            <motion.span
-              animate={{
-                opacity:
-                  original_title.current == paperProperties.item_title ? 0 : 1,
-              }}
-              className={`icon-[material-symbols-light--check-rounded] ${
-                original_title.current == paperProperties.item_title
-                  ? ""
-                  : "hover:text-appLayoutHighlight"
-              } rounded-full w-full h-full`}
-            ></motion.span>
-          </button>
+          <AnimatePresence>
+            {unsavedChangesExist && (
+              <motion.button
+                initial={{
+                  width: 0,
+                  opacity: 0,
+                  marginLeft: 0,
+                  marginBottom: 0,
+                  padding: 0,
+                }}
+                animate={{
+                  width: "var(--libraryManagerAddButtonSize) ",
+                  opacity: 1,
+                  marginLeft: `0.5rem`,
+                  marginBottom: 0,
+                  padding: `0.25rem`,
+                }}
+                exit={{
+                  width: 0,
+                  opacity: 0,
+                  marginLeft: 0,
+                  marginBottom: 0,
+                  padding: 0,
+                }}
+                className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                    flex items-center justify-center order-3
+                    `}
+                onClick={handleSave}
+              >
+                <motion.span
+                  animate={{
+                    opacity: 1,
+                  }}
+                  className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+                ></motion.span>
+              </motion.button>
+            )}
+          </AnimatePresence>
         </motion.div>
       </AnimatePresence>
+
+      <div className="w-full h-px bg-appLayoutBorder"></div>
 
       <motion.div
         id="CreatePaperBody"

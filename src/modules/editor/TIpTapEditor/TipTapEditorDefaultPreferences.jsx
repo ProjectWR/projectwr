@@ -6,16 +6,17 @@ const TiptapDesktopDefaultPreferences = {
     paddingTop: 5, // Updated from marginTop
     paddingLeft: 6, // Updated from marginLeft
     paddingRight: 6, // Updated from marginRight
-    paddingBottom: 40, // Updated from marginBottom
+    paddingBottom: 50, // Updated from marginBottom
     font: "serif",
     fontSize: 1.25,
     lineHeight: 1.75,
     marginBottom: 0,
     backgroundColor: "#171717",
+
     paperBorderWidth: 1,
-    paperColor: "#171717",
     paperBorderColor: "#525252",
-    roundRadius: 0,
+    paperColor: "#171717",
+    roundRadius: 0.5,
     paperShadow: "xl",
     paperShadowColor: "#000",
 
@@ -44,20 +45,23 @@ const TiptapDesktopDefaultPreferences = {
     listMarginBottom: 1.25,
     hrMarginTop: 2,
     hrMarginBottom: 2,
-    hrBorderColor: "white",
+    hrBorderColor: "#262626",
   },
   toolbarPreferences: {
-    toolbarHeight: 3.3,
+    toolbarHeight: 2.6,
     toolbarButtonHeight: 2.3,
+    toolbarBorderWidth: 0.0625,
     marginTop: 0.25,
     marginBottom: 0.25,
     marginLeft: 0.25,
     marginRight: 0.25,
     buttonHeight: 2.3,
-    buttonWidth: 1.8,
+    buttonWidth: 2.5,
+    buttonRadius: 0.5,
+    buttonGap: 0.25,
     backgroundColor: "#171717",
     buttonColor: "#171717",
-    dividerColor: "#232323",
+    dividerColor: "#262626",
     hoverColor: "#121212",
   },
 };

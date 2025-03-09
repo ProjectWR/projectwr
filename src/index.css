@@ -77,7 +77,7 @@
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
     --actionBarButtonIconSize: calc(var(--uiScale) * 1.5rem);
 
-    --footerHeight: calc(var(--uiScale) * 2rem);
+    --footerHeight: calc(var(--uiScale) * 1.8rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
     --ZoomIconSize: calc(var(--uiScale) * 1.7rem);
     --ZoomDisplayWidth: calc(var(--uiScale) * 3.5rem);

@@ -12,6 +12,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
     marginRight,
     buttonHeight,
     buttonWidth,
+    buttonRadius,
     backgroundColor,
     buttonColor,
     dividerColor,
@@ -21,8 +22,8 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
   } = toolbarPreferences;
 
   return (
-    <div className="h-full w-full no-scrollbar overflow-y-hidden overflow-x-scroll">
-      <div className="h-full w-fit flex justify-start items-center">
+    <div className="h-full w-full no-scrollbar flex items-center justify-center overflow-y-hidden overflow-x-scroll">
+      <div className="h-full w-fit flex justify-center items-center">
         <style>
           {`
             .toolbarButton {
@@ -38,6 +39,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
           }}
           onClick={() => editor.commands.undo()}
@@ -48,22 +50,24 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
           }}
           onClick={() => editor.commands.redo()}
         >
           <span className="icon-[material-symbols-light--redo] w-full h-full text-white"></span>
         </button>
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
         <TextFormatButton
           editor={editor}
           toolbarPreferences={toolbarPreferences}
         />
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
         <button
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("bold") ? pressedColor : "",
           }}
@@ -75,6 +79,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("italic") ? pressedColor : "",
           }}
@@ -86,6 +91,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("strike") ? pressedColor : "",
           }}
@@ -97,6 +103,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("underline") ? pressedColor : "",
           }}
@@ -112,6 +119,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("subscript") ? pressedColor : "",
           }}
@@ -123,6 +131,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("superscript") ? pressedColor : "",
           }}
@@ -130,11 +139,12 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[proicons--text-superscript] w-full h-full text-white"></span>
         </button>
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
         <button
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("blockquote") ? pressedColor : "",
           }}
@@ -146,6 +156,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("bulletList") ? pressedColor : "",
           }}
@@ -157,6 +168,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("orderedList") ? pressedColor : "",
           }}
@@ -164,11 +176,12 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--format-list-numbered] w-full h-full text-white"></span>
         </button>
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
         <button
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive({ textAlign: "left" })
               ? pressedColor
@@ -182,6 +195,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive({ textAlign: "center" })
               ? pressedColor
@@ -195,6 +209,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive({ textAlign: "right" })
               ? pressedColor
@@ -208,6 +223,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive({ textAlign: "justify" })
               ? pressedColor
@@ -217,11 +233,12 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-white"></span>
         </button>
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
         <button
           className="toolbarButton"
           style={{
             height: `${buttonHeight}rem`,
+            borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
             backgroundColor: editor.isActive("horizontalRule")
               ? pressedColor
@@ -231,7 +248,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--horizontal-rule] w-full h-full text-white"></span>
         </button>
-        <div className="w-0 h-[2rem] border-appLayoutBorder border-l"></div>
+        {/* <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div> */}
       </div>
     </div>
   );

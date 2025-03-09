@@ -178,10 +178,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
           parseFloat(computedLibraryManagerNodeTextSize)
         );
 
-        newFontSize = max(
-          newFontSize,
-          12
-        );
+        newFontSize = max(newFontSize, 12);
 
         setFontSize(`${newFontSize}px`);
       }
@@ -384,7 +381,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
               }
               options={[
                 {
-                  label: "Edit Properties",
+                  label: "Details",
                   icon: (
                     <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-0"></span>
                   ),
@@ -399,7 +396,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                   },
                 },
                 {
-                  label: "Save As",
+                  label: "Save",
                   icon: (
                     <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-0"></span>
                   ),
@@ -423,21 +420,22 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     );
                     setLoading(false);
                   },
-                },
-                {
-                  label: "Sync",
-                  icon: (
-                    <span className="icon-[iconamoon--cloud-upload-thin] h-full w-full transition-colors duration-200"></span>
-                  ),
-                  callback: async () => {
-                    setLoading(true);
+                  // },
+                  // {
+                  //   label: "Sync",
+                  //   icon: (
+                  //     <span className="icon-[iconamoon--cloud-upload-thin] h-full w-full transition-colors duration-200"></span>
+                  //   ),
+                  //   callback: async () => {
+                  //     setLoading(true);
 
-                    await syncManager.initFireSync(
-                      dataManagerSubdocs.getLibrary(libraryId)
-                    );
+                  //     await syncManager.initFireSync(
+                  //       dataManagerSubdocs.getLibrary(libraryId)
+                  //     );
 
-                    setLoading(false);
-                  },
+                  //     setLoading(false);
+                  //   },
+                  // },
                 },
               ]}
             />
