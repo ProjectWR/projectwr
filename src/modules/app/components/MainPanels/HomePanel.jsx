@@ -62,7 +62,7 @@ const HomePanel = () => {
             className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
           >
             <span className="flex-grow"></span>
-            <span className="w-fit">- William Faulkner</span>
+            <span className="w-fit">- Rohit Kottamasu</span>
           </motion.p>
         </div>
 
