@@ -12,7 +12,7 @@ const Footer = () => {
   return (
     <div
       id="FooterContainer"
-      className="border-t border-appLayoutBorder w-full h-footerHeight min-h-footerHeight flex-grow-0 flex flex-row justify-end font-sans"
+      className="border-t border-appLayoutBorder w-full h-footerHeight min-h-footerHeight flex-grow-0 flex flex-row justify-end pb-1 font-sans"
     >
       <div className="ZoomContainer w-fit h-full p-1 flex flex-row items-center">
         <button
@@ -21,7 +21,7 @@ const Footer = () => {
         >
           <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
         </button>
-        <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full flex items-center justify-center rounded-md">{`${round(
+        <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md">{`${round(
           scale * 100
         )}%`}</div>
         <button
