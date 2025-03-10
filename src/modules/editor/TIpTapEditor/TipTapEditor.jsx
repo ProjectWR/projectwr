@@ -362,15 +362,18 @@ const TiptapEditor = ({
       </div>
 
       <div
-        className={`w-full h-px ${isMobile ? "order-4" : "order-2"}`}
+        className={`w-full h-px flex-shrink-0 ${isMobile ? "order-4" : "order-2"}`}
         style={{ backgroundColor: `${dividerColor}` }}
       ></div>
 
       <div
         id="EditableContainer"
         className={`flex-grow w-full flex justify-center 
-           overflow-y-scroll min-h-0 text-neutral-200 z-1 pl-[0.75rem] order-3
+           overflow-y-scroll min-h-0 text-neutral-200 z-1 order-3
           `}
+        style={{
+          paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+        }}
       >
         <EditorContent
           editor={editor}
@@ -381,6 +384,8 @@ const TiptapEditor = ({
             `}
           style={{
             width: isMobile ? "100%" : `${width}rem`,
+            minWidth: isMobile ? "100%" : `${width * 0.8}rem`, 
+            backgroundColor: `${backgroundColor}`,
             borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
             borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
             borderBottomWidth: isMobile ? "0" : `0`,

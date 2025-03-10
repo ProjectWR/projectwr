@@ -1,11 +1,15 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { appStore } from "../../stores/appStore";
+import { motion, AnimatePresence } from "motion/react";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
   const appWindow = getCurrentWindow();
   const setActivity = appStore((state) => state.setActivity);
+
+  const sideBarOpened = appStore((state) => state.sideBarOpened);
+  const setSideBarOpened = appStore((state) => state.setSideBarOpened);
 
   return (
     <div
@@ -24,13 +28,38 @@ const ActionBar = () => {
           <span className="icon-[ph--flower-tulip-thin] h-actionBarLogoSize w-actionBarLogoSize"></span>
         </div>
 
+        <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <AnimatePresence mode="sync">
+              {sideBarOpened && (
+                <motion.span
+                  initial={{ opacity: 0.6, rotate: 180 }}
+                  animate={{ opacity: 1, rotate: 180 }}
+                  exit={{ opacity: 0.6, rotate: 180 }}
+                  transition={{ duration: 0.05 }}
+                  key="sideBarOpened"
+                  className="icon-[octicon--sidebar-collapse-24] w-full h-full top-0 left-0 absolute"
+                ></motion.span>
+              )}
+              {!sideBarOpened && (
+                <motion.span
+                  initial={{ opacity: 0.6, rotate: 180 }}
+                  animate={{ opacity: 1, rotate: 180 }}
+                  exit={{ opacity: 0.6, rotate: 180 }}
+                  transition={{ duration: 0.05 }}
+                  key="sideBarClosed"
+                  className="icon-[octicon--sidebar-expand-24] w-full h-full top-0 left-0 absolute"
+                ></motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+        </ActionButton>
+
         <div className="flex-grow"></div>
 
-        <ActionButton
-          buttonContent={
-            <span className="icon-[line-md--question] h-actionBarButtonIconSize w-actionBarButtonIconSize"></span>
-          }
-        />
+        <ActionButton>
+          <span className="icon-[line-md--question] h-actionBarButtonIconSize w-actionBarButtonIconSize"></span>
+        </ActionButton>
 
         {deviceType !== "mobile" && (
           <>
@@ -95,13 +124,13 @@ const ActionBar = () => {
 
 export default ActionBar;
 
-const ActionButton = ({ onClick, className, buttonContent }) => {
+const ActionButton = ({ onClick, className, children }) => {
   return (
     <button
       className={`h-full px-4 w-fit ml-1 hover:bg-appLayoutInverseHover flex items-center justify-center ${className}`}
       onClick={onClick}
     >
-      {buttonContent}
+      {children}
     </button>
   );
 };

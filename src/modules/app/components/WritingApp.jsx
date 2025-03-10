@@ -64,6 +64,8 @@ const WritingApp = () => {
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
+  const sideBarOpened = appStore((state) => state.sideBarOpened);
+
   const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
@@ -344,7 +346,7 @@ const WritingApp = () => {
                 {deviceType === "desktop" && (
                   <>
                     <motion.div
-                      id="AcitvityBarAndSidePanelContainer"
+                      id="ActivityBarAndSidePanelContainer"
                       animate={{
                         width: "fit-content",
                         minWidth: "fit-content",
@@ -353,7 +355,7 @@ const WritingApp = () => {
                     >
                       <ActivityBar />
                       <AnimatePresence mode="wait">
-                        {panelOpened && (
+                        {panelOpened && sideBarOpened && (
                           <motion.div
                             key="SidePanelMotionContainer"
                             id="SidePanelMotionContainer"

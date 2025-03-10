@@ -28,6 +28,11 @@ export const appStore = create((set) => ({
     return set({ showActivityBar: showActivityBar });
   },
 
+  sideBarOpened: true,
+  setSideBarOpened: (sideBarOpened) => {
+    return set({ sideBarOpened: sideBarOpened });
+  },
+
   zoom: 1,
   setZoom: (zoom) => {
     return set({ zoom: zoom });

@@ -22,8 +22,8 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
   } = toolbarPreferences;
 
   return (
-    <div className="h-full w-full no-scrollbar flex items-center justify-center overflow-y-hidden overflow-x-scroll">
-      <div className="h-full w-fit flex justify-center items-center">
+    <div className="h-full w-full no-scrollbar overflow-y-hidden overflow-x-scroll">
+      <div className="h-full w-fit min-w-fit m-auto flex-shrink-0 flex items-center">
         <style>
           {`
             .toolbarButton {
@@ -36,11 +36,12 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           `}
         </style>
         <button
-          className="toolbarButton"
+          className="toolbarButton flex-shrink-0"
           style={{
             height: `${buttonHeight}rem`,
             borderRadius: `${buttonRadius}rem`,
             width: `${buttonWidth}rem`,
+            minWidth: `${buttonWidth}rem`,
           }}
           onClick={() => editor.commands.undo()}
         >
@@ -57,12 +58,18 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--redo] w-full h-full text-white"></span>
         </button>
-        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
+        <div
+          className="w-px h-[70%]"
+          style={{ backgroundColor: `${dividerColor}` }}
+        ></div>
         <TextFormatButton
           editor={editor}
           toolbarPreferences={toolbarPreferences}
         />
-        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
+        <div
+          className="w-px h-[70%]"
+          style={{ backgroundColor: `${dividerColor}` }}
+        ></div>
         <button
           className="toolbarButton"
           style={{
@@ -116,7 +123,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           toolbarPreferences={toolbarPreferences}
         />
         <button
-          className="toolbarButton"
+          className="toolbarButton p-1 pb-px"
           style={{
             height: `${buttonHeight}rem`,
             borderRadius: `${buttonRadius}rem`,
@@ -128,7 +135,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           <span className="icon-[proicons--text-subscript] w-full h-full text-white"></span>
         </button>
         <button
-          className="toolbarButton"
+          className="toolbarButton p-1 pt-px"
           style={{
             height: `${buttonHeight}rem`,
             borderRadius: `${buttonRadius}rem`,
@@ -139,9 +146,12 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[proicons--text-superscript] w-full h-full text-white"></span>
         </button>
-        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
+        <div
+          className="w-px h-[70%]"
+          style={{ backgroundColor: `${dividerColor}` }}
+        ></div>
         <button
-          className="toolbarButton"
+          className="toolbarButton p-1"
           style={{
             height: `${buttonHeight}rem`,
             borderRadius: `${buttonRadius}rem`,
@@ -176,7 +186,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--format-list-numbered] w-full h-full text-white"></span>
         </button>
-        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
+        <div
+          className="w-px h-[70%]"
+          style={{ backgroundColor: `${dividerColor}` }}
+        ></div>
         <button
           className="toolbarButton"
           style={{
@@ -233,7 +246,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-white"></span>
         </button>
-        <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div>
+        <div
+          className="w-px h-[70%]"
+          style={{ backgroundColor: `${dividerColor}` }}
+        ></div>
         <button
           className="toolbarButton"
           style={{

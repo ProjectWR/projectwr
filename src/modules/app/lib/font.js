@@ -17,10 +17,9 @@ class FontManager {
     this.fontsDir = null;
   }
 
-  static async getInstance() {
+  static getInstance() {
     if (!instance) {
-      instance = new FontManager();
-      await instance.init();
+      throw new Error('FontManager instance not initialized. Call init() first.');
     }
     return instance;
   }
@@ -160,6 +159,6 @@ class FontManager {
   }
 }
 
-const fontManager = await FontManager.getInstance();
+const fontManager = new FontManager();
 
 export default fontManager;

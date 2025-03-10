@@ -3,7 +3,7 @@ import { use, useEffect, useState } from "react";
 import { appStore } from "../stores/appStore";
 
 const useZoom = () => {
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.9);
   const MIN_SCALE = 0.8;
   const MAX_SCALE = 1.5;
   const SCALE_STEP = 0.1;

@@ -32,7 +32,7 @@
 
 @layer base {
   :root {
-    --uiScale: 1;
+    --uiScale: 0.9;
 
     --appBackground: 0 0% 8.9%;
     --appLayoutBorder: 0 0% 14.9%;
@@ -98,7 +98,7 @@
     --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
     --homePanelSubtitleFontSize: calc(var(--uiScale) * 1.5rem);
 
-    --detailsPanelHeaderHeight: calc(var(--uiScale) * 4rem);
+    --detailsPanelHeaderHeight: calc(var(--uiScale) * 4.5rem);
     --detailsPanelNameFontSize: calc(var(--uiScale) * 2rem);
     --detailsPanelHeaderTwoHeight: calc(var(--uiScale) * 3rem);
     --detailsPanelHeaderTwoFontSize: calc(var(--uiScale) * 1.5rem);

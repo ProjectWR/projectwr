@@ -35,13 +35,6 @@ const LibraryDirectory = ({ libraryId }) => {
   const textContainerRef = useRef(null);
   const textRef = useRef(null);
 
-  const computedLibraryManagerHeaderTextSize = useComputedCssVar(
-    "--libraryManagerHeaderText"
-  );
-  const [fontSize, setFontSize] = useState(
-    computedLibraryManagerHeaderTextSize
-  );
-
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
   /** @type {{current: YTree}} */
@@ -88,42 +81,6 @@ const LibraryDirectory = ({ libraryId }) => {
     };
   }, [libraryId, updateChildrenState]);
 
-  useEffect(() => {
-    const textContainer = textContainerRef.current;
-    const text = textRef.current;
-    const checkOverflow = () => {
-      if (textContainer && text) {
-        const containerWidth = textContainer.offsetWidth - 20;
-        const textWidth = text.scrollWidth;
-
-        const containerHeight = textContainer.offsetHeight - 20;
-        const textHeight = text.scrollHeight;
-
-        console.log("widths: ", containerWidth, textWidth);
-
-        console.log("heights: ", containerHeight, textHeight);
-
-        // Decrease/Increase the font size until the text fits
-        let newFontSize = parseFloat(fontSize);
-
-        newFontSize = newFontSize * (containerWidth / textWidth);
-
-        newFontSize = min(
-          newFontSize,
-          computedLibraryManagerHeaderTextSize * 1.5
-        );
-
-        newFontSize = max(newFontSize, 1);
-
-        console.log("new Font size: ", newFontSize);
-
-        setFontSize(`${newFontSize}px`);
-      }
-    };
-
-    checkOverflow();
-  }, [libraryPropsMapState, fontSize, computedLibraryManagerHeaderTextSize]);
-
   return (
     <div
       id="LibraryDirectoryContainer"
@@ -148,8 +105,7 @@ const LibraryDirectory = ({ libraryId }) => {
             </button>
             <div
               ref={textContainerRef}
-              style={{ fontSize }}
-              className="flex-grow min-w-0 max-h-full flex justify-start items-center transition-colors duration-0 pt-px order-2 overflow-ellipsis"
+              className="flex-grow text-libraryManagerHeaderText min-w-0 max-h-full flex justify-start items-center transition-colors duration-0 pt-px order-2 overflow-ellipsis"
             >
               <p
                 ref={textRef}
@@ -263,8 +219,7 @@ const LibraryDirectory = ({ libraryId }) => {
 
           <div
             ref={textContainerRef}
-            style={{ fontSize }}
-            className="flex-grow min-w-0 flex justify-start items-center transition-colors duration-0 pb-px order-2"
+            className="flex-grow text-libraryManagerHeaderText min-w-0 flex justify-start items-center transition-colors duration-0 pb-px order-2"
           >
             <p
               ref={textRef}

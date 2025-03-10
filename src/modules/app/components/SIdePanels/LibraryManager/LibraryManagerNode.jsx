@@ -1,4 +1,4 @@
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { use, useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDrag, useDrop } from "react-dnd";
 import {
@@ -19,6 +19,7 @@ import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 import syncManager from "../../../lib/sync";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
+import { createDebouncer } from "lib0/eventloop";
 
 /**
  *
@@ -50,8 +51,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
   const computedLibraryManagerNodeTextSize = useComputedCssVar(
     "--libraryManagerNodeText"
   );
-
-  const [fontSize, setFontSize] = useState(computedLibraryManagerNodeTextSize);
 
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
@@ -162,40 +161,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
   });
   drag(drop(ref));
 
-  useEffect(() => {
-    const checkOverflow = () => {
-      if (textContainerRef.current && textRef.current) {
-        const containerWidth = textContainerRef.current.offsetWidth - 20;
-        const textWidth = textRef.current.scrollWidth;
-
-        // Decrease/Increase the font size until the text fits
-        let newFontSize = parseFloat(fontSize);
-
-        newFontSize = newFontSize * (containerWidth / textWidth);
-
-        newFontSize = min(
-          newFontSize,
-          parseFloat(computedLibraryManagerNodeTextSize)
-        );
-
-        newFontSize = max(newFontSize, 12);
-
-        setFontSize(`${newFontSize}px`);
-      }
-    };
-
-    checkOverflow();
-
-    const observer = new ResizeObserver(checkOverflow);
-    if (textContainerRef.current) {
-      observer.observe(textContainerRef.current);
-    }
-    return () => {
-      if (textContainerRef.current) {
-        observer.unobserve(textContainerRef.current);
-      }
-    };
-  }, [fontSize, computedLibraryManagerNodeTextSize]);
 
   return (
     <div
@@ -361,8 +326,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
               <div
                 ref={textContainerRef}
-                style={{ fontSize }}
-                className="flex-grow min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
+                className="flex-grow text-libraryManagerNodeText min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
               >
                 <p
                   className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"

@@ -85,15 +85,18 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
   }, [isOpened]);
 
   return (
-    <div className="relative" ref={innerRef}>
+    <div className="relative h-full w-fit flex-shrink-0" ref={innerRef}>
       <div
         style={{ height: `${buttonHeight}rem` }}
         id="TextFormatButtonHeader"
         ref={headerRef}
-        className="px-1"
+        className="px-1 w-fit"
       >
         <button
-          style={{ minWidth: `${textFormatButtonWidth}rem` }}
+          style={{
+            minWidth: `${textFormatButtonWidth}rem`,
+            width: `${textFormatButtonWidth}rem`,
+          }}
           className={`h-full px-[0.35rem] toolbarButton rounded-[0.35rem] `}
           onClick={() => setIsOpened(!isOpened)}
         >

@@ -37,11 +37,6 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
   const computedLibraryDirectoryBookNodeFontSize = useComputedCssVar(
     "--libraryDirectoryBookNodeFontSize"
   );
-  const [fontSize, setFontSize] = useState(
-    getComputedStyle(document.documentElement).getPropertyValue(
-      "--libraryDirectoryBookNodeFontSize"
-    )
-  );
 
   const itemMapState = useYMap(itemMapRef.current);
 
@@ -231,47 +226,6 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
   // Connect the ref to both drag and drop.
   drag(drop(dndRef));
 
-  useEffect(() => {
-    const textContainer = textContainerRef.current;
-    const text = textRef.current;
-    const checkOverflow = () => {
-      if (textContainer && text) {
-        const containerWidth = textContainer.offsetWidth - 10;
-        const textWidth = text.scrollWidth;
-
-        console.log("widths: ", containerWidth, textWidth);
-
-        // Decrease/Increase the font size until the text fits
-        let newFontSize = parseFloat(fontSize);
-
-        newFontSize = newFontSize * (containerWidth / textWidth);
-
-        newFontSize = min(
-          newFontSize,
-          computedLibraryDirectoryBookNodeFontSize
-        );
-
-        newFontSize = max(newFontSize, 16);
-
-        console.log("new Font size: ", newFontSize);
-
-        setFontSize(`${newFontSize}px`);
-      }
-    };
-
-    checkOverflow();
-
-    const observer = new ResizeObserver(checkOverflow);
-    if (textContainer) {
-      observer.observe(textContainer);
-    }
-    return () => {
-      if (textContainer) {
-        observer.unobserve(textContainer);
-      }
-    };
-  }, [fontSize, computedLibraryDirectoryBookNodeFontSize]);
-
   return (
     <div
       id="DirectoryItemNodeContainer"
@@ -301,9 +255,15 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
           
           `}
     >
-      <div
-        id="DirectoryItemNodeHeader"
-        className={`flex justify-between items-center  hover:bg-appLayoutHover
+      <AnimatePresence mode="wait">
+        <motion.div
+          id="DirectoryItemNodeHeader"
+          key={`itemNodeHeader-${itemId}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.05 }}
+          className={`flex justify-between items-center  hover:bg-appLayoutHover
             pl-1
           
             rounded-md
@@ -321,214 +281,215 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
           duration-0
 
         `}
-        onMouseEnter={() => {
-          setIsHovered(true);
-        }}
-        onMouseLeave={() => {
-          setIsHovered(false);
-        }}
-      >
-        {itemMapRef.current.get("type") == "paper" && (
-          <>
-            <button
-              className="flex-grow min-w-0 flex items-center justify-start h-full"
-              onClick={() => {
-                console.log("edit paper button");
-                setItemId(itemId);
-                setItemMode("details");
-                if (deviceType === "mobile") {
-                  setPanelOpened(false);
-                }
+          onMouseEnter={() => {
+            setIsHovered(true);
+          }}
+          onMouseLeave={() => {
+            setIsHovered(false);
+          }}
+        >
+          {itemMapRef.current.get("type") == "paper" && (
+            <>
+              <button
+                className="flex-grow min-w-0 flex items-center justify-start h-full"
+                onClick={() => {
+                  console.log("edit paper button");
+                  setItemId(itemId);
+                  setItemMode("details");
+                  if (deviceType === "mobile") {
+                    setPanelOpened(false);
+                  }
 
-                setPanelOpened(true);
-              }}
-            >
-              <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
+                  setPanelOpened(true);
+                }}
+              >
+                <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
+                  <motion.span
+                    animate={{ rotate: isOpened ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`icon-[fluent--book-20-regular] h-full w-full`}
+                  ></motion.span>
+                </div>
+
+                <div
+
+                  ref={textContainerRef}
+                  className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                >
+                  <span
+                    ref={textRef}
+                    className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                  >
+                    {itemMapState.item_title}
+                  </span>
+                </div>
+              </button>
+
+              <OptionsButton
+                mainButtonHovered={isHovered}
+                options={[
+                  {
+                    label: "Paper Settings",
+                    icon: (
+                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("edit paper editor button");
+                      setItemId(itemId);
+                      setItemMode("settings");
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
+
+                      setPanelOpened(true);
+                    },
+                  },
+
+                  {
+                    label: "Export Paper",
+                    icon: (
+                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("export paper button");
+                      dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+                    },
+                  },
+
+                  {
+                    label: "Import Paper",
+                    icon: (
+                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("import paper button");
+                      console.log(
+                        dataManagerSubdocs.setHtmlToPaper(
+                          ytree,
+                          itemId,
+                          "<p> Imported Content </p>"
+                        )
+                      );
+                    },
+                  },
+                ]}
+                className={
+                  "h-libraryDirectoryPaperNodeHeight w-libraryDirectoryPaperNodeHeight min-w-libraryDirectoryPaperNodeHeight"
+                }
+                buttonIcon={
+                  <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
+                }
+              />
+            </>
+          )}
+
+          {(itemMapRef.current.get("type") === "section" ||
+            itemMapRef.current.get("type") === "book") && (
+            <>
+              <button
+                className="flex-grow min-w-0 flex items-center justify-start h-full"
+                onClick={() => {
+                  const newOpenedState = !isOpened;
+                  setIsOpened(newOpenedState);
+                  itemLocalStateManager.setItemOpened(itemId, newOpenedState);
+                }}
+              >
                 <motion.span
                   animate={{ rotate: isOpened ? 90 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`icon-[fluent--book-20-regular] h-full w-full`}
+                  className={`icon-[material-symbols-light--keyboard-arrow-right] ${(() => {
+                    const type = itemMapRef.current.get("type");
+
+                    if (type === "section")
+                      return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    if (type === "book")
+                      return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    return "";
+                  })()}`}
                 ></motion.span>
-              </div>
 
-              <div
-                style={{ fontSize }}
-                ref={textContainerRef}
-                className="flex-grow min-w-0 h-full flex items-center justify-start"
-              >
-                <span
-                  ref={textRef}
-                  className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                <div
+                  ref={textContainerRef}
+                  className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
                 >
-                  {itemMapState.item_title}
-                </span>
-              </div>
-            </button>
+                  <span
+                    ref={textRef}
+                    className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                  >
+                    {itemMapState.item_title}
+                  </span>
+                </div>
+              </button>
 
-            <OptionsButton
-              mainButtonHovered={isHovered}
-              options={[
-                {
-                  label: "Paper Settings",
-                  icon: (
-                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("edit paper editor button");
-                    setItemId(itemId);
-                    setItemMode("settings");
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
+              <OptionsButton
+                mainButtonHovered={isHovered}
+                options={[
+                  {
+                    label: "Edit Properties",
+                    icon: (
+                      <span className="icon-[mdi--edit-outline] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("edit section details button");
+                      setItemId(itemId);
+                      setItemMode("details");
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
 
-                    setPanelOpened(true);
+                      setPanelOpened(true);
+                    },
                   },
-                },
-
-                {
-                  label: "Export Paper",
-                  icon: (
-                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("export paper button");
-                    dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+                  {
+                    label: "Create Section",
+                    icon: (
+                      <span className="icon-[mdi--folder-add-outline] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("create section button");
+                      onCreateSectionClick();
+                    },
                   },
-                },
-
-                {
-                  label: "Import Paper",
-                  icon: (
-                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("import paper button");
-                    console.log(
-                      dataManagerSubdocs.setHtmlToPaper(
-                        ytree,
-                        itemId,
-                        "<p> Imported Content </p>"
-                      )
-                    );
+                  {
+                    label: "Create Paper",
+                    icon: (
+                      <span className="icon-[mdi--paper-add-outline] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("create paper button");
+                      onCreatePaperClick();
+                    },
                   },
-                },
-              ]}
-              className={
-                "h-libraryDirectoryPaperNodeHeight w-libraryDirectoryPaperNodeHeight min-w-libraryDirectoryPaperNodeHeight"
-              }
-              buttonIcon={
-                <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
-              }
-            />
-          </>
-        )}
+                  {
+                    label: "Export Section",
+                    icon: (
+                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
+                    ),
+                    callback: () => {
+                      console.log("export section button");
 
-        {(itemMapRef.current.get("type") === "section" ||
-          itemMapRef.current.get("type") === "book") && (
-          <>
-            <button
-              className="flex-grow min-w-0 flex items-center justify-start h-full"
-              onClick={() => {
-                const newOpenedState = !isOpened;
-                setIsOpened(newOpenedState);
-                itemLocalStateManager.setItemOpened(itemId, newOpenedState);
-              }}
-            >
-              <motion.span
-                animate={{ rotate: isOpened ? 90 : 0 }}
-                transition={{ duration: 0.2 }}
-                className={`icon-[material-symbols-light--keyboard-arrow-right] ${(() => {
+                      dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+                    },
+                  },
+                ]}
+                className={`${(() => {
                   const type = itemMapRef.current.get("type");
-
                   if (type === "section")
-                    return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    return "h-libraryDirectorySectionNodeHeight w-libraryDirectorySectionNodeHeight min-w-libraryDirectorySectionNodeHeight";
                   if (type === "book")
-                    return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    return "h-libraryDirectoryBookNodeHeight w-libraryDirectoryBookNodeHeight min-w-libraryDirectoryBookNodeHeight";
                   return "";
-                })()}`}
-              ></motion.span>
-
-              <div
-                style={{ fontSize }}
-                ref={textContainerRef}
-                className="flex-grow min-w-0 h-full flex items-center justify-start"
-              >
-                <span
-                  ref={textRef}
-                  className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-                >
-                  {itemMapState.item_title}
-                </span>
-              </div>
-            </button>
-
-            <OptionsButton
-              mainButtonHovered={isHovered}
-              options={[
-                {
-                  label: "Edit Properties",
-                  icon: (
-                    <span className="icon-[mdi--edit-outline] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("edit section details button");
-                    setItemId(itemId);
-                    setItemMode("details");
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
-
-                    setPanelOpened(true);
-                  },
-                },
-                {
-                  label: "Create Section",
-                  icon: (
-                    <span className="icon-[mdi--folder-add-outline] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("create section button");
-                    onCreateSectionClick();
-                  },
-                },
-                {
-                  label: "Create Paper",
-                  icon: (
-                    <span className="icon-[mdi--paper-add-outline] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("create paper button");
-                    onCreatePaperClick();
-                  },
-                },
-                {
-                  label: "Export Section",
-                  icon: (
-                    <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                  ),
-                  callback: () => {
-                    console.log("export section button");
-
-                    dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
-                  },
-                },
-              ]}
-              className={`${(() => {
-                const type = itemMapRef.current.get("type");
-                if (type === "section")
-                  return "h-libraryDirectorySectionNodeHeight w-libraryDirectorySectionNodeHeight min-w-libraryDirectorySectionNodeHeight";
-                if (type === "book")
-                  return "h-libraryDirectoryBookNodeHeight w-libraryDirectoryBookNodeHeight min-w-libraryDirectoryBookNodeHeight";
-                return "";
-              })()}
+                })()}
               `}
-              buttonIcon={
-                <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
-              }
-            />
-          </>
-        )}
-      </div>
+                buttonIcon={
+                  <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
+                }
+              />
+            </>
+          )}
+        </motion.div>
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         <motion.div
           className="w-full"

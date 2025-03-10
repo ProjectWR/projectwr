@@ -13,16 +13,19 @@ const ActivityBar = ({}) => {
 
   const showActivityBar = appStore((state) => state.showActivityBar);
 
+    const sideBarOpened = appStore((state) => state.sideBarOpened);
+
+
   return (
     <AnimatePresence mode="wait">
-      {showActivityBar && (
+      {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
           className={`flex gap-px items-center bg-appBackground ${
             deviceType === "mobile"
               ? "w-full h-activityBarHeight order-last flex-row border-t"
               : "h-full w-activityBarWidth order-first flex-col border-r"
-          } border-appLayoutBorder z-5`}
+          } border-appLayoutBorder z-5 overflow-hidden`}
           style={{
             boxShadow:
               deviceType === "mobile"

@@ -79,7 +79,7 @@ const PaperPanel = ({ ytree, paperId }) => {
       id="PaperDetailContainer"
       className={`h-full flex flex-col items-center justify-start 
         ${deviceType === "mobile" && "w-full"}   
-        ${deviceType === "desktop" && "mt-2"}       
+        ${deviceType === "desktop" && ""}       
       `}
       style={
         deviceType === "desktop" && {
@@ -96,8 +96,8 @@ const PaperPanel = ({ ytree, paperId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="CreatePaperHeader"
-          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
-            ${deviceType === "desktop" && "px-6"}
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 flex-shrink-0
+            ${deviceType === "desktop" && "px-6 py-1"}
           `}
         >
           {deviceType === "mobile" && (
