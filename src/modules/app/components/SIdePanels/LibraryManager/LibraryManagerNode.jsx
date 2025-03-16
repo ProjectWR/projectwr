@@ -20,7 +20,7 @@ import syncManager from "../../../lib/sync";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { createDebouncer } from "lib0/eventloop";
-
+import { ContextMenu } from "radix-ui";
 /**
  *
  * @param {{libraryId: string, className: string}} param0
@@ -161,11 +161,12 @@ const LibraryManagerNode = ({ libraryId, className }) => {
   });
   drag(drop(ref));
 
-
   return (
-    <div
-      ref={ref}
-      className={`
+    <ContextMenu.Root>
+      <ContextMenu.Trigger className={`w-full h-full`}>
+        <div
+          ref={ref}
+          className={`
         w-full h-full
         library-${libraryId}  
 
@@ -185,228 +186,214 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
         ${className}
       `}
-    >
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <motion.div
-            key={`libraryManagerNodeSpinner-${libraryId}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.05 }}
-            className="flex flex-col justify-center rounded-lg overflow-hidden items-center h-full w-full bg-appBackground text-appLayoutText"
-          >
-            <div
-              className={`relative w-libraryManagerNodeEditButtonWidth h-libraryManagerNodeEditButtonWidth`}
-            >
-              <span
-                className="w-full h-full"
-                // animate={{ rotate: 360 }}
-                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={"100%"}
-                  height={"100%"}
-                  viewBox="0 0 24 24"
-                >
-                  <g
-                    fill="none"
-                    stroke="#fff"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={0.3}
-                  >
-                    <path
-                      strokeDasharray={16}
-                      strokeDashoffset={16}
-                      d="M12 3c4.97 0 9 4.03 9 9"
-                    >
-                      <animate
-                        fill="freeze"
-                        attributeName="stroke-dashoffset"
-                        dur="0.3s"
-                        values="16;0"
-                      ></animate>
-                      <animateTransform
-                        attributeName="transform"
-                        dur="1.5s"
-                        repeatCount="indefinite"
-                        type="rotate"
-                        values="0 12 12;360 12 12"
-                      ></animateTransform>
-                    </path>
-                    <path
-                      strokeDasharray={64}
-                      strokeDashoffset={64}
-                      strokeOpacity={0.3}
-                      d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
-                    >
-                      <animate
-                        fill="freeze"
-                        attributeName="stroke-dashoffset"
-                        dur="1.2s"
-                        values="64;0"
-                      ></animate>
-                    </path>
-                  </g>
-                </svg>
-              </span>
+        >
+          <AnimatePresence mode="wait">
+            {loading ? (
               <motion.div
-                initial={{ opacity: 0.4 }}
+                key={`libraryManagerNodeSpinner-${libraryId}`}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  duration: 1.2,
-                  ease: "linear",
-                }}
-                className="absolute w-full h-full p-[20%] top-0 left-0"
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.05 }}
+                className="flex flex-col justify-center rounded-lg overflow-hidden items-center h-full w-full bg-appBackground text-appLayoutText"
               >
-                <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
-              </motion.div>
-            </div>
-
-            {/* Add a spinner or animation here */}
-          </motion.div>
-        ) : (
-          <motion.div
-            key={`libraryManagerNode-${libraryId}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.05 }}
-            className="w-full max-w-full h-full rounded-lg flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 ease-out"
-          >
-            <button
-              className={
-                "flex-grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
-              }
-              onClick={() => {
-                console.log(
-                  "Library Entry when clicked: ",
-                  libraryPropsMapState
-                );
-                setLibraryId(libraryId);
-                setItemId("unselected");
-                setPanelOpened(true);
-              }}
-              onMouseEnter={() => {
-                setIsDoorOpen(true);
-              }}
-              onMouseLeave={() => {
-                setIsDoorOpen(false);
-              }}
-            >
-              <div className="relative h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize min-w-libraryManagerNodeIconSize">
-                <AnimatePresence mode="sync">
-                  {isDoorOpen && (
-                    <motion.span
-                      initial={{ opacity: 0.6 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0.6 }}
-                      transition={{ duration: 0.05 }}
-                      key="doorOpen"
-                      className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-0"
-                    ></motion.span>
-                  )}
-
-                  {!isDoorOpen && (
-                    <motion.span
-                      initial={{ opacity: 0.6 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0.6 }}
-                      transition={{ duration: 0.05 }}
-                      key="doorClose"
-                      className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-0"
-                    ></motion.span>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <div
-                ref={textContainerRef}
-                className="flex-grow text-libraryManagerNodeText min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
-              >
-                <p
-                  className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-                  ref={textRef}
+                <div
+                  className={`relative w-libraryManagerNodeEditButtonWidth h-libraryManagerNodeEditButtonWidth`}
                 >
-                  {libraryPropsMapState.library_name}
-                </p>
-              </div>
-            </button>
+                  <span
+                    className="w-full h-full"
+                    // animate={{ rotate: 360 }}
+                    // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={"100%"}
+                      height={"100%"}
+                      viewBox="0 0 24 24"
+                    >
+                      <g
+                        fill="none"
+                        stroke="#fff"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={0.3}
+                      >
+                        <path
+                          strokeDasharray={16}
+                          strokeDashoffset={16}
+                          d="M12 3c4.97 0 9 4.03 9 9"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            dur="0.3s"
+                            values="16;0"
+                          ></animate>
+                          <animateTransform
+                            attributeName="transform"
+                            dur="1.5s"
+                            repeatCount="indefinite"
+                            type="rotate"
+                            values="0 12 12;360 12 12"
+                          ></animateTransform>
+                        </path>
+                        <path
+                          strokeDasharray={64}
+                          strokeDashoffset={64}
+                          strokeOpacity={0.3}
+                          d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            dur="1.2s"
+                            values="64;0"
+                          ></animate>
+                        </path>
+                      </g>
+                    </svg>
+                  </span>
+                  <motion.div
+                    initial={{ opacity: 0.4 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      duration: 1.2,
+                      ease: "linear",
+                    }}
+                    className="absolute w-full h-full p-[20%] top-0 left-0"
+                  >
+                    <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                  </motion.div>
+                </div>
 
-            <OptionsButton
-              className={`h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth min-w-libraryManagerNodeEditButtonWidth px-2 rounded-full ml-1 mr-2 
-                          text-appLayoutTextMuted hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover transition-colors duration-0 ease-out`}
-              buttonIcon={
-                <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
-              }
-              options={[
-                {
-                  label: "Details",
-                  icon: (
-                    <span className="icon-[bitcoin-icons--edit-outline] h-full w-full transition-colors duration-0"></span>
-                  ),
-                  callback: () => {
+                {/* Add a spinner or animation here */}
+              </motion.div>
+            ) : (
+              <motion.div
+                key={`libraryManagerNode-${libraryId}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.05 }}
+                className="w-full max-w-full h-full rounded-lg flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 ease-out"
+              >
+                <button
+                  className={
+                    "flex-grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
+                  }
+                  onClick={() => {
+                    console.log(
+                      "Library Entry when clicked: ",
+                      libraryPropsMapState
+                    );
                     setLibraryId(libraryId);
                     setItemId("unselected");
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
-
                     setPanelOpened(true);
-                  },
-                },
-                {
-                  label: "Save",
-                  icon: (
-                    <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-0"></span>
-                  ),
-                  callback: () => {
-                    console.log("Saving Archive");
-                    persistenceManagerForSubdocs.saveArchive(
-                      dataManagerSubdocs.getLibrary(libraryId)
-                    );
-                  },
-                },
-                {
-                  label: "Load",
-                  icon: (
-                    <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-0"></span>
-                  ),
-                  callback: async () => {
-                    console.log("Loading Archive");
-                    setLoading(true);
-                    await persistenceManagerForSubdocs.loadArchive(
-                      dataManagerSubdocs.getLibrary(libraryId)
-                    );
-                    setLoading(false);
-                  },
-                  // },
-                  // {
-                  //   label: "Sync",
-                  //   icon: (
-                  //     <span className="icon-[iconamoon--cloud-upload-thin] h-full w-full transition-colors duration-200"></span>
-                  //   ),
-                  //   callback: async () => {
-                  //     setLoading(true);
+                  }}
+                  onMouseEnter={() => {
+                    setIsDoorOpen(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsDoorOpen(false);
+                  }}
+                >
+                  <div className="relative h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize min-w-libraryManagerNodeIconSize">
+                    <AnimatePresence mode="sync">
+                      {isDoorOpen && (
+                        <motion.span
+                          initial={{ opacity: 0.6 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0.6 }}
+                          transition={{ duration: 0.05 }}
+                          key="doorOpen"
+                          className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-0"
+                        ></motion.span>
+                      )}
 
-                  //     await syncManager.initFireSync(
-                  //       dataManagerSubdocs.getLibrary(libraryId)
-                  //     );
+                      {!isDoorOpen && (
+                        <motion.span
+                          initial={{ opacity: 0.6 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0.6 }}
+                          transition={{ duration: 0.05 }}
+                          key="doorClose"
+                          className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-0"
+                        ></motion.span>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                  //     setLoading(false);
-                  //   },
-                  // },
-                },
-              ]}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+                  <div
+                    ref={textContainerRef}
+                    className="flex-grow text-libraryManagerNodeText min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
+                  >
+                    <p
+                      className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                      ref={textRef}
+                    >
+                      {libraryPropsMapState.library_name}
+                    </p>
+                  </div>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content
+          className="ContextMenuContent"
+          sideOffset={5}
+          align="end"
+        >
+          <ContextMenu.Item
+            className="ContextMenuItem"
+            onClick={() => {
+              setLibraryId(libraryId);
+              setItemId("unselected");
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              setPanelOpened(true);
+            }}
+          > 
+          {/* [bitcoin-icons--edit-outline] */}
+            <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+            <span>Open</span>
+          </ContextMenu.Item>
+          <ContextMenu.Separator className="ContextMenuSeparator" />
+          <ContextMenu.Item
+            className="ContextMenuItem"
+            onClick={() => {
+              console.log("Saving Archive");
+              persistenceManagerForSubdocs.saveArchive(
+                dataManagerSubdocs.getLibrary(libraryId)
+              );
+            }}
+          >
+            <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+            <span>Save to device</span>
+          </ContextMenu.Item>
+          <ContextMenu.Item
+            className="ContextMenuItem"
+            onClick={async () => {
+              console.log("Loading Archive");
+              setLoading(true);
+              await persistenceManagerForSubdocs.loadArchive(
+                dataManagerSubdocs.getLibrary(libraryId)
+              );
+              setLoading(false);
+            }}
+          >
+            <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+            <span>Load from device</span>
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 };
 

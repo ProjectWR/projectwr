@@ -737,7 +737,10 @@ const SettingsPanel = () => {
                   key={font.id}
                   className={`flex items-center justify-between gap-2 pl-3 pr-1 rounded-md bg-appBackground border border-appLayoutBorder`}
                 >
-                  <p className="text-detailsPanelPropsFontSize text-appLayoutTextMuted flex-grow min-w-0 overflow-ellipsis text-nowrap overflow-hidden">
+                  <p
+                    style={{ fontFamily: font.family }}
+                    className="text-detailsPanelPropsFontSize text-appLayoutTextMuted flex-grow min-w-0 overflow-ellipsis text-nowrap overflow-hidden"
+                  >
                     {font.family}
                   </p>
                   <button

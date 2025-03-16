@@ -12,6 +12,7 @@ import useOuterClick from "../../../../design-system/useOuterClick";
 import { min, max } from "lib0/math";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
+import { ContextMenu } from "radix-ui";
 
 /**
  *
@@ -227,10 +228,12 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
   drag(drop(dndRef));
 
   return (
-    <div
-      id="DirectoryItemNodeContainer"
-      ref={dndRef}
-      className={`
+    <ContextMenu.Root>
+      <ContextMenu.Trigger className={`w-full h-fit`}>
+        <div
+          id="DirectoryItemNodeContainer"
+          ref={dndRef}
+          className={`
         flex flex-col
 
         w-full h-fit
@@ -254,16 +257,16 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
    
           
           `}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          id="DirectoryItemNodeHeader"
-          key={`itemNodeHeader-${itemId}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.05 }}
-          className={`flex justify-between items-center  hover:bg-appLayoutHover
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              id="DirectoryItemNodeHeader"
+              key={`itemNodeHeader-${itemId}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.05 }}
+              className={`flex justify-between items-center  hover:bg-appLayoutHover
             pl-1
           
             rounded-md
@@ -281,19 +284,158 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
           duration-0
 
         `}
-          onMouseEnter={() => {
-            setIsHovered(true);
-          }}
-          onMouseLeave={() => {
-            setIsHovered(false);
-          }}
+              onMouseEnter={() => {
+                setIsHovered(true);
+              }}
+              onMouseLeave={() => {
+                setIsHovered(false);
+              }}
+            >
+              {itemMapRef.current.get("type") == "paper" && (
+                <>
+                  <></>
+                  <button
+                    className="flex-grow min-w-0 flex items-center justify-start h-full"
+                    onClick={() => {
+                      console.log("edit paper button");
+                      setItemId(itemId);
+                      setItemMode("details");
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
+
+                      setPanelOpened(true);
+                    }}
+                  >
+                    <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
+                      <motion.span
+                        animate={{ rotate: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={`icon-[fluent--document-one-page-24-regular] h-full w-full`}
+                      ></motion.span>
+                    </div>
+
+                    <div
+                      ref={textContainerRef}
+                      className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                    >
+                      <span
+                        ref={textRef}
+                        className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                      >
+                        {itemMapState.item_title}
+                      </span>
+                    </div>
+                  </button>
+                </>
+              )}
+
+              {(itemMapRef.current.get("type") === "section" ||
+                itemMapRef.current.get("type") === "book") && (
+                <button
+                  className="flex-grow min-w-0 flex items-center justify-start h-full"
+                  onClick={() => {
+                    const newOpenedState = !isOpened;
+                    setIsOpened(newOpenedState);
+                    itemLocalStateManager.setItemOpened(itemId, newOpenedState);
+                  }}
+                >
+                  <motion.span
+                    animate={{ rotate: isOpened ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`icon-[material-symbols-light--keyboard-arrow-right] ${(() => {
+                      const type = itemMapRef.current.get("type");
+
+                      if (type === "section")
+                        return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                      if (type === "book")
+                        return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                      return "";
+                    })()}`}
+                  ></motion.span>
+
+                  <div
+                    ref={textContainerRef}
+                    className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                  >
+                    <span
+                      ref={textRef}
+                      className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                    >
+                      {itemMapState.item_title}
+                    </span>
+                  </div>
+                </button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              className="w-full"
+              key={isOpened ? "opened" : "closed"}
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={{ duration: 0.1 }}
+            >
+              {isOpened &&
+                (itemMapRef.current.get("type") === "section" ||
+                  itemMapRef.current.get("type") === "book") && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "fit-content", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    id="DirectoryItemNodeBodyContainer"
+                    className={`w-full flex flex-row justify-start`}
+                  >
+                    <div
+                      style={{
+                        marginLeft:
+                          "calc(3px + var(--libraryDirectoryBookNodeIconSize) / 2)",
+                      }}
+                      className={`w-px flex items-center justify-center`}
+                    >
+                      <span
+                        className={`h-full w-full bg-appLayoutBorder`}
+                      ></span>
+                    </div>
+                    <div
+                      id="DirectoryItemNodeBody"
+                      className="h-fit w-full grid grid-cols-1"
+                    >
+                      {nodeChildrenState !== null &&
+                        ytree
+                          .sortChildrenByOrder(nodeChildrenState, itemId)
+                          .map((childKey) => (
+                            <div id="DirectoryItemNodeChild" key={childKey}>
+                              <DirectoryItemNode
+                                ytree={ytree}
+                                itemId={childKey}
+                              />
+                            </div>
+                          ))}
+                    </div>
+                  </motion.div>
+                )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content
+          className="ContextMenuContent"
+          sideOffset={5}
+          align="end"
         >
-          {itemMapRef.current.get("type") == "paper" && (
+          {(itemMapRef.current.get("type") === "section" ||
+            itemMapRef.current.get("type") === "book") && (
             <>
-              <button
-                className="flex-grow min-w-0 flex items-center justify-start h-full"
+              <ContextMenu.Item
+                className="ContextMenuItem"
                 onClick={() => {
-                  console.log("edit paper button");
+                  console.log("edit section details button");
                   setItemId(itemId);
                   setItemMode("details");
                   if (deviceType === "mobile") {
@@ -303,240 +445,99 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                   setPanelOpened(true);
                 }}
               >
-                <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
-                  <motion.span
-                    animate={{ rotate: isOpened ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={`icon-[fluent--book-20-regular] h-full w-full`}
-                  ></motion.span>
-                </div>
-
-                <div
-
-                  ref={textContainerRef}
-                  className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
-                >
-                  <span
-                    ref={textRef}
-                    className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-                  >
-                    {itemMapState.item_title}
-                  </span>
-                </div>
-              </button>
-
-              <OptionsButton
-                mainButtonHovered={isHovered}
-                options={[
-                  {
-                    label: "Paper Settings",
-                    icon: (
-                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("edit paper editor button");
-                      setItemId(itemId);
-                      setItemMode("settings");
-                      if (deviceType === "mobile") {
-                        setPanelOpened(false);
-                      }
-
-                      setPanelOpened(true);
-                    },
-                  },
-
-                  {
-                    label: "Export Paper",
-                    icon: (
-                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("export paper button");
-                      dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
-                    },
-                  },
-
-                  {
-                    label: "Import Paper",
-                    icon: (
-                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("import paper button");
-                      console.log(
-                        dataManagerSubdocs.setHtmlToPaper(
-                          ytree,
-                          itemId,
-                          "<p> Imported Content </p>"
-                        )
-                      );
-                    },
-                  },
-                ]}
-                className={
-                  "h-libraryDirectoryPaperNodeHeight w-libraryDirectoryPaperNodeHeight min-w-libraryDirectoryPaperNodeHeight"
-                }
-                buttonIcon={
-                  <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
-                }
-              />
-            </>
-          )}
-
-          {(itemMapRef.current.get("type") === "section" ||
-            itemMapRef.current.get("type") === "book") && (
-            <>
-              <button
-                className="flex-grow min-w-0 flex items-center justify-start h-full"
+                <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Open</span>
+              </ContextMenu.Item>{" "}
+              <ContextMenu.Item
+                className="ContextMenuItem"
                 onClick={() => {
-                  const newOpenedState = !isOpened;
-                  setIsOpened(newOpenedState);
-                  itemLocalStateManager.setItemOpened(itemId, newOpenedState);
+                  console.log("create section button");
+                  onCreateSectionClick();
                 }}
               >
-                <motion.span
-                  animate={{ rotate: isOpened ? 90 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`icon-[material-symbols-light--keyboard-arrow-right] ${(() => {
-                    const type = itemMapRef.current.get("type");
+                <span className="icon-[fluent--folder-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Create section</span>
+              </ContextMenu.Item>
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  console.log("create paper button");
+                  onCreatePaperClick();
+                }}
+              >
+                <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Create paper</span>
+              </ContextMenu.Item>
+              <ContextMenu.Separator className="ContextMenuSeparator" />
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  console.log("export section button");
 
-                    if (type === "section")
-                      return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                    if (type === "book")
-                      return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                    return "";
-                  })()}`}
-                ></motion.span>
-
-                <div
-                  ref={textContainerRef}
-                  className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
-                >
-                  <span
-                    ref={textRef}
-                    className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-                  >
-                    {itemMapState.item_title}
-                  </span>
-                </div>
-              </button>
-
-              <OptionsButton
-                mainButtonHovered={isHovered}
-                options={[
-                  {
-                    label: "Edit Properties",
-                    icon: (
-                      <span className="icon-[mdi--edit-outline] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("edit section details button");
-                      setItemId(itemId);
-                      setItemMode("details");
-                      if (deviceType === "mobile") {
-                        setPanelOpened(false);
-                      }
-
-                      setPanelOpened(true);
-                    },
-                  },
-                  {
-                    label: "Create Section",
-                    icon: (
-                      <span className="icon-[mdi--folder-add-outline] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("create section button");
-                      onCreateSectionClick();
-                    },
-                  },
-                  {
-                    label: "Create Paper",
-                    icon: (
-                      <span className="icon-[mdi--paper-add-outline] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("create paper button");
-                      onCreatePaperClick();
-                    },
-                  },
-                  {
-                    label: "Export Section",
-                    icon: (
-                      <span className="icon-[hugeicons--customize] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("export section button");
-
-                      dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
-                    },
-                  },
-                ]}
-                className={`${(() => {
-                  const type = itemMapRef.current.get("type");
-                  if (type === "section")
-                    return "h-libraryDirectorySectionNodeHeight w-libraryDirectorySectionNodeHeight min-w-libraryDirectorySectionNodeHeight";
-                  if (type === "book")
-                    return "h-libraryDirectoryBookNodeHeight w-libraryDirectoryBookNodeHeight min-w-libraryDirectoryBookNodeHeight";
-                  return "";
-                })()}
-              `}
-                buttonIcon={
-                  <span className="icon-[solar--menu-dots-bold] h-full w-full"></span>
-                }
-              />
+                  dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+                }}
+              >
+                <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>
+                  Export{" "}
+                  {itemMapRef.current.get("type") === "section" &&
+                    "section as .docx"}
+                  {itemMapRef.current.get("type") === "book" && "book as .docx"}
+                </span>
+              </ContextMenu.Item>
             </>
           )}
-        </motion.div>
-      </AnimatePresence>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          className="w-full"
-          key={isOpened ? "opened" : "closed"}
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.1 }}
-        >
-          {isOpened &&
-            (itemMapRef.current.get("type") === "section" ||
-              itemMapRef.current.get("type") === "book") && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "fit-content", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                id="DirectoryItemNodeBodyContainer"
-                className={`w-full flex flex-row justify-start`}
+          {itemMapRef.current.get("type") === "paper" && (
+            <>
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  console.log("edit paper editor button");
+                  setItemId(itemId);
+                  setItemMode("settings");
+                  if (deviceType === "mobile") {
+                    setPanelOpened(false);
+                  }
+
+                  setPanelOpened(true);
+                }}
               >
-                <div
-                  style={{
-                    marginLeft:
-                      "calc(3px + var(--libraryDirectoryBookNodeIconSize) / 2)",
-                  }}
-                  className={`w-px flex items-center justify-center`}
-                >
-                  <span className={`h-full w-full bg-appLayoutBorder`}></span>
-                </div>
-                <div
-                  id="DirectoryItemNodeBody"
-                  className="h-fit w-full grid grid-cols-1"
-                >
-                  {nodeChildrenState !== null &&
-                    ytree
-                      .sortChildrenByOrder(nodeChildrenState, itemId)
-                      .map((childKey) => (
-                        <div id="DirectoryItemNodeChild" key={childKey}>
-                          <DirectoryItemNode ytree={ytree} itemId={childKey} />
-                        </div>
-                      ))}
-                </div>
-              </motion.div>
-            )}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+                <span className="icon-[hugeicons--customize] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Edit Paper Settings</span>
+              </ContextMenu.Item>{" "}
+              <ContextMenu.Separator className="ContextMenuSeparator" />
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  console.log("export paper button");
+                  dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+                }}
+              >
+                <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Export paper as .docx</span>
+              </ContextMenu.Item>
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  console.log("import paper button");
+                  console.log(
+                    dataManagerSubdocs.setHtmlToPaper(
+                      ytree,
+                      itemId,
+                      "<p> Imported Content </p>"
+                    )
+                  );
+                }}
+              >
+                <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Import .docx as paper</span>
+              </ContextMenu.Item>
+            </>
+          )}
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 };
 
@@ -637,7 +638,7 @@ const OptionsButton = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ ease: "easeOut", duration: 0.1 }}
-            className={`z-50 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
+            className={`z-[100] absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
                        ${
                          shouldDropdownGoUp

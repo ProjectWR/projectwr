@@ -21,7 +21,7 @@ const ActivityBar = ({}) => {
       {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex gap-px items-center bg-appBackground ${
+          className={`flex flex-shrink-0 gap-px items-center bg-appBackground ${
             deviceType === "mobile"
               ? "w-full h-activityBarHeight order-last flex-row border-t"
               : "h-full w-activityBarWidth order-first flex-col border-r"
@@ -142,7 +142,7 @@ const ActivityButton = ({
      
         ${
           selectedActivity === activity
-            ? "text-appLayoutHighlight bg-appLayoutPressed z-[100] shadow-sm shadow-appLayoutShadow"
+            ? "text-appLayoutHighlight bg-appLayoutPressed z-6 shadow-sm shadow-appLayoutShadow"
             : "text-appLayoutTextMuted bg-appBackground hover:text-appLayoutHighlight"
         }
        

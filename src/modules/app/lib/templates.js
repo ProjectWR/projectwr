@@ -65,13 +65,15 @@ class TemplateManager {
   // Update a template by UUID
   updateTemplate(uuid, updatedProps) {
     const templates = this.getTemplates();
+    console.log(templates);
     if (templates[uuid]) {
       templates[uuid] = { ...templates[uuid], ...updatedProps }; // Update the template
       this._saveTemplates(templates); // Save to localStorage
       this._triggerCallbacks('updated', templates[uuid]); // Notify callbacks
-
     }
-    throw new Error(`[template] Template with UUID ${uuid} not found`);
+    else {
+      throw new Error(`[template] Template with UUID ${uuid} not found`);
+    }
   }
 }
 

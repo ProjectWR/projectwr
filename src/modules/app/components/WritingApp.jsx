@@ -47,6 +47,7 @@ import templateManager from "../lib/templates";
 import fontManager from "../lib/font";
 import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
+import { setupSearchForLibrary } from "../lib/search";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -140,6 +141,8 @@ const WritingApp = () => {
         dataManagerSubdocs.destroyAll();
         persistenceManagerForSubdocs.closeAllConnections();
 
+        const shutdownSearchCallbacks = new Set();
+
         setLoadingStage("Initializing Local Storage");
 
         for (const db of databases) {
@@ -150,6 +153,7 @@ const WritingApp = () => {
               "firebase-installations-database",
               "firebaseLocalStorageDb",
               "keyval-store",
+              "level-js-index"
             ].find((value) => value === libraryId)
           ) {
             continue;
@@ -166,6 +170,7 @@ const WritingApp = () => {
           console.log("Before persistence: ", ydoc.guid, ydoc);
           await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
           console.log(ydoc.guid, ydoc);
+          shutdownSearchCallbacks.add(setupSearchForLibrary(libraryId));
         }
 
         console.log("Local Libraries: ", localLibraries);
@@ -206,6 +211,10 @@ const WritingApp = () => {
         await wait(1000);
         setLoadingStage("Finished Loading");
         setLoading(false);
+
+        return () => {
+          shutdownSearchCallbacks.forEach((callback) => callback());
+        }
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -224,7 +233,6 @@ const WritingApp = () => {
     });
 
     return async () => {
-      await unlisten;
       unlisten();
     };
   }, []);
@@ -359,7 +367,7 @@ const WritingApp = () => {
                           <motion.div
                             key="SidePanelMotionContainer"
                             id="SidePanelMotionContainer"
-                            className="h-full border-r border-appLayoutBorder z-50 relative"
+                            className="h-full border-r border-appLayoutBorder z-4 relative"
                             initial={{ opacity: 0, width: 0, minWidth: 0 }}
                             animate={{
                               opacity: 1,

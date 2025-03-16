@@ -228,7 +228,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
             </motion.button>
           )}
         </AnimatePresence>
-        <div className="prop w-full h-fit relative flex flex-row justify-center items-center flex-wrap gap-4 mt-3">
+        <div className="prop w-full h-fit relative flex flex-row justify-center items-center font-sans flex-wrap gap-4 mt-3">
           <LibraryActionButton
             onClick={async () => {
               setSyncLoading(true);
@@ -250,12 +250,12 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className={`w-full h-full p-4 flex items-center justify-center ${
+                className={`w-full h-full px-1 flex items-center flex-col justify-center  ${
                   isSynced && "text-appLayoutTextMuted"
                 }`}
               >
                 {(isSynced && (
-                  <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
+                  <span className="icon-[iconamoon--cloud-yes-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize transition-colors duration-200"></span>
                 )) ||
                   (syncLoading && (
                     <div className={`relative w-[4rem] h-[4rem]`}>
@@ -321,13 +321,16 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                           duration: 1.2,
                           ease: "linear",
                         }}
-                        className="absolute w-full h-full p-[20%] top-0 left-0"
-                      >
-                        <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                        className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
+                        >
+                        <span className="icon-[ph--flower-tulip-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize"></span>
                       </motion.div>
                     </div>
                   )) || (
-                    <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
+                    <>
+                      <span className="icon-[iconamoon--cloud-no-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize transition-colors duration-0"></span>
+                      <span>Synchronize</span>
+                    </>
                   )}
               </motion.div>
             </AnimatePresence>
@@ -352,7 +355,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="w-full h-full p-4 flex items-center justify-center"
+                className="w-full h-full px-1 flex items-center flex-col justify-center"
               >
                 {(saveLoading && (
                   <div className={`relative w-[4rem] h-[4rem]`}>
@@ -418,13 +421,16 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                         duration: 1.2,
                         ease: "linear",
                       }}
-                      className="absolute w-full h-full p-[20%] top-0 left-0"
+                      className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
                     >
-                      <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                      <span className="icon-[ph--flower-tulip-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize"></span>
                     </motion.div>
                   </div>
                 )) || (
-                  <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-0"></span>
+                  <>
+                    <span className="icon-[ph--download-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize transition-colors duration-0"></span>
+                    <span>Save as archive</span>
+                  </>
                 )}
               </motion.div>
             </AnimatePresence>
@@ -447,7 +453,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="w-full h-full p-4 flex items-center justify-center"
+                className="w-full h-full px-1 flex flex-col items-center justify-center"
               >
                 {(loadLoading && (
                   <div className={`relative w-[4rem] h-[4rem]`}>
@@ -513,13 +519,16 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                         duration: 1.2,
                         ease: "linear",
                       }}
-                      className="absolute w-full h-full p-[20%] top-0 left-0"
+                      className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
                     >
-                      <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                      <span className="icon-[ph--flower-tulip-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize"></span>
                     </motion.div>
                   </div>
                 )) || (
-                  <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-0"></span>
+                  <>
+                    <span className="icon-[ph--upload-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize transition-colors duration-0"></span>
+                    <span>Load from archive</span>
+                  </>
                 )}
               </motion.div>
             </AnimatePresence>
@@ -540,7 +549,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="w-full h-full p-4 flex items-center justify-center"
+                className="w-full h-full px-1 flex items-center flex-col justify-center"
               >
                 {(deleteLoading && (
                   <div className={`relative w-[4rem] h-[4rem]`}>
@@ -606,13 +615,16 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                         duration: 1.2,
                         ease: "linear",
                       }}
-                      className="absolute w-full h-full p-[20%] top-0 left-0"
+                      className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
                     >
-                      <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                      <span className="icon-[ph--flower-tulip-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize"></span>
                     </motion.div>
                   </div>
                 )) || (
-                  <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-0"></span>
+                  <>
+                    <span className="icon-[ph--trash-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize transition-colors duration-0"></span>
+                    <span>Delete from device</span>
+                  </>
                 )}
               </motion.div>
             </AnimatePresence>

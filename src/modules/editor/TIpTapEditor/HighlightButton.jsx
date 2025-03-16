@@ -97,7 +97,7 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
         return;
       }
 
-      setDropdownPosition({ top: top - 10, left: left });
+      setDropdownPosition({ top: top , left: left });
     }
   }, [isOpened]);
 

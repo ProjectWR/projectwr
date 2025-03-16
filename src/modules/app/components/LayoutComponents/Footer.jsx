@@ -14,9 +14,9 @@ const Footer = () => {
       id="FooterContainer"
       className="border-t border-appLayoutBorder w-full h-footerHeight min-h-footerHeight flex-grow-0 flex flex-row justify-end font-sans"
     >
-      <div className="ZoomContainer w-fit h-full p-1 flex flex-row items-center">
+      <div className="ZoomContainer w-fit h-full px-1 flex flex-row items-center">
         <button
-          className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
+          className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center  border-appLayoutBorder hover:bg-appLayoutInverseHover"
           onClick={zoomIn}
         >
           <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
@@ -25,7 +25,7 @@ const Footer = () => {
           scale * 100
         )}%`}</div>
         <button
-          className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center rounded-md border-appLayoutBorder  hover:bg-appLayoutInverseHover"
+          className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center    border-appLayoutBorder  hover:bg-appLayoutInverseHover"
           onClick={zoomOut}
         >
           <span className="icon-[material-symbols-light--remove-rounded] w-ZoomIconSize h-ZoomIconSize"></span>

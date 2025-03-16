@@ -114,7 +114,15 @@ export default {
         libraryDetailsActionButtonWidth: "var(--libraryDetailsActionButtonWidth)",
         ZoomButtonWidth: "var(--ZoomButtonWidth)",
         ZoomIconSize: "var(--ZoomIconSize)",
-        ZoomDisplayWidth: "var(--ZoomDisplayWidth)"
+        ZoomDisplayWidth: "var(--ZoomDisplayWidth)",
+        actionBarSearchWidth: "var(--actionBarSearchWidth)",
+        actionBarSearchMaxHeight: "var(--actionBarSearchMaxHeight)",
+        actionBarSearchHeaderHeight: "var(--actionBarSearchHeaderHeight)",
+        actionBarResultNodeHeight: "var(--actionBarResultNodeHeight)",
+        actionBarSearchFooterHeight: "var(--actionBarSearchFooterHeight)",
+        actionBarWindowButtonIcons: "var(--actionBarWindowButtonIcons)",
+        optionsDropdownIconHeight: "var(--optionsDropdownIconHeight)",
+        libraryDetailsActionButtonIconSize: "var(--libraryDetailsActionButtonIconSize)"
 
       },
       fontSize: {
@@ -135,6 +143,10 @@ export default {
         homePanelSubtitleFontSize: "var(--homePanelSubtitleFontSize)",
         detailsPanelHeaderTwoFontSize: "var(--detailsPanelHeaderTwoFontSize)",
         ZoomDisplayFontSize: "var(--ZoomDisplayFontSize)",
+        actionBarSearchTextSize: "var(--actionBarSearchTextSize)",
+        actionBarResultHeaderTextSize: "var(--actionBarResultHeaderTextSize)",
+        actionBarResultTextSize: "var(--actionBarResultTextSize)",
+        libraryDetailsActionButtonFontSize: "var(--libraryDetailsActionButtonFontSize)"
       },
       fontFamily: {
         heading: [

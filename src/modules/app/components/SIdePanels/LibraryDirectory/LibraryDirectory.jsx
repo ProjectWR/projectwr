@@ -166,7 +166,7 @@ const LibraryDirectory = ({ libraryId }) => {
               {
                 label: "Create Section",
                 icon: (
-                  <span className="icon-[fluent--one-folder-add-24-regular] h-full w-full"></span>
+                  <span className="icon-[uiw--folder-add] h-full w-full"></span>
                 ),
                 callback: () => {
                   console.log("create section button");

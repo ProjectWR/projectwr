@@ -143,7 +143,6 @@ class DataManagerSubdocs {
     this.libraryYDocMap.set(uuid, ydoc);
     persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
 
-
     return uuid;
   }
 

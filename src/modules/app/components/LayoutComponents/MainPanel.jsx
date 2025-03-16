@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { libraryStore } from "../../stores/libraryStore";
 import { checkForYTree, YTree } from "yjs-orderedtree";
@@ -36,7 +36,7 @@ const MainPanel = ({}) => {
 
   useEffect(() => {
     if (libraryId === "unselected") {
-      libraryYTreeRef.current === null;
+      libraryYTreeRef.current = null;
       return;
     }
 
@@ -51,13 +51,31 @@ const MainPanel = ({}) => {
     libraryYTreeRef.current = new YTree(
       dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
     );
-  }, [libraryId]);
+  }, [libraryId, activity, itemId, itemMode, templateId, templateMode]);
 
-  const renderMainPanel = () => {
+  const renderMainPanel = useCallback(() => {
     if (activity === "libraries") {
       if (libraryId !== "unselected") {
         if (itemId !== "unselected") {
-          key.current = "itemDetails-" + itemId;
+          key.current = "itemDetails-" + itemId + "-" + itemMode;
+
+          if (!libraryYTreeRef.current) {
+            if (
+              !checkForYTree(
+                dataManagerSubdocs
+                  .getLibrary(libraryId)
+                  .getMap("library_directory")
+              )
+            ) {
+              throw new Error("Tried to access uninitialized directory");
+            }
+
+            libraryYTreeRef.current = new YTree(
+              dataManagerSubdocs
+                .getLibrary(libraryId)
+                .getMap("library_directory")
+            );
+          }
 
           const itemMap = libraryYTreeRef.current.getNodeValueFromKey(itemId);
 
@@ -67,6 +85,7 @@ const MainPanel = ({}) => {
                 <BookDetailsPanel
                   ytree={libraryYTreeRef.current}
                   bookId={itemId}
+                  key={itemId}
                 />
               );
             }
@@ -76,6 +95,7 @@ const MainPanel = ({}) => {
                 <SectionDetailsPanel
                   ytree={libraryYTreeRef.current}
                   sectionId={itemId}
+                  key={itemId}
                 />
               );
             }
@@ -135,9 +155,9 @@ const MainPanel = ({}) => {
 
     key.current = "empty";
     return <HomePanel />;
-  };
+  }, [libraryId, activity, itemId, itemMode, templateId, templateMode]);
 
-  return(
+  return (
     <AnimatePresence mode="wait">
       <motion.div
         key={key.current}
@@ -150,7 +170,7 @@ const MainPanel = ({}) => {
         {renderMainPanel()}
       </motion.div>
     </AnimatePresence>
-  )
+  );
 };
 
 export default MainPanel;

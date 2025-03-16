@@ -21,6 +21,7 @@ import { equalityDeep, equalityFlat } from "lib0/function";
 import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
 import { wait } from "lib0/promise";
+import { setupSearchForLibrary } from "../../../lib/search";
 
 // TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
@@ -109,7 +110,9 @@ const LibraryManager = () => {
           className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize text-appLayoutTextMuted transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
  `}
           onClick={() => {
-            setLibraryId(dataManagerSubdocs.createEmptyLibrary());
+            const newLibraryId = dataManagerSubdocs.createEmptyLibrary();
+            setLibraryId(newLibraryId);
+            setupSearchForLibrary(newLibraryId);
             if (deviceType === "mobile") {
               setPanelOpened(false);
             }

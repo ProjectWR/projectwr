@@ -47,6 +47,19 @@ const TemplateDetailsPanel = ({ templateId }) => {
     [newTemplate]
   );
 
+  useEffect(() => {
+    const callback = () => {
+      setNewTemplate(templateManager.getTemplates()[templateId]);
+      templateRef.current = templateManager.getTemplates()[templateId];
+    };
+
+    templateManager.addCallback(callback);
+
+    return () => {
+      templateManager.removeCallback(callback);
+    };
+  }, [templateId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -112,7 +125,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
                 padding: 0,
               }}
               animate={{
-                height: "var(--libraryManagerAddButtonSize) ",
+                height: "var(--libraryManagerAddButtonSize)",
                 opacity: 1,
                 marginTop: `0`,
                 marginBottom: "1rem",

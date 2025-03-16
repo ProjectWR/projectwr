@@ -54,7 +54,7 @@ const GrainyButton = ({
     mouseY.set(-1 * size * 16);
   }
 
-  const spotlightBackground = useMotionTemplate`radial-gradient(${size}rem ${size}rem at ${mouseXSpring}% ${mouseYSpring}%, #2E2E2E 0%, #1F1F1F 100%`;
+  const spotlightBackground = useMotionTemplate`radial-gradient(${size}rem ${size}rem at ${mouseXSpring}% ${mouseYSpring}%, #3D3D3D 0%, #1F1F1F 100%`;
   return (
     <motion.div
       onClick={onClick}

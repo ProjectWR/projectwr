@@ -48,6 +48,9 @@ const TiptapEditor = ({
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
 
+  const [editorRef, setEditorFocus] = useFocus()
+
+
   const lastScrollTopRef = useRef(0); // Stores last scroll position
 
   const defaultPreferences = isMobile
@@ -373,6 +376,7 @@ const TiptapEditor = ({
           `}
         style={{
           paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+          backgroundColor: backgroundColor
         }}
       >
         <EditorContent
@@ -385,7 +389,7 @@ const TiptapEditor = ({
           style={{
             width: isMobile ? "100%" : `${width}rem`,
             minWidth: isMobile ? "100%" : `${width * 0.8}rem`, 
-            backgroundColor: `${backgroundColor}`,
+            backgroundColor: `${paperColor}`,
             borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
             borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
             borderBottomWidth: isMobile ? "0" : `0`,
@@ -442,3 +446,10 @@ const updateVirtualCursor = (editor, fontSize) => {
     fontSize: max(fontSize, minFontSize),
   });
 };
+
+const useFocus = () => {
+  const htmlElRef = useRef(null)
+  const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
+
+  return [ htmlElRef, setFocus ] 
+}

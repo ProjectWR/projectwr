@@ -1,3 +1,6 @@
+import { YTree } from "yjs-orderedtree";
+import dataManagerSubdocs from "./dataSubDoc";
+
 let instance;
 
 class ItemLocalStateManager {
@@ -54,6 +57,18 @@ class ItemLocalStateManager {
   getPaperEditorTemplate(itemId) {
     const items = this._getItems();
     return items[itemId]?.props?.EditorTemplate || null;
+  }
+
+  // Get the paper editor template for a specific item
+  setPaperEditorTemplate(itemId, templateId) {
+    const items = this._getItems();
+    if (items[itemId]) {
+      items[itemId].props.EditorTemplate = templateId;
+      this._saveItems(items);
+      this._trigger(itemId, templateId, items[itemId]); // Trigger callbacks for the specific itemId
+    } else {
+      console.warn(`Item with ID ${itemId} does not exist.`);
+    }
   }
 
   // Get the paper editor type for a specific item
@@ -167,6 +182,22 @@ class ItemLocalStateManager {
     };
     this._saveItems(items);
   }
+
+  setItemAndParentsOpened(libraryId, itemId) {
+    const libraryYTree = new YTree(dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory"));
+    let parentKey = itemId;
+    while (parentKey != "root" && parentKey !== null && parentKey !== undefined) {
+      if (!itemLocalStateManager.hasItemLocalState(parentKey)) {
+        itemLocalStateManager.createItemLocalState(parentKey, {
+          type: libraryYTree.getNodeValueFromKey(parentKey).get("type"),
+          props: {},
+        });
+      }
+      this.setItemOpened(parentKey, true);
+      parentKey = libraryYTree.getNodeParentFromKey(parentKey);
+    }
+  }
+
 }
 
 const itemLocalStateManager = Object.freeze(new ItemLocalStateManager());

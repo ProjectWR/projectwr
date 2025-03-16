@@ -8,6 +8,8 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 import { AnimatePresence, motion } from "motion/react";
 import { equalityDeep } from "lib0/function";
+import itemLocalStateManager from "../../lib/itemLocalState";
+import useTemplates from "../../hooks/useTemplates";
 
 /**
  *
@@ -22,6 +24,19 @@ const PaperPanel = ({ ytree, paperId }) => {
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = libraryStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
+
+  const templates = useTemplates();
+
+  const preferences = useMemo(() => {
+    if (
+      templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]
+    ) {
+      return templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]
+        .template_content.desktopDefaultPreferences;
+    } else {
+      return null;
+    }
+  }, [templates, paperId]);
 
   useEffect(() => {
     if (deviceType === "mobile") {
@@ -173,6 +188,7 @@ const PaperPanel = ({ ytree, paperId }) => {
           key={paperId}
           yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
           setHeaderOpened={setHeaderOpened}
+          preferences={preferences}
         />
       </motion.div>
     </div>

@@ -61,7 +61,16 @@ const TemplateViewPanel = ({ templateId }) => {
   return (
     <div
       id="TemplateViewContainer"
-      className="w-full h-full flex flex-col items-center justify-start"
+      className={`h-full flex flex-col items-center justify-start 
+        ${deviceType === "mobile" && "w-full"}   
+        ${deviceType === "desktop" && ""}       
+      `}
+      style={
+        deviceType === "desktop" && {
+          width: `100%`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+        }
+      }
     >
       <AnimatePresence>
         <motion.div
@@ -71,35 +80,42 @@ const TemplateViewPanel = ({ templateId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="TemplateViewHeader"
-          className="w-full flex items-center justify-start border-b border-appLayoutBorder shadow-sm shadow-appLayoutShadow px-1 gap-1 overflow-hidden"
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 flex-shrink-0
+            ${deviceType === "desktop" && "px-6 py-1"}
+          `}
         >
-          <button
-            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center order-first`}
-            onClick={() => {
-              setPanelOpened(true);
-              setTemplateId("unselected");
-            }}
-          >
-            <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-          </button>
+          {deviceType === "mobile" && (
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center order-first`}
+              onClick={() => {
+                setPanelOpened(true);
+                setTemplateId("unselected");
+              }}
+            >
+              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+          )}
 
           <p
-            className="bg-appBackground flex-grow text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 my-2 px-2 pr-1 transition-colors duration-200"
-            id="item_title"
+            className="bg-appBackground text-center flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
+            id="template_name"
           >
             {template.template_name}
           </p>
         </motion.div>
       </AnimatePresence>
 
+      <div className="w-full h-px bg-appLayoutBorder"></div>
+
       <motion.div
         id="TemplateViewBody"
         className="w-full flex-grow min-h-0 min-w-0 basis-0"
       >
         <TipTapEditor
+          key={templateId}
           setHeaderOpened={setHeaderOpened}
           mode={"previewTemplate"}
-          preferences={template.template_content.mobileDefaultPreferences}
+          preferences={template.template_content.desktopDefaultPreferences}
         />
       </motion.div>
     </div>

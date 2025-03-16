@@ -1,0 +1,82 @@
+import dataManagerSubdocs from './dataSubDoc';
+import MiniSearch from 'minisearch'
+
+let miniSearch = new MiniSearch({
+  fields: ['library_name', "library_description", "item_title", "section_description", "book_description", "paper_xml"],
+  storeFields: ["library_name", "item_title", "libraryId", "id", "type"]
+});
+
+export async function setupSearchForLibrary(libraryId) {
+  if (miniSearch.getStoredFields(libraryId)) {
+    console.log("Already set up search for library: ", libraryId);
+    return;
+  }
+  const ydoc = dataManagerSubdocs.getLibrary(libraryId);
+  const libraryDocument = ydoc.getMap("library_props").toJSON();
+  const document = { id: libraryId, libraryId: libraryId, ...libraryDocument };
+  console.log("libdoc for search: ", document);
+
+  miniSearch.add(document);
+
+  const callback = () => {
+    const libraryDocument = ydoc.getMap("library_props").toJSON();
+    const document = { id: libraryId, libraryId: libraryId, ...libraryDocument };
+    miniSearch.replace(document);
+  };
+
+  ydoc.getMap("library_props").observe(callback);
+
+  const itemCallbacks = new Map();
+
+  for (const [key, value] of ydoc.getMap("library_directory").entries()) {
+    if (key === "root") continue
+    const itemDocument = value.get("value").toJSON();
+    console.log("setting up itemdoc for search: ", key, " ", itemDocument);
+    miniSearch.add({ id: key, libraryId: libraryId, ...itemDocument });
+
+    const itemCallback = () => {
+      console.log("itemCallback: item ${key} changed");
+      const itemDocument = value.get("value").toJSON();
+      console.log("itemCallback itemDoc replacement: ", itemDocument);
+      miniSearch.replace({ id: key, libraryId: libraryId, ...itemDocument });
+    }
+    itemCallbacks.set(key, itemCallback);
+    value.get("value").observeDeep(itemCallback);
+  }
+
+  ydoc.getMap("library_directory").observe((event) => {
+    event.changes.keys.forEach((change, key) => {
+      const value = ydoc.getMap("library_directory").get(key);
+      if (change.action === "delete") {
+        value.get("value").unobserveDeep(itemCallbacks.get(key));
+        miniSearch.remove(key);
+      }
+      else if (change.action === 'add') {
+        const itemDocument = value.get("value").toJSON();
+        miniSearch.add({ id: key, libraryId: libraryId, ...itemDocument });
+        const itemCallback = () => {
+          console.log("itemCallback: item ${key} changed");
+          const itemDocument = value.get("value").toJSON();
+          miniSearch.replace({ id: key, libraryId: libraryId, ...itemDocument });
+        }
+        itemCallbacks.set(key, itemCallback);
+        value.get("value").observeDeep(itemCallback);
+      }
+    });
+  });
+
+  return () => {
+    ydoc.getMap("library_props").unobserve(callback);
+
+    itemCallbacks.entries().forEach(([key, value]) => {
+      const libDec = ydoc.getMap("library_directory");
+      if (libDec.has(key)) {
+        libDec.get(key).get("value").unobserveDeep(value);
+      }
+    });
+  };
+}
+
+export function queryData(query) {
+  return miniSearch.search(query, { fuzzy: 0.2 });
+}

@@ -80,12 +80,12 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
         headerRect.left +
         (headerRect.width - dropdownRef.current.offsetWidth) / 2;
 
-      setDropdownPosition({ top: top - 10, left: left > 0 ? left : 0 });
+      setDropdownPosition({ top: top, left: left > 0 ? left : 0 });
     }
   }, [isOpened]);
 
   return (
-    <div className="relative h-full w-fit flex-shrink-0" ref={innerRef}>
+    <div className="relative h-full w-fit flex-shrink-0 flex items-center" ref={innerRef}>
       <div
         style={{ height: `${buttonHeight}rem` }}
         id="TextFormatButtonHeader"

@@ -5,7 +5,7 @@ import { appStore } from "../stores/appStore";
 const useZoom = () => {
   const [scale, setScale] = useState(0.9);
   const MIN_SCALE = 0.8;
-  const MAX_SCALE = 1.5;
+  const MAX_SCALE = 1.3;
   const SCALE_STEP = 0.1;
 
   const setZoom = appStore((state) => state.setZoom);
