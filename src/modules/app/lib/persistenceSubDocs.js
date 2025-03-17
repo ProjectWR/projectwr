@@ -39,16 +39,29 @@ class PersistenceManagerForSubdocs {
       throw new Error("Yjs document is required to initialize persistence");
     }
 
+    if (this.indexeddbProviderMap.has(ydoc.guid)) {
+      return false;
+    }
+
     this.indexeddbProviderMap.set(
       ydoc.guid,
       new IndexeddbPersistence(ydoc.guid, ydoc)
     );
+
+
+    console.log("Started wait for sync to finish!");
 
     await new Promise((resolve) => {
       this.indexeddbProviderMap.get(ydoc.guid).whenSynced.then(() => {
         resolve();
       });
     });
+
+    console.log("finished wait for sync to finish!");
+    
+    console.log("after sync finished: ", ydoc.toJSON());
+
+    return true;
   }
 
   async closeConnectionForYDoc(ydoc) {

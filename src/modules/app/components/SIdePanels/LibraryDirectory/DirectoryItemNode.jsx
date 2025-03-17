@@ -62,7 +62,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
     if (!itemLocalStateManager.hasItemLocalState(itemId)) {
       itemLocalStateManager.createItemLocalState(itemId, {
         type: type,
-        props: {},
+        libraryId: ytree._ydoc.guid,
       });
     }
 
@@ -91,15 +91,19 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
   }, [itemId, ytree]);
 
   const onCreateSectionClick = useCallback(() => {
-    dataManagerSubdocs.createEmptySection(ytree, itemId);
+    const newId = dataManagerSubdocs.createEmptySection(ytree, itemId);
     setIsOpened(true);
     itemLocalStateManager.setItemOpened(itemId, true);
+    itemLocalStateManager.setItemOpened(newId, true);
+
   }, [ytree, itemId]);
 
   const onCreatePaperClick = useCallback(() => {
-    dataManagerSubdocs.createEmptyPaper(ytree, itemId);
+    const newId = dataManagerSubdocs.createEmptyPaper(ytree, itemId);
     setIsOpened(true);
     itemLocalStateManager.setItemOpened(itemId, true);
+    itemLocalStateManager.setItemOpened(newId, true);
+
   }, [ytree, itemId]);
 
   const [{ isDragging }, drag] = useDrag(() => ({

@@ -40,6 +40,7 @@ import { Buffer } from 'buffer/';
 import { save } from '@tauri-apps/plugin-dialog';
 import { writeFile } from '@tauri-apps/plugin-fs';
 import { Packer } from 'docx';
+import itemLocalStateManager from './itemLocalState';
 
 let instance;
 
@@ -79,7 +80,6 @@ class DataManagerSubdocs {
    * @param {string} libraryId
    */
   async initLibrary(libraryId) {
-
     if (this.libraryYDocMap.has(libraryId)) {
       console.log("library already intitiated: ", libraryId);
       return;
@@ -88,7 +88,11 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: libraryId });
     ydoc.getMap("library_props");
     ydoc.getMap("library_directory");
-    this.libraryYDocMap.set(libraryId, new Y.Doc({ guid: libraryId }));
+
+    if (await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc)) {
+      console.log("Checking ydoc in initLibrary: ", ydoc.toJSON());
+      this.libraryYDocMap.set(libraryId, ydoc);
+    }
   }
 
   /**
@@ -143,6 +147,11 @@ class DataManagerSubdocs {
     this.libraryYDocMap.set(uuid, ydoc);
     persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
 
+    itemLocalStateManager.createItemLocalState(uuid, {
+      type: "library",
+      libraryId: uuid,
+    });
+
     return uuid;
   }
 
@@ -160,6 +169,11 @@ class DataManagerSubdocs {
     bookMap.set("book_description", "Book Description");
     ytree.createNode("root", uuid, bookMap);
 
+    itemLocalStateManager.createItemLocalState(uuid, {
+      type: "book",
+      libraryId: ytree._ydoc.guid,
+    });
+
     return uuid;
   }
 
@@ -176,6 +190,11 @@ class DataManagerSubdocs {
     sectionMap.set("item_title", "Section Title");
     sectionMap.set("section_description", "Section Description")
     ytree.createNode(bookId, uuid, sectionMap);
+
+    itemLocalStateManager.createItemLocalState(uuid, {
+      type: "section",
+      libraryId: ytree._ydoc.guid,
+    });
     return uuid;
   }
 
@@ -192,6 +211,11 @@ class DataManagerSubdocs {
     paperMap.set("item_title", "Paper Title");
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
+
+    itemLocalStateManager.createItemLocalState(uuid, {
+      type: "paper",
+      libraryId: ytree._ydoc.guid,
+    });
     return uuid;
   }
 

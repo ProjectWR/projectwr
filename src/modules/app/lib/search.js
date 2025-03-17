@@ -77,6 +77,21 @@ export async function setupSearchForLibrary(libraryId) {
   };
 }
 
+export async function destroySearchForLibrary(libraryId) {
+  if (miniSearch.getStoredFields(libraryId)) {
+    console.log("Already set up search for library: ", libraryId);
+    return;
+  }
+  const ydoc = dataManagerSubdocs.getLibrary(libraryId);
+
+  for (const [key,] of ydoc.getMap("library_directory").entries()) {
+    if (key === "root") continue
+    miniSearch.remove(key);
+  }
+
+  miniSearch.remove(libraryId);
+}
+
 export function queryData(query) {
   return miniSearch.search(query, { fuzzy: 0.2 });
 }

@@ -6,14 +6,8 @@ import {
 } from "motion/react";
 import { useMemo, useRef, useState } from "react";
 
-const GrainyButton = ({
-  children,
-  className,
-  size = 30,
-  onClick,
-  disabled,
-}) => {
-  const grainyButtonRef = useRef(null);
+const GrainyDiv = ({ children, className, size = 30, disabled }) => {
+  const grainyDivRef = useRef(null);
 
   const mouseX = useMotionValue(50);
   const mouseY = useMotionValue(-1 * size * 16);
@@ -44,20 +38,20 @@ const GrainyButton = ({
   };
 
   const handleMouseLeave = () => {
-    mouseX.set(50);
-    mouseY.set(-1 * size * 16);
+    mouseX.set(100);
+    mouseY.set(100);
     setHover(false);
   };
 
   if (disabled) {
-    mouseX.set(50);
-    mouseY.set(-1 * size * 16);
+    mouseX.set(100);
+    mouseY.set(100);
   }
 
-  const spotlightBackground = useMotionTemplate`radial-gradient(${size}rem ${size}rem at ${mouseXSpring}% ${mouseYSpring}%, #3D3D3D 0%, #1F1F1F 100%`;
+  const spotlightBackground = useMotionTemplate`radial-gradient(${size}rem ${size}rem at ${mouseXSpring}% ${mouseYSpring}%, #262626 0%, #1F1F1F 100%`;
   return (
     <motion.div
-      ref={grainyButtonRef}
+      ref={grainyDivRef}
       onMouseEnter={() => {
         setHover(true);
       }}
@@ -71,17 +65,11 @@ const GrainyButton = ({
       }}
       className={`relative ${className}`}
     >
-      <div className="w-full h-full noise mix-blend-multiply"></div>
+      <div className="w-full h-full noiseFine mix-blend-multiply"></div>
 
-      <button
-        className="absolute w-full h-full top-0 left-0"
-        onClick={onClick}
-        disabled={disabled}
-      >
-        {children}
-      </button>
+      <div className="absolute w-full h-full top-0 left-0">{children}</div>
     </motion.div>
   );
 };
 
-export default GrainyButton;
+export default GrainyDiv;

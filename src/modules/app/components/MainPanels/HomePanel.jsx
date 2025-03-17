@@ -6,12 +6,58 @@ import {
   AnimatePresence,
 } from "motion/react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-
+import itemLocalStateManager from "../../lib/itemLocalState";
+import { equalityDeep, equalityFlat } from "lib0/function";
+import GrainyDiv from "../../../design-system/GrainyDiv";
+import GrainyButton from "../../../design-system/GrainyButton";
+import { checkForYTree, YTree } from "yjs-orderedtree";
+import dataManagerSubdocs from "../../lib/dataSubDoc";
+import { libraryStore } from "../../stores/libraryStore";
+import { appStore } from "../../stores/appStore";
 
 const HomePanel = () => {
   const { deviceType } = useDeviceType();
+
+  const setLibraryId = libraryStore((state) => state.setLibraryId);
+  const setItemId = libraryStore((state) => state.setItemId);
+  const setItemMode = libraryStore((state) => state.setItemMode);
+  const setActivity = appStore((state) => state.setActivity);
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+  const prevLatestItemsRef = useRef(null);
+
+  const latestItems = useSyncExternalStore(
+    (callback) => {
+      itemLocalStateManager.onAll(callback);
+
+      return () => {
+        itemLocalStateManager.offAll(callback);
+      };
+    },
+    () => {
+      const latestItems = itemLocalStateManager.fetchLatestOpenedItems(5);
+      if (
+        prevLatestItemsRef.current === null ||
+        prevLatestItemsRef.current === undefined ||
+        !equalityDeep(latestItems, prevLatestItemsRef.current)
+      ) {
+        prevLatestItemsRef.current = latestItems;
+        return prevLatestItemsRef.current;
+      } else {
+        return prevLatestItemsRef.current;
+      }
+    }
+  );
+
+  console.log("Latest ITems: ", latestItems);
 
   return (
     <AnimatePresence mode="wait">
@@ -27,7 +73,7 @@ const HomePanel = () => {
             minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
           }
         }
-      >        
+      >
         <div
           id="HomeHeader"
           className={`h-fit min-h-fit w-full flex flex-col items-start
@@ -42,75 +88,155 @@ const HomePanel = () => {
           >
             Tulip Writer
           </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, bounce: 0 }}
-            className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
-          >
-            &nbsp;
-            <q>
-              The problems of the human heart in conflict with itself… alone can
-              make good writing because only that is worth writing about, worth
-              the agony and the sweat.
-            </q>
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, bounce: 0 }}
-            className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
-          >
-            <span className="flex-grow"></span>
-            <span className="w-fit">- Rohit Kottamasu</span>
-          </motion.p>
+          {latestItems.length === 0 && (
+            <>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, bounce: 0 }}
+                className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
+              >
+                &nbsp;
+                <q>
+                  The problems of the human heart in conflict with itself… alone
+                  can make good writing because only that is worth writing
+                  about, worth the agony and the sweat.
+                </q>
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, bounce: 0 }}
+                className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
+              >
+                <span className="flex-grow"></span>
+                <span className="w-fit">- Rohit Kottamasu</span>
+              </motion.p>
+            </>
+          )}
+
+          {latestItems.length > 0 && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, bounce: 0 }}
+              className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
+            >
+              &nbsp;
+              <q>A subtitle goes here</q>
+            </motion.p>
+          )}
         </div>
 
         <div
           id="HomeBody"
-          className="h-fit min-h-fit w-full flex flex-col items-center justify-start px-6 mt-12"
+          className="h-fit min-h-fit w-full flex flex-col items-center justify-start px-6 mt-6"
         >
-          {/* <div className="h-[10rem] w-full isolate relative rounded-lg overflow-hidden">
-          <div className="h-full w-full noise"></div>
-          <div className="h-full w-full absolute top-0 overlay"></div>
-        </div> */}
+          <AnimatePresence>
+            {latestItems.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "fit-content" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="w-full overflow-hidden rounded-lg border border-appLayoutInverseHover"
+              >
+                <div className={`h-fit w-full`}>
+                  <div className="w-full h-full flex flex-col items-center justify-start pt-6 pb-5 gap-1">
+                    <div className="h-fit w-full text-3xl pb-2 px-5 flex items-center justify-between">
+                      <span>Recently Opened</span>
+                      <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
+                    </div>
+                    <div className="h-px w-[95%] bg-appLayoutBorder"></div>
+                    {latestItems.map(({ itemId, props, type }) => {
+                      let name = "";
+                      if (type !== "library") {
+                        if (
+                          !checkForYTree(
+                            dataManagerSubdocs
+                              .getLibrary(props.libraryId)
+                              .getMap("library_directory")
+                          )
+                        ) {
+                          throw new Error(
+                            "Tried to access uninitialized directory"
+                          );
+                        }
 
-          {/* <div className="w-full h-fit flex flex-row">
-          <div className="h-fit flex-grow flex flex-col items-start justify-start">
-            <GrainyButton
-              className={`h-[5rem] w-[25rem] rounded-lg overflow-hidden border border-appLayoutBorder`}
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <h1 className="text-4xl">Button</h1>
-              </div>
-            </GrainyButton>
+                        const ytree = new YTree(
+                          dataManagerSubdocs
+                            .getLibrary(props.libraryId)
+                            .getMap("library_directory")
+                        );
 
-            <GrainyButton
-              className={`h-[5rem] w-[25rem] rounded-lg overflow-hidden border border-appLayoutBorder mt-4`}
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <h1 className="text-4xl">Button</h1>
-              </div>
-            </GrainyButton>
+                        console.log(ytree._ymap.toJSON());
 
-            <GrainyButton
-              className={`h-[5rem] w-[25rem] rounded-lg overflow-hidden border border-appLayoutBorder mt-4`}
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <h1 className="text-4xl">Button</h1>
-              </div>
-            </GrainyButton>
+                        name = ytree
+                          .getNodeValueFromKey(itemId)
+                          .get("item_title");
+                      } else {
+                        name = dataManagerSubdocs
+                          .getLibrary(props.libraryId)
+                          .getMap("library_props")
+                          .get("library_name");
+                      }
 
-            <GrainyButton
-              className={`h-[5rem] w-[25rem] rounded-lg overflow-hidden border border-appLayoutBorder mt-4`}
-            >
-              <div className="w-full h-full flex items-center justify-center">
-                <h1 className="text-4xl">Button</h1>
-              </div>
-            </GrainyButton>
-          </div>
-          <div className="h-fit flex-grow flex flex-col items-start justify-start"></div>
-        </div> */}
+                      return (
+                        <div key={itemId} className="w-full h-fit px-2">
+                          <button
+                            onClick={() => {
+                              if (type === "library") {
+                                setLibraryId(itemId);
+                                setItemId("unselected");
+                                if (deviceType === "mobile") {
+                                  setPanelOpened(false);
+                                }
+                                setPanelOpened(true);
+                              }
+
+                              if (
+                                type === "book" ||
+                                type === "paper" ||
+                                type === "section"
+                              ) {
+                                itemLocalStateManager.setItemAndParentsOpened(
+                                  props.libraryId,
+                                  itemId
+                                );
+                                console.log(
+                                  "Opening from Recently Opened: ",
+                                  props.libraryId,
+                                  itemId
+                                );
+                                setLibraryId(props.libraryId);
+                                setItemId(itemId);
+                                setItemMode("details");
+                                if (deviceType === "mobile") {
+                                  setPanelOpened(false);
+                                }
+                                setPanelOpened(true);
+                              }
+                              setActivity("libraries");
+                            }}
+                            className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md hover:bg-appLayoutInverseHover font-sans text-recentlyOpenedNodeFontSize"
+                          >
+                            <span className="h-fit flex items-center gap-2">
+                              <span> {name}</span>
+                              <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize w-fit pt-px">
+                                {type}
+                              </span>
+                            </span>
+                            <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize">
+                              {new Date(props.lastOpened).toLocaleString()}
+                            </span>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </AnimatePresence>
@@ -118,59 +244,3 @@ const HomePanel = () => {
 };
 
 export default HomePanel;
-
-const GrainyButton = ({ children, className }) => {
-  const grainyButtonRef = useRef(null);
-
-  const mouseX = useMotionValue(50);
-  const mouseY = useMotionValue(-400);
-  const mouseXSpring = useSpring(mouseX, { stiffness: "400", damping: "50" });
-  const mouseYSpring = useSpring(mouseY, { stiffness: "400", damping: "50" });
-
-  const [hover, setHover] = useState(false);
-
-  const hoverColor = useMemo(() => {
-    if (hover) return `#232323`;
-    else return "#171717";
-  }, [hover]);
-
-  const hoverColorSpring = useSpring(hover, {
-    stiffness: "400",
-    damping: "50",
-  });
-
-  const handleMouseMove = ({ clientX, clientY, currentTarget }) => {
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-
-    mouseX.set(((clientX - left) / width) * 100);
-    mouseY.set(((clientY - top) / height) * 100);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(50);
-    mouseY.set(-400);
-    setHover(false);
-  };
-
-  const spotlightBackground = useMotionTemplate`radial-gradient(30rem 30rem at ${mouseXSpring}% ${mouseYSpring}%, #2E2E2E 0%, #1F1F1F 100%, #1F1F1F 100%`;
-  return (
-    <motion.div
-      ref={grainyButtonRef}
-      onMouseEnter={() => {
-        setHover(true);
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        backgroundImage: spotlightBackground,
-      }}
-      className={`relative ${className}`}
-    >
-      <div className="w-full h-full noise mix-blend-multiply"></div>
-
-      <button className="absolute w-full h-full top-0 left-0">
-        {children}
-      </button>
-    </motion.div>
-  );
-};

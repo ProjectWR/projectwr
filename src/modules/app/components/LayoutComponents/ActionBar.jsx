@@ -6,6 +6,7 @@ import { queryData } from "../../lib/search";
 import { useEffect, useState } from "react";
 import { libraryStore } from "../../stores/libraryStore";
 import itemLocalStateManager from "../../lib/itemLocalState";
+import { max } from "lib0/math";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
@@ -18,7 +19,7 @@ const ActionBar = () => {
     <div
       data-tauri-drag-region
       id="actionBarContainer"
-      className="border-b z-[1000] border-appLayoutBorder w-full h-actionBarHeight min-h-actionBarHeight text-appLayoutText"
+      className="border-b z-[1000] border-appLayoutBorder w-full h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
     >
       <div
         data-tauri-drag-region
@@ -174,6 +175,22 @@ const SearchBar = () => {
     }
   }, [searchQuery]);
 
+  console.log(
+    "Sroted results: ",
+    searchResults.toSorted((a, b) => {
+      if (!itemLocalStateManager.getLastOpened(a.id)) {
+        return false;
+      } else if (!itemLocalStateManager.getLastOpened(b.id)) {
+        return true;
+      } else {
+        return (
+          itemLocalStateManager.getLastOpened(b.id) -
+          itemLocalStateManager.getLastOpened(a.id)
+        );
+      }
+    })
+  );
+
   return (
     <div className="relative h-full py-1 w-actionBarSearchWidth ml-1 text-actionBarSearchTextSize">
       <input
@@ -198,8 +215,22 @@ const SearchBar = () => {
             transition={{ duration: 0.1 }}
             className="absolute top-[100%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-[1000] border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
           >
-            <div className="w-full px-2 h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center">
-              {searchResults.length} results in your libraries
+            <div
+              style={{
+                paddingLeft: `calc(1rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                paddingRight: `calc(1rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+              }}
+              className="w-full h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center"
+            >
+              <span>
+                {" "}
+                {searchResults.length}{" "}
+                {searchResults.length === 1 ? "result" : "results"} in your
+                libraries
+              </span>
+              <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
+                Last opened at
+              </span>
             </div>
             <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
             <div
@@ -209,56 +240,74 @@ const SearchBar = () => {
               className="w-full max-h-actionBarSearchMaxHeight overflow-y-scroll text-actionBarResultTextSize flex flex-col py-1"
             >
               {searchResults.length > 0 &&
-                searchResults.map((result) => {
-                  return (
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      key={result.id}
-                      onClick={() => {
-                        if (result.library_name) {
-                          setLibraryId(result.libraryId);
-                          setItemId("unselected");
-                          if (deviceType === "mobile") {
-                            setPanelOpened(false);
+                searchResults
+                  .toSorted((a, b) => {
+                    if (!itemLocalStateManager.getLastOpened(a.id)) {
+                      return false;
+                    } else if (!itemLocalStateManager.getLastOpened(b.id)) {
+                      return true;
+                    } else {
+                      return (
+                        itemLocalStateManager.getLastOpened(b.id) -
+                        itemLocalStateManager.getLastOpened(a.id)
+                      );
+                    }
+                  })
+                  .map((result) => {
+                    return (
+                      <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        key={result.id}
+                        onClick={() => {
+                          if (result.library_name) {
+                            setLibraryId(result.libraryId);
+                            setItemId("unselected");
+                            if (deviceType === "mobile") {
+                              setPanelOpened(false);
+                            }
+                            setPanelOpened(true);
                           }
-                          setPanelOpened(true);
-                        }
-                        if (
-                          result.type === "book" ||
-                          result.type === "paper" ||
-                          result.type === "section"
-                        ) {
-                          itemLocalStateManager.setItemAndParentsOpened(
-                            result.libraryId,
-                            result.id
-                          );
-                          console.log(
-                            "Opening from search: ",
-                            result.libraryId,
-                            result.id
-                          );
-                          setLibraryId(result.libraryId);
-                          setItemId(result.id);
-                          setItemMode("details");
-                          if (deviceType === "mobile") {
-                            setPanelOpened(false);
+                          if (
+                            result.type === "book" ||
+                            result.type === "paper" ||
+                            result.type === "section"
+                          ) {
+                            itemLocalStateManager.setItemAndParentsOpened(
+                              result.libraryId,
+                              result.id
+                            );
+                            console.log(
+                              "Opening from search: ",
+                              result.libraryId,
+                              result.id
+                            );
+                            setLibraryId(result.libraryId);
+                            setItemId(result.id);
+                            setItemMode("details");
+                            if (deviceType === "mobile") {
+                              setPanelOpened(false);
+                            }
+                            setPanelOpened(true);
                           }
-                          setPanelOpened(true);
-                        }
-                        setActivity("libraries");
-                      }}
-                      style={{
-                        paddingTop: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                        paddingBottom: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                      }}
-                      className="px-3 h-actionBarResultNodeHeight w-full flex items-center hover:bg-appLayoutInverseHover rounded-md "
-                    >
-                      {result.library_name || result.item_title}
-                    </motion.button>
-                  );
-                })}
+                          setActivity("libraries");
+                        }}
+                        style={{
+                          paddingTop: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                          paddingBottom: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                        }}
+                        className="px-3 h-actionBarResultNodeHeight w-full flex items-center hover:bg-appLayoutInverseHover rounded-md "
+                      >
+                        <span> {result.library_name || result.item_title}</span>
+                        <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
+                          {new Date(
+                            itemLocalStateManager.getLastOpened(result.id)
+                          ).toLocaleString()}
+                        </span>
+                      </motion.button>
+                    );
+                  })}
 
               {searchResults.length === 0 && (
                 <motion.div

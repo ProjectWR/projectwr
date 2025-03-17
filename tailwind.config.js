@@ -122,7 +122,7 @@ export default {
         actionBarSearchFooterHeight: "var(--actionBarSearchFooterHeight)",
         actionBarWindowButtonIcons: "var(--actionBarWindowButtonIcons)",
         optionsDropdownIconHeight: "var(--optionsDropdownIconHeight)",
-        libraryDetailsActionButtonIconSize: "var(--libraryDetailsActionButtonIconSize)"
+        libraryDetailsActionButtonIconSize: "var(--libraryDetailsActionButtonIconSize)",
 
       },
       fontSize: {
@@ -146,7 +146,11 @@ export default {
         actionBarSearchTextSize: "var(--actionBarSearchTextSize)",
         actionBarResultHeaderTextSize: "var(--actionBarResultHeaderTextSize)",
         actionBarResultTextSize: "var(--actionBarResultTextSize)",
-        libraryDetailsActionButtonFontSize: "var(--libraryDetailsActionButtonFontSize)"
+        libraryDetailsActionButtonFontSize: "var(--libraryDetailsActionButtonFontSize)",
+        actionBarResultDateFontSize: "var(--actionBarResultDateFontSize)",
+        recentlyOpenedDateFontSize: "var(--recentlyOpenedDateFontSize)",
+        recentlyOpenedNodeFontSize: "var(--recentlyOpenedNodeFontSize)",
+
       },
       fontFamily: {
         heading: [

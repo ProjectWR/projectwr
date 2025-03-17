@@ -13,6 +13,7 @@ import useTemplates from "../../hooks/useTemplates";
 import { TipTapEditorDefaultPreferences } from "../../../editor/TIpTapEditor/TipTapEditorDefaultPreferences";
 import templateManager from "../../lib/templates";
 import itemLocalStateManager from "../../lib/itemLocalState";
+import { YTree } from "yjs-orderedtree";
 
 /**
  *
@@ -79,7 +80,7 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
         id="PaperSettingsBody"
         className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
       >
-        <EditorStylePickerButton paperId={paperId} />
+        <EditorStylePickerButton ytree={ytree} paperId={paperId} />
 
         <div className="PaperActionButtons w-full h-fit flex flex-wrap items-center justify-start font-sans gap-4">
           <PaperActionButton
@@ -118,7 +119,12 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
 
 export default PaperSettingsPanel;
 
-const EditorStylePickerButton = ({ paperId }) => {
+/**
+ *
+ * @param {{ytree: YTree, paperId: string}} param0
+ * @returns
+ */
+const EditorStylePickerButton = ({ ytree, paperId }) => {
   const [pickingEditorStyle, setPickingEditorStyle] = useState(false);
   const [paperEditorTemplateId, setPaperEditorTemplateId] = useState(
     itemLocalStateManager.getPaperEditorTemplate(paperId)
@@ -150,7 +156,7 @@ const EditorStylePickerButton = ({ paperId }) => {
     if (!itemLocalStateManager.hasItemLocalState(paperId)) {
       itemLocalStateManager.createItemLocalState(paperId, {
         type: "paper",
-        props: {},
+        libraryId: ytree._ydoc.guid,
       });
     }
 

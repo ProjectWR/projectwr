@@ -21,6 +21,7 @@ import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { createDebouncer } from "lib0/eventloop";
 import { ContextMenu } from "radix-ui";
+import itemLocalStateManager from "../../../lib/itemLocalState";
 /**
  *
  * @param {{libraryId: string, className: string}} param0
@@ -290,6 +291,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     );
                     setLibraryId(libraryId);
                     setItemId("unselected");
+                    itemLocalStateManager.setItemOpened(libraryId, true);
                     setPanelOpened(true);
                   }}
                   onMouseEnter={() => {
@@ -353,9 +355,8 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             onClick={() => {
               setLibraryId(libraryId);
               setItemId("unselected");
-              if (deviceType === "mobile") {
-                setPanelOpened(false);
-              }
+            
+              itemLocalStateManager.setItemOpened(libraryId, true);
 
               setPanelOpened(true);
             }}

@@ -47,7 +47,9 @@ import templateManager from "../lib/templates";
 import fontManager from "../lib/font";
 import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
-import { setupSearchForLibrary } from "../lib/search";
+import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
+
+let wasLocalSetup = false;
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -120,6 +122,7 @@ const WritingApp = () => {
 
   useEffect(() => {
     const initializeWritingApp = async () => {
+      console.log("Initialize Writing App has been run!");
       setLoading(true);
       setLoadingStage("Loading App");
       try {
@@ -134,46 +137,55 @@ const WritingApp = () => {
 
         await fontManager.init();
 
-        const databases = await indexedDB.databases();
+        if (!wasLocalSetup) {
+          wasLocalSetup = true;
+          const databases = await indexedDB.databases();
 
-        const localLibraries = [];
+          const localLibraries = [];
 
-        dataManagerSubdocs.destroyAll();
-        persistenceManagerForSubdocs.closeAllConnections();
+          dataManagerSubdocs.destroyAll();
+          persistenceManagerForSubdocs.closeAllConnections();
 
-        const shutdownSearchCallbacks = new Set();
+          const searchCallback = (action, key, value) => {
+            console.log("In search callback: ", action, key);
+            if (action === "set") {
+              setupSearchForLibrary(key);
+            }
 
-        setLoadingStage("Initializing Local Storage");
+            if (action === "delete") {
+              destroySearchForLibrary(key);
+            }
+          };
 
-        for (const db of databases) {
-          const libraryId = db.name;
-          if (
-            [
-              "firebase-heartbeat-database",
-              "firebase-installations-database",
-              "firebaseLocalStorageDb",
-              "keyval-store",
-              "level-js-index"
-            ].find((value) => value === libraryId)
-          ) {
-            continue;
+          dataManagerSubdocs.addLibraryYDocMapCallback(searchCallback);
+
+          setLoadingStage("Initializing Local Storage");
+
+          for (const db of databases) {
+            const libraryId = db.name;
+            if (
+              [
+                "firebase-heartbeat-database",
+                "firebase-installations-database",
+                "firebaseLocalStorageDb",
+                "keyval-store",
+                "level-js-index",
+              ].find((value) => value === libraryId)
+            ) {
+              continue;
+            }
+            console.log("Database: ", libraryId);
+
+            localLibraries.push(libraryId);
+
+            await dataManagerSubdocs.initLibrary(libraryId);
+            const ydoc = dataManagerSubdocs.getLibrary(libraryId);
+
+            console.log(ydoc.guid, ydoc);
           }
-          console.log("Database: ", libraryId);
 
-          localLibraries.push(libraryId);
-
-          dataManagerSubdocs.initLibrary(libraryId);
-          const ydoc = dataManagerSubdocs.getLibrary(libraryId);
-
-          console.log("ydoc", ydoc);
-
-          console.log("Before persistence: ", ydoc.guid, ydoc);
-          await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
-          console.log(ydoc.guid, ydoc);
-          shutdownSearchCallbacks.add(setupSearchForLibrary(libraryId));
+          console.log("Local Libraries: ", localLibraries);
         }
-
-        console.log("Local Libraries: ", localLibraries);
 
         setLoadingStage("Fetching Cloud Storage");
 
@@ -192,7 +204,7 @@ const WritingApp = () => {
             let ydoc = dataManagerSubdocs.getLibrary(guid);
 
             if (!ydoc) {
-              dataManagerSubdocs.initLibrary(guid);
+              await dataManagerSubdocs.initLibrary(guid);
               ydoc = dataManagerSubdocs.getLibrary(guid);
 
               console.log("ydoc", ydoc);
@@ -213,8 +225,8 @@ const WritingApp = () => {
         setLoading(false);
 
         return () => {
-          shutdownSearchCallbacks.forEach((callback) => callback());
-        }
+          dataManagerSubdocs.removeLibraryYDocMapCallback(searchCallback);
+        };
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -231,10 +243,6 @@ const WritingApp = () => {
 
       setIsMaximized(x);
     });
-
-    return async () => {
-      unlisten();
-    };
   }, []);
 
   const [color, setColor] = useState("#a3a3a3");

@@ -11,6 +11,7 @@ class ItemLocalStateManager {
 
     this.storageKey = 'items'; // Key for localStorage
     this.callbacks = new Map(); // Use a Map to store callbacks for specific itemIds
+    this.callbacksForAll = new Set();
     instance = this;
   }
 
@@ -20,6 +21,10 @@ class ItemLocalStateManager {
       this.callbacks.set(itemId, new Set()); // Initialize a Set for the itemId if it doesn't exist
     }
     this.callbacks.get(itemId).add(callback); // Add the callback to the Set
+  }
+
+  onAll(callback) {
+    this.callbacksForAll.add(callback); // Initialize a Set for the itemId if it doesn't exist
   }
 
   // Remove a callback for a specific itemId
@@ -35,11 +40,16 @@ class ItemLocalStateManager {
     }
   }
 
+  offAll(callback) {
+    this.callbacksForAll.delete(callback); // Initialize a Set for the itemId if it doesn't exist
+  }
+
   // Trigger all callbacks for a specific itemId
   _trigger(itemId, ...args) {
     if (this.callbacks.has(itemId)) {
       this.callbacks.get(itemId).forEach((callback) => callback(...args));
     }
+    this.callbacksForAll.forEach((callback) => callback(...args));
   }
 
   // Get the entire items dictionary from localStorage
@@ -87,22 +97,20 @@ class ItemLocalStateManager {
   setItemOpened(itemId, isOpened) {
     const items = this._getItems();
     if (items[itemId]) {
-      const previousState = items[itemId].props.isOpened;
-      if (previousState !== isOpened) { // Only trigger if the state changes
-        items[itemId].props.isOpened = isOpened;
+      items[itemId].props.isOpened = isOpened;
 
-        // Update lastOpened timestamp if the item is being opened
-        if (isOpened) {
-          items[itemId].props.lastOpened = Date.now();
-        }
-
-        this._saveItems(items);
-        this._trigger(itemId, isOpened, items[itemId]); // Trigger callbacks for the specific itemId
+      // Update lastOpened timestamp if the item is being opened
+      if (isOpened) {
+        items[itemId].props.lastOpened = Date.now();
       }
+
+      this._saveItems(items);
+      this._trigger(itemId, isOpened, items[itemId]); // Trigger callbacks for the specific itemId
+
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
     }
-  }
+  } 
 
   // Get the lastOpened timestamp for a specific item
   getLastOpened(itemId) {
@@ -171,13 +179,15 @@ class ItemLocalStateManager {
   // Create or update the local state of an item
   createItemLocalState(itemId, props) {
     const items = this._getItems();
+    console.log("creating localItem State with: ", props);
     items[itemId] = {
       type: props.type || 'default',
       props: {
+        libraryId: props.libraryId || null,
         EditorTemplate: props.EditorTemplate || null,
         EditorType: props.EditorType || null,
         isOpened: props.isOpened || false,
-        lastOpened: props.lastOpened || null, // Initialize lastOpened
+        lastOpened: props.lastOpened || Date.now(), // Initialize lastOpened
       },
     };
     this._saveItems(items);
@@ -190,7 +200,7 @@ class ItemLocalStateManager {
       if (!itemLocalStateManager.hasItemLocalState(parentKey)) {
         itemLocalStateManager.createItemLocalState(parentKey, {
           type: libraryYTree.getNodeValueFromKey(parentKey).get("type"),
-          props: {},
+          props: {libraryId: libraryId},
         });
       }
       this.setItemOpened(parentKey, true);

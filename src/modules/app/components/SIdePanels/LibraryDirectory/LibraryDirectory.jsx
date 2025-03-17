@@ -11,6 +11,7 @@ import { appStore } from "../../../stores/appStore";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import { max, min } from "lib0/math";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
+import itemLocalStateManager from "../../../lib/itemLocalState";
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
@@ -269,6 +270,7 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
+              itemLocalStateManager.setItemOpened(bookId, true);
             }}
           >
             <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -291,6 +293,8 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
+
+              itemLocalStateManager.setItemOpened(sectionId, true);
             }}
           >
             <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -313,6 +317,8 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
+              itemLocalStateManager.setItemOpened(paperId, true);
+
             }}
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>

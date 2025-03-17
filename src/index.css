@@ -24,6 +24,12 @@
   }
 }
 
+.noiseFine {
+  /* ... */
+  background: url(/src/assets/noiseFine.svg);
+  filter: contrast(100%) brightness(100%);
+}
+
 .noise {
   /* ... */
   background: url(/src/assets/noise.svg);
@@ -85,6 +91,9 @@
     --actionBarResultHeaderTextSize: calc(var(--uiScale) * 1.1rem);
     --actionBarResultNodeHeight: calc(var(var(--uiScale) * 2.2rem));
     --actionBarWindowButtonIcons: calc(var(--uiScale) * 0.8rem);
+    --actionBarResultDateFontSize: calc(var(--uiScale) * 1rem);
+    --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.5rem);
+    --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
 
     --footerHeight: calc(var(--uiScale) * 1.3rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
