@@ -11,7 +11,6 @@ import { appStore } from "../../stores/appStore";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 import templateManager from "../../lib/templates";
 import { equalityDeep } from "lib0/function";
-import { templateStore } from "../../stores/templateStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TemplateContentEditor from "./TemplateContentEditor";
 
@@ -25,7 +24,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
 
   console.log("TemplateDetailsPanel rendering: ", templateId);
 
-  const setTemplateId = templateStore((state) => state.setTemplateId);
+  const setTemplateId = appStore((state) => state.setTemplateId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   if (templateManager.getTemplates()[templateId] === undefined) {

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
-import { libraryStore } from "../../stores/libraryStore";
 import { YTree } from "yjs-orderedtree";
 import { appStore } from "../../stores/appStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
@@ -20,7 +19,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
   const { deviceType } = useDeviceType();
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const setItemId = libraryStore((state) => state.setItemId);
+  const setItemId = appStore((state) => state.setItemId);
 
   const bookMapState = useYMap(ytree.getNodeValueFromKey(bookId));
 

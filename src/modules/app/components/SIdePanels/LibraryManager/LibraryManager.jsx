@@ -18,7 +18,6 @@ import { YMapEvent } from "yjs";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { useY } from "react-yjs";
 import { equalityDeep, equalityFlat } from "lib0/function";
-import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
 import { wait } from "lib0/promise";
 import { setupSearchForLibrary } from "../../../lib/search";
@@ -28,7 +27,7 @@ const LibraryManager = () => {
   console.log("Library Manager was rendered");
   const { deviceType } = useDeviceType();
 
-  const setLibraryId = libraryStore((state) => state.setLibraryId);
+  const setLibraryId = appStore((state) => state.setLibraryId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const prevLibraryIdsWithPropsRef = useRef(null);

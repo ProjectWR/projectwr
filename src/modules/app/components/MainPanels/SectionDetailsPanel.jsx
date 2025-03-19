@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
-import { libraryStore } from "../../stores/libraryStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import { equalityDeep } from "lib0/function";
@@ -18,7 +17,7 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
 
   console.log("library details panel rendering: ", sectionId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const setItemId = libraryStore((state) => state.setItemId);
+  const setItemId = appStore((state) => state.setItemId);
 
   const sectionMapState = useYMap(ytree.getNodeValueFromKey(sectionId));
 

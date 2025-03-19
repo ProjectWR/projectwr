@@ -4,7 +4,6 @@ import { YTree } from "yjs-orderedtree";
 import { useDrag, useDrop } from "react-dnd";
 import useYMap from "../../../hooks/useYMap";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
-import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
 import itemLocalStateManager from "../../../lib/itemLocalState";
@@ -24,8 +23,8 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
   const { deviceType } = useDeviceType();
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const setItemId = libraryStore((state) => state.setItemId);
-  const setItemMode = libraryStore((state) => state.setItemMode);
+  const setItemId = appStore((state) => state.setItemId);
+  const setItemMode = appStore((state) => state.setItemMode);
 
   const dndRef = useRef(null);
 

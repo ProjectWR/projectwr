@@ -5,7 +5,6 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { templateStore } from "../../../stores/templateStore";
 import { appStore } from "../../../stores/appStore";
 import templateManager from "../../../lib/templates";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
@@ -114,8 +113,8 @@ export default TemplateManager;
 
 const TemplateManagerNode = ({ templateId, template }) => {
   const { deviceType } = useDeviceType();
-  const setTemplateId = templateStore((state) => state.setTemplateId);
-  const setTemplateMode = templateStore((state) => state.setTemplateMode);
+  const setTemplateId = appStore((state) => state.setTemplateId);
+  const setTemplateMode = appStore((state) => state.setTemplateMode);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   return (

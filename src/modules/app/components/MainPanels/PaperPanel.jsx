@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
-import { libraryStore } from "../../stores/libraryStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 import { AnimatePresence, motion } from "motion/react";
@@ -22,7 +21,7 @@ const PaperPanel = ({ ytree, paperId }) => {
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const setItemId = libraryStore((state) => state.setItemId);
+  const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
 
   const templates = useTemplates();

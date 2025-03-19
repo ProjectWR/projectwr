@@ -10,11 +10,11 @@ const ActivityBar = ({}) => {
 
   const activity = appStore((state) => state.activity);
   const setActivity = appStore((state) => state.setActivity);
+  const setLibraryId = appStore((state) => state.setLibraryId);
 
   const showActivityBar = appStore((state) => state.showActivityBar);
 
-    const sideBarOpened = appStore((state) => state.sideBarOpened);
-
+  const sideBarOpened = appStore((state) => state.sideBarOpened);
 
   return (
     <AnimatePresence mode="wait">
@@ -61,6 +61,11 @@ const ActivityBar = ({}) => {
           <ActivityButton
             onClick={() => {
               setPanelOpened(true);
+
+              if (activity === "libraries") {
+                setLibraryId("unselected");
+              }
+
               setActivity("libraries");
             }}
             activity={activity}

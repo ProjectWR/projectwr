@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-import { libraryStore } from "../../../stores/libraryStore";
 import useYMap from "../../../hooks/useYMap";
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../../stores/appStore";
@@ -20,8 +19,8 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const libraryDirectoryBodyRef = useRef(null);
 
-  const setLibraryId = libraryStore((state) => state.setLibraryId);
-  const setItemId = libraryStore((state) => state.setItemId);
+  const setLibraryId = appStore((state) => state.setLibraryId);
+  const setItemId = appStore((state) => state.setItemId);
 
   const libraryPropsMapRef = useRef(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")

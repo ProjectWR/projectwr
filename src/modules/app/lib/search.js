@@ -93,5 +93,14 @@ export async function destroySearchForLibrary(libraryId) {
 }
 
 export function queryData(query) {
-  return miniSearch.search(query, { fuzzy: 0.2 });
+  return miniSearch.search(query, {
+    processTerm: (term) => {
+      return [
+        `${term}`,
+        `<paragraph>${term}`,
+        `${term}</paragraph>`,
+        `<paragraph>${term}</paragraph>`
+      ]
+    }
+  });
 }

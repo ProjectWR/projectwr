@@ -4,7 +4,6 @@ import { appStore } from "../../stores/appStore";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor"; // Assuming you have a TipTapEditor component
 import templateManager from "../../lib/templates";
 import { equalityDeep } from "lib0/function";
-import { templateStore } from "../../stores/templateStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 
 /**
@@ -17,7 +16,7 @@ const TemplateViewPanel = ({ templateId }) => {
   console.log("TemplateViewPanel rendering: ", templateId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
-  const setTemplateId = templateStore((state) => state.setTemplateId);
+  const setTemplateId = appStore((state) => state.setTemplateId);
 
   // Hide the activity bar when the panel is mounted
   useEffect(() => {

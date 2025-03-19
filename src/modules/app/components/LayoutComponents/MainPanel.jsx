@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { libraryStore } from "../../stores/libraryStore";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
@@ -18,9 +17,9 @@ import HomePanel from "../MainPanels/HomePanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
-  const libraryId = libraryStore((state) => state.libraryId);
-  const itemId = libraryStore((state) => state.itemId);
-  const itemMode = libraryStore((state) => state.itemMode);
+  const libraryId = appStore((state) => state.libraryId);
+  const itemId = appStore((state) => state.itemId);
+  const itemMode = appStore((state) => state.itemMode);
 
   const templateId = templateStore((state) => state.templateId);
   const templateMode = templateStore((state) => state.templateMode);

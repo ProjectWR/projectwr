@@ -20,15 +20,14 @@ import GrainyDiv from "../../../design-system/GrainyDiv";
 import GrainyButton from "../../../design-system/GrainyButton";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
-import { libraryStore } from "../../stores/libraryStore";
 import { appStore } from "../../stores/appStore";
 
 const HomePanel = () => {
   const { deviceType } = useDeviceType();
 
-  const setLibraryId = libraryStore((state) => state.setLibraryId);
-  const setItemId = libraryStore((state) => state.setItemId);
-  const setItemMode = libraryStore((state) => state.setItemMode);
+  const setLibraryId = appStore((state) => state.setLibraryId);
+  const setItemId = appStore((state) => state.setItemId);
+  const setItemMode = appStore((state) => state.setItemMode);
   const setActivity = appStore((state) => state.setActivity);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
@@ -130,7 +129,7 @@ const HomePanel = () => {
 
         <div
           id="HomeBody"
-          className="h-fit min-h-fit w-full flex flex-col items-center justify-start px-6 mt-6"
+          className="h-fit min-h-fit w-full flex flex-col items-center justify-start mt-6"
         >
           <AnimatePresence>
             {latestItems.length > 0 && (
@@ -138,11 +137,11 @@ const HomePanel = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "fit-content" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="w-full overflow-hidden rounded-lg border border-appLayoutInverseHover"
+                className="w-full overflow-hidden rounded-lg"
               >
                 <div className={`h-fit w-full`}>
                   <div className="w-full h-full flex flex-col items-center justify-start pt-6 pb-5 gap-1">
-                    <div className="h-fit w-full text-3xl pb-2 px-5 flex items-center justify-between">
+                    <div className="h-fit w-full text-3xl px-6 pb-2 flex items-center justify-between">
                       <span>Recently Opened</span>
                       <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
                     </div>
@@ -181,7 +180,7 @@ const HomePanel = () => {
                       }
 
                       return (
-                        <div key={itemId} className="w-full h-fit px-2">
+                        <div key={itemId} className="w-full h-fit px-3">
                           <button
                             onClick={() => {
                               if (type === "library") {
@@ -221,7 +220,7 @@ const HomePanel = () => {
                           >
                             <span className="h-fit flex items-center gap-2">
                               <span> {name}</span>
-                              <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize w-fit pt-px">
+                              <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize w-fit pt-1">
                                 {type}
                               </span>
                             </span>

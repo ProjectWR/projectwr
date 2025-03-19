@@ -1,17 +1,15 @@
 import { useRef } from "react";
 import { appStore } from "../../stores/appStore";
-import { libraryStore } from "../../stores/libraryStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import LibraryManager from "../SidePanels/LibraryManager/LibraryManager";
 import { AnimatePresence, motion } from "motion/react";
 import LibraryDirectory from "../SIdePanels/LibraryDirectory/LibraryDirectory";
-import { templateStore } from "../../stores/templateStore";
 import TemplateManager from "../SIdePanels/TemplateManager/TemplateManager";
 
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
-  const libraryId = libraryStore((state) => state.libraryId);
-  const templateId = templateStore((state) => state.templateId);
+  const libraryId = appStore((state) => state.libraryId);
+  const templateId = appStore((state) => state.templateId);
   const activity = appStore((state) => state.activity);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 

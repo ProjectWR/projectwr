@@ -13,11 +13,6 @@ export const appStore = create((set) => ({
     return set({ user: user });
   },
 
-  activity: "home",
-  setActivity: (activity) => {
-    return set({ activity: activity });
-  },
-
   panelOpened: false,
   setPanelOpened: (panelOpened) => {
     return set({ panelOpened: panelOpened });
@@ -36,5 +31,40 @@ export const appStore = create((set) => ({
   zoom: 1,
   setZoom: (zoom) => {
     return set({ zoom: zoom });
+  },
+
+  activity: "home",
+  setActivity: (activity) => {
+    return set({ activity: activity });
+  },
+
+  libraryId: 'unselected',
+  setLibraryId: (libraryId) => {
+    return set({ libraryId: libraryId });
+  },
+
+  itemId: 'unselected',
+  setItemId: (itemId) => {
+    return set({ itemId: itemId });
+  },
+
+  itemMode: 'details',
+  setItemMode: (itemMode) => {
+    return set({ itemMode: itemMode });
+  },
+
+  templateId: 'unselected',
+  setTemplateId: (templateId) => {
+    return set({ templateId: templateId });
+  },
+
+  templateMode: 'details',
+  setTemplateMode: (templateMode) => {
+    return set({ templateMode: templateMode });
+  },
+
+  time: "now",
+  setTime: (time) => {
+    return set({ time: time });
   }
 }));

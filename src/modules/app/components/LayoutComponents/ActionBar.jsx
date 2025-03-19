@@ -4,7 +4,6 @@ import { appStore } from "../../stores/appStore";
 import { motion, AnimatePresence } from "motion/react";
 import { queryData } from "../../lib/search";
 import { useEffect, useState } from "react";
-import { libraryStore } from "../../stores/libraryStore";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import { max } from "lib0/math";
 
@@ -152,9 +151,9 @@ const WindowButton = ({
 const SearchBar = () => {
   const { deviceType } = useDeviceType();
 
-  const setLibraryId = libraryStore((state) => state.setLibraryId);
-  const setItemId = libraryStore((state) => state.setItemId);
-  const setItemMode = libraryStore((state) => state.setItemMode);
+  const setLibraryId = appStore((state) => state.setLibraryId);
+  const setItemId = appStore((state) => state.setItemId);
+  const setItemMode = appStore((state) => state.setItemMode);
   const setActivity = appStore((state) => state.setActivity);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 

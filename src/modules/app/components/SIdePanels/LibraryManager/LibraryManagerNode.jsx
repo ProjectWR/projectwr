@@ -10,7 +10,6 @@ import useYMap from "../../../hooks/useYMap";
 import dataManagerSubdocs, {
   getArrayFromYDocMap,
 } from "../../../lib/dataSubDoc";
-import { libraryStore } from "../../../stores/libraryStore";
 import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
 import { max, min } from "lib0/math";
@@ -34,8 +33,8 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const setLibraryId = libraryStore((state) => state.setLibraryId);
-  const setItemId = libraryStore((state) => state.setItemId);
+  const setLibraryId = appStore((state) => state.setLibraryId);
+  const setItemId = appStore((state) => state.setItemId);
   const setActivity = appStore((state) => state.setActivity);
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
