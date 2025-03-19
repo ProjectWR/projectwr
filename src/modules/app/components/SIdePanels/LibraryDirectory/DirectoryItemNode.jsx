@@ -482,7 +482,11 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 }}
               >
                 <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Open</span>
+                <span>
+                  Edit{" "}
+                  {itemMapRef.current.get("type") === "section" && "section"}{" "}
+                  {itemMapRef.current.get("type") === "book" && "book"} details
+                </span>
               </ContextMenu.Item>{" "}
               <ContextMenu.Item
                 className="ContextMenuItem"
