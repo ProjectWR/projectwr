@@ -10,6 +10,7 @@ import templateManager from "../../../lib/templates";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "../../../../editor/TIpTapEditor/TipTapEditorDefaultPreferences";
 import { equalityDeep } from "lib0/function";
+import useStoreHistory from "../../../hooks/useStoreHistory";
 
 const TemplateManager = () => {
   console.log("Template Manager was rendered");
@@ -113,19 +114,39 @@ export default TemplateManager;
 
 const TemplateManagerNode = ({ templateId, template }) => {
   const { deviceType } = useDeviceType();
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
   const setTemplateId = appStore((state) => state.setTemplateId);
+  const appStoreTemplateId = appStore((state) => state.appStoreTemplateId);
   const setTemplateMode = appStore((state) => state.setTemplateMode);
+  const templateMode = appStore((state) => state.templateMode);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+  const panelOpened = appStore((state) => state.panelOpened);
 
   return (
     <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg">
       <button
         className={`flex-grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0 rounded-l-lg`}
         onClick={() => {
-          setTemplateId(templateId);
-          setTemplateMode("preview");
-          if (deviceType === "mobile") {
-            setPanelOpened(false);
+          if (
+            !(appStoreTemplateId !== templateId && templateMode === "preview")
+          ) {
+            setTemplateId(templateId);
+            setTemplateMode("preview");
+            if (deviceType === "mobile") {
+              setPanelOpened(false);
+            }
+            setPanelOpened(true);
+            saveStateInHistory();
+            clearFuture();
           }
         }}
       >
@@ -139,10 +160,17 @@ const TemplateManagerNode = ({ templateId, template }) => {
       <button
         className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth transition-colors duration-0 px-2 m-2 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
         onClick={() => {
-          setTemplateId(templateId);
-          setTemplateMode("details");
-          if (deviceType === "mobile") {
-            setPanelOpened(false);
+          if (
+            !(appStoreTemplateId !== templateId && templateMode === "details")
+          ) {
+            setTemplateId(templateId);
+            setTemplateMode("details");
+            if (deviceType === "mobile") {
+              setPanelOpened(false);
+            }
+            setPanelOpened(true);
+            saveStateInHistory();
+            clearFuture();
           }
         }}
       >

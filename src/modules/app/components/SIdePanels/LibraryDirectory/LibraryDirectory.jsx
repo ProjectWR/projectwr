@@ -11,10 +11,21 @@ import useOuterClick from "../../../../design-system/useOuterClick";
 import { max, min } from "lib0/math";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import itemLocalStateManager from "../../../lib/itemLocalState";
+import useStoreHistory from "../../../hooks/useStoreHistory";
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
   const { deviceType } = useDeviceType();
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const libraryDirectoryBodyRef = useRef(null);
@@ -167,6 +178,8 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
+                  saveStateInHistory();
+                  clearFuture();
                 },
               },
               {
@@ -187,6 +200,8 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
+                  saveStateInHistory();
+                  clearFuture();
                 },
               },
               {
@@ -207,6 +222,8 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
+                  saveStateInHistory();
+                  clearFuture();
                 },
               },
             ]}

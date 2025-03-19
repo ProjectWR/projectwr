@@ -21,11 +21,21 @@ import { equalityDeep, equalityFlat } from "lib0/function";
 import { appStore } from "../../../stores/appStore";
 import { wait } from "lib0/promise";
 import { setupSearchForLibrary } from "../../../lib/search";
+import useStoreHistory from "../../../hooks/useStoreHistory";
 
 // TODO - Replace all these UseEffects with a singular useSyncExternalStore hook
 const LibraryManager = () => {
   console.log("Library Manager was rendered");
   const { deviceType } = useDeviceType();
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
 
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
@@ -117,6 +127,8 @@ const LibraryManager = () => {
             }
 
             setPanelOpened(true);
+            saveStateInHistory();
+                  clearFuture();
           }}
         >
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
