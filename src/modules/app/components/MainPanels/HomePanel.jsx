@@ -194,12 +194,18 @@ const HomePanel = () => {
                           <button
                             onClick={() => {
                               if (type === "library") {
+                                itemLocalStateManager.setItemOpened(
+                                  itemId,
+                                  true
+                                );
                                 setLibraryId(itemId);
                                 setItemId("unselected");
                                 if (deviceType === "mobile") {
                                   setPanelOpened(false);
                                 }
                                 setPanelOpened(true);
+                                saveStateInHistory();
+                                clearFuture();
                               }
 
                               if (
@@ -223,7 +229,10 @@ const HomePanel = () => {
                                   setPanelOpened(false);
                                 }
                                 setPanelOpened(true);
+                                saveStateInHistory();
+                                clearFuture();
                               }
+
                               setActivity("libraries");
                             }}
                             className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md hover:bg-appLayoutInverseHover font-sans text-recentlyOpenedNodeFontSize"

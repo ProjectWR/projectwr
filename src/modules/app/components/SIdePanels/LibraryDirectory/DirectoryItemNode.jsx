@@ -12,6 +12,7 @@ import { min, max } from "lib0/math";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { ContextMenu } from "radix-ui";
+import useStoreHistory from "../../../hooks/useStoreHistory";
 
 /**
  *
@@ -21,10 +22,23 @@ import { ContextMenu } from "radix-ui";
 const DirectoryItemNode = ({ ytree, itemId }) => {
   console.log("Directory item node rendered: ", itemId);
   const { deviceType } = useDeviceType();
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+  const panelOpened = appStore((state) => state.panelOpened);
+
   const setItemId = appStore((state) => state.setItemId);
+  const appStoreItemId = appStore((state) => state.appStoreItemId);
+
   const setItemMode = appStore((state) => state.setItemMode);
+  const itemMode = appStore((state) => state.itemMode);
 
   const dndRef = useRef(null);
 
@@ -94,7 +108,6 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
     setIsOpened(true);
     itemLocalStateManager.setItemOpened(itemId, true);
     itemLocalStateManager.setItemOpened(newId, true);
-
   }, [ytree, itemId]);
 
   const onCreatePaperClick = useCallback(() => {
@@ -102,7 +115,6 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
     setIsOpened(true);
     itemLocalStateManager.setItemOpened(itemId, true);
     itemLocalStateManager.setItemOpened(newId, true);
-
   }, [ytree, itemId]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -301,13 +313,24 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                     className="flex-grow min-w-0 flex items-center justify-start h-full"
                     onClick={() => {
                       console.log("edit paper button");
-                      setItemId(itemId);
-                      setItemMode("details");
-                      if (deviceType === "mobile") {
-                        setPanelOpened(false);
-                      }
 
-                      setPanelOpened(true);
+                      if (
+                        !(
+                          appStoreItemId === itemId &&
+                          itemMode === "details" &&
+                          panelOpened
+                        )
+                      ) {
+                        setItemId(itemId);
+                        setItemMode("details");
+                        if (deviceType === "mobile") {
+                          setPanelOpened(false);
+                        }
+
+                        setPanelOpened(true);
+                        saveStateInHistory();
+                        clearFuture();
+                      }
                     }}
                   >
                     <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
@@ -439,13 +462,23 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 className="ContextMenuItem"
                 onClick={() => {
                   console.log("edit section details button");
-                  setItemId(itemId);
-                  setItemMode("details");
-                  if (deviceType === "mobile") {
-                    setPanelOpened(false);
-                  }
+                  if (
+                    !(
+                      appStoreItemId === itemId &&
+                      itemMode === "details" &&
+                      panelOpened
+                    )
+                  ) {
+                    setItemId(itemId);
+                    setItemMode("details");
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
 
-                  setPanelOpened(true);
+                    setPanelOpened(true);
+                    saveStateInHistory();
+                    clearFuture();
+                  }
                 }}
               >
                 <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -497,13 +530,49 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                 className="ContextMenuItem"
                 onClick={() => {
                   console.log("edit paper editor button");
-                  setItemId(itemId);
-                  setItemMode("settings");
-                  if (deviceType === "mobile") {
-                    setPanelOpened(false);
-                  }
+                  if (
+                    !(
+                      appStoreItemId === itemId &&
+                      itemMode === "details" &&
+                      panelOpened
+                    )
+                  ) {
+                    setItemId(itemId);
+                    setItemMode("details");
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
 
-                  setPanelOpened(true);
+                    setPanelOpened(true);
+                    saveStateInHistory();
+                    clearFuture();
+                  }
+                }}
+              >
+                <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span>Open</span>
+              </ContextMenu.Item>{" "}
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  console.log("edit paper editor button");
+                  if (
+                    !(
+                      appStoreItemId === itemId &&
+                      itemMode === "settings" &&
+                      panelOpened
+                    )
+                  ) {
+                    setItemId(itemId);
+                    setItemMode("settings");
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
+                    saveStateInHistory();
+                    clearFuture();
+                  }
                 }}
               >
                 <span className="icon-[hugeicons--customize] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>

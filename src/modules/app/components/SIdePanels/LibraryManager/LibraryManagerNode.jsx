@@ -21,6 +21,7 @@ import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { createDebouncer } from "lib0/eventloop";
 import { ContextMenu } from "radix-ui";
 import itemLocalStateManager from "../../../lib/itemLocalState";
+import useStoreHistory from "../../../hooks/useStoreHistory";
 /**
  *
  * @param {{libraryId: string, className: string}} param0
@@ -31,13 +32,27 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
   const { deviceType } = useDeviceType();
 
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
   const [loading, setLoading] = useState(false);
 
   const setLibraryId = appStore((state) => state.setLibraryId);
+  const appStoreLibraryId = appStore((state) => state.libraryId);
+
   const setItemId = appStore((state) => state.setItemId);
+  const appStoreItemId = appStore((state) => state.itemId);
+
   const setActivity = appStore((state) => state.setActivity);
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+  const appStorePanelOpened = appStore((state) => state.panelOpened);
 
   const libraryPropsMapRef = useRef(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
@@ -284,14 +299,22 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     "flex-grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
                   }
                   onClick={() => {
-                    console.log(
-                      "Library Entry when clicked: ",
-                      libraryPropsMapState
-                    );
-                    setLibraryId(libraryId);
-                    setItemId("unselected");
-                    itemLocalStateManager.setItemOpened(libraryId, true);
-                    setPanelOpened(true);
+                    if (
+                      !(
+                        appStoreLibraryId === libraryId &&
+                        appStoreItemId === "unselected" &&
+                        appStorePanelOpened
+                      )
+                    ) {
+                      setLibraryId(libraryId);
+                      setItemId("unselected");
+
+                      itemLocalStateManager.setItemOpened(libraryId, true);
+
+                      setPanelOpened(true);
+                      saveStateInHistory();
+                      clearFuture();
+                    }
                   }}
                   onMouseEnter={() => {
                     setIsDoorOpen(true);
@@ -352,15 +375,25 @@ const LibraryManagerNode = ({ libraryId, className }) => {
           <ContextMenu.Item
             className="ContextMenuItem"
             onClick={() => {
-              setLibraryId(libraryId);
-              setItemId("unselected");
-            
-              itemLocalStateManager.setItemOpened(libraryId, true);
+              if (
+                !(
+                  appStoreLibraryId === libraryId &&
+                  appStoreItemId === "unselected" &&
+                  appStorePanelOpened
+                )
+              ) {
+                setLibraryId(libraryId);
+                setItemId("unselected");
 
-              setPanelOpened(true);
+                itemLocalStateManager.setItemOpened(libraryId, true);
+
+                setPanelOpened(true);
+                saveStateInHistory();
+                clearFuture();
+              }
             }}
-          > 
-          {/* [bitcoin-icons--edit-outline] */}
+          >
+            {/* [bitcoin-icons--edit-outline] */}
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
             <span>Open</span>
           </ContextMenu.Item>

@@ -49,12 +49,32 @@ const ActionBar = () => {
               animate={{ opacity: canGoBack ? 1 : 0.6 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              key="sideBarOpened"
+              key="historyGoBack"
               className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute"
             ></motion.span>
           </div>
         </ActionButton>
-        
+
+        <ActionButton
+          onClick={() => {
+            if (canGoForward) {
+              goForward();
+            }
+          }}
+          disabled={!canGoForward}
+        >
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: canGoForward ? 1 : 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="historyGoForward"
+              className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute"
+            ></motion.span>
+          </div>
+        </ActionButton>
+
         <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
           <div className="h-full w-actionBarButtonIconSize relative">
             <AnimatePresence mode="sync">
@@ -154,6 +174,7 @@ const ActionButton = ({ onClick, className, children, disabled = false }) => {
           !disabled && "hover:bg-appLayoutInverseHover"
         } rounded-md flex items-center justify-center ${className}`}
         onClick={onClick}
+        disabled={disabled}
       >
         {children}
       </button>

@@ -40,7 +40,7 @@ const useStoreHistory = () => {
       itemMode,
       templateId,
       templateMode,
-      panelOpened
+      panelOpened,
     });
   };
 
@@ -48,7 +48,11 @@ const useStoreHistory = () => {
   const [canGoForward, setCanGoForward] = useState(false);
 
   useEffect(() => {
-    console.log("State History past and future length check: ", past.length, future.length);
+    console.log(
+      "State History past and future length check: ",
+      past.length,
+      future.length
+    );
     if (past.length > 0) setCanGoBack(true);
     else setCanGoBack(false);
     if (future.length > 0) setCanGoForward(true);
@@ -58,7 +62,11 @@ const useStoreHistory = () => {
   const goBack = () => {
     if (!canGoBack) return;
 
+    saveStateInHistory();
+    future.push(past.pop());
+
     const state = past.pop();
+
     setActivity(state.activity);
     setLibraryId(state.libraryId);
     setItemId(state.itemId);
@@ -70,6 +78,18 @@ const useStoreHistory = () => {
 
   const goForward = () => {
     if (!canGoForward) return;
+
+    future.push({
+      activity,
+      libraryId,
+      itemId,
+      itemMode,
+      templateId,
+      templateMode,
+      panelOpened,
+    });
+
+    past.push(future.pop());
 
     const state = future.pop();
     setActivity(state.activity);

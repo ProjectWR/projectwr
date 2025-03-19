@@ -32,9 +32,6 @@ const LibraryDirectory = ({ libraryId }) => {
     libraryPropsMapRef.current
   );
 
-  const textContainerRef = useRef(null);
-  const textRef = useRef(null);
-
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
   /** @type {{current: YTree}} */
@@ -89,11 +86,10 @@ const LibraryDirectory = ({ libraryId }) => {
       {deviceType === "desktop" && (
         <div
           id="LibraryDirectoryHeader"
-          className={`flex flex-col w-full items-center justify-center h-fit min-h-libraryDirectoryHeaderHeight border-appLayoutBorder  z-[1]`}
-          style={{ maxHeight: `calc(var(--libraryDirectoryHeaderHeight) * 2)` }}
+          className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder`}
         >
           <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
-            <button
+            {/* <button
               className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
                           order-1
                         `}
@@ -102,8 +98,18 @@ const LibraryDirectory = ({ libraryId }) => {
               }}
             >
               <span className="icon-[material-symbols-light--keyboard-arrow-left] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-            <div
+            </button> */}
+
+            <h1
+              className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
+                deviceType === "mobile" ? "ml-3" : "ml-6"
+              }`}
+            >
+              <p className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis">
+                {libraryPropsMapState.library_name}
+              </p>
+            </h1>
+            {/* <div
               ref={textContainerRef}
               className="flex-grow text-libraryManagerHeaderText min-w-0 max-h-full flex justify-start items-center transition-colors duration-0 pt-px order-2 overflow-ellipsis"
             >
@@ -113,7 +119,7 @@ const LibraryDirectory = ({ libraryId }) => {
               >
                 {libraryPropsMapState.library_name}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
@@ -217,17 +223,7 @@ const LibraryDirectory = ({ libraryId }) => {
             <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
           </button>
 
-          <div
-            ref={textContainerRef}
-            className="flex-grow text-libraryManagerHeaderText min-w-0 flex justify-start items-center transition-colors duration-0 pb-px order-2"
-          >
-            <p
-              ref={textRef}
-              className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
-            >
-              {libraryPropsMapState.library_name}
-            </p>
-          </div>
+         
         </div>
       )}
 
@@ -317,7 +313,6 @@ const LibraryDirectory = ({ libraryId }) => {
 
               setPanelOpened(true);
               itemLocalStateManager.setItemOpened(paperId, true);
-
             }}
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
