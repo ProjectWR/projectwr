@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { appStore } from "../stores/appStore";
 
 const past = [];
@@ -22,6 +22,7 @@ const useStoreHistory = () => {
   const itemMode = appStore((state) => state.itemMode);
   const templateId = appStore((state) => state.templateId);
   const templateMode = appStore((state) => state.templateMode);
+  const panelOpened = appStore((state) => state.panelOpened);
 
   const setActivity = appStore((state) => state.setActivity);
   const setLibraryId = appStore((state) => state.setLibraryId);
@@ -29,8 +30,9 @@ const useStoreHistory = () => {
   const setItemMode = appStore((state) => state.setItemMode);
   const setTemplateId = appStore((state) => state.setTemplateId);
   const setTemplateMode = appStore((state) => state.setTemplateMode);
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-  useEffect(() => {
+  const saveStateInHistory = () => {
     past.push({
       activity,
       libraryId,
@@ -38,18 +40,60 @@ const useStoreHistory = () => {
       itemMode,
       templateId,
       templateMode,
-      past: true,
+      panelOpened
     });
+  };
+
+  const [canGoBack, setCanGoBack] = useState(false);
+  const [canGoForward, setCanGoForward] = useState(false);
+
+  useEffect(() => {
+    console.log("State History past and future length check: ", past.length, future.length);
+    if (past.length > 0) setCanGoBack(true);
+    else setCanGoBack(false);
+    if (future.length > 0) setCanGoForward(true);
+    else setCanGoForward(false);
   }, [activity, libraryId, itemId, itemMode, templateId, templateMode]);
 
   const goBack = () => {
-    
-  }
+    if (!canGoBack) return;
+
+    const state = past.pop();
+    setActivity(state.activity);
+    setLibraryId(state.libraryId);
+    setItemId(state.itemId);
+    setItemMode(state.itemMode);
+    setTemplateId(state.templateId);
+    setTemplateMode(state.templateMode);
+    setPanelOpened(state.panelOpened);
+  };
 
   const goForward = () => {
+    if (!canGoForward) return;
 
-  }
+    const state = future.pop();
+    setActivity(state.activity);
+    setLibraryId(state.libraryId);
+    setItemId(state.itemId);
+    setItemMode(state.itemMode);
+    setTemplateId(state.templateId);
+    setTemplateMode(state.templateMode);
+    setPanelOpened(state.panelOpened);
+  };
 
+  const clearFuture = () => {
+    future.length = 0;
+    setCanGoForward(false);
+  };
+
+  return {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  };
 };
 
 export default useStoreHistory;

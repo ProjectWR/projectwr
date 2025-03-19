@@ -21,9 +21,19 @@ import GrainyButton from "../../../design-system/GrainyButton";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
+import useStoreHistory from "../../hooks/useStoreHistory";
 
 const HomePanel = () => {
   const { deviceType } = useDeviceType();
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
 
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);

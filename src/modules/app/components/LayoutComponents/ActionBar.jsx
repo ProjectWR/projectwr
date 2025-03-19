@@ -6,10 +6,20 @@ import { queryData } from "../../lib/search";
 import { useEffect, useState } from "react";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import { max } from "lib0/math";
+import useStoreHistory from "../../hooks/useStoreHistory";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
   const appWindow = getCurrentWindow();
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
 
   const sideBarOpened = appStore((state) => state.sideBarOpened);
   const setSideBarOpened = appStore((state) => state.setSideBarOpened);
@@ -25,6 +35,26 @@ const ActionBar = () => {
         id="actionBar"
         className="w-full h-full flex justify-start items-center relative"
       >
+        <ActionButton
+          onClick={() => {
+            if (canGoBack) {
+              goBack();
+            }
+          }}
+          disabled={!canGoBack}
+        >
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: canGoBack ? 1 : 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="sideBarOpened"
+              className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute"
+            ></motion.span>
+          </div>
+        </ActionButton>
+        
         <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
           <div className="h-full w-actionBarButtonIconSize relative">
             <AnimatePresence mode="sync">
@@ -51,6 +81,7 @@ const ActionBar = () => {
             </AnimatePresence>
           </div>
         </ActionButton>
+
         {/* 
         <div
           className={`logo h-full w-actionBarLogoSize flex items-center justify-center font-serif pointer-events-none select-none`}
@@ -115,11 +146,13 @@ const ActionBar = () => {
 
 export default ActionBar;
 
-const ActionButton = ({ onClick, className, children }) => {
+const ActionButton = ({ onClick, className, children, disabled = false }) => {
   return (
     <div className="h-full py-1 w-fit ml-1">
       <button
-        className={`h-full px-1 w-fit hover:bg-appLayoutInverseHover rounded-md flex items-center justify-center ${className}`}
+        className={`h-full px-1 w-fit ${
+          !disabled && "hover:bg-appLayoutInverseHover"
+        } rounded-md flex items-center justify-center ${className}`}
         onClick={onClick}
       >
         {children}

@@ -1,6 +1,7 @@
 import { appStore } from "../../stores/appStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
+import useStoreHistory from "../../hooks/useStoreHistory";
 
 const ActivityBar = ({}) => {
   const { deviceType } = useDeviceType();
@@ -8,9 +9,19 @@ const ActivityBar = ({}) => {
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
   const activity = appStore((state) => state.activity);
   const setActivity = appStore((state) => state.setActivity);
   const setLibraryId = appStore((state) => state.setLibraryId);
+  const libraryId = appStore((state) => state.libraryId);
 
   const showActivityBar = appStore((state) => state.showActivityBar);
 
@@ -46,8 +57,12 @@ const ActivityBar = ({}) => {
           {deviceType === "desktop" && (
             <ActivityButton
               onClick={() => {
-                setActivity("home");
-                setPanelOpened(false);
+                if (!(activity === "home" && !panelOpened)) {
+                  setActivity("home");
+                  setPanelOpened(false);
+                  saveStateInHistory();
+                  clearFuture();
+                }
               }}
               activity={activity}
               selectedActivity={"home"}
@@ -60,13 +75,18 @@ const ActivityBar = ({}) => {
           )}
           <ActivityButton
             onClick={() => {
-              setPanelOpened(true);
-
-              if (activity === "libraries") {
-                setLibraryId("unselected");
+              if (!(activity === "libraries" && panelOpened)) {
+                setPanelOpened(true);
+                setActivity("libraries");
+                saveStateInHistory();
+                clearFuture();
               }
 
-              setActivity("libraries");
+              if (activity === "libraries" && libraryId !== "unselected") {
+                setLibraryId("unselected");
+                saveStateInHistory();
+                clearFuture();
+              }
             }}
             activity={activity}
             selectedActivity={"libraries"}
@@ -94,8 +114,12 @@ const ActivityBar = ({}) => {
           )}
           <ActivityButton
             onClick={() => {
-              setActivity("templates");
-              setPanelOpened(true);
+              if (!(activity === "templates" && panelOpened)) {
+                setActivity("templates");
+                setPanelOpened(true);
+                saveStateInHistory();
+                clearFuture();
+              }
             }}
             activity={activity}
             selectedActivity={"templates"}
@@ -107,8 +131,12 @@ const ActivityBar = ({}) => {
           />
           <ActivityButton
             onClick={() => {
-              setActivity("settings");
-              setPanelOpened(false);
+              if (!(activity === "settings" && !panelOpened)) {
+                setActivity("settings");
+                setPanelOpened(false);
+                saveStateInHistory();
+                clearFuture();
+              }
             }}
             activity={activity}
             selectedActivity={"settings"}

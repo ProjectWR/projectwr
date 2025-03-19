@@ -63,8 +63,4 @@ export const appStore = create((set) => ({
     return set({ templateMode: templateMode });
   },
 
-  time: "now",
-  setTime: (time) => {
-    return set({ time: time });
-  }
 }));

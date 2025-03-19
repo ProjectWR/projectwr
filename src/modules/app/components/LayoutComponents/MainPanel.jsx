@@ -10,7 +10,6 @@ import LibraryDetailsPanel from "../MainPanels/LibraryDetailsPanel";
 import PaperPanel from "../MainPanels/PaperPanel";
 import SettingsPanel from "../MainPanels/SettingsPanel";
 import PaperSettingsPanel from "../MainPanels/PaperSettingsPanel";
-import { templateStore } from "../../stores/templateStore";
 import TemplateViewPanel from "../MainPanels/TemplateViewPanel";
 import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
 import HomePanel from "../MainPanels/HomePanel";
@@ -21,8 +20,8 @@ const MainPanel = ({}) => {
   const itemId = appStore((state) => state.itemId);
   const itemMode = appStore((state) => state.itemMode);
 
-  const templateId = templateStore((state) => state.templateId);
-  const templateMode = templateStore((state) => state.templateMode);
+  const templateId = appStore((state) => state.templateId);
+  const templateMode = appStore((state) => state.templateMode);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
 
