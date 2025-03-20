@@ -118,7 +118,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 animate={{
                   textShadow:
                     focusedItemId === null
-                      ? `0 0 5px hsl(var(--appLayoutText))`
+                      ? `0 0 4px hsl(var(--appLayoutText))`
                       : "none",
                 }}
                 className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis"
