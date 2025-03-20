@@ -191,7 +191,11 @@ const HomePanel = () => {
 
                       return (
                         <div key={itemId} className="w-full h-fit px-3">
-                          <button
+                          <RecentlyOpenedItemButton
+                            name={name}
+                            itemId={itemId}
+                            props={props}
+                            type={type}
                             onClick={() => {
                               if (type === "library") {
                                 itemLocalStateManager.setItemOpened(
@@ -235,18 +239,7 @@ const HomePanel = () => {
 
                               setActivity("libraries");
                             }}
-                            className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md hover:bg-appLayoutInverseHover font-sans text-recentlyOpenedNodeFontSize"
-                          >
-                            <span className="h-fit flex items-center gap-2">
-                              <span> {name}</span>
-                              <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize w-fit pt-1">
-                                {type}
-                              </span>
-                            </span>
-                            <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize">
-                              {new Date(props.lastOpened).toLocaleString()}
-                            </span>
-                          </button>
+                          />
                         </div>
                       );
                     })}
@@ -262,3 +255,32 @@ const HomePanel = () => {
 };
 
 export default HomePanel;
+
+const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={onClick}
+      className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md font-sans text-recentlyOpenedNodeFontSize"
+    >
+      <span className="h-fit flex items-center gap-2">
+        <motion.span
+          animate={{
+            textShadow: hover ? `0 0 10px hsl(var(--appLayoutText))` : "none",
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          {name}
+        </motion.span>
+        <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize w-fit pt-1">
+          {type}
+        </span>
+      </span>
+      <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize">
+        {new Date(props.lastOpened).toLocaleString()}
+      </span>
+    </button>
+  );
+};
