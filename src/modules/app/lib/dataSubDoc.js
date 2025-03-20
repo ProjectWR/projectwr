@@ -165,8 +165,8 @@ class DataManagerSubdocs {
     const bookMap = new Y.Map();
     bookMap.set("type", "book");
     bookMap.set("item_id", uuid);
-    bookMap.set("item_title", "Book Title");
-    bookMap.set("book_description", "Book Description");
+    bookMap.set("item_title", "Untitled Book");
+    bookMap.set("book_description", "");
     ytree.createNode("root", uuid, bookMap);
 
     itemLocalStateManager.createItemLocalState(uuid, {
@@ -187,8 +187,8 @@ class DataManagerSubdocs {
     const sectionMap = new Y.Map();
     sectionMap.set("type", "section");
     sectionMap.set("item_id", uuid);
-    sectionMap.set("item_title", "Section Title");
-    sectionMap.set("section_description", "Section Description")
+    sectionMap.set("item_title", "Untitled Section");
+    sectionMap.set("section_description", "")
     ytree.createNode(bookId, uuid, sectionMap);
 
     itemLocalStateManager.createItemLocalState(uuid, {
@@ -208,7 +208,7 @@ class DataManagerSubdocs {
     const paperMap = new Y.Map();
     paperMap.set("type", "paper");
     paperMap.set("item_id", uuid);
-    paperMap.set("item_title", "Paper Title");
+    paperMap.set("item_title", "Untitled Paper");
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
 

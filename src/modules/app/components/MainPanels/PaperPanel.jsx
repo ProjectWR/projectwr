@@ -27,9 +27,7 @@ const PaperPanel = ({ ytree, paperId }) => {
   const templates = useTemplates();
 
   const preferences = useMemo(() => {
-    if (
-      templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]
-    ) {
+    if (templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]) {
       return templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]
         .template_content.desktopDefaultPreferences;
     } else {
@@ -82,7 +80,7 @@ const PaperPanel = ({ ytree, paperId }) => {
     });
   };
 
-  const handleSave = (e) => {
+  const handleSave = () => {
     const paperMap = ytree.getNodeValueFromKey(paperId);
 
     paperMap.set("item_title", paperProperties.item_title);
@@ -103,7 +101,13 @@ const PaperPanel = ({ ytree, paperId }) => {
       }
     >
       <AnimatePresence>
-        <motion.div
+        <motion.form
+          noValidate
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
           animate={{
             height: headerOpened ? "var(--detailsPanelHeaderHeight)" : "0",
             maxHeight: headerOpened ? "var(--detailsPanelHeaderHeight)" : "0",
@@ -138,6 +142,7 @@ const PaperPanel = ({ ytree, paperId }) => {
           <AnimatePresence>
             {unsavedChangesExist && (
               <motion.button
+                type="submit"
                 initial={{
                   width: 0,
                   opacity: 0,
@@ -163,7 +168,6 @@ const PaperPanel = ({ ytree, paperId }) => {
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                     flex items-center justify-center order-3
                     `}
-                onClick={handleSave}
               >
                 <motion.span
                   animate={{
@@ -174,7 +178,7 @@ const PaperPanel = ({ ytree, paperId }) => {
               </motion.button>
             )}
           </AnimatePresence>
-        </motion.div>
+        </motion.form>
       </AnimatePresence>
 
       <div className="w-full h-px bg-appLayoutBorder"></div>

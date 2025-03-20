@@ -19,7 +19,12 @@ import useStoreHistory from "../../../hooks/useStoreHistory";
  * @param {{ytree: YTree, itemId: string}} param0
  * @returns
  */
-const DirectoryItemNode = ({ ytree, itemId }) => {
+const DirectoryItemNode = ({
+  ytree,
+  itemId,
+  focusedItemId,
+  setFocusedItemId,
+}) => {
   console.log("Directory item node rendered: ", itemId);
   const { deviceType } = useDeviceType();
   const {
@@ -313,7 +318,6 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                     className="flex-grow min-w-0 flex items-center justify-start h-full"
                     onClick={() => {
                       console.log("edit paper button");
-
                       if (
                         !(
                           appStoreItemId === itemId &&
@@ -358,9 +362,17 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
 
               {(itemMapRef.current.get("type") === "section" ||
                 itemMapRef.current.get("type") === "book") && (
-                <button
+                <motion.button
+
+                  animate={{
+                    textShadow:
+                      focusedItemId === itemId
+                        ? `0 0 10px hsl(var(--appLayoutText))`
+                        : "none",
+                  }}
                   className="flex-grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
+                    setFocusedItemId(itemId);
                     const newOpenedState = !isOpened;
                     setIsOpened(newOpenedState);
                     itemLocalStateManager.setItemOpened(itemId, newOpenedState);
@@ -391,7 +403,7 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                       {itemMapState.item_title}
                     </span>
                   </div>
-                </button>
+                </motion.button>
               )}
             </motion.div>
           </AnimatePresence>
@@ -439,6 +451,8 @@ const DirectoryItemNode = ({ ytree, itemId }) => {
                               <DirectoryItemNode
                                 ytree={ytree}
                                 itemId={childKey}
+                                setFocusedItemId={setFocusedItemId}
+                                focusedItemId={focusedItemId}
                               />
                             </div>
                           ))}

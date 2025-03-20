@@ -7,7 +7,6 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { equalityDeep } from "lib0/function";
 import { AnimatePresence, motion } from "motion/react";
 
-
 /**
  *
  * @param {{ytree: YTree, bookId: string}} param0
@@ -70,7 +69,12 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
   };
 
   return (
-    <div
+    <form
+      onSubmit={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        handleSave();
+      }}
       id="LibraryDetailContainer"
       className={`h-full flex flex-col items-center justify-start 
       ${deviceType === "mobile" && "w-full"}   
@@ -113,7 +117,6 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
 
       <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
 
-
       <div
         id="CreateLibraryBody"
         className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
@@ -139,6 +142,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
         <AnimatePresence>
           {unsavedChangesExist && (
             <motion.button
+              type="submit"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -147,7 +151,6 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
                 flex items-center justify-center
                 order-last
             `}
-              onClick={handleSave}
             >
               <motion.span
                 animate={{
@@ -159,7 +162,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </form>
   );
 };
 

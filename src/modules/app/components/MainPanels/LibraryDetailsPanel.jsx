@@ -81,7 +81,12 @@ const LibraryDetailsPanel = ({ libraryId }) => {
   };
 
   return (
-    <div
+    <form
+      onSubmit={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        handleSave();
+      }}
       id="LibraryDetailContainer"
       className={`h-full flex flex-col items-center justify-start 
         ${deviceType === "mobile" && "w-full"}   
@@ -191,6 +196,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
         <AnimatePresence>
           {unsavedChangesExist && (
             <motion.button
+              type="submit"
               initial={{
                 height: 0,
                 opacity: 0,
@@ -216,7 +222,6 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                 flex items-center justify-center
             `}
-              onClick={handleSave}
             >
               <motion.span
                 animate={{
@@ -321,7 +326,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
                           ease: "linear",
                         }}
                         className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
-                        >
+                      >
                         <span className="icon-[ph--flower-tulip-thin] h-libraryDetailsActionButtonIconSize w-libraryDetailsActionButtonIconSize"></span>
                       </motion.div>
                     </div>
@@ -630,7 +635,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
           </LibraryActionButton>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 LibraryDetailsPanel.propTypes = {

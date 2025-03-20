@@ -33,6 +33,12 @@ const LibraryDirectory = ({ libraryId }) => {
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
 
+  const [focusedItemId, setFocusedItemId] = useState(null);
+
+  useEffect(() => {
+    console.log("Focused Item: ", focusedItemId);
+  }, [focusedItemId]);
+
   const libraryPropsMapRef = useRef(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
   );
@@ -46,7 +52,7 @@ const LibraryDirectory = ({ libraryId }) => {
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
   /** @type {{current: YTree}} */
-  const libraryYTreeRef = useRef(null);
+  const libraryYTreeRef = useRef(libraryId);
 
   /**
    * @type {[Array<String>, function]}
@@ -95,44 +101,33 @@ const LibraryDirectory = ({ libraryId }) => {
       className={`h-full w-full flex flex-col items-center`}
     >
       {deviceType === "desktop" && (
-        <div
+        <button
+          onClick={() => {
+            setFocusedItemId(null);
+          }}
           id="LibraryDirectoryHeader"
           className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder`}
         >
           <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
-            {/* <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mx-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
-                          order-1
-                        `}
-              onClick={() => {
-                setLibraryId("unselected");
-              }}
-            >
-              <span className="icon-[material-symbols-light--keyboard-arrow-left] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button> */}
-
             <h1
               className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
                 deviceType === "mobile" ? "ml-3" : "ml-6"
               }`}
             >
-              <p className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis">
-                {libraryPropsMapState.library_name}
-              </p>
-            </h1>
-            {/* <div
-              ref={textContainerRef}
-              className="flex-grow text-libraryManagerHeaderText min-w-0 max-h-full flex justify-start items-center transition-colors duration-0 pt-px order-2 overflow-ellipsis"
-            >
-              <p
-                ref={textRef}
+              <motion.p
+                animate={{
+                  textShadow:
+                    focusedItemId === null
+                      ? `0 0 5px hsl(var(--appLayoutText))`
+                      : "none",
+                }}
                 className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis"
               >
                 {libraryPropsMapState.library_name}
-              </p>
-            </div> */}
+              </motion.p>
+            </h1>
           </div>
-        </div>
+        </button>
       )}
 
       {deviceType === "mobile" && (
@@ -239,8 +234,6 @@ const LibraryDirectory = ({ libraryId }) => {
           >
             <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
           </button>
-
-         
         </div>
       )}
 
@@ -283,6 +276,8 @@ const LibraryDirectory = ({ libraryId }) => {
 
               setPanelOpened(true);
               itemLocalStateManager.setItemOpened(bookId, true);
+              saveStateInHistory();
+              clearFuture();
             }}
           >
             <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -294,9 +289,10 @@ const LibraryDirectory = ({ libraryId }) => {
                         `}
             onClick={() => {
               console.log("create section button");
+              console.log("testing ||", focusedItemId);
               const sectionId = dataManagerSubdocs.createEmptySection(
                 libraryYTreeRef.current,
-                "root"
+                focusedItemId || "root"
               );
 
               setItemId(sectionId);
@@ -306,7 +302,11 @@ const LibraryDirectory = ({ libraryId }) => {
 
               setPanelOpened(true);
 
+              if (focusedItemId)
+                itemLocalStateManager.setItemOpened(focusedItemId, true);
               itemLocalStateManager.setItemOpened(sectionId, true);
+              saveStateInHistory();
+              clearFuture();
             }}
           >
             <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -320,7 +320,7 @@ const LibraryDirectory = ({ libraryId }) => {
               console.log("create paper button");
               const paperId = dataManagerSubdocs.createEmptyPaper(
                 libraryYTreeRef.current,
-                "root"
+                focusedItemId || "root"
               );
 
               setItemId(paperId);
@@ -329,7 +329,11 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
+              if (focusedItemId)
+                itemLocalStateManager.setItemOpened(focusedItemId, true);
               itemLocalStateManager.setItemOpened(paperId, true);
+              saveStateInHistory();
+              clearFuture();
             }}
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -343,6 +347,11 @@ const LibraryDirectory = ({ libraryId }) => {
       >
         <div
           id="libraryDirectoryBody"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setFocusedItemId(null);
+            }
+          }}
           ref={libraryDirectoryBodyRef}
           style={{
             paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
@@ -353,7 +362,7 @@ const LibraryDirectory = ({ libraryId }) => {
         >
           <div
             id="BookListContainer"
-            className="h-fit w-full flex flex-col justify-start items-center pb-10"
+            className="h-fit w-full flex flex-col justify-start items-center"
           >
             {sortedChildrenState &&
               sortedChildrenState.length > 0 &&
@@ -369,6 +378,8 @@ const LibraryDirectory = ({ libraryId }) => {
                   <DirectoryItemNode
                     ytree={libraryYTreeRef.current}
                     itemId={bookId}
+                    focusedItemId={focusedItemId}
+                    setFocusedItemId={setFocusedItemId}
                   />
                 </motion.div>
               ))}

@@ -71,7 +71,12 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
   };
 
   return (
-    <div
+    <form
+      onSubmit={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        handleSave();
+      }}
       id="LibraryDetailContainer"
       className={`h-full flex flex-col items-center justify-start 
       ${deviceType === "mobile" && "w-full"}   
@@ -138,6 +143,7 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
         <AnimatePresence>
           {unsavedChangesExist && (
             <motion.button
+              type="submit"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -146,7 +152,6 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
                 flex items-center justify-center
                 order-last
             `}
-              onClick={handleSave}
             >
               <motion.span
                 animate={{
@@ -158,7 +163,7 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </form>
   );
 };
 
