@@ -111,7 +111,11 @@ const LibraryManager = () => {
           <span className="icon-[ion--library-sharp] ml-3 h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize"></span>
         )}
 
-        <h1 className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${deviceType === 'mobile' ? 'ml-3' : 'ml-6'}`}>
+        <h1
+          className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
+            deviceType === "mobile" ? "ml-3" : "ml-6"
+          }`}
+        >
           Your Libraries
         </h1>
 
@@ -128,15 +132,16 @@ const LibraryManager = () => {
 
             setPanelOpened(true);
             saveStateInHistory();
-                  clearFuture();
+            clearFuture();
           }}
         >
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
         </button>
       </div>
 
-      <div className="w-[92.5%] h-px bg-appLayoutBorder"></div>
-
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
       <div
         id="LibraryManagerBody"
         className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${

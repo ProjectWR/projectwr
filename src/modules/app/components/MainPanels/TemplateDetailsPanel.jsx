@@ -107,8 +107,9 @@ const TemplateDetailsPanel = ({ templateId }) => {
         />
       </div>
 
-      <div className="w-[93.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
-
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
       <motion.div
         id="TemplateDetailsBody"
         className="flex-grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"

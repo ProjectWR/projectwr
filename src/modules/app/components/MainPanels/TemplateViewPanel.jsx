@@ -104,8 +104,10 @@ const TemplateViewPanel = ({ templateId }) => {
         </motion.div>
       </AnimatePresence>
 
-      <div className="w-full h-px bg-appLayoutBorder"></div>
-
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
+      
       <motion.div
         id="TemplateViewBody"
         className="w-full flex-grow min-h-0 min-w-0 basis-0"

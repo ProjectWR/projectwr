@@ -35,72 +35,81 @@ const ActionBar = () => {
         id="actionBar"
         className="w-full h-full flex justify-start items-center relative"
       >
-        <ActionButton
-          onClick={() => {
-            if (canGoBack) {
-              goBack();
-            }
-          }}
-          disabled={!canGoBack}
-        >
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: canGoBack ? 1 : 0.6 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="historyGoBack"
-              className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute"
-            ></motion.span>
-          </div>
-        </ActionButton>
+        <div className="h-full w-fit pl-1 flex items-center gap-1">
+          <Logo>
+            <div className="h-actionBarLogoSize w-actionBarLogoSize p-px relative">
+              <span
+                key="logoButtonDisabled"
+                className="icon-[ph--flower-tulip-thin] w-full h-full top-0 left-0 absolute  bg-appLayoutText"
+              ></span>
+            </div>
+          </Logo>
 
-        <ActionButton
-          onClick={() => {
-            if (canGoForward) {
-              goForward();
-            }
-          }}
-          disabled={!canGoForward}
-        >
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: canGoForward ? 1 : 0.6 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="historyGoForward"
-              className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute"
-            ></motion.span>
-          </div>
-        </ActionButton>
-
-        <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <AnimatePresence mode="sync">
-              {sideBarOpened && (
-                <motion.span
-                  initial={{ opacity: 0.6, rotate: 180 }}
-                  animate={{ opacity: 1, rotate: 180 }}
-                  exit={{ opacity: 0.6, rotate: 180 }}
-                  transition={{ duration: 0.05 }}
-                  key="sideBarOpened"
-                  className="icon-[octicon--sidebar-collapse-24] w-full h-full top-0 left-0 absolute"
-                ></motion.span>
-              )}
-              {!sideBarOpened && (
-                <motion.span
-                  initial={{ opacity: 0.6, rotate: 180 }}
-                  animate={{ opacity: 1, rotate: 180 }}
-                  exit={{ opacity: 0.6, rotate: 180 }}
-                  transition={{ duration: 0.05 }}
-                  key="sideBarClosed"
-                  className="icon-[octicon--sidebar-expand-24] w-full h-full top-0 left-0 absolute"
-                ></motion.span>
-              )}
-            </AnimatePresence>
-          </div>
-        </ActionButton>
+          <ActionButton
+            onClick={() => {
+              if (canGoBack) {
+                goBack();
+              }
+            }}
+            disabled={!canGoBack}
+          >
+            <div className="h-full w-actionBarButtonIconSize relative">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: canGoBack ? 1 : 0.6 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="historyGoBack"
+                className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </ActionButton>
+          <ActionButton
+            onClick={() => {
+              if (canGoForward) {
+                goForward();
+              }
+            }}
+            disabled={!canGoForward}
+          >
+            <div className="h-full w-actionBarButtonIconSize relative">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: canGoForward ? 1 : 0.6 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="historyGoForward"
+                className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </ActionButton>
+          <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
+            <div className="h-full w-actionBarButtonIconSize relative">
+              <AnimatePresence mode="sync">
+                {sideBarOpened && (
+                  <motion.span
+                    initial={{ opacity: 0.6 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0.6 }}
+                    transition={{ duration: 0.05 }}
+                    key="sideBarOpened"
+                    className="icon-[tabler--layout-sidebar-left-collapse-filled] w-full h-full top-0 left-0 absolute bg-appLayoutTextMuted"
+                  ></motion.span>
+                )}
+                {!sideBarOpened && (
+                  <motion.span
+                    initial={{ opacity: 0.6 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0.6 }}
+                    transition={{ duration: 0.05 }}
+                    key="sideBarClosed"
+                    className="icon-[tabler--layout-sidebar-left-expand] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                  ></motion.span>
+                )}
+              </AnimatePresence>
+            </div>
+          </ActionButton>
+        </div>
 
         {/* 
         <div
@@ -166,9 +175,21 @@ const ActionBar = () => {
 
 export default ActionBar;
 
+const Logo = ({ children }) => {
+  return (
+    <div className="h-full w-fit">
+      <div
+        className={`h-full w-fitrounded-md flex items-center justify-center`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const ActionButton = ({ onClick, className, children, disabled = false }) => {
   return (
-    <div className="h-full py-1 w-fit ml-1">
+    <div className="h-full py-1 w-fit">
       <button
         className={`h-full px-1 w-fit ${
           !disabled && "hover:bg-appLayoutInverseHover"

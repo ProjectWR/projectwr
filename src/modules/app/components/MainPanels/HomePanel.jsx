@@ -155,7 +155,9 @@ const HomePanel = () => {
                       <span>Recently Opened</span>
                       <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
                     </div>
-                    <div className="h-px w-[95%] bg-appLayoutBorder"></div>
+                    <div className="divider w-full px-3">
+                      <div className="w-full h-px bg-appLayoutBorder"></div>
+                    </div>{" "}
                     {latestItems.map(({ itemId, props, type }) => {
                       let name = "";
                       if (type !== "library") {

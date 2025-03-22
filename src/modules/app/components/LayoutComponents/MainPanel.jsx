@@ -163,7 +163,7 @@ const MainPanel = ({}) => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -10, opacity: 0 }}
         transition={{ duration: 0.1 }}
-        className="w-full h-full bg-appBackground overflow-hidden z-3 flex justify-center"
+        className="w-full h-full overflow-hidden z-3 flex justify-center"
       >
         {renderMainPanel()}
       </motion.div>

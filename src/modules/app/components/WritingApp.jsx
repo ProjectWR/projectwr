@@ -385,14 +385,14 @@ const WritingApp = () => {
                             transition={{ duration: 0.2 }}
                             style={{
                               width: mWidth,
-                              boxShadow:
-                                deviceType === "desktop"
-                                  ? "0px 0px 6px -1px hsl(var(--appLayoutShadow))"
-                                  : "", // right shadow
-                              clipPath:
-                                deviceType === "desktop"
-                                  ? "inset(0 -10px 0 0)"
-                                  : "", // Clip the shadow except at right
+                              // boxShadow:
+                              //   deviceType === "desktop"
+                              //     ? "0px 0px 6px -1px hsl(var(--appLayoutShadow))"
+                              //     : "", // right shadow
+                              // clipPath:
+                              //   deviceType === "desktop"
+                              //     ? "inset(0 -10px 0 0)"
+                              //     : "", // Clip the shadow except at right
                             }}
                           >
                             <SidePanel />

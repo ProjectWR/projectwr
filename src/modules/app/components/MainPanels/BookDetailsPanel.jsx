@@ -115,8 +115,9 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
         />
       </div>
 
-      <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
-
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
       <div
         id="CreateLibraryBody"
         className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"

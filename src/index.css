@@ -94,6 +94,7 @@
     --actionBarResultDateFontSize: calc(var(--uiScale) * 1rem);
     --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.5rem);
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
+    --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
     --footerHeight: calc(var(--uiScale) * 1.3rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);

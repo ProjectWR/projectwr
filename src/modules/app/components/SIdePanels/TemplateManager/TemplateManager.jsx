@@ -76,8 +76,9 @@ const TemplateManager = () => {
         </button>
       </div>
 
-      <div className="w-[92.5%] h-px bg-appLayoutBorder"></div>
-
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
       <div
         id="TemplateManagerBody"
         className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${
@@ -136,9 +137,7 @@ const TemplateManagerNode = ({ templateId, template }) => {
       <button
         className={`flex-grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0 rounded-l-lg`}
         onClick={() => {
-          if (
-            !(appStoreTemplateId !== templateId && templateMode === "preview")
-          ) {
+          if (appStoreTemplateId !== templateId || templateMode !== "preview") {
             setTemplateId(templateId);
             setTemplateMode("preview");
             if (deviceType === "mobile") {
@@ -160,9 +159,7 @@ const TemplateManagerNode = ({ templateId, template }) => {
       <button
         className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth transition-colors duration-0 px-2 m-2 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
         onClick={() => {
-          if (
-            !(appStoreTemplateId !== templateId && templateMode === "details")
-          ) {
+          if (appStoreTemplateId !== templateId || templateMode !== "details") {
             setTemplateId(templateId);
             setTemplateMode("details");
             if (deviceType === "mobile") {

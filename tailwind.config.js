@@ -123,7 +123,7 @@ export default {
         actionBarWindowButtonIcons: "var(--actionBarWindowButtonIcons)",
         optionsDropdownIconHeight: "var(--optionsDropdownIconHeight)",
         libraryDetailsActionButtonIconSize: "var(--libraryDetailsActionButtonIconSize)",
-
+        actionBarLogoHeight: "var(--actionBarLogoHeight)",
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",

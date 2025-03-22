@@ -48,7 +48,7 @@ const SidePanel = ({}) => {
         style={{
           minWidth: `calc(var(--sidePanelWidth) * 0.75)`,
         }}
-        className="w-full h-full bg-appBackground border-appLayoutBorder"
+        className="w-full h-full"
       >
         {renderSidePanel()}
       </motion.div>

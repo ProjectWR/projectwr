@@ -129,7 +129,6 @@ const LibraryDirectory = ({ libraryId }) => {
           </div>
         </button>
       )}
-
       {deviceType === "mobile" && (
         <div
           id="LibraryDirectoryHeader"
@@ -237,7 +236,10 @@ const LibraryDirectory = ({ libraryId }) => {
         </div>
       )}
 
-      <div className="w-[92.5%] h-px bg-appLayoutBorder"></div>
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
+      
       <div
         id="LibraryDirectoryHeader"
         className={`flex flex-col items-center justify-between h-fit min-h-fit mt-1 border-appLayoutBorder   z-[1]`}
@@ -340,7 +342,6 @@ const LibraryDirectory = ({ libraryId }) => {
           </button>
         </div>
       </div>
-
       <div
         id="libraryDirectoryBodyContainer"
         className={`flex-grow min-h-0 w-full`}

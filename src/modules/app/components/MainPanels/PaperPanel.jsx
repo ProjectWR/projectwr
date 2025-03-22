@@ -181,7 +181,9 @@ const PaperPanel = ({ ytree, paperId }) => {
         </motion.form>
       </AnimatePresence>
 
-      <div className="w-full h-px bg-appLayoutBorder"></div>
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
 
       <motion.div
         id="CreatePaperBody"

@@ -270,8 +270,9 @@ const SettingsPanel = () => {
         </h1>
       </div>
 
-      <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
-
+      <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
       <div
         id="SettingsBody"
         className="h-fit w-full flex flex-col items-center justify-start py-4 gap-4 px-6"
