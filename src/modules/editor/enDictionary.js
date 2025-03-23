@@ -44,15 +44,10 @@ export async function setupEnDictionary() {
     });
 }
 
-export function check(word) {
-    const result = EnDictionary.search(word);
-    return result.length > 0;
-}
-
-export function searchWord(word) {
+export function getDetails(word) {
     return EnDictionary.search(word);
 }
 
-export function getSuggestionsForIncorrectWord(word) {
+export function getDetailsFuzzySearch(word) {
     return EnDictionary.search(word, { fuzzy: 0.2 });
 }
