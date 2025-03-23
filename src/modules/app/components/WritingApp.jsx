@@ -48,6 +48,7 @@ import fontManager from "../lib/font";
 import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
+import { setupEnDictionary } from "../../editor/enDictionary";
 
 let wasLocalSetup = false;
 
@@ -135,7 +136,7 @@ const WritingApp = () => {
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
 
-
+        await setupEnDictionary();
 
         await fontManager.init();
 
@@ -173,6 +174,7 @@ const WritingApp = () => {
                 "firebaseLocalStorageDb",
                 "keyval-store",
                 "level-js-index",
+                "validate-browser-context-for-indexeddb-analytics-module"
               ].find((value) => value === libraryId)
             ) {
               continue;
@@ -223,7 +225,7 @@ const WritingApp = () => {
           }
         }
 
-        await wait(1000);
+        // await wait(1000);
         setLoadingStage("Finished Loading");
         setLoading(false);
 

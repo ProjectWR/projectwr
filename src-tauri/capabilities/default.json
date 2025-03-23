@@ -17,6 +17,8 @@
     "core:window:allow-set-size",
     "core:app:allow-app-hide",
     "fs:allow-read-file",
+    "fs:allow-read-text-file",
+    "fs:allow-resource-read-recursive",
     {
       "identifier": "fs:allow-mkdir",
       "allow": [
