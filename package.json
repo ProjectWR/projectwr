@@ -60,7 +60,7 @@
     "minisearch": "^7.1.2",
     "motion": "^12.0.6",
     "nspell": "^2.1.5",
-    "prismjs": "^1.29.0",
+    "prismjs": "^1.30.0",
     "prosemirror-docx": "^0.2.0",
     "prosemirror-model": "^1.24.1",
     "prosemirror-proofread": "^0.2.2",
