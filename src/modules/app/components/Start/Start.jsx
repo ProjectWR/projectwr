@@ -3,7 +3,7 @@ import Settings from "../Settings/Settings";
 import { startStore } from "../../stores/startStore";
 import React, { lazy } from "react";
 
-const LibraryManager = lazy(() => import("../SIdePanels/LibraryManager/LibraryManager"))
+const LibraryManager = lazy(() => import("../SidePanels/LibraryManager/LibraryManager"))
 
 const preloadLibraryManager = () => {
   return (<LibraryManager />);

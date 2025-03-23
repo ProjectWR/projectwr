@@ -135,7 +135,10 @@ const WritingApp = () => {
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
 
+
+
         await fontManager.init();
+
 
         if (!wasLocalSetup) {
           wasLocalSetup = true;

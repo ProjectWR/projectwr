@@ -4,7 +4,7 @@ import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
-import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
+import TipTapEditor from "../../../editor/TipTapEditor/TipTapEditor";
 import { AnimatePresence, motion } from "motion/react";
 import { equalityDeep } from "lib0/function";
 import itemLocalStateManager from "../../lib/itemLocalState";

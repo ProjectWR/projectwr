@@ -8,7 +8,7 @@ import {
 import { appStore } from "../../../stores/appStore";
 import templateManager from "../../../lib/templates";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-import { TipTapEditorDefaultPreferences } from "../../../../editor/TIpTapEditor/TipTapEditorDefaultPreferences";
+import { TipTapEditorDefaultPreferences } from "../../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
 import { equalityDeep } from "lib0/function";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 

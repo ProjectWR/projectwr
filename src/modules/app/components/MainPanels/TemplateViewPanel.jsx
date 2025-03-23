@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../stores/appStore";
-import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor"; // Assuming you have a TipTapEditor component
+import TipTapEditor from "../../../editor/TipTapEditor/TipTapEditor"; // Assuming you have a TipTapEditor component
 import templateManager from "../../lib/templates";
 import { equalityDeep } from "lib0/function";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";

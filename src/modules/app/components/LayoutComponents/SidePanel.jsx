@@ -3,8 +3,8 @@ import { appStore } from "../../stores/appStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import LibraryManager from "../SidePanels/LibraryManager/LibraryManager";
 import { AnimatePresence, motion } from "motion/react";
-import LibraryDirectory from "../SIdePanels/LibraryDirectory/LibraryDirectory";
-import TemplateManager from "../SIdePanels/TemplateManager/TemplateManager";
+import LibraryDirectory from "../SidePanels/LibraryDirectory/LibraryDirectory";
+import TemplateManager from "../SidePanels/TemplateManager/TemplateManager";
 
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();

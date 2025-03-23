@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import VirtualCursor from "./Extensions/VirtualCursorExtension";
 import TipTapToolbar from "./TipTapToolbar";
 
 import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
@@ -31,6 +30,7 @@ import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
 import loremIpsum from "../lorem";
 import { max } from "lib0/math";
+import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExtension";
 
 const content = "<p>Hello World!</p>";
 
@@ -38,6 +38,7 @@ const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
 
 const TiptapEditor = ({
+  hunspell,
   yXmlFragment,
   setHeaderOpened,
   mode = "editPaper",
@@ -48,8 +49,7 @@ const TiptapEditor = ({
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
 
-  const [editorRef, setEditorFocus] = useFocus()
-
+  const [editorRef, setEditorFocus] = useFocus();
 
   const lastScrollTopRef = useRef(0); // Stores last scroll position
 
@@ -115,7 +115,6 @@ const TiptapEditor = ({
     Collaboration.configure({
       fragment: yXmlFragment,
     }),
-    VirtualCursor,
     TabIndentExtension.configure({
       spaces: 8,
     }),
@@ -141,13 +140,13 @@ const TiptapEditor = ({
     TextAlign.configure({
       types: ["heading", "paragraph"],
     }),
+    ProsemirrorVirtualCursor
   ]);
 
   const previewTemplateExtensions = useRef([
     Document,
     Paragraph,
     Text,
-    VirtualCursor,
     TabIndentExtension.configure({
       spaces: 8,
     }),
@@ -202,38 +201,10 @@ const TiptapEditor = ({
         : extensions.current,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
-    onSelectionUpdate({ editor }) {
-      console.log("UPDATE!");
-      const selection = editor.state.selection;
-      if (!selection.empty) {
-        editor.commands.hideVirtualCursor();
-        return;
-      }
-      updateVirtualCursor(editor, fontSize + 2);
-    },
-    onFocus({ editor }) {
-      console.log("UPDATE!");
-      const selection = editor.state.selection;
-      if (!selection.empty) {
-        editor.commands.hideVirtualCursor();
-        return;
-      }
-      updateVirtualCursor(editor, fontSize + 2);
-    },
-    onBlur({ editor }) {
-      console.log("UPDATE!");
-      editor.commands.hideVirtualCursor();
-    },
     onUpdate({ editor }) {
       console.log("UPDATE!");
       console.log("Editor Updated");
       const selection = editor.state.selection;
-      if (selection.empty) {
-        updateVirtualCursor(editor, fontSize + 2);
-      } else {
-        editor.commands.hideVirtualCursor();
-      }
-
       const coords = editor.view.coordsAtPos(selection.from);
       const container = document.getElementById("EditableContainer");
       const containerRect = container.getBoundingClientRect();
@@ -365,7 +336,9 @@ const TiptapEditor = ({
       </div>
 
       <div
-        className={`w-full h-px flex-shrink-0 ${isMobile ? "order-4" : "order-2"}`}
+        className={`w-full h-px flex-shrink-0 ${
+          isMobile ? "order-4" : "order-2"
+        }`}
         style={{ backgroundColor: `${dividerColor}` }}
       ></div>
 
@@ -376,19 +349,19 @@ const TiptapEditor = ({
           `}
         style={{
           paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-          backgroundColor: backgroundColor
+          backgroundColor: backgroundColor,
         }}
       >
         <EditorContent
           editor={editor}
-          className={`caret-transparent h-fit outline-none focus:outline-none
+          className={`h-fit outline-none focus:outline-none
             shadow-${isMobile ? "none" : paperShadow}
             shadow-black
             font-serif
             `}
           style={{
             width: isMobile ? "100%" : `${width}rem`,
-            minWidth: isMobile ? "100%" : `${width * 0.8}rem`, 
+            minWidth: isMobile ? "100%" : `${width * 0.8}rem`,
             backgroundColor: `${paperColor}`,
             borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
             borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
@@ -411,45 +384,47 @@ const TiptapEditor = ({
 
 export default React.memo(TiptapEditor);
 
-const updateVirtualCursor = (editor, fontSize) => {
-  const selection = editor.state.selection;
-  if (!selection.empty) {
-    editor.commands.hideVirtualCursor();
-    return;
-  }
+// const updateVirtualCursor = (editor, fontSize) => {
+//   const selection = editor.state.selection;
+//   if (!selection.empty) {
+//     editor.commands.hideVirtualCursor();
+//     return;
+//   }
 
-  const editable = document.querySelector(".tiptap");
-  const editableRect = editable.getBoundingClientRect();
-  const coords = editor.view.coordsAtPos(selection.from);
+//   const editable = document.querySelector(".tiptap");
+//   const editableRect = editable.getBoundingClientRect();
+//   const coords = editor.view.coordsAtPos(selection.from);
 
-  const domSelection = window.getSelection();
-  const anchorNode = domSelection.anchorNode;
+//   const domSelection = window.getSelection();
+//   const anchorNode = domSelection.anchorNode;
 
-  const minFontSize = fontSize + 2;
+//   const minFontSize = fontSize + 2;
 
-  if (anchorNode?.parentElement) {
-    if (anchorNode.parentElement.tagName === "DIV") {
-      const computedStyle = getComputedStyle(anchorNode);
-      fontSize = parseFloat(computedStyle.fontSize) || fontSize;
-    } else {
-      console.log("HERRE IN UPDATE VIRTUAL CURSOR: ");
-      const computedStyle = getComputedStyle(anchorNode.parentElement);
-      fontSize = parseFloat(computedStyle.fontSize) || fontSize;
-    }
-  }
+//   if (anchorNode?.parentElement) {
+//     if (anchorNode.parentElement.tagName === "DIV") {
+//       const computedStyle = getComputedStyle(anchorNode);
+//       fontSize = parseFloat(computedStyle.fontSize) || fontSize;
+//     } else {
+//       console.log("HERRE IN UPDATE VIRTUAL CURSOR: ");
+//       const computedStyle = getComputedStyle(anchorNode.parentElement);
+//       fontSize = parseFloat(computedStyle.fontSize) || fontSize;
+//     }
+//   }
 
-  console.log("Font size in uvc: ", fontSize);
+//   console.log("Font size in uvc: ", fontSize);
 
-  editor.commands.addVirtualCursor({
-    top: coords.top - editableRect.top,
-    left: coords.left - editableRect.left,
-    fontSize: max(fontSize, minFontSize),
-  });
-};
+//   editor.commands.addVirtualCursor({
+//     top: coords.top - editableRect.top,
+//     left: coords.left - editableRect.left,
+//     fontSize: max(fontSize, minFontSize),
+//   });
+// };
 
 const useFocus = () => {
-  const htmlElRef = useRef(null)
-  const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
+  const htmlElRef = useRef(null);
+  const setFocus = () => {
+    htmlElRef.current && htmlElRef.current.focus();
+  };
 
-  return [ htmlElRef, setFocus ] 
-}
+  return [htmlElRef, setFocus];
+};

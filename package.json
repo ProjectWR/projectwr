@@ -14,6 +14,7 @@
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^9.4.0",
+    "@farscrl/tiptap-extension-spellchecker": "^1.0.7",
     "@headlessui/react": "^2.2.0",
     "@hookform/resolvers": "^3.10.0",
     "@iconify/json": "^2.2.294",
@@ -58,9 +59,11 @@
     "lib0": "^0.2.99",
     "minisearch": "^7.1.2",
     "motion": "^12.0.6",
+    "nspell": "^2.1.5",
     "prismjs": "^1.29.0",
     "prosemirror-docx": "^0.2.0",
     "prosemirror-model": "^1.24.1",
+    "prosemirror-proofread": "^0.2.2",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.37.1",
     "prosemirror-virtual-cursor": "^0.4.2",
@@ -80,9 +83,11 @@
     "react-tweet": "^3.2.1",
     "react-yjs": "^2.0.1",
     "scheduler": "^0.26.0-canary-fc8a898d-20241226",
+    "spellchecker-wasm": "^0.3.3",
     "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.5",
+    "vite-plugin-wasm": "^3.4.1",
     "y-fire": "^2.1.1",
     "y-indexeddb": "^9.0.12",
     "y-prosemirror": "^1.2.15",
@@ -112,6 +117,7 @@
     "tailwind-scrollbar-utilities": "^0.2.0",
     "tailwindcss": "^3.4.15",
     "vite": "^6.0.1",
-    "vite-plugin-node-polyfills": "^0.23.0"
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-plugin-top-level-await": "^1.5.0"
   }
 }
