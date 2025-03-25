@@ -1,13 +1,67 @@
 import { resolveResource } from '@tauri-apps/api/path';
 import { readTextFile } from '@tauri-apps/plugin-fs';
-import MiniSearch from 'minisearch'
-
+import Fuse from 'fuse.js'
 // https://github.com/fluhus/wordnet-to-json
 
-const EnDictionary = new MiniSearch({
-    fields: ["searchWords"],
-    storeFields: ["searchWords", "words", "pos", "gloss", "antonyms"]
-});
+// const EnDictionary = new MiniSearch({
+//     fields: ["searchWords"],
+//     storeFields: ["searchWords", "words", "pos", "gloss", "antonyms"]
+// });
+
+const fuseOptions = { keys: ['searchWords'], useExtendedSearch: true, threshold: 0.1 };
+
+/** @type {Fuse} */
+let EnDictionary = null;
+
+const map = new Map();
+
+const exceptionMap = new Map();
+
+const determiners = [
+    "few", "fewer", "fewest",
+    "every",
+    "most",
+    "that",
+    "little",
+    "half",
+    "much",
+    "the",
+    "other",
+    "her",
+    "my",
+    "their",
+    "a",
+    "an",
+    "his",
+    "neither",
+    "these",
+    "all",
+    "its",
+    "no",
+    "this",
+    "any",
+    "those",
+    "both",
+    "least",
+    "our",
+    "what",
+    "each",
+    "less",
+    "several",
+    "which",
+    "either",
+    "many",
+    "some",
+    "whose",
+    "enough",
+    "more",
+    "such",
+    "your"
+]
+
+const prepositions = [
+
+]
 
 export async function setupEnDictionary() {
     const dictionaryPath = await resolveResource('resources/en-wordnet.json');
@@ -15,39 +69,76 @@ export async function setupEnDictionary() {
 
     const synset = dictionaryJson["synset"];
     const lemma = dictionaryJson["lemma"];
+    const exception = dictionaryJson["exception"];
 
     Object.entries(synset).forEach(([key, value]) => {
         const document = {
             id: key,
-            searchWords: value["word"].join(' '),
+            searchWords: value["word"],
             pos: value["pos"],
-            words: value["word"].join(' '),
+            words: value["word"],
             gloss: value["gloss"].split(";"),
             antonyms: value["pointer"].filter((value) => value["symbol"] == "!").map((value) => value["synset"]),
         };
 
-        EnDictionary.add(document);
+        map.set(key, document);
     });
 
     Object.entries(lemma).forEach(([key, value]) => {
         for (const id of value) {
-            const storeFields = EnDictionary.getStoredFields(id);
+            const storeFields = map.get(id);
 
             const newDocument = {
                 id: id,
                 ...storeFields,
-                searchWords: `${storeFields['searchWords']} ${key.substring(key.indexOf('.') + 1)}`
+                searchWords: [...storeFields['searchWords'], key.substring(key.indexOf('.') + 1)]
             }
 
-            EnDictionary.replace(newDocument);
+            if (key.substring(key.indexOf('.') + 1) === 'be') {
+                console.log("be: ", newDocument);
+            }
+
+            map.set(id, newDocument);
         }
     });
+
+    Object.entries(exception).forEach(([key, value]) => {
+        const keyWord = key.substring(key.indexOf('.') + 1);
+        for (const i of value) {
+            const word = i.substring(i.indexOf('.') + 1);
+            if (exceptionMap.has(keyWord)) {
+                exceptionMap.get(keyWord).push(word);
+            } else {
+                exceptionMap.set(keyWord, [word]);
+            }
+
+        }
+    })
+
+    const array = Array.from(map, ([, value]) => value);
+
+    // console.log("Checking array data structure: ", array);
+
+    EnDictionary = new Fuse(array, fuseOptions, Fuse.createIndex(fuseOptions.keys, array));
+
+    console.log("Test Query for Fuse: ", exceptionMap.get("is"), getExactMatch("is"));
 }
 
-export function getDetails(word) {
-    return EnDictionary.search(word);
-}
+export function getExactMatch(word) {
+    const result = [];
+    const queryResult = EnDictionary.search(`=${word}`);
+    if (queryResult.length > 0) {
+        result.push(...queryResult);
+    }
 
-export function getDetailsFuzzySearch(word) {
-    return EnDictionary.search(word, { fuzzy: 0.2 });
+    exceptionMap.get(word)?.forEach((word) => {
+        const queryResult = EnDictionary.search(`=${word}`);
+        if (queryResult.length > 0) {
+            result.push(...queryResult);
+        }
+    })
+
+    console.log("checking new result logic: ", result);
+
+    return result;
 }

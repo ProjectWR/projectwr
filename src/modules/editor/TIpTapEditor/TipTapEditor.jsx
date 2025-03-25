@@ -29,8 +29,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
 import loremIpsum from "../lorem";
-import { max } from "lib0/math";
-import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExtension";
+import ProsemirrorProofreadExtension from "./Extensions/ProsemirrorProofreadExtension";
 
 const content = "<p>Hello World!</p>";
 
@@ -140,7 +139,7 @@ const TiptapEditor = ({
     TextAlign.configure({
       types: ["heading", "paragraph"],
     }),
-    ProsemirrorVirtualCursor
+    ProsemirrorProofreadExtension
   ]);
 
   const previewTemplateExtensions = useRef([
@@ -313,6 +312,10 @@ const TiptapEditor = ({
             cursor: pointer;
             margin: ${hrMarginTop}rem 0 ${hrMarginBottom}rem 0;
             border-top: 1px solid ${hrBorderColor};
+          }
+
+          .spelling-error {
+            background-color: red;
           }
         `}
       </style>

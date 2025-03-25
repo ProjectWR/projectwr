@@ -36,6 +36,10 @@
   filter: contrast(100%) brightness(100%);
 }
 
+.proofread-suggestion {
+  display: none;
+}
+
 .ProseMirror.virtual-cursor-enabled {
   /* Hide the native cursor */
   caret-color: transparent;

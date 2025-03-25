@@ -3,7 +3,25 @@ import MiniSearch from 'minisearch'
 
 let miniSearch = new MiniSearch({
   fields: ['library_name', "library_description", "item_title", "section_description", "book_description", "paper_xml"],
-  storeFields: ["library_name", "item_title", "libraryId", "id", "type"]
+  storeFields: ["library_name", "item_title", "libraryId", "id", "type", "paper_xml"],
+  tokenize: (string) => {
+    const tokens = []
+    // Match XML/HTML tags OR non-tag text
+    const tagRegex = /<\/?[^>\s]+(?:>|$)|([^<]+)/g
+    let match
+
+    while ((match = tagRegex.exec(string)) !== null) {
+      if (match[1]) { // Text content (not a tag)
+        // Split on whitespace, hyphens, punctuation, and other non-word characters
+        const textTokens = match[1]
+          .split(/[\s\W_]+/) // Split on whitespace, non-word chars, hyphens, and underscores
+          .filter(t => t.length > 0)
+        tokens.push(...textTokens)
+      }
+      // Ignore tags (don't add them to tokens)
+    }
+    return tokens
+  }
 });
 
 export async function setupSearchForLibrary(libraryId) {
@@ -93,14 +111,5 @@ export async function destroySearchForLibrary(libraryId) {
 }
 
 export function queryData(query) {
-  return miniSearch.search(query, {
-    processTerm: (term) => {
-      return [
-        `${term}`,
-        `<paragraph>${term}`,
-        `${term}</paragraph>`,
-        `<paragraph>${term}</paragraph>`
-      ]
-    }
-  });
+  return miniSearch.search(query);
 }

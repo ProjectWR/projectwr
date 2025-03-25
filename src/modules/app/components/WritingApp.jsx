@@ -127,6 +127,8 @@ const WritingApp = () => {
       setLoading(true);
       setLoadingStage("Loading App");
       try {
+        setLoadingStage("Loading settings");
+
         // Load settings
         const loadedSettings = await loadSettings();
         setSettings(loadedSettings);
@@ -136,13 +138,19 @@ const WritingApp = () => {
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
 
+        setLoadingStage("Loading dictionaries");
+
         await setupEnDictionary();
+
+        setLoadingStage("Loading fonts");
 
         await fontManager.init();
 
-
         if (!wasLocalSetup) {
           wasLocalSetup = true;
+
+          setLoadingStage("Fetching local storage");
+
           const databases = await indexedDB.databases();
 
           const localLibraries = [];
@@ -174,7 +182,7 @@ const WritingApp = () => {
                 "firebaseLocalStorageDb",
                 "keyval-store",
                 "level-js-index",
-                "validate-browser-context-for-indexeddb-analytics-module"
+                "validate-browser-context-for-indexeddb-analytics-module",
               ].find((value) => value === libraryId)
             ) {
               continue;
@@ -192,9 +200,9 @@ const WritingApp = () => {
           console.log("Local Libraries: ", localLibraries);
         }
 
-        setLoadingStage("Fetching Cloud Storage");
-
         if (false) {
+          setLoadingStage("Fetching cloud storage");
+
           console.log("path: ", `users/${user.uid}/docs/`);
 
           const querySnapshot = await getDocs(
@@ -228,10 +236,7 @@ const WritingApp = () => {
         // await wait(1000);
         setLoadingStage("Finished Loading");
         setLoading(false);
-
-        return () => {
-          dataManagerSubdocs.removeLibraryYDocMapCallback(searchCallback);
-        };
+        return () => {};
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error

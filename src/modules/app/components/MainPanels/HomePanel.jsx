@@ -162,15 +162,14 @@ const HomePanel = () => {
                       let name = "";
                       if (type !== "library") {
                         if (
+                          !dataManagerSubdocs.getLibrary(props.libraryId) ||
                           !checkForYTree(
                             dataManagerSubdocs
                               .getLibrary(props.libraryId)
                               .getMap("library_directory")
                           )
                         ) {
-                          throw new Error(
-                            "Tried to access uninitialized directory"
-                          );
+                          return null;
                         }
 
                         const ytree = new YTree(
@@ -185,6 +184,9 @@ const HomePanel = () => {
                           .getNodeValueFromKey(itemId)
                           .get("item_title");
                       } else {
+                        if (!dataManagerSubdocs.getLibrary(props.libraryId)) {
+                          return null;
+                        }
                         name = dataManagerSubdocs
                           .getLibrary(props.libraryId)
                           .getMap("library_props")

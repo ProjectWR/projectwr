@@ -90,7 +90,6 @@ class DataManagerSubdocs {
     ydoc.getMap("library_directory");
 
     if (await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc)) {
-      console.log("Checking ydoc in initLibrary: ", ydoc.toJSON());
       this.libraryYDocMap.set(libraryId, ydoc);
     }
   }
