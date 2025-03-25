@@ -1,15 +1,25 @@
 import { Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "prosemirror-state";
+import { Decoration, DecorationSet } from "prosemirror-view";
 import {
-  createProofreadPlugin,
   createSpellCheckEnabledStore,
   createSuggestionBox,
 } from "prosemirror-proofread";
 import Tokenizr from "tokenizr";
-
-import dictionary from "dictionary-en";
 import nspell from "nspell";
+import { resolveResource } from '@tauri-apps/api/path';
+import { readTextFile } from '@tauri-apps/plugin-fs';
+import createProofreadPlugin from "./createProofreadPlugin";
 
-const nspellchecker = nspell({ aff: dictionary.aff, dic: dictionary.dic });
+/** @type {nspell} */
+let nspellchecker;
+
+export async function setupNspellchecker() {
+  const aff = await readTextFile(await resolveResource('resources/index.aff'));
+  const dic = await readTextFile(await resolveResource('resources/index.dic'));
+
+  nspellchecker = nspell({ aff: aff, dic: dic });
+}
 
 let lexer = new Tokenizr();
 
@@ -41,6 +51,8 @@ const generateProofreadErrors = async (input) => {
 
     const result = nspellchecker.correct(token.value);
 
+    const replacements = nspellchecker.suggest(token.value);
+
     if (!result) {
       response.matches.push({
         offset: token.pos,
@@ -48,9 +60,10 @@ const generateProofreadErrors = async (input) => {
         message: "Possible spelling mistake found.",
         shortMessage: "Spelling error",
         type: { typeName: "UnknownWord" },
+        replacements
       });
     }
-    
+
     console.log("token: ", token.toString());
   });
 
@@ -70,7 +83,6 @@ const ProsemirrorProofreadExtension = Extension.create({
       createProofreadPlugin(
         1000, // Debounce time in ms
         generateProofreadErrors, // function to call proofreading service
-        createSuggestionBox, // Suggestion box function
         spellCheckStore // Reactive store to toggle spell checking
       ),
     ];

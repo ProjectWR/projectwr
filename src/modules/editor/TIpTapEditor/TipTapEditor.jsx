@@ -139,7 +139,7 @@ const TiptapEditor = ({
     TextAlign.configure({
       types: ["heading", "paragraph"],
     }),
-    ProsemirrorProofreadExtension
+    ProsemirrorProofreadExtension,
   ]);
 
   const previewTemplateExtensions = useRef([
@@ -315,7 +315,10 @@ const TiptapEditor = ({
           }
 
           .spelling-error {
-            background-color: red;
+            background-color: #ff00001a;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            border-bottom: 1px solid #ff0000e6;
           }
         `}
       </style>
@@ -356,6 +359,7 @@ const TiptapEditor = ({
         }}
       >
         <EditorContent
+          spellCheck={false}
           editor={editor}
           className={`h-fit outline-none focus:outline-none
             shadow-${isMobile ? "none" : paperShadow}

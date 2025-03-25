@@ -17,52 +17,6 @@ const map = new Map();
 
 const exceptionMap = new Map();
 
-const determiners = [
-    "few", "fewer", "fewest",
-    "every",
-    "most",
-    "that",
-    "little",
-    "half",
-    "much",
-    "the",
-    "other",
-    "her",
-    "my",
-    "their",
-    "a",
-    "an",
-    "his",
-    "neither",
-    "these",
-    "all",
-    "its",
-    "no",
-    "this",
-    "any",
-    "those",
-    "both",
-    "least",
-    "our",
-    "what",
-    "each",
-    "less",
-    "several",
-    "which",
-    "either",
-    "many",
-    "some",
-    "whose",
-    "enough",
-    "more",
-    "such",
-    "your"
-]
-
-const prepositions = [
-
-]
-
 export async function setupEnDictionary() {
     const dictionaryPath = await resolveResource('resources/en-wordnet.json');
     const dictionaryJson = JSON.parse(await readTextFile(dictionaryPath));

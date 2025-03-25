@@ -49,6 +49,7 @@ import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
 import { setupEnDictionary } from "../../editor/enDictionary";
+import { setupNspellchecker } from "../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
 
 let wasLocalSetup = false;
 
@@ -141,6 +142,10 @@ const WritingApp = () => {
         setLoadingStage("Loading dictionaries");
 
         await setupEnDictionary();
+
+        setLoadingStage("Loading spellchecker");
+
+        await setupNspellchecker();
 
         setLoadingStage("Loading fonts");
 
