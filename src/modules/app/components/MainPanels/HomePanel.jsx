@@ -72,13 +72,13 @@ const HomePanel = () => {
     <AnimatePresence mode="wait">
       <div
         id="HomeContainer"
-        className={`h-full flex flex-col items-center justify-center 
+        className={`h-full flex flex-col items-start justify-start mr-auto
         ${deviceType === "mobile" && "w-full"}   
-        ${deviceType === "desktop" && "mt-0 pb-20 px-8"}       
+        ${deviceType === "desktop" && "mt-0 pb-20 px-8 pt-8"}       
       `}
         style={
           deviceType === "desktop" && {
-            width: `var(--detailsPanelWidth)`,
+            width: `100%`,
             minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
           }
         }
