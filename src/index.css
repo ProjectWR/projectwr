@@ -40,6 +40,13 @@
   display: none;
 }
 
+.ProseMirror {
+  overflow-wrap: break-word;
+  text-wrap: wrap;
+  white-space-collapse: break-spaces;
+  font-variant-ligatures: none;
+}
+
 .ProseMirror.virtual-cursor-enabled {
   /* Hide the native cursor */
   caret-color: transparent;
@@ -126,7 +133,7 @@
     --appLayoutInverseHover: 0 0% 20%;
     --appLayoutInputBackground: 0 0% 14.9%;
     --appLayoutPressed: 0 0% 3%;
-    --appLayoutDestruct: 0 62.8% 30.6%;
+    --appLayoutDestruct: 0 90% 38%;
     --appLayoutHighlight: 0 0% 100%;
     --activitySelectLine: 0 0% 100%;
     --appLayoutSubmitButton: 0 0% 80%;
@@ -135,7 +142,7 @@
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 2rem);
     --libraryManagerHeaderHeight: calc(var(--uiScale) * 4.5rem);
     --detailsPanelHeaderHeight: calc(var(--uiScale) * 3rem);
-    --actionBarHeight: calc(var(--uiScale) * 2.65rem);
+    --actionBarHeight: calc(var(--uiScale) * 2.4rem);
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
     --actionBarButtonIconSize: calc(var(--uiScale) * 1.4rem);
     --actionBarSearchWidth: calc((1 / sqrt(var(--uiScale))) * 40rem);
@@ -146,7 +153,7 @@
     --actionBarSearchFooterHeight: calc(var(--uiScale) * 0.4rem);
     --actionBarResultHeaderTextSize: calc(var(--uiScale) * 1.1rem);
     --actionBarResultNodeHeight: calc(var(var(--uiScale) * 2.2rem));
-    --actionBarWindowButtonIcons: calc(var(--uiScale) * 0.8rem);
+    --actionBarWindowButtonIconSize: calc(var(--uiScale) * 1.3rem);
     --actionBarResultDateFontSize: calc(var(--uiScale) * 1rem);
     --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.5rem);
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);

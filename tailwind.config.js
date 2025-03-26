@@ -120,7 +120,7 @@ export default {
         actionBarSearchHeaderHeight: "var(--actionBarSearchHeaderHeight)",
         actionBarResultNodeHeight: "var(--actionBarResultNodeHeight)",
         actionBarSearchFooterHeight: "var(--actionBarSearchFooterHeight)",
-        actionBarWindowButtonIcons: "var(--actionBarWindowButtonIcons)",
+        actionBarWindowButtonIconSize: "var(--actionBarWindowButtonIconSize)",
         optionsDropdownIconHeight: "var(--optionsDropdownIconHeight)",
         libraryDetailsActionButtonIconSize: "var(--libraryDetailsActionButtonIconSize)",
         actionBarLogoHeight: "var(--actionBarLogoHeight)",

@@ -11,10 +11,10 @@ const DeviceTypeContext = createContext(initialDeviceTypeState);
 
 // DeviceTypeProvider component
 export function DeviceTypeProvider({ children }) {
-  const [deviceType, setDeviceType] = useState("desktop"); // desktop, androidTab, iPad, android, iPhone 
+  const [deviceType, setDeviceType] = useState("desktop"); // desktop, androidTab, iPad, android, iPhone
 
-   // phone: 365 x 667
-   // desktop: 1024 x 768
+  // phone: 365 x 667
+  // desktop: 1024 x 768
 
   useEffect(() => {
     const root = window.document.documentElement;

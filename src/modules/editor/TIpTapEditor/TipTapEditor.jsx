@@ -30,6 +30,7 @@ import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
 import loremIpsum from "../lorem";
 import ProsemirrorProofreadExtension from "./Extensions/ProsemirrorProofreadExtension";
+import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExtension";
 
 const content = "<p>Hello World!</p>";
 
@@ -140,6 +141,7 @@ const TiptapEditor = ({
       types: ["heading", "paragraph"],
     }),
     ProsemirrorProofreadExtension,
+    ProsemirrorVirtualCursor
   ]);
 
   const previewTemplateExtensions = useRef([
@@ -364,7 +366,7 @@ const TiptapEditor = ({
           className={`h-fit outline-none focus:outline-none
             shadow-${isMobile ? "none" : paperShadow}
             shadow-black
-            font-serif
+            font-serif  
             `}
           style={{
             width: isMobile ? "100%" : `${width}rem`,
@@ -435,3 +437,5 @@ const useFocus = () => {
 
   return [htmlElRef, setFocus];
 };
+
+

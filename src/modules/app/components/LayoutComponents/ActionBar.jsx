@@ -24,6 +24,21 @@ const ActionBar = () => {
   const sideBarOpened = appStore((state) => state.sideBarOpened);
   const setSideBarOpened = appStore((state) => state.setSideBarOpened);
 
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      const x = await getCurrentWindow().isMaximized();
+      console.log("fullscreen??", x);
+
+      setIsMaximized(x);
+    });
+
+    return () => {
+      unlisten.then((unlistenFn) => unlistenFn());
+    };
+  }, []);
+
   return (
     <div
       data-tauri-drag-region
@@ -139,9 +154,9 @@ const ActionBar = () => {
         {deviceType !== "mobile" && (
           <>
             <WindowButton
-              className={`ml-1`}
+              className={``}
               buttonContent={
-                <span className="icon-[mdi--window-minimize] w-actionBarButtonIconSize h-actionBarButtonIconSize"></span>
+                <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
               }
               onClick={() => {
                 appWindow.minimize();
@@ -150,7 +165,11 @@ const ActionBar = () => {
             <WindowButton
               className={``}
               buttonContent={
-                <span className="icon-[mdi--window-maximize] w-actionBarButtonIconSize h-actionBarButtonIconSize"></span>
+                isMaximized ? (
+                  <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                ) : (
+                  <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                )
               }
               onClick={() => {
                 appWindow.toggleMaximize();
@@ -160,7 +179,7 @@ const ActionBar = () => {
               destructive={true}
               className={``}
               buttonContent={
-                <span className="icon-[mdi--window-close] w-actionBarButtonIconSize h-actionBarButtonIconSize"></span>
+                <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
               }
               onClick={() => {
                 appWindow.close();
@@ -211,9 +230,9 @@ const WindowButton = ({
 }) => {
   return (
     <button
-      className={`h-full flex items-center px-4 w-fit ${
+      className={`h-full flex items-center justify-center w-fit px-4 text-appLayoutHighlight ${
         destructive
-          ? "hover:bg-appLayoutDestruct hover:bg-opacity-70"
+          ? "hover:bg-appLayoutDestruct"
           : "hover:bg-appLayoutInverseHover"
       } ${className}`}
       onClick={onClick}
