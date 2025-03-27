@@ -89,3 +89,7 @@ class DictionaryManager {
         });
     }
 }
+
+const dictionaryManager = new DictionaryManager();
+
+export default dictionaryManager;

@@ -5,6 +5,7 @@ import LibraryManager from "../SidePanels/LibraryManager/LibraryManager";
 import { AnimatePresence, motion } from "motion/react";
 import LibraryDirectory from "../SidePanels/LibraryDirectory/LibraryDirectory";
 import TemplateManager from "../SidePanels/TemplateManager/TemplateManager";
+import DictionaryManager from "../SidePanels/DictionaryManager/DictionaryManager";
 
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -27,6 +28,9 @@ const SidePanel = ({}) => {
     } else if (activity === "templates") {
       key.current = "templateManager";
       return <TemplateManager />;
+    } else if (activity === "dictionary") {
+      key.current = "dictionaryManager";
+      return <DictionaryManager />;
     } else {
       key.current = "empty";
       return (

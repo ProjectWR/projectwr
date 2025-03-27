@@ -50,6 +50,7 @@ import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
 import { setupEnDictionary } from "../../editor/enDictionary";
 import { setupNspellchecker } from "../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
+import dictionaryManager from "../lib/dictionary";
 
 let wasLocalSetup = false;
 
@@ -142,6 +143,8 @@ const WritingApp = () => {
         setLoadingStage("Loading dictionaries");
 
         await setupEnDictionary();
+
+        await dictionaryManager.init();
 
         setLoadingStage("Loading spellchecker");
 

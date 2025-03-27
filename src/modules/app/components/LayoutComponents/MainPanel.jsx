@@ -146,6 +146,11 @@ const MainPanel = ({}) => {
       return <HomePanel />;
     }
 
+    if (activity === "dictionary") {
+      key.current = "empty";
+      return <HomePanel />;
+    }
+
     if (activity === "settings") {
       key.current = "settings";
       return <SettingsPanel />;

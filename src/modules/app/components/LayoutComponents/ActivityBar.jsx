@@ -131,6 +131,23 @@ const ActivityBar = ({}) => {
           />
           <ActivityButton
             onClick={() => {
+              if (!(activity === "dictionary" && panelOpened)) {
+                setActivity("dictionary");
+                setPanelOpened(true);
+                saveStateInHistory();
+                clearFuture();
+              }
+            }}
+            activity={activity}
+            selectedActivity={"dictionary"}
+            deviceType={deviceType}
+            buttonContent={
+              <span className="icon-[material-symbols-light--dictionary-outline] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+            }
+            flexValue={"grow-1"}
+          />
+          <ActivityButton
+            onClick={() => {
               if (!(activity === "settings" && !panelOpened)) {
                 setActivity("settings");
                 setPanelOpened(false);
