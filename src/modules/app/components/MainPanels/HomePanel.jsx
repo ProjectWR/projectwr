@@ -144,10 +144,10 @@ const HomePanel = () => {
           <AnimatePresence>
             {latestItems.length > 0 && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "fit-content" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="w-full overflow-hidden rounded-lg"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="w-full h-fit overflow-hidden rounded-lg"
               >
                 <div className={`h-fit w-full`}>
                   <div className="w-full h-full flex flex-col items-center justify-start pt-6 pb-5 gap-1">
