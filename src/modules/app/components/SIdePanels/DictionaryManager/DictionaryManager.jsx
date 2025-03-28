@@ -16,18 +16,28 @@ const DictionaryManager = () => {
   console.log("Template Manager was rendered");
   const { deviceType } = useDeviceType();
 
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
+  const dictionaryMode = appStore((state) => state.dictionaryMode);
+  const setDictionaryMode = appStore((state) => state.setDictionaryMode);
+
   const prevWordArrayRef = useRef(null);
 
   /** @type {[]} */
   const wordArray = useSyncExternalStore(
     (callback) => {
-      dictionaryManager.dictionaryYDoc
-        .getArray("wordArray")
-        .observeDeep(callback);
+      dictionaryManager.dictionaryYDoc.getMap("wordMap").observeDeep(callback);
 
       return () => {
         dictionaryManager.dictionaryYDoc
-          .getArray("wordArray")
+          .getMap("wordMap")
           .unobserveDeep(callback);
       };
     },
@@ -47,13 +57,19 @@ const DictionaryManager = () => {
   );
 
   const sortedWordArray = useMemo(() => {
-    wordArray.sort((a, b) => {
-      a.word < b.word;
+    return wordArray.sort((a, b) => {
+      return a < b;
     });
   }, [wordArray]);
 
+  console.log("Checking word array on rerender: ", sortedWordArray);
+
   const handleCreateWord = () => {
-    //
+    if (dictionaryMode !== "create") {
+      setDictionaryMode("create");
+      saveStateInHistory();
+      clearFuture();
+    }
   };
 
   return (
@@ -94,9 +110,19 @@ const DictionaryManager = () => {
         }}
       >
         <div
-          id="TemplateListContainer"
+          id="WordListContainer"
           className="w-full h-fit flex flex-col justify-start items-center"
-        ></div>
+        >
+          {sortedWordArray?.map((word) => (
+            <div
+              key={word}
+              id={`WordListNode-${word}`}
+              className="w-full h-libraryManagerNodeHeight min-h-libraryManagerNodeHeight"
+            >
+              <DictionaryManagerNode word={word} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -104,7 +130,7 @@ const DictionaryManager = () => {
 
 export default DictionaryManager;
 
-const DictionaryManagerNode = ({ word, index }) => {
+const DictionaryManagerNode = ({ word }) => {
   const { deviceType } = useDeviceType();
 
   const {
@@ -116,25 +142,36 @@ const DictionaryManagerNode = ({ word, index }) => {
     clearFuture,
   } = useStoreHistory();
 
+  const setDictionaryWord = appStore((state) => state.setDictionaryWord);
+  const dictionaryWord = appStore((state) => state.dictionaryWord);
+
+  const setDictionaryMode = appStore((state) => state.setDictionaryMode);
+  const dictionaryMode = appStore((state) => state.dictionaryMode);
+
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-  const panelOpened = appStore((state) => state.panelOpened);
+
 
   return (
     <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg">
       <button
         className={`flex-grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0 rounded-l-lg`}
-        onClick={() => {}}
+        onClick={() => {
+          if (dictionaryWord !== word || dictionaryMode !== "details") {
+            setDictionaryMode("details");
+            setDictionaryWord(word);
+            if (deviceType === "mobile") {
+              setPanelOpened(false);
+            }
+
+            setPanelOpened(true);
+            saveStateInHistory();
+            clearFuture();
+          }
+        }}
       >
         <div className="flex items-center gap-2">
-          <span className="icon-[carbon--template] h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize transition-colors duration-100"></span>
           <p className="transition-colors duration-100">{word}</p>
         </div>
-      </button>
-      <button
-        className="h-libraryManagerNodeEditButtonWidth w-libraryManagerNodeEditButtonWidth transition-colors duration-0 px-2 m-2 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
-        onClick={() => {}}
-      >
-        <span className="icon-[mdi--edit-outline] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
       </button>
     </div>
   );

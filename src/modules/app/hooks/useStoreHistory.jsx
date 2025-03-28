@@ -23,6 +23,8 @@ const useStoreHistory = () => {
   const templateId = appStore((state) => state.templateId);
   const templateMode = appStore((state) => state.templateMode);
   const panelOpened = appStore((state) => state.panelOpened);
+  const dictionaryMode = appStore((state) => state.dictionaryMode);
+  const dictionaryWord = appStore((state) => state.dictionaryWord);
 
   const setActivity = appStore((state) => state.setActivity);
   const setLibraryId = appStore((state) => state.setLibraryId);
@@ -31,6 +33,8 @@ const useStoreHistory = () => {
   const setTemplateId = appStore((state) => state.setTemplateId);
   const setTemplateMode = appStore((state) => state.setTemplateMode);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+  const setDictionaryMode = appStore((state) => state.setDictionaryMode);
+  const setDictionaryWord = appStore((state) => state.setDictionaryWord);
 
   const saveStateInHistory = () => {
     past.push({
@@ -41,6 +45,8 @@ const useStoreHistory = () => {
       templateId,
       templateMode,
       panelOpened,
+      dictionaryMode,
+      dictionaryWord,
     });
   };
 
@@ -57,7 +63,16 @@ const useStoreHistory = () => {
     else setCanGoBack(false);
     if (future.length > 0) setCanGoForward(true);
     else setCanGoForward(false);
-  }, [activity, libraryId, itemId, itemMode, templateId, templateMode]);
+  }, [
+    activity,
+    libraryId,
+    itemId,
+    itemMode,
+    templateId,
+    templateMode,
+    dictionaryMode,
+    dictionaryWord,
+  ]);
 
   const goBack = () => {
     if (!canGoBack) return;
@@ -74,6 +89,8 @@ const useStoreHistory = () => {
     setTemplateId(state.templateId);
     setTemplateMode(state.templateMode);
     setPanelOpened(state.panelOpened);
+    setDictionaryMode(state.dictionaryMode);
+    setDictionaryWord(state.dictionaryWord);
   };
 
   const goForward = () => {
@@ -87,6 +104,8 @@ const useStoreHistory = () => {
       templateId,
       templateMode,
       panelOpened,
+      dictionaryMode,
+      dictionaryWord,
     });
 
     past.push(future.pop());
@@ -99,6 +118,8 @@ const useStoreHistory = () => {
     setTemplateId(state.templateId);
     setTemplateMode(state.templateMode);
     setPanelOpened(state.panelOpened);
+    setDictionaryMode(state.dictionaryMode);
+    setDictionaryWord(state.dictionaryWord);
   };
 
   const clearFuture = () => {

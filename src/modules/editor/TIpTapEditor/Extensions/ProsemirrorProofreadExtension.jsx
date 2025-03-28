@@ -7,19 +7,10 @@ import {
 } from "prosemirror-proofread";
 import Tokenizr from "tokenizr";
 import nspell from "nspell";
-import { resolveResource } from '@tauri-apps/api/path';
-import { readTextFile } from '@tauri-apps/plugin-fs';
+import { resolveResource } from "@tauri-apps/api/path";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 import createProofreadPlugin from "./createProofreadPlugin";
-
-/** @type {nspell} */
-let nspellchecker;
-
-export async function setupNspellchecker() {
-  const aff = await readTextFile(await resolveResource('resources/index.aff'));
-  const dic = await readTextFile(await resolveResource('resources/index.dic'));
-
-  nspellchecker = nspell({ aff: aff, dic: dic });
-}
+import dictionaryManager from "../../../app/lib/dictionary";
 
 let lexer = new Tokenizr();
 
@@ -49,9 +40,9 @@ const generateProofreadErrors = async (input) => {
   lexer.tokens().forEach((token) => {
     if (token.value.length < 2) return;
 
-    const result = nspellchecker.correct(token.value);
+    const result = dictionaryManager.userSpellchecker.correct(token.value);
 
-    const replacements = nspellchecker.suggest(token.value);
+    // const replacements = nspellchecker.suggest(token.value);
 
     if (!result) {
       response.matches.push({
@@ -60,7 +51,6 @@ const generateProofreadErrors = async (input) => {
         message: "Possible spelling mistake found.",
         shortMessage: "Spelling error",
         type: { typeName: "UnknownWord" },
-        replacements
       });
     }
 

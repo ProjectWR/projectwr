@@ -49,7 +49,6 @@ import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
 import { setupEnDictionary } from "../../editor/enDictionary";
-import { setupNspellchecker } from "../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
 import dictionaryManager from "../lib/dictionary";
 
 let wasLocalSetup = false;
@@ -140,15 +139,11 @@ const WritingApp = () => {
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
 
-        setLoadingStage("Loading dictionaries");
-
-        await setupEnDictionary();
+        setLoadingStage("Loading dictionaries and spellchecker");
 
         await dictionaryManager.init();
 
-        setLoadingStage("Loading spellchecker");
-
-        await setupNspellchecker();
+        await setupEnDictionary();
 
         setLoadingStage("Loading fonts");
 
@@ -191,6 +186,7 @@ const WritingApp = () => {
                 "keyval-store",
                 "level-js-index",
                 "validate-browser-context-for-indexeddb-analytics-module",
+                "dictionary"
               ].find((value) => value === libraryId)
             ) {
               continue;

@@ -13,6 +13,8 @@ import PaperSettingsPanel from "../MainPanels/PaperSettingsPanel";
 import TemplateViewPanel from "../MainPanels/TemplateViewPanel";
 import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
 import HomePanel from "../MainPanels/HomePanel";
+import DictionaryCreatePanel from "../MainPanels/DictionaryCreatePanel";
+import DictionaryDetailsPanel from "../MainPanels/DictionaryDetailsPanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -22,6 +24,9 @@ const MainPanel = ({}) => {
 
   const templateId = appStore((state) => state.templateId);
   const templateMode = appStore((state) => state.templateMode);
+
+  const dictionaryWord = appStore((state) => state.dictionaryWord);
+  const dictionaryMode = appStore((state) => state.dictionaryMode);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
 
@@ -147,6 +152,16 @@ const MainPanel = ({}) => {
     }
 
     if (activity === "dictionary") {
+      if (dictionaryMode === "create") {
+        key.current = "Dictionary-" + dictionaryMode;
+        return <DictionaryCreatePanel />;
+      }
+
+      if (dictionaryMode === "details") {
+        key.current = "Dictionary-" + dictionaryWord + "-" + dictionaryMode;
+        return <DictionaryDetailsPanel word={dictionaryWord} />;
+      }
+
       key.current = "empty";
       return <HomePanel />;
     }
@@ -158,7 +173,16 @@ const MainPanel = ({}) => {
 
     key.current = "empty";
     return <HomePanel />;
-  }, [libraryId, activity, itemId, itemMode, templateId, templateMode]);
+  }, [
+    libraryId,
+    activity,
+    itemId,
+    itemMode,
+    templateId,
+    templateMode,
+    dictionaryMode,
+    dictionaryWord
+  ]);
 
   return (
     <AnimatePresence mode="wait">

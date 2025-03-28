@@ -63,4 +63,13 @@ export const appStore = create((set) => ({
     return set({ templateMode: templateMode });
   },
 
+  dictionaryWord: '',
+  setDictionaryWord: (dictionaryWord) => {
+    return set({ dictionaryWord: dictionaryWord });
+  },
+
+  dictionaryMode: '',
+  setDictionaryMode: (dictionaryMode) => {
+    return set({ dictionaryMode: dictionaryMode });
+  }
 }));
