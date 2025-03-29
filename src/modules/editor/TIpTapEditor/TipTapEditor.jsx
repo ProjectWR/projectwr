@@ -36,6 +36,7 @@ import ProsemirrorProofreadExtension from "./Extensions/ProsemirrorProofreadExte
 import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExtension";
 import dictionaryManager from "../../app/lib/dictionary";
 import { wait } from "lib0/promise";
+import { appStore } from "../../app/stores/appStore";
 
 const content = "<p>Hello World!</p>";
 
@@ -64,6 +65,7 @@ const TiptapEditor = ({
 
   const editorPreferences = preferences || defaultPreferences;
 
+  const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
 
   const {
@@ -422,17 +424,38 @@ const TiptapEditor = ({
               align="end"
             >
               {selectingError.trim().length > 0 && (
-                <ContextMenu.Item className="ContextMenuItem" onClick={async () => {
-                  dictionaryManager.addOrUpdateWord(selectingError, "", "");
-                  await wait(1000);
-                  editor.commands.forceSpellcheck();
-
-                }}>
+                <ContextMenu.Item
+                  className="ContextMenuItem"
+                  onClick={async () => {
+                    dictionaryManager.addOrUpdateWord(selectingError, "", "");
+                    await wait(1000);
+                    editor.commands.forceSpellcheck();
+                  }}
+                >
                   {/* [bitcoin-icons--edit-outline] */}
                   <span className="icon-[material-symbols-light--add-2-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                   <span className="pb-px">Add word to dictionary</span>
                 </ContextMenu.Item>
               )}
+
+              <ContextMenu.Item
+                className="ContextMenuItem"
+                onClick={() => {
+                  const textSelection = window
+                    .getSelection()
+                    ?.toString()
+                    .trim();
+                  setSearchQuery(textSelection);
+                  console.log(document.getElementById("searchInput"));
+                  setTimeout(() => {
+                    document.getElementById("searchInput").focus();
+                  }, 100);
+                }}
+              >
+                {/* [bitcoin-icons--edit-outline] */}
+                <span className="icon-[material-symbols-light--search] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span className="pb-px">Search</span>
+              </ContextMenu.Item>
 
               <ContextMenu.Label className="ContextMenuLabel">
                 <span className="icon-[material-symbols-light--content-copy-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>

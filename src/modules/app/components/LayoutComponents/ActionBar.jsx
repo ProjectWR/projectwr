@@ -3,7 +3,7 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { appStore } from "../../stores/appStore";
 import { motion, AnimatePresence } from "motion/react";
 import { queryData } from "../../lib/search";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import { max } from "lib0/math";
 import useStoreHistory from "../../hooks/useStoreHistory";
@@ -245,13 +245,17 @@ const WindowButton = ({
 const SearchBar = () => {
   const { deviceType } = useDeviceType();
 
+  const searchInputRef = useRef(null);
+
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
   const setItemMode = appStore((state) => state.setItemMode);
   const setActivity = appStore((state) => state.setActivity);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchQuery = appStore((state => state.searchQuery));
+  const setSearchQuery = appStore((state => state.setSearchQuery));
+
   const [isFocused, setIsFocused] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
@@ -288,6 +292,9 @@ const SearchBar = () => {
     <div className="relative h-full py-1 w-actionBarSearchWidth ml-1 text-actionBarSearchTextSize">
       <input
         name="searchQuery"
+        ref={searchInputRef}
+        id="searchInput"
+        tabIndex={4}
         placeholder=""
         value={searchQuery}
         onChange={handleChange}

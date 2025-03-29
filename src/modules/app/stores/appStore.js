@@ -71,5 +71,10 @@ export const appStore = create((set) => ({
   dictionaryMode: '',
   setDictionaryMode: (dictionaryMode) => {
     return set({ dictionaryMode: dictionaryMode });
+  },
+
+  searchQuery: '',
+  setSearchQuery: (searchQuery) => {
+    return set({ searchQuery: searchQuery });
   }
 }));
