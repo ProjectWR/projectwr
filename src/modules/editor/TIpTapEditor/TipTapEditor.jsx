@@ -454,7 +454,7 @@ const TiptapEditor = ({
               >
                 {/* [bitcoin-icons--edit-outline] */}
                 <span className="icon-[material-symbols-light--search] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span className="pb-px">Search</span>
+                <span className="pb-px">Search in your library</span>
               </ContextMenu.Item>
 
               <ContextMenu.Label className="ContextMenuLabel">
