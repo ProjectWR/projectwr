@@ -316,7 +316,7 @@
   .ContextMenuCheckboxItem,
   .ContextMenuRadioItem,
   .ContextMenuSubTrigger {
-    @apply text-optionsDropdownOptionFont text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 pl-2 pr-1 justify-start gap-2 relative select-none outline-none;
+    @apply text-optionsDropdownOptionFont text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
   }
 
   .ContextMenuItem[data-disabled],
@@ -326,7 +326,7 @@
   }
 
   .ContextMenuLabel {
-    @apply text-appLayoutText text-optionsDropdownOptionFont;
+    @apply text-optionsDropdownOptionFont text-appLayoutTextMuted rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
   }
 
   .ContextMenuSeparator {

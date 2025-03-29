@@ -9,7 +9,7 @@ import Tokenizr from "tokenizr";
 import nspell from "nspell";
 import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
-import createProofreadPlugin from "./createProofreadPlugin";
+import createProofreadPlugin, { spellcheckkey } from "./createProofreadPlugin";
 import dictionaryManager from "../../../app/lib/dictionary";
 
 let lexer = new Tokenizr();
@@ -71,11 +71,24 @@ const ProsemirrorProofreadExtension = Extension.create({
   addProseMirrorPlugins() {
     return [
       createProofreadPlugin(
-        1000, // Debounce time in ms
+        500, // Debounce time in ms
         generateProofreadErrors, // function to call proofreading service
         spellCheckStore // Reactive store to toggle spell checking
       ),
     ];
+  },
+
+  addCommands() {
+    return {
+      forceSpellcheck:
+        () =>
+        ({ tr, dispatch }) => {
+          if (dispatch) {
+            tr.setMeta("forceProofread", true);
+          }
+          return true;
+        },
+    };
   },
 });
 

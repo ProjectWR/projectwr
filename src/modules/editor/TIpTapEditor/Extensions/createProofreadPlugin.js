@@ -32,7 +32,7 @@ function generateErrorKey(error) {
     return keyContent;
 }
 
-const spellcheckkey = new PluginKey('proofreadPlugin');
+export const spellcheckkey = new PluginKey('proofreadPlugin');
 
 export function createProofreadPlugin(
     debounceTimeMS,
@@ -143,7 +143,7 @@ export function createProofreadPlugin(
                 const spellcheckEnabled = value;
                 const tr = view.state.tr;
                 tr.setMeta('updateSpellcheckEnabled', spellcheckEnabled);
-                view.dispatch(tr);
+                    view.dispatch(tr);
             });
             return {
                 destroy() {
@@ -182,6 +182,11 @@ export function createProofreadPlugin(
                 getOldNodes([tr], oldState).forEach((changednode) => {
                     old.cacheMap.delete(generateNodeKey(changednode.node));
                 });
+
+                if (forceProofread) {
+                    old.cacheMap.clear();
+                }
+
                 const newIgnoredErrors = new Map();
                 old.ignoredErrors.forEach((value, key) => {
                     const [from, to, msgHash] = key.split('-');
@@ -191,6 +196,8 @@ export function createProofreadPlugin(
                     newIgnoredErrors.set(newKey, true);
                 });
                 const newDeco = old.decor.map(tr.mapping, tr.doc);
+
+                console.log("Spellchecker is checking!");
                 debouncedCheck(
                     newState.doc,
                     {

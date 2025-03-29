@@ -26,11 +26,16 @@ import TabIndentExtension from "./Extensions/TabIndentExtension";
 import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
 
+import { ContextMenu } from "radix-ui";
+import { writeText, readText } from "@tauri-apps/plugin-clipboard-manager";
+
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
 import loremIpsum from "../lorem";
 import ProsemirrorProofreadExtension from "./Extensions/ProsemirrorProofreadExtension";
 import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExtension";
+import dictionaryManager from "../../app/lib/dictionary";
+import { wait } from "lib0/promise";
 
 const content = "<p>Hello World!</p>";
 
@@ -58,6 +63,8 @@ const TiptapEditor = ({
     : desktopDefaultPreferences;
 
   const editorPreferences = preferences || defaultPreferences;
+
+  const [selectingError, setSelectingError] = useState("");
 
   const {
     width,
@@ -141,7 +148,7 @@ const TiptapEditor = ({
       types: ["heading", "paragraph"],
     }),
     ProsemirrorProofreadExtension,
-    ProsemirrorVirtualCursor
+    ProsemirrorVirtualCursor,
   ]);
 
   const previewTemplateExtensions = useRef([
@@ -233,6 +240,25 @@ const TiptapEditor = ({
           });
         }, 2);
       }
+    },
+    onSelectionUpdate({ editor }) {
+      const domSelection = window.getSelection();
+      let errorText = "";
+      if (domSelection?.anchorNode) {
+        let node = domSelection.anchorNode.parentElement;
+        while (node) {
+          if (
+            node.tagName.toLowerCase() === "span" &&
+            node.classList.contains("spelling-error")
+          ) {
+            errorText = node.textContent;
+            break;
+          }
+          node = node.parentElement;
+        }
+      }
+      console.log("Selecting Error Text:", errorText);
+      setSelectingError(errorText);
     },
   });
 
@@ -360,32 +386,71 @@ const TiptapEditor = ({
           backgroundColor: backgroundColor,
         }}
       >
-        <EditorContent
-          spellCheck={false}
-          editor={editor}
-          className={`h-fit outline-none focus:outline-none
+        <ContextMenu.Root>
+          <ContextMenu.Trigger>
+            <EditorContent
+              spellCheck={false}
+              editor={editor}
+              className={`h-fit outline-none focus:outline-none
             shadow-${isMobile ? "none" : paperShadow}
             shadow-black
             font-serif  
             `}
-          style={{
-            width: isMobile ? "100%" : `${width}rem`,
-            minWidth: isMobile ? "100%" : `${width * 0.8}rem`,
-            backgroundColor: `${paperColor}`,
-            borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-            borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-            borderBottomWidth: isMobile ? "0" : `0`,
-            borderLeftWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-            borderTopColor: `${paperBorderColor}`,
-            borderLeftColor: `${paperBorderColor}`,
-            borderRightColor: `${paperBorderColor}`,
-            marginTop: isMobile ? "0" : `${gapTop}rem`,
-            fontSize: `${fontSize}rem`,
-            lineHeight: `${lineHeight}rem`,
-            borderTopRightRadius: `${roundRadius}rem`,
-            borderTopLeftRadius: `${roundRadius}rem`,
-          }}
-        />
+              style={{
+                width: isMobile ? "100%" : `${width}rem`,
+                minWidth: isMobile ? "100%" : `${width * 0.8}rem`,
+                backgroundColor: `${paperColor}`,
+                borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+                borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+                borderBottomWidth: isMobile ? "0" : `0`,
+                borderLeftWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+                borderTopColor: `${paperBorderColor}`,
+                borderLeftColor: `${paperBorderColor}`,
+                borderRightColor: `${paperBorderColor}`,
+                marginTop: isMobile ? "0" : `${gapTop}rem`,
+                fontSize: `${fontSize}rem`,
+                lineHeight: `${lineHeight}rem`,
+                borderTopRightRadius: `${roundRadius}rem`,
+                borderTopLeftRadius: `${roundRadius}rem`,
+              }}
+            />
+          </ContextMenu.Trigger>
+          <ContextMenu.Portal>
+            <ContextMenu.Content
+              className="ContextMenuContent"
+              sideOffset={5}
+              align="end"
+            >
+              {selectingError.trim().length > 0 && (
+                <ContextMenu.Item className="ContextMenuItem" onClick={async () => {
+                  dictionaryManager.addOrUpdateWord(selectingError, "", "");
+                  await wait(1000);
+                  editor.commands.forceSpellcheck();
+
+                }}>
+                  {/* [bitcoin-icons--edit-outline] */}
+                  <span className="icon-[material-symbols-light--add-2-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                  <span className="pb-px">Add word to dictionary</span>
+                </ContextMenu.Item>
+              )}
+
+              <ContextMenu.Label className="ContextMenuLabel">
+                <span className="icon-[material-symbols-light--content-copy-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span className="pb-px">Use Ctrl+C to Copy</span>
+              </ContextMenu.Label>
+
+              <ContextMenu.Label className="ContextMenuLabel">
+                <span className="icon-[material-symbols-light--content-paste] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span className="pb-px">Use Ctrl+V to Paste</span>
+              </ContextMenu.Label>
+
+              <ContextMenu.Label className="ContextMenuLabel">
+                <span className="icon-[material-symbols-light--content-cut] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+                <span className="pb-px">Use Ctrl+X to Cut</span>
+              </ContextMenu.Label>
+            </ContextMenu.Content>
+          </ContextMenu.Portal>
+        </ContextMenu.Root>
       </div>
     </div>
   );
@@ -437,5 +502,3 @@ const useFocus = () => {
 
   return [htmlElRef, setFocus];
 };
-
-
