@@ -223,7 +223,7 @@
       var(--uiScale) * 1.2rem
     );
 
-    --loadingSpinnerSize: calc(var(--uiScale) * 7.5rem);
+    --loadingSpinnerSize: calc(var(--uiScale) * 12rem);
 
     --optionsDropdownWidth: calc(var(--uiScale) * 14rem);
     --optionsDropdownOptionHeight: calc(var(--uiScale) * 2rem);
