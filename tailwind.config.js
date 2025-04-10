@@ -51,6 +51,7 @@ export default {
         appLayoutShadow: "hsl(var(--appLayoutShadow))",
         appLayoutGentleShadow: "hsl(var(--appLayoutGentleShadow))",
         appLayoutHover: "hsl(var(--appLayoutHover))",
+        appLayoutDarkHover: "hsl(var(--appLayoutDarkHover))",
         appLayoutHoverLight: "hsl(var(--appLayoutHoverLight))",
         appLayoutInverseHover: "hsl(var(--appLayoutInverseHover))",
         appLayout: "hsl(var(--appLayoutInverseHover))",

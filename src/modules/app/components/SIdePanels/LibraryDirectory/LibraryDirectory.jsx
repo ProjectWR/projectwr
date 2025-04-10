@@ -106,7 +106,7 @@ const LibraryDirectory = ({ libraryId }) => {
             setFocusedItemId(null);
           }}
           id="LibraryDirectoryHeader"
-          className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder`}
+          className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  ${focusedItemId === null ? "bg-appLayoutHover" : ""} `}
         >
           <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
             <h1
@@ -114,17 +114,11 @@ const LibraryDirectory = ({ libraryId }) => {
                 deviceType === "mobile" ? "ml-3" : "ml-6"
               }`}
             >
-              <motion.p
-                animate={{
-                  textShadow:
-                    focusedItemId === null
-                      ? `0 0 4px hsl(var(--appLayoutText))`
-                      : "none",
-                }}
+              <p
                 className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis"
               >
                 {libraryPropsMapState.library_name}
-              </motion.p>
+              </p>
             </h1>
           </div>
         </button>

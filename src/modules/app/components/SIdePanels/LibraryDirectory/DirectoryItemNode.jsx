@@ -288,7 +288,7 @@ const DirectoryItemNode = ({
               transition={{ duration: 0.05 }}
               className={`flex justify-between items-center  hover:bg-appLayoutHover
             pl-1
-          
+          ${focusedItemId === itemId ? "bg-appLayoutHover" : ""} 
             rounded-md
 
           ${(() => {
@@ -362,15 +362,8 @@ const DirectoryItemNode = ({
 
               {(itemMapRef.current.get("type") === "section" ||
                 itemMapRef.current.get("type") === "book") && (
-                <motion.button
-
-                  animate={{
-                    textShadow:
-                      focusedItemId === itemId
-                        ? `0 0 10px hsl(var(--appLayoutText))`
-                        : "none",
-                  }}
-                  className="flex-grow min-w-0 flex items-center justify-start h-full"
+                <button
+                  className={`flex-grow min-w-0 flex items-center justify-start h-full`}
                   onClick={() => {
                     setFocusedItemId(itemId);
                     const newOpenedState = !isOpened;
@@ -403,7 +396,7 @@ const DirectoryItemNode = ({
                       {itemMapState.item_title}
                     </span>
                   </div>
-                </motion.button>
+                </button>
               )}
             </motion.div>
           </AnimatePresence>
