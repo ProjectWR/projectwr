@@ -396,7 +396,7 @@ const WritingApp = () => {
                               width: `${computedPanelWidth}px`,
                             }}
                             exit={{ opacity: 0, width: 0, minWidth: 0 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.1 }}
                             style={{
                               width: mWidth,
                               // boxShadow:
