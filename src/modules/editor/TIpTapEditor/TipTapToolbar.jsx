@@ -38,10 +38,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton flex-shrink-0"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
-            minWidth: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
           }}
           onClick={() => editor.commands.undo()}
         >
@@ -50,9 +50,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
           }}
           onClick={() => editor.commands.redo()}
         >
@@ -73,9 +74,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("bold") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -85,9 +87,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("italic") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -97,9 +100,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("strike") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -109,9 +113,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("underline") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -125,9 +130,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton p-1 pb-px"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("subscript") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleSubscript().run()}
@@ -137,9 +143,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton p-1 pt-px"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("superscript") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleSuperscript().run()}
@@ -153,9 +160,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton p-1"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("blockquote") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -165,9 +173,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("bulletList") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -177,9 +186,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("orderedList") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -193,9 +203,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive({ textAlign: "left" })
               ? pressedColor
               : "",
@@ -207,9 +218,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive({ textAlign: "center" })
               ? pressedColor
               : "",
@@ -221,9 +233,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive({ textAlign: "right" })
               ? pressedColor
               : "",
@@ -235,9 +248,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive({ textAlign: "justify" })
               ? pressedColor
               : "",
@@ -253,9 +267,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `${buttonHeight}rem`,
+            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
-            width: `${buttonWidth}rem`,
+            width: `calc(${buttonWidth}rem * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
             backgroundColor: editor.isActive("horizontalRule")
               ? pressedColor
               : "",

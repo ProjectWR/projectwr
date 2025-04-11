@@ -94,8 +94,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
       >
         <button
           style={{
-            minWidth: `${textFormatButtonWidth}rem`,
-            width: `${textFormatButtonWidth}rem`,
+            minWidth: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+            width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
           }}
           className={`h-full px-[0.35rem] toolbarButton rounded-[0.35rem] `}
           onClick={() => setIsOpened(!isOpened)}
@@ -125,7 +125,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
-              width: `${textFormatButtonWidth}rem`,
+              width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
               border: `1px solid ${dividerColor}`,
             }}
           >

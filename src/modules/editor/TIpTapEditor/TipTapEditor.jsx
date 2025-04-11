@@ -289,65 +289,66 @@ const TiptapEditor = ({
       <style>
         {`
           .tiptap {
-            min-height: 20rem;
-            padding: ${paddingTop}rem 
-                      ${paddingRight}rem 
-                      ${paddingBottom}rem 
-                      ${paddingLeft}rem;
+            min-height: calc(20rem * var(--uiScale));
+            padding: calc(${paddingTop}rem * var(--uiScale))
+                     calc(${paddingRight}rem * var(--uiScale))
+                     calc(${paddingBottom}rem * var(--uiScale))
+                     calc(${paddingLeft}rem * var(--uiScale));
           }
 
           #EditorContainer h1 {
-            font-size: ${h1FontSize}rem;
-            line-height: ${h1LineHeight}rem;
-            margin-bottom: ${h1MarginBottom}rem;
+            font-size: calc(${h1FontSize}rem * var(--uiScale));
+            line-height: calc(${h1LineHeight}rem * var(--uiScale));
+            margin-bottom: calc(${h1MarginBottom}rem * var(--uiScale));
           }
           #EditorContainer h2 {
-            font-size: ${h2FontSize}rem;
-            line-height: ${h2LineHeight}rem;
-            margin-bottom: ${h2MarginBottom}rem;
+            font-size: calc(${h2FontSize}rem * var(--uiScale));
+            line-height: calc(${h2LineHeight}rem * var(--uiScale));
+            margin-bottom: calc(${h2MarginBottom}rem * var(--uiScale));
           }
           #EditorContainer h3 {
-            font-size: ${h3FontSize}rem;
-            line-height: ${h3LineHeight}rem;
-            margin-bottom: ${h3MarginBottom}rem;
+            font-size: calc(${h3FontSize}rem * var(--uiScale));
+            line-height: calc(${h3LineHeight}rem * var(--uiScale));
+            margin-bottom: calc(${h3MarginBottom}rem * var(--uiScale));
           }
           #EditorContainer h4 {
-            font-size: ${h4FontSize}rem;
-            line-height: ${h4LineHeight}rem;
-            margin-bottom: ${h4MarginBottom}rem;
+            font-size: calc(${h4FontSize}rem * var(--uiScale));
+            line-height: calc(${h4LineHeight}rem * var(--uiScale));
+            margin-bottom: calc(${h4MarginBottom}rem * var(--uiScale));
           }
           #EditorContainer h5 {
-            font-size: ${h5FontSize}rem;
-            line-height: ${h5LineHeight}rem;
-            margin-bottom: ${h5MarginBottom}rem;
+            font-size: calc(${h5FontSize}rem * var(--uiScale));
+            line-height: calc(${h5LineHeight}rem * var(--uiScale));
+            margin-bottom: calc(${h5MarginBottom}rem * var(--uiScale));
           }
 
           #EditorContainer p {
-            font-size: ${fontSize}rem;
-            line-height: ${lineHeight}rem;
+            font-size: calc(${fontSize}rem * var(--uiScale));
+            line-height: calc(${lineHeight}rem * var(--uiScale));
             margin: 0;
           }
 
           #EditorContainer {
-            font-size: ${fontSize}rem;
-            line-height: ${lineHeight}rem;
+            font-size: calc(${fontSize}rem * var(--uiScale));
+            line-height: calc(${lineHeight}rem * var(--uiScale));
           }
 
-          #EditorContainer ol, #EditorContainer ul {
-            padding-left: ${listPaddingLeft}rem;
-            margin: ${listMarginTop}rem 1rem ${listMarginBottom}rem 0.4rem;
+          #EditorContainer ol,
+          #EditorContainer ul {
+            padding-left: calc(${listPaddingLeft}rem * var(--uiScale));
+            margin: calc(${listMarginTop}rem * var(--uiScale)) 1rem calc(${listMarginBottom}rem * var(--uiScale)) 0.4rem;
           }
 
           #EditorContainer hr {
             cursor: pointer;
-            margin: ${hrMarginTop}rem 0 ${hrMarginBottom}rem 0;
+            margin: calc(${hrMarginTop}rem * var(--uiScale)) 0 calc(${hrMarginBottom}rem * var(--uiScale)) 0;
             border-top: 1px solid ${hrBorderColor};
           }
 
           .spelling-error {
             background-color: #ff00001a;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
+            border-top-left-radius: calc(3px * var(--uiScale));
+            border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #ff0000e6;
           }
         `}
@@ -366,18 +367,14 @@ const TiptapEditor = ({
         <div
           id="EditableToolbar"
           style={{
-            height: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
-            minHeight: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
+            height: `calc(${editorPreferences.toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+            minHeight: `calc(${editorPreferences.toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
             backgroundColor: `${editorPreferences.toolbarPreferences.backgroundColor}`,
             borderColor: `${dividerColor}`,
           }}
           className={`
             min-w-0 top-2 sticky
-            ${
-              isMobile
-                ? "order-1 w-full"
-                : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutShadow relative z-[2]"
-            }
+            ${isMobile ? "order-1 w-full" : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutShadow relative z-[2]"}
           `}
         >
           <TipTapToolbar
@@ -397,8 +394,8 @@ const TiptapEditor = ({
             font-serif  
             `}
               style={{
-                width: isMobile ? "100%" : `${width}rem`,
-                minWidth: isMobile ? "100%" : `${width * 0.8}rem`,
+                width: isMobile ? "100%" : `calc(${width}rem * var(--uiScale))`,
+                minWidth: isMobile ? "100%" : `calc(${width * 0.8}rem * var(--uiScale))`,
                 backgroundColor: `${paperColor}`,
                 borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
                 borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
@@ -407,11 +404,9 @@ const TiptapEditor = ({
                 borderTopColor: `${paperBorderColor}`,
                 borderLeftColor: `${paperBorderColor}`,
                 borderRightColor: `${paperBorderColor}`,
-                marginTop: isMobile ? "0" : `${gapTop}rem`,
-                fontSize: `${fontSize}rem`,
-                lineHeight: `${lineHeight}rem`,
+                marginTop: isMobile ? "0" : `calc(${gapTop}rem * var(--uiScale))`,
                 borderTopRightRadius: `${roundRadius}rem`,
-                borderTopLeftRadius: `${roundRadius}rem`,
+                borderTopLeftRadius: `${roundRadius}rem`, 
               }}
             />
           </ContextMenu.Trigger>
@@ -430,7 +425,6 @@ const TiptapEditor = ({
                     editor.commands.forceSpellcheck();
                   }}
                 >
-                  {/* [bitcoin-icons--edit-outline] */}
                   <span className="icon-[material-symbols-light--add-2-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                   <span className="pb-px">Add word to dictionary</span>
                 </ContextMenu.Item>
@@ -450,7 +444,6 @@ const TiptapEditor = ({
                   }, 100);
                 }}
               >
-                {/* [bitcoin-icons--edit-outline] */}
                 <span className="icon-[material-symbols-light--search] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                 <span className="pb-px">Search in your library</span>
               </ContextMenu.Item>
