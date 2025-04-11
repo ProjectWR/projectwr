@@ -45,6 +45,7 @@ export default {
     extend: {
       colors: {
         appBackground: "hsl(var(--appBackground))",
+        appBackgroundAccent: "hsl(var(--appBackgroundAccent))",
         appLayoutBorder: "hsl(var(--appLayoutBorder))",
         appLayoutText: "hsl(var(--appLayoutText))",
         appLayoutTextMuted: "hsl(var(--appLayoutTextMuted))",

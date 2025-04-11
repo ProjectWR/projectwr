@@ -106,7 +106,7 @@ const LibraryDirectory = ({ libraryId }) => {
             setFocusedItemId(null);
           }}
           id="LibraryDirectoryHeader"
-          className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  ${focusedItemId === null ? "bg-appLayoutHover" : ""} `}
+          className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  `}
         >
           <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
             <h1

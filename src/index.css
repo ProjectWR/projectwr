@@ -125,11 +125,12 @@
   }
   .dark {
     --appBackground: 0 0% 8.9%;
+    --appBackgroundAccent: 0 0% 6.9%;
     --appLayoutBorder: 0 0% 16.9%;
     --appLayoutText: 0 0% 80%;
     --appLayoutShadow: 0 0% 0%;
     --appLayoutGentleShadow: 0 0% 3%;
-    --appLayoutHover: 0 0% 6.9%;
+    --appLayoutHover: 0 0% 15%;
     --appLayoutDarkHover: 0 0% 3.9%;
     --appLayoutInverseHover: 0 0% 20%;
     --appLayoutInputBackground: 0 0% 14.9%;

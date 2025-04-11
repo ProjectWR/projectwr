@@ -389,7 +389,7 @@ const WritingApp = () => {
                           <motion.div
                             key="SidePanelMotionContainer"
                             id="SidePanelMotionContainer"
-                            className="h-full border-r border-appLayoutBorder z-4 relative"
+                            className="h-full border-r border-appLayoutBorder z-4 relative bg-appBackgroundAccent"
                             initial={{ opacity: 0, width: 0, minWidth: 0 }}
                             animate={{
                               opacity: 1,
