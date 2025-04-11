@@ -284,7 +284,7 @@ const TiptapEditor = ({
   return (
     <div
       id="EditorContainer"
-      className="h-full w-full flex flex-col items-center"
+      className="h-full w-full flex flex-col items-center bg-appBackgroundAccent"
     >
       <style>
         {`
@@ -354,46 +354,44 @@ const TiptapEditor = ({
       </style>
 
       <div
-        id="EditableToolbar"
-        style={{
-          height: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
-          minHeight: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
-          backgroundColor: `${editorPreferences.toolbarPreferences.backgroundColor}`,
-        }}
-        className={`
-            w-full min-w-0
-            ${isMobile ? "order-5" : "order-1"}
-          `}
-      >
-        <TipTapToolbar
-          editor={editor}
-          toolbarPreferences={editorPreferences.toolbarPreferences}
-        />
-      </div>
-
-      <div
-        className={`w-full h-px flex-shrink-0 ${
-          isMobile ? "order-4" : "order-2"
-        }`}
-        style={{ backgroundColor: `${dividerColor}` }}
-      ></div>
-
-      <div
         id="EditableContainer"
-        className={`flex-grow w-full flex justify-center 
-           overflow-y-scroll min-h-0 text-neutral-200 z-1 order-3
+        className={`h-full w-full flex justify-start flex-col items-center relative
+           overflow-y-scroll min-h-0 text-neutral-200
           `}
         style={{
           paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
           backgroundColor: backgroundColor,
         }}
       >
+        <div
+          id="EditableToolbar"
+          style={{
+            height: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
+            minHeight: `${editorPreferences.toolbarPreferences.toolbarHeight}rem`,
+            backgroundColor: `${editorPreferences.toolbarPreferences.backgroundColor}`,
+            borderColor: `${dividerColor}`,
+          }}
+          className={`
+            min-w-0 top-2 sticky
+            ${
+              isMobile
+                ? "order-1 w-full"
+                : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutShadow relative z-[2]"
+            }
+          `}
+        >
+          <TipTapToolbar
+            editor={editor}
+            toolbarPreferences={editorPreferences.toolbarPreferences}
+          />
+        </div>
+
         <ContextMenu.Root>
           <ContextMenu.Trigger>
             <EditorContent
               spellCheck={false}
               editor={editor}
-              className={`h-fit outline-none focus:outline-none
+              className={`h-fit outline-none focus:outline-none z-[1]
             shadow-${isMobile ? "none" : paperShadow}
             shadow-black
             font-serif  

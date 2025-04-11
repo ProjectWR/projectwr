@@ -2,7 +2,7 @@
 const TiptapDesktopDefaultPreferences = {
   paperPreferences: {
     width: 55,
-    gapTop: 3,
+    gapTop: 1,
     paddingTop: 5, // Updated from marginTop
     paddingLeft: 6, // Updated from marginLeft
     paddingRight: 6, // Updated from marginRight
@@ -11,7 +11,7 @@ const TiptapDesktopDefaultPreferences = {
     fontSize: 1.25,
     lineHeight: 1.75,
     marginBottom: 0,
-    backgroundColor: "#171717",
+    backgroundColor: "#121212",
 
     paperBorderWidth: 1,
     paperBorderColor: "#525252",
