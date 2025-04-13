@@ -18,6 +18,9 @@ import DictionaryDetailsPanel from "../MainPanels/DictionaryDetailsPanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
+
+  const mainPanelPreviousRef = useRef(null);
+
   const libraryId = appStore((state) => state.libraryId);
   const itemId = appStore((state) => state.itemId);
   const itemMode = appStore((state) => state.itemMode);
@@ -130,8 +133,8 @@ const MainPanel = ({}) => {
         return <LibraryDetailsPanel libraryId={libraryId} />;
       }
 
-      key.current = "empty";
-      return <HomePanel />;
+      // key.current = "empty";
+      // return <HomePanel />;
     }
 
     if (activity === "templates") {
@@ -147,8 +150,8 @@ const MainPanel = ({}) => {
         }
       }
 
-      key.current = "empty";
-      return <HomePanel />;
+      // key.current = "empty";
+      // return <HomePanel />;
     }
 
     if (activity === "dictionary") {
@@ -162,8 +165,8 @@ const MainPanel = ({}) => {
         return <DictionaryDetailsPanel word={dictionaryWord} />;
       }
 
-      key.current = "empty";
-      return <HomePanel />;
+      // key.current = "empty";
+      // return <HomePanel />;
     }
 
     if (activity === "settings") {
@@ -171,8 +174,12 @@ const MainPanel = ({}) => {
       return <SettingsPanel />;
     }
 
-    key.current = "empty";
-    return <HomePanel />;
+    if (activity === "home") {
+      key.current = "home";
+      return <HomePanel />;
+    }
+
+    return null;
   }, [
     libraryId,
     activity,
@@ -181,8 +188,21 @@ const MainPanel = ({}) => {
     templateId,
     templateMode,
     dictionaryMode,
-    dictionaryWord
+    dictionaryWord,
   ]);
+
+  const renderProxy = useCallback(() => {
+    const mainPanel = renderMainPanel();
+    
+    if (mainPanel) {
+      mainPanelPreviousRef.current = {key: key.current, mainPanel: mainPanel}
+      return mainPanelPreviousRef.current.mainPanel;
+    } else if (mainPanelPreviousRef.current) {
+      return mainPanelPreviousRef.current.mainPanel;
+    } else {
+      return null;
+    }
+  }, [renderMainPanel])
 
   return (
     <AnimatePresence mode="wait">
@@ -194,7 +214,7 @@ const MainPanel = ({}) => {
         transition={{ duration: 0.1 }}
         className="w-full h-full overflow-hidden z-3 flex justify-center"
       >
-        {renderMainPanel()}
+        {renderProxy()}
       </motion.div>
     </AnimatePresence>
   );

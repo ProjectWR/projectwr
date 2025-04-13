@@ -121,7 +121,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
             ref={dropdownRef}
-            className={`h-fit p-1 px-1 bg-appBackground z-30 bg-opacity-100 flex fixed items-center flex-col rounded-[0.2rem]`}
+            className={`h-fit p-1 px-1 bg-appBackground z-30 bg-opacity-100 flex fixed items-center flex-col rounded-[0.2rem] shadow-2xl shadow-appLayoutGentleShadow`}
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,

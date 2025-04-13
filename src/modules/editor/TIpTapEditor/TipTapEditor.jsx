@@ -278,6 +278,11 @@ const TiptapEditor = ({
       isBulletList: editor.isActive("bulletList"),
       isOrderedList: editor.isActive("orderedList"),
       isAlign: editor.isActive("textAlign"),
+      isHeading1: editor.isActive("heading", { level: 1 }),
+      isHeading2: editor.isActive("heading", { level: 2 }),
+      isHeading3: editor.isActive("heading", { level: 3 }),
+      isHeading4: editor.isActive("heading", { level: 4 }),
+      isHeading5: editor.isActive("heading", { level: 5 }),
     }),
   });
 
@@ -292,7 +297,7 @@ const TiptapEditor = ({
             min-height: calc(20rem * var(--uiScale));
             padding: calc(${paddingTop}rem * var(--uiScale))
                      calc(${paddingRight}rem * var(--uiScale))
-                     calc(${paddingBottom}rem * var(--uiScale))
+                     ${paddingBottom}rem
                      calc(${paddingLeft}rem * var(--uiScale));
           }
 

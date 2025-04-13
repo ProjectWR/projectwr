@@ -1,8 +1,32 @@
 import { useCallback, useEffect, useState } from "react";
 import TextFormatButton from "./HeadingButton";
 import HighlightButton from "./HighlightButton";
+import { useEditorState } from "@tiptap/react";
 
 const TipTapToolbar = ({ editor, toolbarPreferences }) => {
+
+  const editorState = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      isBold: editor.isActive("bold"),
+      isItalic: editor.isActive("italic"),
+      isHighlighted: editor.isActive("highlight"),
+      isStriked: editor.isActive("strike"),
+      isUnderlined: editor.isActive("underline"),
+      isSubscript: editor.isActive("subscript"),
+      isSuperscript: editor.isActive("superscript"),
+      isBlockQuote: editor.isActive("blockquote"),
+      isBulletList: editor.isActive("bulletList"),
+      isOrderedList: editor.isActive("orderedList"),
+      isAlign: editor.isActive("textAlign"),
+      isHeading1: editor.isActive("heading", { level: 1 }),
+      isHeading2: editor.isActive("heading", { level: 2 }),
+      isHeading3: editor.isActive("heading", { level: 3 }),
+      isHeading4: editor.isActive("heading", { level: 4 }),
+      isHeading5: editor.isActive("heading", { level: 5 }),
+    }),
+  });
+
   const {
     toolbarHeight,
     toolbarButtonHeight,
@@ -20,6 +44,12 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
     hoverColor,
     pressedColor,
   } = toolbarPreferences;
+
+  console.log("toolbar preferences: ", toolbarPreferences);
+
+  console.log("Pressed Color: ", pressedColor);
+
+  console.log("Is Italic Active: ", editor.isActive("italic"));
 
   return (
     <div className="h-full w-full no-scrollbar overflow-y-hidden overflow-x-scroll">
