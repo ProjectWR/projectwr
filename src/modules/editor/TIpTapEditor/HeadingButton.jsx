@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import useOuterClick from "../../design-system/useOuterClick";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
+import { useEditorState } from "@tiptap/react";
 
 const formats = {
   p: {
@@ -13,6 +14,17 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
   console.log("textformat button rerendered");
 
   const { deviceType } = useDeviceType();
+
+  const editorState = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      isHeading1: editor.isActive("heading", { level: 1 }),
+      isHeading2: editor.isActive("heading", { level: 2 }),
+      isHeading3: editor.isActive("heading", { level: 3 }),
+      isHeading4: editor.isActive("heading", { level: 4 }),
+      isHeading5: editor.isActive("heading", { level: 5 }),
+    }),
+  });
 
   const [isOpened, setIsOpened] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
@@ -61,6 +73,10 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
   }, [editor, onSelectionUpdate]);
 
   useEffect(() => {
+    onSelectionUpdate();
+  }, [editorState, onSelectionUpdate])
+
+  useEffect(() => {
     if (isOpened && headerRef.current && dropdownRef.current) {
       const headerRect = headerRef.current.getBoundingClientRect();
       const dropdownHeight = dropdownRef.current.offsetHeight;
@@ -85,7 +101,10 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
   }, [isOpened]);
 
   return (
-    <div className="relative h-full w-fit flex-shrink-0 flex items-center" ref={innerRef}>
+    <div
+      className="relative h-full w-fit flex-shrink-0 flex items-center"
+      ref={innerRef}
+    >
       <div
         style={{ height: `${buttonHeight}rem` }}
         id="TextFormatButtonHeader"
@@ -106,7 +125,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             </div>
             <motion.span
               animate={{
-                rotate: isOpened ^ (deviceType === "mobile") ? 180 : 0,
+                rotate: isOpened ^ (deviceType === "mobile") ? 0 : 180,
               }}
               className={`icon-[material-symbols-light--keyboard-arrow-up] mt-px h-full w-[2rem]`}
             ></motion.span>
