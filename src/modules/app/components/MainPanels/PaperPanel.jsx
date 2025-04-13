@@ -23,7 +23,7 @@ const PaperPanel = ({ ytree, paperId }) => {
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
 
-  console.log("library details panel rendering: ", paperId);
+  console.log("paper panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
@@ -67,7 +67,6 @@ const PaperPanel = ({ ytree, paperId }) => {
 
   const paperMapState = useYMap(ytree.getNodeValueFromKey(paperId));
 
-  console.log("Paper Props Map STATE: ", paperMapState);
 
   const initialPaperProperties = useRef({
     item_title: paperMapState.item_title,
@@ -89,7 +88,6 @@ const PaperPanel = ({ ytree, paperId }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setPaperProperties({
       ...paperProperties,
       [name]: value,
@@ -131,8 +129,8 @@ const PaperPanel = ({ ytree, paperId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="CreatePaperHeader"
-          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-[97.5%] flex items-center justify-start py-1 px-1 flex-shrink-0 border-x border-b border-appLayoutBorder rounded-b-lg
-            bg-appBackground
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 flex-shrink-0
+            
             ${deviceType === "desktop" && "px- py-0"}
             ${inputFocused && "bg-appLayoutInputBackground"}
           `}
@@ -152,7 +150,7 @@ const PaperPanel = ({ ytree, paperId }) => {
           )}
 
           <input
-            className="bg-transparent text-center flex-grow h-full text-detailsPanelNameFontSize focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
+            className="bg-transparent flex-grow h-full text-detailsPanelNameFontSize focus:outline-none py-1 px-4 transition-colors duration-200 order-2"
             name="item_title"
             onFocus={() => {
               setInputFocused(true);
@@ -206,9 +204,9 @@ const PaperPanel = ({ ytree, paperId }) => {
         </motion.form>
       </AnimatePresence>
 
-      {/* <div className="divider w-full">
+      <div className="divider w-full px-3">
         <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div> */}
+      </div>
 
       <motion.div
         id="CreatePaperBody"
