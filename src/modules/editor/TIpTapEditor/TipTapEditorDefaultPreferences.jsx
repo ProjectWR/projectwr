@@ -41,7 +41,7 @@ const TiptapDesktopDefaultPreferences = {
     h5MarginBottom: 1.75 * 0.45,
 
     listPaddingLeft: 1,
-    listMarginTop: 1.25,
+    listMarginTop: 0.25,
     listMarginBottom: 1.25,
     hrMarginTop: 2,
     hrMarginBottom: 2,

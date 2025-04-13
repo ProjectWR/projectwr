@@ -344,6 +344,15 @@ const TiptapEditor = ({
             margin: calc(${listMarginTop}rem * var(--uiScale)) 1rem calc(${listMarginBottom}rem * var(--uiScale)) 0.4rem;
           }
 
+          #EditorContainer ul {
+            list-style: circle;
+          }
+
+          #EditorContainer ol {
+            list-style: lower;
+          }
+
+
           #EditorContainer hr {
             cursor: pointer;
             margin: calc(${hrMarginTop}rem * var(--uiScale)) 0 calc(${hrMarginBottom}rem * var(--uiScale)) 0;
