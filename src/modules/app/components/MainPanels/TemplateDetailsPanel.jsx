@@ -159,7 +159,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
           <div
             className="h-full w-full min-h-0 pr-3 py-4 overflow-y-scroll"
             style={{
-              paddingLeft: `calc(0.75rem + 0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+              paddingLeft: `var(--scrollbarWidth)`,
             }}
           >
             <TemplateContentEditor

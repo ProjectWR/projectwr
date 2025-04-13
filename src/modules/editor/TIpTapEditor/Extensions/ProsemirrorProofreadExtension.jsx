@@ -54,10 +54,10 @@ const generateProofreadErrors = async (input) => {
       });
     }
 
-    console.log("token: ", token.toString());
+    // console.log("token: ", token.toString());
   });
 
-  console.log("Generated Errors: ", response);
+  // console.log("Generated Errors: ", response);
   return response;
   // try {
 
@@ -71,7 +71,7 @@ const ProsemirrorProofreadExtension = Extension.create({
   addProseMirrorPlugins() {
     return [
       createProofreadPlugin(
-        500, // Debounce time in ms
+        2000, // Debounce time in ms
         generateProofreadErrors, // function to call proofreading service
         spellCheckStore // Reactive store to toggle spell checking
       ),

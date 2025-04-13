@@ -148,7 +148,7 @@ const LibraryManager = () => {
           deviceType === "mobile" ? "no-scrollbar" : ""
         }`}
         style={{
-          paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+          paddingLeft: `var(--scrollbarWidth)`,
         }}
       >
         <div

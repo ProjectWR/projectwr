@@ -36,6 +36,8 @@ export async function setupSearchForLibrary(libraryId) {
 
   miniSearch.add(document);
 
+  
+
   const callback = () => {
     const libraryDocument = ydoc.getMap("library_props").toJSON();
     const document = { id: libraryId, libraryId: libraryId, ...libraryDocument };
@@ -58,6 +60,7 @@ export async function setupSearchForLibrary(libraryId) {
       console.log("itemCallback itemDoc replacement: ", itemDocument);
       miniSearch.replace({ id: key, libraryId: libraryId, ...itemDocument });
     }
+
     itemCallbacks.set(key, itemCallback);
     value.get("value").observeDeep(itemCallback);
   }
@@ -72,11 +75,13 @@ export async function setupSearchForLibrary(libraryId) {
       else if (change.action === 'add') {
         const itemDocument = value.get("value").toJSON();
         miniSearch.add({ id: key, libraryId: libraryId, ...itemDocument });
+        
         const itemCallback = () => {
           console.log("itemCallback: item ${key} changed");
           const itemDocument = value.get("value").toJSON();
           miniSearch.replace({ id: key, libraryId: libraryId, ...itemDocument });
         }
+
         itemCallbacks.set(key, itemCallback);
         value.get("value").observeDeep(itemCallback);
       }

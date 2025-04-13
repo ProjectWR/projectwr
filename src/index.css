@@ -161,6 +161,14 @@
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
     --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
+    --scrollbarWidth: calc(
+      var(--uiScale) *
+        (
+          0.75rem + var(--libraryManagerAddButtonSize) / 2 -
+            var(--libraryDirectoryBookNodeIconSize) / 2
+        )
+    );
+
     --footerHeight: calc(var(--uiScale) * 1.3rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
     --ZoomIconSize: calc(var(--uiScale) * 1.2rem);
@@ -358,10 +366,7 @@
 
 *::-webkit-scrollbar {
   display: fixed;
-  width: calc(
-    0.25rem + var(--libraryManagerAddButtonSize) / 2 -
-      var(--libraryDirectoryBookNodeIconSize) / 2
-  );
+  width: var(--scrollbarWidth);
 }
 
 *::-webkit-scrollbar-button {

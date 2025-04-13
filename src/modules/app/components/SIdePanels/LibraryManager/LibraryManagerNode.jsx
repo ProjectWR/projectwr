@@ -177,7 +177,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
   drag(drop(ref));
 
   return (
-    <ContextMenu.Root>
+    <ContextMenu.Root modal={false}>
       <ContextMenu.Trigger className={`w-full h-full`}>
         <div
           ref={ref}

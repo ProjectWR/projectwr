@@ -365,7 +365,7 @@ const TiptapEditor = ({
            overflow-y-scroll min-h-0 text-neutral-200
           `}
         style={{
-          paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+          paddingLeft: `var(--scrollbarWidth)`,
           backgroundColor: backgroundColor,
         }}
       >
@@ -392,7 +392,7 @@ const TiptapEditor = ({
           />
         </div>
 
-        <ContextMenu.Root>
+        <ContextMenu.Root modal={false}>
           <ContextMenu.Trigger>
             <EditorContent
               spellCheck={false}

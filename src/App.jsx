@@ -4,11 +4,11 @@ import WritingApp from "./modules/app/components/WritingApp";
 
 function App() {
   return (
-    <DeviceTypeProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <WritingApp key={'WritingApp'} />
-      </ThemeProvider>
-    </DeviceTypeProvider>
+      <DeviceTypeProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <WritingApp key={"WritingApp"} />
+        </ThemeProvider>
+      </DeviceTypeProvider>
   );
 }
 

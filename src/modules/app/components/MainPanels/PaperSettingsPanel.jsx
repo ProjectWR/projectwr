@@ -213,7 +213,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
             <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
             <div
               style={{
-                paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                paddingLeft: `var(--scrollbarWidth)`,
                 maxHeight: `calc(var(--actionBarSearchMaxHeight) / 2)`,
               }}
               className="w-full overflow-y-scroll text-actionBarResultTextSize flex flex-col py-1"
@@ -227,8 +227,8 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
                       exit={{ opacity: 0 }}
                       key={templateId}
                       style={{
-                        paddingTop: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                        paddingBottom: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                        paddingTop: `var(--scrollbarWidth)`,
+                        paddingBottom: `var(--scrollbarWidth)`,
                       }}
                       className="px-3 h-actionBarResultNodeHeight w-full flex items-center hover:bg-appLayoutInverseHover rounded-md "
                       onClick={() => {
@@ -251,8 +251,8 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
                   exit={{ opacity: 0 }}
                   key="noResults"
                   style={{
-                    paddingTop: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                    paddingBottom: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                    paddingTop: `var(--scrollbarWidth)`,
+                    paddingBottom: `var(--scrollbarWidth)`,
                   }}
                   className="px-1 h-actionBarResultNodeHeight flex items-center justify-center text-appLayoutTextMuted"
                 >

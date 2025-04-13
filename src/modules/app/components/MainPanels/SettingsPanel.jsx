@@ -728,7 +728,7 @@ const SettingsPanel = () => {
         >
           <div
             style={{
-              paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+              paddingLeft: `var(--scrollbarWidth)`,
             }}
             className="h-full w-full py-2 overflow-y-scroll grid grid-cols-3 gap-2 auto-rows-[--fontItemHeight]"
           >

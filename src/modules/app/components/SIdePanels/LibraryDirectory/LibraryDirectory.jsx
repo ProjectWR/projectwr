@@ -349,7 +349,7 @@ const LibraryDirectory = ({ libraryId }) => {
           }}
           ref={libraryDirectoryBodyRef}
           style={{
-            paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+            paddingLeft: `var(--scrollbarWidth)`,
           }}
           className={`h-full w-full overflow-y-scroll overflow-x-hidden ${
             deviceType === "mobile" ? "no-scrollbar" : ""

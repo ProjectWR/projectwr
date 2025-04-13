@@ -70,6 +70,7 @@ export default {
         sidePanelDragHandle: "hsl(var(--sidePanelDragHandle))",
       },
       spacing: {
+        scrollbarWidth: "var(--scrollbarWidth)",
         actionBarHeight: "var(--actionBarHeight)",
         actionBarLogoSize: "var(--actionBarLogoSize)",
         activityBarWidth: "var(--activityBarWidth)",

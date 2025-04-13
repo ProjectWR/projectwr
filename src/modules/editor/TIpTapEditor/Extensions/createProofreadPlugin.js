@@ -121,9 +121,11 @@ export function createProofreadPlugin(
             await task();
         }
         pluginState.decor = DecorationSet.create(doc, decorations);
-        const tr = editorView.state.tr;
-        tr.setMeta('proofread', pluginState);
-        editorView.dispatch(tr);
+        if (editorView) {
+            const tr = editorView.state.tr;
+            tr.setMeta('proofread', pluginState);
+            editorView.dispatch(tr);
+        }
     }
 
     return new Plugin({
@@ -143,7 +145,7 @@ export function createProofreadPlugin(
                 const spellcheckEnabled = value;
                 const tr = view.state.tr;
                 tr.setMeta('updateSpellcheckEnabled', spellcheckEnabled);
-                    view.dispatch(tr);
+                view.dispatch(tr);
             });
             return {
                 destroy() {

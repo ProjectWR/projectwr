@@ -248,7 +248,7 @@ const DirectoryItemNode = ({
   drag(drop(dndRef));
 
   return (
-    <ContextMenu.Root>
+    <ContextMenu.Root modal={false}>
       <ContextMenu.Trigger className={`w-full h-fit`}>
         <div
           id="DirectoryItemNodeContainer"

@@ -25,6 +25,8 @@ const PaperPanel = ({ ytree, paperId }) => {
 
   console.log("paper panel rendering: ", paperId);
 
+ 
+
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
@@ -66,7 +68,6 @@ const PaperPanel = ({ ytree, paperId }) => {
   });
 
   const paperMapState = useYMap(ytree.getNodeValueFromKey(paperId));
-
 
   const initialPaperProperties = useRef({
     item_title: paperMapState.item_title,
@@ -111,7 +112,7 @@ const PaperPanel = ({ ytree, paperId }) => {
         deviceType === "desktop" && {
           width: `100%`,
           minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-          backgroundColor: `${backgroundColor}`
+          backgroundColor: `${backgroundColor}`,
         }
       }
     >

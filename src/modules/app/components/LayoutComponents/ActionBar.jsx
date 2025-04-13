@@ -317,8 +317,8 @@ const SearchBar = () => {
           >
             <div
               style={{
-                paddingLeft: `calc(1rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                paddingRight: `calc(1rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                paddingLeft: `var(--scrollbarWidth)`,
+                paddingRight: `var(--scrollbarWidth)`,
               }}
               className="w-full h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center"
             >
@@ -335,7 +335,7 @@ const SearchBar = () => {
             <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
             <div
               style={{
-                paddingLeft: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                paddingLeft: `var(--scrollbarWidth)`,
               }}
               className="w-full max-h-actionBarSearchMaxHeight overflow-y-scroll text-actionBarResultTextSize flex flex-col py-1"
             >
@@ -394,8 +394,8 @@ const SearchBar = () => {
                           setActivity("libraries");
                         }}
                         style={{
-                          paddingTop: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                          paddingBottom: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                          paddingTop: `var(--scrollbarWidth)`,
+                          paddingBottom: `var(--scrollbarWidth)`,
                         }}
                         className="px-3 h-actionBarResultNodeHeight w-full flex items-center hover:bg-appLayoutInverseHover rounded-md "
                       >
@@ -416,8 +416,8 @@ const SearchBar = () => {
                   exit={{ opacity: 0 }}
                   key="noResults"
                   style={{
-                    paddingTop: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
-                    paddingBottom: `calc(0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2)`,
+                    paddingTop: `var(--scrollbarWidth)`,
+                    paddingBottom: `var(--scrollbarWidth)`,
                   }}
                   className="px-1 h-actionBarResultNodeHeight flex items-center justify-center text-appLayoutTextMuted"
                 >
