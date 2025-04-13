@@ -379,7 +379,11 @@ const TiptapEditor = ({
           }}
           className={`
             min-w-0 top-2 sticky
-            ${isMobile ? "order-1 w-full" : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutShadow relative z-[2]"}
+            ${
+              isMobile
+                ? "order-1 w-full"
+                : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutShadow relative z-[2]"
+            }
           `}
         >
           <TipTapToolbar
@@ -399,8 +403,16 @@ const TiptapEditor = ({
             font-serif  
             `}
               style={{
-                width: isMobile ? "100%" : `calc(${width}rem * var(--uiScale))`,
-                minWidth: isMobile ? "100%" : `calc(${width * 0.8}rem * var(--uiScale))`,
+                width: isMobile
+                  ? "100%"
+                  : typeof width === "string" && width.trim().endsWith("%")
+                  ? width
+                  : `calc(${width}rem * var(--uiScale))`,
+                minWidth: isMobile
+                  ? "100%"
+                  : typeof width === "string" && width.trim().endsWith("%")
+                  ? width
+                  : `calc(${width}rem * var(--uiScale))`,
                 backgroundColor: `${paperColor}`,
                 borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
                 borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
@@ -409,9 +421,11 @@ const TiptapEditor = ({
                 borderTopColor: `${paperBorderColor}`,
                 borderLeftColor: `${paperBorderColor}`,
                 borderRightColor: `${paperBorderColor}`,
-                marginTop: isMobile ? "0" : `calc(${gapTop}rem * var(--uiScale))`,
+                marginTop: isMobile
+                  ? "0"
+                  : `calc(${gapTop}rem * var(--uiScale))`,
                 borderTopRightRadius: `${roundRadius}rem`,
-                borderTopLeftRadius: `${roundRadius}rem`, 
+                borderTopLeftRadius: `${roundRadius}rem`,
               }}
             />
           </ContextMenu.Trigger>

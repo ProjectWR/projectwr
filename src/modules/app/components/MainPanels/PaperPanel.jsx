@@ -9,6 +9,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { equalityDeep } from "lib0/function";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import useTemplates from "../../hooks/useTemplates";
+import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
+
+const { desktopDefaultPreferences, mobileDefaultPreferences } =
+  TipTapEditorDefaultPreferences;
 
 /**
  *
@@ -17,12 +21,16 @@ import useTemplates from "../../hooks/useTemplates";
  */
 const PaperPanel = ({ ytree, paperId }) => {
   const { deviceType } = useDeviceType();
+  const isMobile = deviceType === "mobile";
+
   console.log("library details panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
+
+  const [inputFocused, setInputFocused] = useState(false);
 
   const templates = useTemplates();
 
@@ -34,6 +42,14 @@ const PaperPanel = ({ ytree, paperId }) => {
       return null;
     }
   }, [templates, paperId]);
+
+  const defaultPreferences = isMobile
+    ? mobileDefaultPreferences
+    : desktopDefaultPreferences;
+
+  const editorPreferences = preferences || defaultPreferences;
+
+  const { backgroundColor } = editorPreferences.paperPreferences;
 
   useEffect(() => {
     if (deviceType === "mobile") {
@@ -97,6 +113,7 @@ const PaperPanel = ({ ytree, paperId }) => {
         deviceType === "desktop" && {
           width: `100%`,
           minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+          backgroundColor: `${backgroundColor}`
         }
       }
     >
@@ -114,8 +131,10 @@ const PaperPanel = ({ ytree, paperId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="CreatePaperHeader"
-          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 flex-shrink-0
-            ${deviceType === "desktop" && "px-6 py-1"}
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-[97.5%] flex items-center justify-start py-1 px-1 flex-shrink-0 border-x border-b border-appLayoutBorder rounded-b-lg
+            bg-appBackground
+            ${deviceType === "desktop" && "px- py-0"}
+            ${inputFocused && "bg-appLayoutInputBackground"}
           `}
         >
           {deviceType === "mobile" && (
@@ -133,8 +152,14 @@ const PaperPanel = ({ ytree, paperId }) => {
           )}
 
           <input
-            className="bg-appBackground text-center flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
+            className="bg-transparent text-center flex-grow h-full text-detailsPanelNameFontSize focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
             name="item_title"
+            onFocus={() => {
+              setInputFocused(true);
+            }}
+            onBlur={() => {
+              setInputFocused(false);
+            }}
             onChange={handleChange}
             value={paperProperties.item_title}
           />
@@ -166,7 +191,7 @@ const PaperPanel = ({ ytree, paperId }) => {
                 }}
                 className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-3
+                    flex items-center justify-center order-3 mx-2
                     `}
               >
                 <motion.span
@@ -181,9 +206,9 @@ const PaperPanel = ({ ytree, paperId }) => {
         </motion.form>
       </AnimatePresence>
 
-      <div className="divider w-full px-3">
+      {/* <div className="divider w-full">
         <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
+      </div> */}
 
       <motion.div
         id="CreatePaperBody"
