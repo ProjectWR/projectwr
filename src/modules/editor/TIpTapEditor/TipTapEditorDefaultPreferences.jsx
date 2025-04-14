@@ -46,6 +46,9 @@ const TiptapDesktopDefaultPreferences = {
     hrMarginTop: 2,
     hrMarginBottom: 2,
     hrBorderColor: "#262626",
+
+    blockquotePadding: "2",
+    blockquoteBorderColor: "#262626",
   },
   toolbarPreferences: {
     toolbarHeight: 2.6,
@@ -64,7 +67,7 @@ const TiptapDesktopDefaultPreferences = {
     buttonColor: "#171717",
     dividerColor: "#262626",
     hoverColor: "#121212",
-    pressedColor: "#080808"
+    pressedColor: "#080808",
   },
 };
 
@@ -114,6 +117,9 @@ const TiptapMobileDefaultPreferences = {
     hrMarginTop: 2,
     hrMarginBottom: 2,
     hrBorderColor: "white",
+
+    blockquotePadding: "2",
+    blockquoteBorderColor: "#262626",
   },
   toolbarPreferences: {
     toolbarHeight: 2.8,

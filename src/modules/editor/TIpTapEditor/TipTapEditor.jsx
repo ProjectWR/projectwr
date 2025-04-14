@@ -113,6 +113,9 @@ const TiptapEditor = ({
     hrMarginTop,
     hrMarginBottom,
     hrBorderColor,
+
+    blockquotePadding,
+    blockquoteBorderColor,
   } = editorPreferences.paperPreferences;
 
   const { dividerColor } = editorPreferences.toolbarPreferences;
@@ -352,11 +355,15 @@ const TiptapEditor = ({
             list-style: lower;
           }
 
-
           #EditorContainer hr {
             cursor: pointer;
             margin: calc(${hrMarginTop}rem * var(--uiScale)) 0 calc(${hrMarginBottom}rem * var(--uiScale)) 0;
             border-top: 1px solid ${hrBorderColor};
+          }
+
+          #EditorContainer blockquote {
+            padding-left: ${blockquotePadding}rem;
+            border-left: 4px solid ${blockquoteBorderColor};
           }
 
           .spelling-error {
@@ -365,6 +372,8 @@ const TiptapEditor = ({
             border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #ff0000e6;
           }
+          
+
         `}
       </style>
 
