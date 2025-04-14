@@ -45,11 +45,11 @@ const TiptapDesktopDefaultPreferences = {
     listMarginBottom: 1.25,
     hrMarginTop: 2,
     hrMarginBottom: 2,
-    hrBorderColor: "#262626",
+    hrBorderColor: "#525252",
 
     blockquoteBorderWidth: "0.2",
     blockquotePadding: "2",
-    blockquoteBorderColor: "#262626",
+    blockquoteBorderColor: "#525252",
   },
   toolbarPreferences: {
     toolbarHeight: 2.6,
