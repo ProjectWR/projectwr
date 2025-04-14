@@ -6,7 +6,7 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 
 // ─── CONFIG OBJECTS FOR EACH GROUP ───────────────────────────────
 const desktopPaperConfig = {
-  width: { type: "number", label: "Width" },
+  width: { type: "numberOrPercent", label: "Width" },
   gapTop: { type: "number", label: "Gap Top" },
   paddingTop: { type: "number", label: "Padding Top" },
   paddingLeft: { type: "number", label: "Padding Left" },
@@ -95,20 +95,20 @@ function GroupEditor({ config, data, onChange }) {
   return (
     <>
       {Object.entries(config).map(([key, fieldConfig]) => (
-        <div key={key}>
+        <div key={key} className="flex items-center justify-center">
           {fieldConfig.type === "color" ? (
-            <div className="mt-4 h-templateDetailsPreferenceInputHeight w-full rounded-lg border border-appLayoutBorder flex flex-row items-center shadow-sm shadow-appLayoutShadow">
+            <div className="mt-4 h-templateDetailsPreferenceInputHeight w-fit flex gap-2 flex-row items-center">
               <label
                 htmlFor={`input-${key}`}
-                className="pl-3 text-templateDetailsPanelPreferenceFontSize w-templateDetailsPreferenceLabelWidth text-appLayoutTextMuted pointer-events-none flex items-center justify-start"
+                className="px-3 text-templateDetailsPanelPreferenceFontSize w-templateDetailsPreferenceLabelWidth min-w-templateDetailsPreferenceLabelWidth text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
               >
                 {fieldConfig.label}
               </label>
 
               <div className="w-px h-full bg-appLayoutBorder"></div>
 
-              <div className="flex-grow h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg" >
-                <div className="h-templateDetailsPreferencesColorInputSize w-templateDetailsPreferencesColorInputSize">
+              <div className="flex-grow h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
+                <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
                   <ColorPicker
                     color={data[key]}
                     onChangeComplete={(color) => handleChange(key, color)}
@@ -117,10 +117,10 @@ function GroupEditor({ config, data, onChange }) {
               </div>
             </div>
           ) : (
-            <div className="mt-4 h-templateDetailsPreferenceInputHeight w-full rounded-r-lg border border-appLayoutBorder flex flex-row items-center shadow-sm shadow-appLayoutShadow">
+            <div className="mt-4 h-templateDetailsPreferenceInputHeight w-fit flex gap-2 flex-row items-center">
               <label
                 htmlFor={`input-${key}`}
-                className="pl-3 text-templateDetailsPanelPreferenceFontSize w-templateDetailsPreferenceLabelWidth min-w-templateDetailsPreferenceLabelWidth text-appLayoutTextMuted h-fit pointer-events-none flex items-center justify-start"
+                className="px-3 text-templateDetailsPanelPreferenceFontSize w-templateDetailsPreferenceLabelWidth min-w-templateDetailsPreferenceLabelWidth text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
               >
                 {fieldConfig.label}
               </label>
@@ -133,7 +133,7 @@ function GroupEditor({ config, data, onChange }) {
                   type={fieldConfig.type === "number" ? "number" : "text"}
                   value={data[key]}
                   onChange={(e) => handleChange(key, e.target.value)}
-                  className="text-templateDetailsPanelPreferenceInputFontSize h-full w-full bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-r-lg shadow-inner shadow-appLayoutShadow text-center"
+                  className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
                 />
               </div>
 
@@ -153,17 +153,14 @@ function GroupEditor({ config, data, onChange }) {
 function SectionHeader({ title, isOpen, toggle }) {
   return (
     <button
-      className="w-full flex items-center justify-between cursor-pointer p-2 border-b border-appLayoutBorder"
+      className="w-full flex items-center px-2 py-1 justify-between cursor-pointer border-b border-appLayoutBorder"
       onClick={toggle}
     >
       <span className="text-lg">{title}</span>
-      <button className="focus:outline-none">
-        {isOpen ? (
-          <span className="icon-[material-symbols--expand-less]"></span>
-        ) : (
-          <span className="icon-[material-symbols--expand-more]"></span>
-        )}
-      </button>
+      <motion.span
+        animate={{ rotate: isOpen ? -90 : 90 }}
+        className="icon-[material-symbols-light--keyboard-arrow-right] w-[2.2rem] h-[2.2rem]"
+      ></motion.span>
     </button>
   );
 }
@@ -205,7 +202,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   return (
     <div>
       {/* Desktop Preferences */}
-      <h2 className="text-2xl mb-4">Desktop Preferences</h2>
+      <h2 className="text-2xl mb-4 px-2">Desktop Preferences</h2>
       <div className="mb-8 space-y-4">
         {/* Desktop Paper Preferences */}
         <SectionHeader
@@ -214,7 +211,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
           toggle={() => setDesktopPaperOpen((prev) => !prev)}
         />
         {desktopPaperOpen && (
-          <div className="mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2">
             <GroupEditor
               config={desktopPaperConfig}
               data={content.desktopDefaultPreferences.paperPreferences}
@@ -253,7 +250,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
       </div>
 
       {/* Mobile Preferences */}
-      <h2 className="text-2xl  mb-4">Mobile Preferences</h2>
+      <h2 className="text-2xl mb-4 px-2">Mobile Preferences</h2>
       <div className="mb-8 space-y-4">
         {/* Mobile Paper Preferences */}
         <SectionHeader
@@ -342,9 +339,9 @@ const ColorPicker = ({ color, onChangeComplete }) => {
 
   return (
     <div className="relative flex-grow h-full rounded-lg" ref={innerRef}>
-      <div ref={headerRef} className="w-full h-full">
+      <div ref={headerRef} className="w-full h-full rounded-lg">
         <button
-          className="w-full h-full"
+          className="w-full h-full rounded-lg"
           onClick={() => setIsOpened(!isOpened)}
           style={{ backgroundColor: `${currentColor}` }}
         ></button>
@@ -362,9 +359,10 @@ const ColorPicker = ({ color, onChangeComplete }) => {
               top: dropdownPosition.top,
               left: dropdownPosition.left,
             }}
-            className="absolute z-[99] bg-white rounded-lg shadow-md h-fit w-fit"
+            className="absolute z-[99] bg-appBackground text-appLayoutText rounded-lg shadow-md h-fit w-fit"
           >
             <SketchPicker
+              className="bg-appBackground text-appLayoutText"
               color={currentColor}
               onChange={(color) => {
                 setCurrentColor(color);

@@ -155,11 +155,11 @@ const TemplateDetailsPanel = ({ templateId }) => {
             </motion.button>
           )}
         </AnimatePresence>
-        <div className="w-full flex-grow min-h-0 border border-appLayoutBorder rounded-md">
+        <div className="w-full flex-grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
           <div
-            className="h-full w-full min-h-0 pr-3 py-4 overflow-y-scroll"
+            className="h-full w-full min-h-0 pr-1 py-4 overflow-y-scroll"
             style={{
-              paddingLeft: `var(--scrollbarWidth)`,
+              paddingLeft: `calc(0.25rem + var(--scrollbarWidth))`,
             }}
           >
             <TemplateContentEditor

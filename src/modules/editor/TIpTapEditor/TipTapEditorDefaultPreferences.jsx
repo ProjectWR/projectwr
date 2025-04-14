@@ -47,8 +47,8 @@ const TiptapDesktopDefaultPreferences = {
     hrMarginBottom: 2,
     hrBorderColor: "#525252",
 
-    blockquoteBorderWidth: "0.2",
-    blockquotePadding: "2",
+    blockquoteBorderWidth: 0.2,
+    blockquotePadding: 2,
     blockquoteBorderColor: "#525252",
   },
   toolbarPreferences: {
@@ -119,8 +119,8 @@ const TiptapMobileDefaultPreferences = {
     hrMarginBottom: 2,
     hrBorderColor: "white",
 
-    blockquoteBorderWidth: "0.25",
-    blockquotePadding: "2",
+    blockquoteBorderWidth: 0.2,
+    blockquotePadding: 2,
     blockquoteBorderColor: "#262626",
   },
   toolbarPreferences: {
