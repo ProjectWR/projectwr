@@ -114,6 +114,7 @@ const TiptapEditor = ({
     hrMarginBottom,
     hrBorderColor,
 
+    blockquoteBorderWidth,
     blockquotePadding,
     blockquoteBorderColor,
   } = editorPreferences.paperPreferences;
@@ -363,7 +364,7 @@ const TiptapEditor = ({
 
           #EditorContainer blockquote {
             padding-left: ${blockquotePadding}rem;
-            border-left: 4px solid ${blockquoteBorderColor};
+            border-left: ${blockquoteBorderWidth}rem solid ${blockquoteBorderColor};
           }
 
           .spelling-error {
