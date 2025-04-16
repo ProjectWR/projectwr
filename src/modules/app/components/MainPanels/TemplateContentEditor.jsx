@@ -274,21 +274,24 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   ]);
 
   return (
-    <div id="TCEContainer" className="w-full font-sans flex flex-col">
-      <div id="TCEHeader" className="w-full h-fit min-h-fit flex">
-        <div className="TCEDevice flex-grow basis-0 h-fit flex flex-col justify-center">
-          <div className="TCEDevice h-fit mb-3 w-full flex items-center justify-center text-2xl">
+    <div id="TCEContainer" className="w-full font-sans flex flex-col relative">
+      <div
+        id="TCEHeader"
+        className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-[1]"
+      >
+        <div className="TCEDevice bg-appBackground flex-grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+          <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md">
             Desktop
           </div>
-          <div className="TCEGroups h-fit flex py-1">
+          <div className="h-fit w-full px-2">
+            <div className="h-px min-h-px w-full bg-appLayoutBorder"></div>
+          </div>
+
+          <div className="TCEGroups h-fit w-full flex gap-2 px-2 py-1">
             <button
               onClick={() => setGroupSelected("desktopPaper")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${
-                groupSelected === "desktopPaper"
-                  ? "border-b border-x border-appLayoutBorder"
-                  : "border-t border-appLayoutBorder"
-              }
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${groupSelected === "desktopPaper" ? "" : ""}
               `}
             >
               <motion.span
@@ -302,12 +305,8 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
 
             <button
               onClick={() => setGroupSelected("desktopToolbar")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${
-                groupSelected === "desktopToolbar"
-                  ? "border-b border-x border-appLayoutBorder"
-                  : "border-t border-appLayoutBorder"
-              }
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${groupSelected === "desktopToolbar" ? "" : ""}
               `}
             >
               <motion.span
@@ -320,19 +319,18 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             </button>
           </div>
         </div>
-        <div className="TCEDevice flex-grow basis-0 h-fit flex flex-col justify-center">
-          <div className="TCEDevice h-fit mb-3 w-full flex items-center justify-center text-2xl">
+        <div className="TCEDevice bg-appBackground flex-grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+          <div className="TCEDevice h-fit py-1 w-full flex items-center justify-start px-2 text-md">
             Mobile
           </div>
-          <div className="TCEGroups h-fit flex py-1">
+          <div className="h-fit w-full px-2">
+            <div className="h-px min-h-px w-full bg-appLayoutBorder"></div>
+          </div>
+          <div className="TCEGroups h-fit w-full flex gap-2 px-2 py-1">
             <button
               onClick={() => setGroupSelected("mobilePaper")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${
-                groupSelected === "mobilePaper"
-                  ? "border-b border-x border-appLayoutBorder"
-                  : "border-t border-appLayoutBorder"
-              }
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${groupSelected === "mobilePaper" ? "" : ""}
               `}
             >
               <motion.span
@@ -346,12 +344,8 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
 
             <button
               onClick={() => setGroupSelected("mobileToolbar")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${
-                groupSelected === "mobileToolbar"
-                  ? "border-b border-x border-appLayoutBorder"
-                  : "border-t border-appLayoutBorder"
-              }
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${groupSelected === "mobileToolbar" ? "" : ""}
               `}
             >
               <motion.span
@@ -366,7 +360,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
         </div>
       </div>
 
-      <div id="TCEBody w-full h-fit mt-1">
+      <div id="TCEBody w-full h-fit mt-1 z-[0]">
         <AnimatePresence mode="wait">
           <motion.div
             key={groupSelected}
