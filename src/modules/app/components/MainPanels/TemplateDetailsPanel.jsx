@@ -119,74 +119,61 @@ const TemplateDetailsPanel = ({ templateId }) => {
         id="TemplateDetailsBody"
         className="flex-grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"
       >
-        <form
-          onSubmit={() => {
-            templateManager.updateTemplate(templateId, newTemplate);
-          }}
-          className="w-full h-full flex flex-col items-center justify-start"
-        >
-          <AnimatePresence>
-            {!wasTemplateChanged && (
-              <motion.button
-                type="submit"
-                initial={{
-                  height: 0,
-                  opacity: 0,
-                  marginTop: 0,
-                  marginBottom: 0,
-                  padding: 0,
-                }}
-                animate={{
-                  height: "var(--libraryManagerAddButtonSize)",
-                  opacity: 1,
-                  marginTop: `0`,
-                  marginBottom: "1rem",
-                  padding: `0.25rem`,
-                }}
-                exit={{
-                  height: 0,
-                  opacity: 0,
-                  marginTop: 0,
-                  marginBottom: 0,
-                  padding: 0,
-                }}
-                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+        <AnimatePresence>
+          {!wasTemplateChanged && (
+            <motion.button
+              type="submit"
+              initial={{
+                height: 0,
+                opacity: 0,
+                marginTop: 0,
+                marginBottom: 0,
+                padding: 0,
+              }}
+              animate={{
+                height: "var(--libraryManagerAddButtonSize)",
+                opacity: 1,
+                marginTop: `0`,
+                marginBottom: "1rem",
+                padding: `0.25rem`,
+              }}
+              exit={{
+                height: 0,
+                opacity: 0,
+                marginTop: 0,
+                marginBottom: 0,
+                padding: 0,
+              }}
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                 flex items-center justify-center flex-shrink-0
             `}
-              >
-                <motion.span
-                  animate={{
-                    opacity: 1,
-                  }}
-                  className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-                ></motion.span>
-              </motion.button>
-            )}
-          </AnimatePresence>
-          <input
-            name="fakeInput"
-            value={fakeInput.fakeInput}
-            onChange={() => setFakeInput({ fakeInput: fakeInput.fakeInput })}
-            className="w-0 h-0"
-          ></input>
-          <div className="w-full flex-grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
-            <div
-              className="h-full w-full min-h-0 pr-1 py-4 overflow-y-scroll"
-              style={{
-                paddingLeft: `calc(0.25rem + var(--scrollbarWidth))`,
-              }}
             >
-              <TemplateContentEditor
-                newTemplate={newTemplate}
-                setNewTemplate={setNewTemplate}
-                handleSave={() => {
-                  templateManager.updateTemplate(templateId, newTemplate);
+              <motion.span
+                animate={{
+                  opacity: 1,
                 }}
-              />
-            </div>
+                className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+              ></motion.span>
+            </motion.button>
+          )}
+        </AnimatePresence>
+        <div className="w-full flex-grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
+          <div
+            className="h-full w-full min-h-0 pr-1 py-4 overflow-y-scroll"
+            style={{
+              paddingLeft: `calc(0.25rem + var(--scrollbarWidth))`,
+            }}
+          >
+            <TemplateContentEditor
+              newTemplate={newTemplate}
+              setNewTemplate={setNewTemplate}
+              handleSave={() => {
+                templateManager.updateTemplate(templateId, newTemplate);
+              }}
+            />
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
