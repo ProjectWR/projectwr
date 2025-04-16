@@ -276,33 +276,109 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   return (
     <div id="TCEContainer" className="w-full font-sans flex flex-col">
       <div id="TCEHeader" className="w-full h-fit min-h-fit flex">
-        <div className="TCEDevice flex-grow h-fit flex flex-col justify-center">
+        <div className="TCEDevice flex-grow basis-0 h-fit flex flex-col justify-center">
           <div className="TCEDevice h-fit mb-3 w-full flex items-center justify-center text-2xl">
             Desktop
           </div>
-          <div className="h-px min-h-px w-[98.5%] bg-appLayoutBorder"></div>
-          <div className="TCEGroups h-templateContentEditorHeaderGroupHeight flex">
+          <div className="TCEGroups h-fit flex py-1">
             <button
               onClick={() => setGroupSelected("desktopPaper")}
-              className="TCEGroup flex-grow h-full hover:bg-appLayoutInverseHover"
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${
+                groupSelected === "desktopPaper"
+                  ? "border-b border-x border-appLayoutBorder"
+                  : "border-t border-appLayoutBorder"
+              }
+              `}
             >
+              <motion.span
+                animate={{
+                  width: groupSelected === "desktopPaper" ? "1.75rem" : 0,
+                }}
+                className="icon-[material-symbols-light--keyboard-arrow-right] h-[1.75rem]"
+              ></motion.span>
               Paper
             </button>
+
             <button
               onClick={() => setGroupSelected("desktopToolbar")}
-              className="TCEGroup flex-grow h-full hover:bg-appLayoutInverseHover"
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${
+                groupSelected === "desktopToolbar"
+                  ? "border-b border-x border-appLayoutBorder"
+                  : "border-t border-appLayoutBorder"
+              }
+              `}
             >
+              <motion.span
+                animate={{
+                  width: groupSelected === "desktopToolbar" ? "1.75rem" : 0,
+                }}
+                className="icon-[material-symbols-light--keyboard-arrow-right] h-[1.75rem]"
+              ></motion.span>
+              Toolbar
+            </button>
+          </div>
+        </div>
+        <div className="TCEDevice flex-grow basis-0 h-fit flex flex-col justify-center">
+          <div className="TCEDevice h-fit mb-3 w-full flex items-center justify-center text-2xl">
+            Mobile
+          </div>
+          <div className="TCEGroups h-fit flex py-1">
+            <button
+              onClick={() => setGroupSelected("mobilePaper")}
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${
+                groupSelected === "mobilePaper"
+                  ? "border-b border-x border-appLayoutBorder"
+                  : "border-t border-appLayoutBorder"
+              }
+              `}
+            >
+              <motion.span
+                animate={{
+                  width: groupSelected === "mobilePaper" ? "1.75rem" : 0,
+                }}
+                className="icon-[material-symbols-light--keyboard-arrow-right] h-[1.75rem]"
+              ></motion.span>
+              Paper
+            </button>
+
+            <button
+              onClick={() => setGroupSelected("mobileToolbar")}
+              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-b-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              ${
+                groupSelected === "mobileToolbar"
+                  ? "border-b border-x border-appLayoutBorder"
+                  : "border-t border-appLayoutBorder"
+              }
+              `}
+            >
+              <motion.span
+                animate={{
+                  width: groupSelected === "mobileToolbar" ? "1.75rem" : 0,
+                }}
+                className="icon-[material-symbols-light--keyboard-arrow-right] h-[1.75rem]"
+              ></motion.span>
               Toolbar
             </button>
           </div>
         </div>
       </div>
 
-      <div
-        id="TCEBody"
-        className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-0"
-      >
-        {returnGroupEditor()}
+      <div id="TCEBody w-full h-fit mt-1">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={groupSelected}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.1 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-0"
+          >
+            {returnGroupEditor()}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
