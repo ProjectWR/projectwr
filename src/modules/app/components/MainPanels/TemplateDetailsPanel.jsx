@@ -110,13 +110,14 @@ const TemplateDetailsPanel = ({ templateId }) => {
       <div className="divider w-full px-3">
         <div className="w-full h-px bg-appLayoutBorder"></div>
       </div>
-      <motion.div
+      <motion.form
         id="TemplateDetailsBody"
         className="flex-grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"
       >
         <AnimatePresence>
           {!wasTemplateChanged && (
             <motion.button
+              type="submit"
               initial={{
                 height: 0,
                 opacity: 0,
@@ -142,7 +143,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                 flex items-center justify-center flex-shrink-0
             `}
-              onClick={() => {
+              onSubmit={() => {
                 templateManager.updateTemplate(templateId, newTemplate);
               }}
             >
@@ -171,7 +172,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
             />
           </div>
         </div>
-      </motion.div>
+      </motion.form>
     </div>
   );
 };
