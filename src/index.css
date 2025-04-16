@@ -252,6 +252,10 @@
     --libraryDetailsActionButtonWidth: calc(var(--uiScale) * 12rem);
     --libraryDetailsActionButtonIconSize: calc(var(--uiScale) * 3rem);
     --libraryDetailsActionButtonFontSize: calc(var(--uiScale) * 0.9rem);
+
+    --templateContentEditorHeaderHeight: calc(var(--uiScale) * 4rem);
+    --templateContentEditorHeaderPreferenceHeight: calc(var(--uiScale) * 4rem);
+    --templateContentEditorHeaderGroupHeight: calc(var(--uiScale) * 3rem);
   }
   .mobile {
     --libraryManagerNodeHeight: 7rem;

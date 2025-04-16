@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChromePicker, SketchPicker } from "react-color";
 import useOuterClick from "../../../design-system/useOuterClick";
 import { AnimatePresence, motion } from "framer-motion";
@@ -107,7 +107,6 @@ function GroupEditor({ config, data, onChange }) {
 
               <div className="h-px flex-grow bg-appLayoutBorder"></div>
 
-
               <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
                 <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
                   <ColorPicker
@@ -127,7 +126,6 @@ function GroupEditor({ config, data, onChange }) {
               </label>
 
               <div className="h-px flex-grow bg-appLayoutBorder"></div>
-
 
               <div className="w-fit h-full">
                 <input
@@ -180,32 +178,134 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   // For convenience, work directly with the nested template_content.
   const content = newTemplate.template_content;
 
-  // Collapsible section states.
-  const [desktopPaperOpen, setDesktopPaperOpen] = useState(false);
-  const [desktopToolbarOpen, setDesktopToolbarOpen] = useState(false);
-  const [mobilePaperOpen, setMobilePaperOpen] = useState(false);
-  const [mobileToolbarOpen, setMobileToolbarOpen] = useState(false);
+  // // Collapsible section states.
+  // const [desktopPaperOpen, setDesktopPaperOpen] = useState(false);
+  // const [desktopToolbarOpen, setDesktopToolbarOpen] = useState(false);
+  // const [mobilePaperOpen, setMobilePaperOpen] = useState(false);
+  // const [mobileToolbarOpen, setMobileToolbarOpen] = useState(false);
+
+  const [groupSelected, setGroupSelected] = useState("none");
 
   // Update a subgroup in template_content by calling setNewTemplate.
-  const handleGroupChange = (groupKey, subGroupKey, newData) => {
-    console.log("new Template", newTemplate);
-    setNewTemplate((prev) => ({
-      ...prev,
-      template_content: {
-        ...prev.template_content,
-        [groupKey]: {
-          ...prev.template_content[groupKey],
-          [subGroupKey]: newData,
+  const handleGroupChange = useCallback(
+    (groupKey, subGroupKey, newData) => {
+      console.log("new Template", newTemplate);
+      setNewTemplate((prev) => ({
+        ...prev,
+        template_content: {
+          ...prev.template_content,
+          [groupKey]: {
+            ...prev.template_content[groupKey],
+            [subGroupKey]: newData,
+          },
         },
-      },
-    }));
-  };
+      }));
+    },
+    [newTemplate, setNewTemplate]
+  );
+
+  const returnGroupEditor = useCallback(() => {
+    if (groupSelected === "desktopPaper") {
+      return (
+        <GroupEditor
+          config={desktopPaperConfig}
+          data={content.desktopDefaultPreferences.paperPreferences}
+          onChange={(newData) =>
+            handleGroupChange(
+              "desktopDefaultPreferences",
+              "paperPreferences",
+              newData
+            )
+          }
+        />
+      );
+    } else if (groupSelected === "desktopToolbar") {
+      return (
+        <GroupEditor
+          config={desktopToolbarConfig}
+          data={content.desktopDefaultPreferences.toolbarPreferences}
+          onChange={(newData) =>
+            handleGroupChange(
+              "desktopDefaultPreferences",
+              "toolbarPreferences",
+              newData
+            )
+          }
+        />
+      );
+    } else if (groupSelected === "mobilePaper") {
+      return (
+        <GroupEditor
+          config={mobilePaperConfig}
+          data={content.mobileDefaultPreferences.paperPreferences}
+          onChange={(newData) =>
+            handleGroupChange(
+              "mobileDefaultPreferences",
+              "paperPreferences",
+              newData
+            )
+          }
+        />
+      );
+    } else if (groupSelected === "mobileToolbar") {
+      return (
+        <GroupEditor
+          config={mobileToolbarConfig}
+          data={content.mobileDefaultPreferences.toolbarPreferences}
+          onChange={(newData) =>
+            handleGroupChange(
+              "mobileDefaultPreferences",
+              "toolbarPreferences",
+              newData
+            )
+          }
+        />
+      );
+    } else {
+      return null;
+    }
+  }, [
+    groupSelected,
+    content.desktopDefaultPreferences.paperPreferences,
+    content.desktopDefaultPreferences.toolbarPreferences,
+    content.mobileDefaultPreferences.paperPreferences,
+    content.mobileDefaultPreferences.toolbarPreferences,
+    handleGroupChange,
+  ]);
 
   return (
-    <div id="TCEContainer" className="w-full font-sans">
-       <div id="TCEHeader"></div>
+    <div id="TCEContainer" className="w-full font-sans flex flex-col">
+      <div id="TCEHeader" className="w-full h-fit min-h-fit flex">
+        <div className="TCEDevice flex-grow h-fit flex flex-col justify-center">
+          <div className="TCEDevice h-fit mb-3 w-full flex items-center justify-center text-2xl">
+            Desktop
+          </div>
+          <div className="h-px min-h-px w-[98.5%] bg-appLayoutBorder"></div>
+          <div className="TCEGroups h-templateContentEditorHeaderGroupHeight flex">
+            <button
+              onClick={() => setGroupSelected("desktopPaper")}
+              className="TCEGroup flex-grow h-full hover:bg-appLayoutInverseHover"
+            >
+              Paper
+            </button>
+            <button
+              onClick={() => setGroupSelected("desktopToolbar")}
+              className="TCEGroup flex-grow h-full hover:bg-appLayoutInverseHover"
+            >
+              Toolbar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="TCEBody"
+        className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-0"
+      >
+        {returnGroupEditor()}
+      </div>
     </div>
-  )
+  );
 
   return (
     <div className="font-sans">

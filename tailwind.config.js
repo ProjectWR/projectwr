@@ -127,6 +127,9 @@ export default {
         optionsDropdownIconHeight: "var(--optionsDropdownIconHeight)",
         libraryDetailsActionButtonIconSize: "var(--libraryDetailsActionButtonIconSize)",
         actionBarLogoHeight: "var(--actionBarLogoHeight)",
+        templateContentEditorHeaderPreferenceHeight: "var(--templateContentEditorHeaderPreferenceHeight)",
+        templateContentEditorHeaderGroupHeight: "var(--templateContentEditorHeaderGroupHeight)",
+
       },
       fontSize: {
         activityBarFontSize: "var(--activityBarFontSize)",
