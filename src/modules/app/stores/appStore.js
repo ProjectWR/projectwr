@@ -18,6 +18,11 @@ export const appStore = create((set) => ({
     return set({ panelOpened: panelOpened });
   },
 
+  panelTransient: false,
+  setPanelTransient: (panelTransient) => {
+    return set({ panelTransient: panelTransient });
+  },
+
   showActivityBar: true,
   setShowActivityBar: (showActivityBar) => {
     return set({ showActivityBar: showActivityBar });
