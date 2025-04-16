@@ -255,23 +255,6 @@ function GroupEditor({ config, data, onChange }) {
   );
 }
 
-// ─── SECTION HEADER ───────────────────────────────────────────────
-// A clickable header that toggles a section open or closed.
-function SectionHeader({ title, isOpen, toggle }) {
-  return (
-    <button
-      className="w-full flex items-center px-2 py-1 justify-between cursor-pointer border-b border-appLayoutBorder"
-      onClick={toggle}
-    >
-      <span className="text-lg">{title}</span>
-      <motion.span
-        animate={{ rotate: isOpen ? -90 : 90 }}
-        className="icon-[material-symbols-light--keyboard-arrow-right] w-[2.2rem] h-[2.2rem]"
-      ></motion.span>
-    </button>
-  );
-}
-
 // ─── TEMPLATE CONTENT EDITOR ───────────────────────────────────────────────
 /**
  * TemplateContentEditor
@@ -291,7 +274,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   // const [mobilePaperOpen, setMobilePaperOpen] = useState(false);
   // const [mobileToolbarOpen, setMobileToolbarOpen] = useState(false);
 
-  const [groupSelected, setGroupSelected] = useState("none");
+  const [groupSelected, setGroupSelected] = useState("desktopPaper");
 
   // Update a subgroup in template_content by calling setNewTemplate.
   const handleGroupChange = useCallback(
@@ -480,106 +463,6 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             {returnGroupEditor()}
           </motion.div>
         </AnimatePresence>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="font-sans">
-      {/* Desktop Preferences */}
-      <h2 className="text-2xl mb-4 px-2">Desktop Preferences</h2>
-      <div className="mb-8 space-y-4">
-        {/* Desktop Paper Preferences */}
-        <SectionHeader
-          title="Paper Preferences"
-          isOpen={desktopPaperOpen}
-          toggle={() => setDesktopPaperOpen((prev) => !prev)}
-        />
-        {desktopPaperOpen && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-0">
-            <GroupEditor
-              config={desktopPaperConfig}
-              data={content.desktopDefaultPreferences.paperPreferences}
-              onChange={(newData) =>
-                handleGroupChange(
-                  "desktopDefaultPreferences",
-                  "paperPreferences",
-                  newData
-                )
-              }
-            />
-          </div>
-        )}
-
-        {/* Desktop Toolbar Preferences */}
-        <SectionHeader
-          title="Toolbar Preferences"
-          isOpen={desktopToolbarOpen}
-          toggle={() => setDesktopToolbarOpen((prev) => !prev)}
-        />
-        {desktopToolbarOpen && (
-          <div className="mt-2">
-            <GroupEditor
-              config={desktopToolbarConfig}
-              data={content.desktopDefaultPreferences.toolbarPreferences}
-              onChange={(newData) =>
-                handleGroupChange(
-                  "desktopDefaultPreferences",
-                  "toolbarPreferences",
-                  newData
-                )
-              }
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Mobile Preferences */}
-      <h2 className="text-2xl mb-4 px-2">Mobile Preferences</h2>
-      <div className="mb-8 space-y-4">
-        {/* Mobile Paper Preferences */}
-        <SectionHeader
-          title="Paper Preferences"
-          isOpen={mobilePaperOpen}
-          toggle={() => setMobilePaperOpen((prev) => !prev)}
-        />
-        {mobilePaperOpen && (
-          <div className="mt-2">
-            <GroupEditor
-              config={mobilePaperConfig}
-              data={content.mobileDefaultPreferences.paperPreferences}
-              onChange={(newData) =>
-                handleGroupChange(
-                  "mobileDefaultPreferences",
-                  "paperPreferences",
-                  newData
-                )
-              }
-            />
-          </div>
-        )}
-
-        {/* Mobile Toolbar Preferences */}
-        <SectionHeader
-          title="Toolbar Preferences"
-          isOpen={mobileToolbarOpen}
-          toggle={() => setMobileToolbarOpen((prev) => !prev)}
-        />
-        {mobileToolbarOpen && (
-          <div className="mt-2">
-            <GroupEditor
-              config={mobileToolbarConfig}
-              data={content.mobileDefaultPreferences.toolbarPreferences}
-              onChange={(newData) =>
-                handleGroupChange(
-                  "mobileDefaultPreferences",
-                  "toolbarPreferences",
-                  newData
-                )
-              }
-            />
-          </div>
-        )}
       </div>
     </div>
   );
