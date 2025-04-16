@@ -64,6 +64,74 @@ const desktopToolbarConfig = {
 const mobilePaperConfig = { ...desktopPaperConfig };
 const mobileToolbarConfig = { ...desktopToolbarConfig };
 
+// Add this helper component (place it at the top of GroupEditor, before the return statement)
+const NumberOrPercentInput = ({ value, onChange }) => {
+  // Determine active type based on value suffix; default to "rem"
+  const initialActive =
+    typeof value === "string" && value.trim().endsWith("%") ? "%" : "rem";
+  // Remove unit from value if present
+  const extractNumber = (val) => String(val).replace(/(rem|%)/, "");
+
+  const [active, setActive] = useState(initialActive);
+  const [remValue, setRemValue] = useState(
+    initialActive === "rem" ? extractNumber(value) : ""
+  );
+  const [percentValue, setPercentValue] = useState(
+    initialActive === "%" ? extractNumber(value) : ""
+  );
+
+  const handleRemChange = (e) => {
+    setActive("rem");
+    setRemValue(e.target.value);
+    onChange(e.target.value + "rem");
+  };
+
+  const handlePercentChange = (e) => {
+    setActive("%");
+    setPercentValue(e.target.value);
+    onChange(e.target.value + "%");
+  };
+
+  return (
+    <div className="flex gap-2 items-center ">
+      <input
+        id="rem-input"
+        type="number"
+
+        value={remValue}
+        onChange={handleRemChange}
+        min="0"
+        onClick={() => {
+          setActive("rem");
+        }}
+        placeholder="rem"
+        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
+          active !== "rem"
+            ? "bg-appBackgroundAccent text-appLayoutBorder"
+            : "bg-appBackground"
+        }`}
+      />
+      <input
+        id="percent-input"
+        type="number"
+        value={percentValue}
+        onChange={handlePercentChange}
+        min="0"
+        max="100"
+        onClick={() => {
+          setActive("%");
+        }}
+        placeholder="%"
+        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
+          active !== "%"
+            ? "bg-appBackgroundAccent text-appLayoutBorder"
+            : "bg-appBackground"
+        }`}
+      />
+    </div>
+  );
+};
+
 // ─── GROUP EDITOR ───────────────────────────────────────────────
 // Renders a series of input fields (or a ChromePicker for color fields)
 // with a floating label and inline error display.
@@ -94,56 +162,95 @@ function GroupEditor({ config, data, onChange }) {
 
   return (
     <>
-      {Object.entries(config).map(([key, fieldConfig]) => (
-        <div key={key} className="flex items-center justify-center">
-          {fieldConfig.type === "color" ? (
-            <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-              <label
-                htmlFor={`input-${key}`}
-                className="text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-              >
-                {fieldConfig.label}
-              </label>
+      {Object.entries(config).map(([key, fieldConfig]) => {
+        if (fieldConfig.type === "color") {
+          return (
+            <div key={key} className="flex items-center justify-center">
+              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+                <label
+                  htmlFor={`input-${key}`}
+                  className="text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
 
-              <div className="h-px flex-grow bg-appLayoutBorder"></div>
+                <div className="h-px flex-grow bg-appLayoutBorder"></div>
 
-              <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
-                <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
-                  <ColorPicker
-                    color={data[key]}
-                    onChangeComplete={(color) => handleChange(key, color)}
-                  />
+                <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
+                  <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
+                    <ColorPicker
+                      color={data[key]}
+                      onChangeComplete={(color) => handleChange(key, color)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-              <label
-                htmlFor={`input-${key}`}
-                className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-              >
-                {fieldConfig.label}
-              </label>
+          );
+        }
 
-              <div className="h-px flex-grow bg-appLayoutBorder"></div>
+        if (fieldConfig.type === "number" || fieldConfig.type === "text") {
+          return (
+            <div key={key} className="flex items-center justify-center">
+              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
 
-              <div className="w-fit h-full">
-                <input
-                  id={`input-${key}`}
-                  type={fieldConfig.type === "number" ? "number" : "text"}
-                  value={data[key]}
-                  onChange={(e) => handleChange(key, e.target.value)}
-                  className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
-                />
+                <div className="h-px flex-grow bg-appLayoutBorder"></div>
+
+                <div className="w-fit h-full">
+                  <input
+                    id={`input-${key}`}
+                    type={fieldConfig.type === "number" ? "number" : "text"}
+                    value={data[key]}
+                    onChange={(e) => handleChange(key, e.target.value)}
+                    className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+                  />
+                </div>
+
+                {errors[key] && (
+                  <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
+                )}
               </div>
-
-              {errors[key] && (
-                <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
-              )}
             </div>
-          )}
-        </div>
-      ))}
+          );
+        }
+
+        // Modified branch for "numberOrPercent"
+        if (fieldConfig.type === "numberOrPercent") {
+          return (
+            <div key={key} className="flex items-center justify-center">
+              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+
+                <div className="h-px flex-grow bg-appLayoutBorder"></div>
+
+                <div className="w-fit h-full flex items-center">
+                  <NumberOrPercentInput
+                    value={data[key]}
+                    onChange={(val) => handleChange(key, val)}
+                  />
+                </div>
+
+                {errors[key] && (
+                  <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
+                )}
+              </div>
+            </div>
+          );
+        }
+
+        return null;
+      })}
     </>
   );
 }
@@ -280,7 +387,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
         className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-[1]"
       >
         <div className="TCEDevice bg-appBackground flex-grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
-          <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md">
+          <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Desktop
           </div>
           <div className="h-fit w-full px-2">
@@ -320,7 +427,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
           </div>
         </div>
         <div className="TCEDevice bg-appBackground flex-grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
-          <div className="TCEDevice h-fit py-1 w-full flex items-center justify-start px-2 text-md">
+          <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Mobile
           </div>
           <div className="h-fit w-full px-2">
