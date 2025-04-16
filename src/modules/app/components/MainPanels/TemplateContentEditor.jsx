@@ -97,17 +97,18 @@ function GroupEditor({ config, data, onChange }) {
       {Object.entries(config).map(([key, fieldConfig]) => (
         <div key={key} className="flex items-center justify-center">
           {fieldConfig.type === "color" ? (
-            <div className="mt-4 h-templateDetailsPreferenceInputHeight w-fit flex gap-2 flex-row items-center">
+            <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
               <label
                 htmlFor={`input-${key}`}
-                className="px-3 text-templateDetailsPanelPreferenceFontSize w-templateDetailsPreferenceLabelWidth min-w-templateDetailsPreferenceLabelWidth text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                className="text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
               >
                 {fieldConfig.label}
               </label>
 
-              <div className="w-px h-full bg-appLayoutBorder"></div>
+              <div className="h-px flex-grow bg-appLayoutBorder"></div>
 
-              <div className="flex-grow h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
+
+              <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
                 <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
                   <ColorPicker
                     color={data[key]}
@@ -117,17 +118,18 @@ function GroupEditor({ config, data, onChange }) {
               </div>
             </div>
           ) : (
-            <div className="mt-4 h-templateDetailsPreferenceInputHeight w-fit flex gap-2 flex-row items-center">
+            <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
               <label
                 htmlFor={`input-${key}`}
-                className="px-3 text-templateDetailsPanelPreferenceFontSize w-templateDetailsPreferenceLabelWidth min-w-templateDetailsPreferenceLabelWidth text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
               >
                 {fieldConfig.label}
               </label>
 
-              <div className="w-px min-w-px h-full bg-appLayoutBorder"></div>
+              <div className="h-px flex-grow bg-appLayoutBorder"></div>
 
-              <div className="flex-grow h-full">
+
+              <div className="w-fit h-full">
                 <input
                   id={`input-${key}`}
                   type={fieldConfig.type === "number" ? "number" : "text"}
@@ -200,7 +202,13 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   };
 
   return (
-    <div>
+    <div id="TCEContainer" className="w-full font-sans">
+       <div id="TCEHeader"></div>
+    </div>
+  )
+
+  return (
+    <div className="font-sans">
       {/* Desktop Preferences */}
       <h2 className="text-2xl mb-4 px-2">Desktop Preferences</h2>
       <div className="mb-8 space-y-4">
@@ -211,7 +219,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
           toggle={() => setDesktopPaperOpen((prev) => !prev)}
         />
         {desktopPaperOpen && (
-          <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-0">
             <GroupEditor
               config={desktopPaperConfig}
               data={content.desktopDefaultPreferences.paperPreferences}
