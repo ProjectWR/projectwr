@@ -10,3 +10,4 @@
 - themes
 - add word and character counter
 - make side panel transient when small screen
+- Add linking
