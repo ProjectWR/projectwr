@@ -130,7 +130,7 @@ const SettingsPanel = () => {
       setIsPasswordTouched(false);
       setIsLoginLoading(false);
     }
-  }, [authProps]);
+  }, [authProps, resetAuthProps]);
 
   const logoutUser = useCallback(async () => {
     try {
@@ -140,7 +140,7 @@ const SettingsPanel = () => {
     } catch {
       setIsLogoutLoading(false);
     }
-  }, [authProps]);
+  }, []);
 
   const registerUser = useCallback(async () => {
     const email = authProps.email;

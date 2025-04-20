@@ -378,10 +378,10 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
           </div>
 
           <div className="TCEGroups h-fit w-full flex gap-2 px-2 py-1">
+            {/* ${groupSelected === "desktopPaper" ? "" : ""} */}
             <button
               onClick={() => setGroupSelected("desktopPaper")}
               className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${groupSelected === "desktopPaper" ? "" : ""}
               `}
             >
               <motion.span
@@ -396,7 +396,6 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             <button
               onClick={() => setGroupSelected("desktopToolbar")}
               className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${groupSelected === "desktopToolbar" ? "" : ""}
               `}
             >
               <motion.span
@@ -420,7 +419,6 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             <button
               onClick={() => setGroupSelected("mobilePaper")}
               className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${groupSelected === "mobilePaper" ? "" : ""}
               `}
             >
               <motion.span
@@ -435,7 +433,6 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             <button
               onClick={() => setGroupSelected("mobileToolbar")}
               className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
-              ${groupSelected === "mobileToolbar" ? "" : ""}
               `}
             >
               <motion.span
