@@ -401,7 +401,7 @@ const TiptapEditor = ({
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutShadow relative z-[2]"
+                : "order-0 mt-2 w-fit rounded-lg border shadow-sm shadow-appLayoutShadow relative z-[2]"
             }
           `}
         >
