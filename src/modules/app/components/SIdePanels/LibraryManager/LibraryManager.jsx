@@ -112,7 +112,7 @@ const LibraryManager = () => {
         )}
 
         <h1
-          className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
+          className={`h-fit flex-grow text-libraryManagerHeaderText text-appLayoutText order-2 ${
             deviceType === "mobile" ? "ml-3" : "ml-6"
           }`}
         >

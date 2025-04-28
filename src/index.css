@@ -150,19 +150,19 @@
   }
   .desktop {
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.6rem);
-    --libraryManagerHeaderHeight: calc(var(--uiScale) * 3.5rem);
+    --libraryManagerHeaderHeight: calc(var(--uiScale) * 4rem);
     --detailsPanelHeaderHeight: calc(var(--uiScale) * 3rem);
     --actionBarHeight: calc(var(--uiScale) * 2.4rem);
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
     --actionBarButtonIconSize: calc(var(--uiScale) * 1.4rem);
-    --actionBarSearchWidth: calc((1 / sqrt(var(--uiScale))) * 30rem);
+    --actionBarSearchWidth: calc((1 / sqrt(var(--uiScale))) * 35rem);
     --actionBarSearchTextSize: calc(var(--uiScale) * 1.1rem);
-    --actionBarResultTextSize: calc(var(--uiScale) * 1.1rem);
+    --actionBarResultTextSize: calc(var(--uiScale) * 1rem);
     --actionBarSearchMaxHeight: calc(40rem);
     --actionBarSearchHeaderHeight: calc(var(--uiScale) * 2rem);
     --actionBarSearchFooterHeight: calc(var(--uiScale) * 0.4rem);
-    --actionBarResultHeaderTextSize: calc(var(--uiScale) * 1.1rem);
-    --actionBarResultNodeHeight: calc(var(var(--uiScale) * 2.2rem));
+    --actionBarResultHeaderTextSize: calc(var(--uiScale) * 1rem);
+    --actionBarResultNodeHeight: calc(var(--uiScale) * 1.75rem);
     --actionBarWindowButtonIconSize: calc(var(--uiScale) * 1.3rem);
     --actionBarResultDateFontSize: calc(var(--uiScale) * 1rem);
     --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.5rem);
@@ -185,11 +185,11 @@
 
     --libraryDirectoryHeaderHeight: calc(var(--uiScale) * 4.5rem);
 
-    --activityBarWidth: calc(var(--uiScale) * 4.5rem);
+    --activityBarWidth: calc(var(--uiScale) * 4rem);
     --activityBarHeight: calc(var(--uiScale) * 3.3rem);
-    --activityButtonHeight: calc(var(--uiScale) * 4.5rem);
+    --activityButtonHeight: calc(var(--uiScale) * 4rem);
     --sidePanelWidth: calc(var(--uiScale) * 25rem);
-    --activityBarIconSize: calc(var(--uiScale) * 2.2rem);
+    --activityBarIconSize: calc(var(--uiScale) * 1.9rem);
     --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
 
     --libraryManagerHeaderText: calc(var(--uiScale) * 1.2rem);
