@@ -16,6 +16,7 @@
 - Grammarly/language tool/etc. integration
 - google drive and one drive sync
 - Completion Status for each item
+- change internal structure of yjs ordered tree
 - FUTURE:
 - Tabs like vs code
 - Notes
