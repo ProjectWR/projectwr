@@ -75,12 +75,13 @@ const ActivityBar = ({}) => {
           )} */}
           <ActivityButton
             onClick={() => {
-              if (!(activity === "libraries" && panelOpened)) {
-                setPanelOpened(true);
+              if (activity !== "libraries") {
                 setActivity("libraries");
                 saveStateInHistory();
                 clearFuture();
               }
+
+              setPanelOpened(true);
 
               if (activity === "libraries" && libraryId !== "unselected") {
                 setLibraryId("unselected");
@@ -100,12 +101,13 @@ const ActivityBar = ({}) => {
           {deviceType === "mobile" && (
             <ActivityButton
               onClick={() => {
-                if (!(activity === "home" && !panelOpened)) {
+                if (activity !== "home") {
                   setActivity("home");
-                  setPanelOpened(false);
                   saveStateInHistory();
                   clearFuture();
                 }
+
+                setPanelOpened(false);
               }}
               activity={activity}
               selectedActivity={"home"}
@@ -118,12 +120,13 @@ const ActivityBar = ({}) => {
           )}
           <ActivityButton
             onClick={() => {
-              if (!(activity === "templates" && panelOpened)) {
+              if (activity !== "templates") {
                 setActivity("templates");
-                setPanelOpened(true);
                 saveStateInHistory();
                 clearFuture();
               }
+
+              setPanelOpened(true);
             }}
             activity={activity}
             selectedActivity={"templates"}
@@ -135,12 +138,13 @@ const ActivityBar = ({}) => {
           />
           <ActivityButton
             onClick={() => {
-              if (!(activity === "dictionary" && panelOpened)) {
+              if (activity !== "dictionary") {
                 setActivity("dictionary");
-                setPanelOpened(true);
                 saveStateInHistory();
                 clearFuture();
               }
+
+              setPanelOpened(true);
             }}
             activity={activity}
             selectedActivity={"dictionary"}
@@ -153,12 +157,13 @@ const ActivityBar = ({}) => {
           {deviceType === "mobile" && (
             <ActivityButton
               onClick={() => {
-                if (!(activity === "settings" && !panelOpened)) {
+                if (activity !== "settings") {
                   setActivity("settings");
-                  setPanelOpened(false);
                   saveStateInHistory();
                   clearFuture();
                 }
+
+                setPanelOpened(false);
               }}
               activity={activity}
               selectedActivity={"settings"}
@@ -175,8 +180,6 @@ const ActivityBar = ({}) => {
                 onClick={() => {
                   if (panelOpened) {
                     setPanelOpened(false);
-                    saveStateInHistory();
-                    clearFuture();
                   }
                 }}
                 activity={"closeSidePanelButton"}
@@ -197,8 +200,6 @@ const ActivityBar = ({}) => {
                   onClick={() => {
                     if (!panelOpened) {
                       setPanelOpened(true);
-                      saveStateInHistory();
-                      clearFuture();
                     }
                   }}
                   activity={"openSidePanelButton"}

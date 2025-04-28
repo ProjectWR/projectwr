@@ -469,20 +469,14 @@ const DirectoryItemNode = ({
                 className="ContextMenuItem"
                 onClick={() => {
                   console.log("edit section details button");
-                  if (
-                    !(
-                      appStoreItemId === itemId &&
-                      itemMode === "details" &&
-                      panelOpened
-                    )
-                  ) {
+                  if (!(appStoreItemId === itemId && itemMode === "details")) {
                     setItemId(itemId);
                     setItemMode("details");
+
                     if (deviceType === "mobile") {
                       setPanelOpened(false);
                     }
 
-                    setPanelOpened(true);
                     saveStateInHistory();
                     clearFuture();
                   }
@@ -554,7 +548,6 @@ const DirectoryItemNode = ({
                       setPanelOpened(false);
                     }
 
-                    setPanelOpened(true);
                     saveStateInHistory();
                     clearFuture();
                   }
@@ -567,20 +560,13 @@ const DirectoryItemNode = ({
                 className="ContextMenuItem"
                 onClick={() => {
                   console.log("edit paper editor button");
-                  if (
-                    !(
-                      appStoreItemId === itemId &&
-                      itemMode === "settings" &&
-                      panelOpened
-                    )
-                  ) {
+                  if (!(appStoreItemId === itemId && itemMode === "settings")) {
                     setItemId(itemId);
                     setItemMode("settings");
                     if (deviceType === "mobile") {
                       setPanelOpened(false);
                     }
 
-                    setPanelOpened(true);
                     saveStateInHistory();
                     clearFuture();
                   }

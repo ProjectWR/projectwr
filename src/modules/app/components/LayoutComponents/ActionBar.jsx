@@ -133,7 +133,7 @@ const ActionBar = () => {
 
           <ActionButton
             onClick={() => {
-              if (!(activity === "home" && !panelOpened)) {
+              if (activity !== "home") {
                 setActivity("home");
                 setPanelOpened(false);
                 saveStateInHistory();
@@ -179,9 +179,8 @@ const ActionBar = () => {
         <div className="h-full w-fit pl-1 flex items-center gap-1">
           <ActionButton
             onClick={() => {
-              if (!(activity === "settings" && !panelOpened)) {
+              if (!(activity === "settings")) {
                 setActivity("settings");
-                setPanelOpened(false);
                 saveStateInHistory();
                 clearFuture();
               }

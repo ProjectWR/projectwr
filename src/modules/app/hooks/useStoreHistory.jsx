@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { appStore } from "../stores/appStore";
 
 const past = [];
@@ -22,7 +22,6 @@ const useStoreHistory = () => {
   const itemMode = appStore((state) => state.itemMode);
   const templateId = appStore((state) => state.templateId);
   const templateMode = appStore((state) => state.templateMode);
-  const panelOpened = appStore((state) => state.panelOpened);
   const dictionaryMode = appStore((state) => state.dictionaryMode);
   const dictionaryWord = appStore((state) => state.dictionaryWord);
 
@@ -32,7 +31,6 @@ const useStoreHistory = () => {
   const setItemMode = appStore((state) => state.setItemMode);
   const setTemplateId = appStore((state) => state.setTemplateId);
   const setTemplateMode = appStore((state) => state.setTemplateMode);
-  const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setDictionaryMode = appStore((state) => state.setDictionaryMode);
   const setDictionaryWord = appStore((state) => state.setDictionaryWord);
 
@@ -44,7 +42,6 @@ const useStoreHistory = () => {
       itemMode,
       templateId,
       templateMode,
-      panelOpened,
       dictionaryMode,
       dictionaryWord,
     });
@@ -88,7 +85,6 @@ const useStoreHistory = () => {
     setItemMode(state.itemMode);
     setTemplateId(state.templateId);
     setTemplateMode(state.templateMode);
-    setPanelOpened(state.panelOpened);
     setDictionaryMode(state.dictionaryMode);
     setDictionaryWord(state.dictionaryWord);
   };
@@ -103,7 +99,6 @@ const useStoreHistory = () => {
       itemMode,
       templateId,
       templateMode,
-      panelOpened,
       dictionaryMode,
       dictionaryWord,
     });
@@ -117,7 +112,6 @@ const useStoreHistory = () => {
     setItemMode(state.itemMode);
     setTemplateId(state.templateId);
     setTemplateMode(state.templateMode);
-    setPanelOpened(state.panelOpened);
     setDictionaryMode(state.dictionaryMode);
     setDictionaryWord(state.dictionaryWord);
   };
