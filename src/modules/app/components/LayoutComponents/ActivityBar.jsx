@@ -169,6 +169,48 @@ const ActivityBar = ({}) => {
               flexValue={"grow-1"}
             />
           )}
+          <AnimatePresence mode="wait">
+            {deviceType === "desktop" && panelOpened && (
+              <ActivityButton
+                onClick={() => {
+                  if (panelOpened) {
+                    setPanelOpened(false);
+                    saveStateInHistory();
+                    clearFuture();
+                  }
+                }}
+                activity={"closeSidePanelButton"}
+                deviceType={deviceType}
+                toggleButton={true}
+                buttonContent={
+                  <span className="icon-[material-symbols-light--arrow-menu-close] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                }
+                flexValue={"grow-1"}
+              />
+            )}
+            {deviceType === "desktop" &&
+              !panelOpened &&
+              (activity === "libraries" ||
+                activity === "templates" ||
+                activity === "dictionary") && (
+                <ActivityButton
+                  onClick={() => {
+                    if (!panelOpened) {
+                      setPanelOpened(true);
+                      saveStateInHistory();
+                      clearFuture();
+                    }
+                  }}
+                  activity={"openSidePanelButton"}
+                  deviceType={deviceType}
+                  toggleButton={true}
+                  buttonContent={
+                    <span className="icon-[material-symbols-light--arrow-menu-open] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                  }
+                  flexValue={"grow-1"}
+                />
+              )}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
@@ -185,10 +227,15 @@ const ActivityButton = ({
   activity,
   deviceType,
   flexValue,
+  toggleButton = false,
 }) => {
   return (
     <motion.button
       key={activity}
+      initial={{ opacity: toggleButton ? 0 : 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: toggleButton ? 0 : 1 }}
+      transition={{ duration: 0.15 }}
       className={`relative 
         ${
           deviceType === "mobile"
