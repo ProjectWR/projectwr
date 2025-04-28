@@ -32,26 +32,16 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import firebaseApp from "../lib/Firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  getDocsFromServer,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import syncManager from "../lib/sync";
-import { Resizable } from "re-resizable";
-import { wait } from "lib0/promise";
 import { max, min } from "lib0/math";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import templateManager from "../lib/templates";
 import fontManager from "../lib/font";
 import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
-import { setupEnDictionary } from "../../editor/enDictionary";
+import { setupEnDictionary } from "../../editor/EnDictionary";
 import dictionaryManager from "../lib/dictionary";
-
-let wasLocalSetup = false;
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -59,6 +49,10 @@ const WritingApp = () => {
   const zoom = useZoom();
 
   const [isMaximized, setIsMaximized] = useState(false);
+
+  // FOR DEV ONLY
+
+  const [wasLocalSetup, setWasLocalSetup] = useState(false);
 
   const loading = appStore((state) => state.loading);
   const setLoading = appStore((state) => state.setLoading);
@@ -71,7 +65,13 @@ const WritingApp = () => {
 
   const sideBarOpened = appStore((state) => state.sideBarOpened);
 
+  const isMd = appStore((state) => state.isMd);
+  const setIsMd = appStore((state) => state.setIsMd);
+
   const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
+
+  const sidePanelWidth = appStore((state) => state.sidePanelWidth);
+  const setSidePanelWidth = appStore((state) => state.setSidePanelWidth);
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
@@ -105,7 +105,7 @@ const WritingApp = () => {
     }
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
-  const mWidth = useMotionValue(200);
+  const mWidth = useMotionValue(computedPanelWidth);
 
   const handleDrag = (event, info) => {
     const rect = document
@@ -120,6 +120,7 @@ const WritingApp = () => {
     newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
     mWidth.set(newWidth);
+    setSidePanelWidth(mWidth.get());
   };
 
   useEffect(() => {
@@ -127,6 +128,7 @@ const WritingApp = () => {
       console.log("Initialize Writing App has been run!");
       setLoading(true);
       setLoadingStage("Loading App");
+
       try {
         setLoadingStage("Loading settings");
 
@@ -149,60 +151,56 @@ const WritingApp = () => {
 
         await fontManager.init();
 
-        if (!wasLocalSetup) {
-          wasLocalSetup = true;
+        setLoadingStage("Fetching local storage");
 
-          setLoadingStage("Fetching local storage");
+        const databases = await indexedDB.databases();
 
-          const databases = await indexedDB.databases();
+        const localLibraries = [];
 
-          const localLibraries = [];
+        dataManagerSubdocs.destroyAll();
+        persistenceManagerForSubdocs.closeAllConnections();
 
-          dataManagerSubdocs.destroyAll();
-          persistenceManagerForSubdocs.closeAllConnections();
-
-          const searchCallback = (action, key, value) => {
-            console.log("In search callback: ", action, key);
-            if (action === "set") {
-              setupSearchForLibrary(key);
-            }
-
-            if (action === "delete") {
-              destroySearchForLibrary(key);
-            }
-          };
-
-          dataManagerSubdocs.addLibraryYDocMapCallback(searchCallback);
-
-          setLoadingStage("Initializing Local Storage");
-
-          for (const db of databases) {
-            const libraryId = db.name;
-            if (
-              [
-                "firebase-heartbeat-database",
-                "firebase-installations-database",
-                "firebaseLocalStorageDb",
-                "keyval-store",
-                "level-js-index",
-                "validate-browser-context-for-indexeddb-analytics-module",
-                "dictionary"
-              ].find((value) => value === libraryId)
-            ) {
-              continue;
-            }
-            console.log("Database: ", libraryId);
-
-            localLibraries.push(libraryId);
-
-            await dataManagerSubdocs.initLibrary(libraryId);
-            const ydoc = dataManagerSubdocs.getLibrary(libraryId);
-
-            console.log(ydoc.guid, ydoc);
+        const searchCallback = (action, key, value) => {
+          console.log("In search callback: ", action, key);
+          if (action === "set") {
+            setupSearchForLibrary(key);
           }
 
-          console.log("Local Libraries: ", localLibraries);
+          if (action === "delete") {
+            destroySearchForLibrary(key);
+          }
+        };
+
+        dataManagerSubdocs.addLibraryYDocMapCallback(searchCallback);
+
+        setLoadingStage("Initializing Local Storage");
+
+        for (const db of databases) {
+          const libraryId = db.name;
+          if (
+            [
+              "firebase-heartbeat-database",
+              "firebase-installations-database",
+              "firebaseLocalStorageDb",
+              "keyval-store",
+              "level-js-index",
+              "validate-browser-context-for-indexeddb-analytics-module",
+              "dictionary",
+            ].find((value) => value === libraryId)
+          ) {
+            continue;
+          }
+          console.log("Database: ", libraryId);
+
+          localLibraries.push(libraryId);
+
+          await dataManagerSubdocs.initLibrary(libraryId);
+          const ydoc = dataManagerSubdocs.getLibrary(libraryId);
+
+          console.log(ydoc.guid, ydoc);
         }
+
+        console.log("Local Libraries: ", localLibraries);
 
         if (false) {
           setLoadingStage("Fetching cloud storage");
@@ -239,27 +237,42 @@ const WritingApp = () => {
 
         // await wait(1000);
         setLoadingStage("Finished Loading");
-        setLoading(false);
         return () => {};
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
+      } finally {
+        setLoading(false);
       }
     };
 
-    initializeWritingApp();
-  }, [setDefaultSettings, setSettings, setLoading, user]);
+    if (!wasLocalSetup) {
+      initializeWritingApp();
+      setWasLocalSetup(true);
+    }
+  }, [setDefaultSettings, setSettings, setLoading, user, wasLocalSetup]);
 
   useEffect(() => {
+    setSidePanelWidth(computedPanelWidth);
+
     const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
       const x = await getCurrentWindow().isMaximized();
-      console.log("fullscreen??", x);
 
       setIsMaximized(x);
     });
-  }, []);
 
-  const [color, setColor] = useState("#a3a3a3");
+    const checkScreenSize = () => {
+      console.log("WINDOW INNER WIDTH: ", window.innerWidth);
+      setIsMd(window.innerWidth >= 1280);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return async () => {
+      (await unlisten)();
+    };
+  }, [setIsMd, setSidePanelWidth, computedPanelWidth]);
 
   // Render loading screen if loading is true
   return (
@@ -295,7 +308,7 @@ const WritingApp = () => {
                   >
                     <g
                       fill="none"
-                      stroke={`${color}`}
+                      stroke={`"#a3a3a3"`}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={0.3}
@@ -381,7 +394,7 @@ const WritingApp = () => {
                         width: "fit-content",
                         minWidth: "fit-content",
                       }}
-                      className="h-full flex flex-row items-center"
+                      className="h-full flex flex-row items-center relative"
                     >
                       <ActivityBar />
                       <AnimatePresence mode="wait">
@@ -389,11 +402,13 @@ const WritingApp = () => {
                           <motion.div
                             key="SidePanelMotionContainer"
                             id="SidePanelMotionContainer"
-                            className="h-full border-r border-appLayoutBorder z-4 relative bg-appBackgroundAccent"
+                            className={`h-full border-r border-appLayoutBorder z-[5] bg-appBackgroundAccent ${
+                              !isMd && "absolute top-0 left-full"
+                            } `}
                             initial={{ opacity: 0, width: 0, minWidth: 0 }}
                             animate={{
                               opacity: 1,
-                              width: `${computedPanelWidth}px`,
+                              width: `${sidePanelWidth}px`,
                             }}
                             exit={{ opacity: 0, width: 0, minWidth: 0 }}
                             transition={{ duration: 0.1 }}
@@ -409,20 +424,25 @@ const WritingApp = () => {
                               //     : "", // Clip the shadow except at right
                             }}
                           >
-                            <SidePanel />
-                            <motion.div
-                              className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
-                              drag="x"
-                              dragConstraints={{
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                              }}
-                              dragElastic={0}
-                              dragMomentum={false}
-                              onDrag={handleDrag}
-                            ></motion.div>
+                            <div
+                              id="SidePanelWrapper"
+                              className="h-full w-full relative"
+                            >
+                              <SidePanel />
+                              <motion.div
+                                className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
+                                drag="x"
+                                dragConstraints={{
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                }}
+                                dragElastic={0}
+                                dragMomentum={false}
+                                onDrag={handleDrag}
+                              ></motion.div>
+                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>

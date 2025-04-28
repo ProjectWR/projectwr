@@ -81,5 +81,15 @@ export const appStore = create((set) => ({
   searchQuery: '',
   setSearchQuery: (searchQuery) => {
     return set({ searchQuery: searchQuery });
+  },
+
+  isMd: false,
+  setIsMd: (isMd) => {
+    return set({ isMd: isMd });
+  },
+
+  sidePanelWidth: "360",
+  setSidePanelWidth: (sidePanelWidth) => {
+    return set({ sidePanelWidth: sidePanelWidth })
   }
 }));

@@ -153,7 +153,7 @@ const LibraryDirectory = ({ libraryId }) => {
               {
                 label: "Create Book",
                 icon: (
-                  <span className="icon-[fluent--one-book-add-24-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
+                  <span className="icon-[fluent--book-add-24-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
                 ),
                 callback: () => {
                   console.log("Create Book!");
