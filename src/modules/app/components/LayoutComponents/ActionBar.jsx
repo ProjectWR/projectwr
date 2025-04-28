@@ -24,6 +24,12 @@ const ActionBar = () => {
   const sideBarOpened = appStore((state) => state.sideBarOpened);
   const setSideBarOpened = appStore((state) => state.setSideBarOpened);
 
+  const panelOpened = appStore((state) => state.panelOpened);
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+  const activity = appStore((state) => state.activity);
+  const setActivity = appStore((state) => state.setActivity);
+
   const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
@@ -124,6 +130,29 @@ const ActionBar = () => {
               </AnimatePresence>
             </div>
           </ActionButton>
+
+          <ActionButton
+            onClick={() => {
+              if (!(activity === "home" && !panelOpened)) {
+                setActivity("home");
+                setPanelOpened(false);
+                saveStateInHistory();
+                clearFuture();
+              }
+            }}
+            className={`${activity === "home" && "bg-appLayoutPressed"}`}
+          >
+            <div className={`h-full w-actionBarButtonIconSize relative`}>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="homeButton"
+                className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </ActionButton>
         </div>
 
         {/* 
@@ -146,6 +175,31 @@ const ActionBar = () => {
         </div>
 
         <div className="flex-grow"></div>
+
+        <div className="h-full w-fit pl-1 flex items-center gap-1">
+          <ActionButton
+            onClick={() => {
+              if (!(activity === "settings" && !panelOpened)) {
+                setActivity("settings");
+                setPanelOpened(false);
+                saveStateInHistory();
+                clearFuture();
+              }
+            }}
+            className={`${activity === "settings" && "bg-appLayoutPressed"}`}
+          >
+            <div className={`h-full w-actionBarButtonIconSize relative`}>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="settingsButton"
+                className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </ActionButton>
+        </div>
 
         {/* <ActionButton>
           <span className="icon-[line-md--question] h-actionBarButtonIconSize w-actionBarButtonIconSize"></span>
@@ -253,8 +307,8 @@ const SearchBar = () => {
   const setActivity = appStore((state) => state.setActivity);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-  const searchQuery = appStore((state => state.searchQuery));
-  const setSearchQuery = appStore((state => state.setSearchQuery));
+  const searchQuery = appStore((state) => state.searchQuery);
+  const setSearchQuery = appStore((state) => state.setSearchQuery);
 
   const [isFocused, setIsFocused] = useState(false);
   const [searchResults, setSearchResults] = useState([]);

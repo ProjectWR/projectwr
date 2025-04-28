@@ -54,7 +54,7 @@ const ActivityBar = ({}) => {
           exit={deviceType !== "mobile" ? { width: 0 } : { height: 0 }}
           transition={{ duration: 0.1 }}
         >
-          {deviceType === "desktop" && (
+          {/* {deviceType === "desktop" && (
             <ActivityButton
               onClick={() => {
                 if (!(activity === "home" && !panelOpened)) {
@@ -72,7 +72,7 @@ const ActivityBar = ({}) => {
               }
               flexValue={"grow-1"}
             />
-          )}
+          )} */}
           <ActivityButton
             onClick={() => {
               if (!(activity === "libraries" && panelOpened)) {
@@ -100,8 +100,12 @@ const ActivityBar = ({}) => {
           {deviceType === "mobile" && (
             <ActivityButton
               onClick={() => {
-                setActivity("home");
-                setPanelOpened(true);
+                if (!(activity === "home" && !panelOpened)) {
+                  setActivity("home");
+                  setPanelOpened(false);
+                  saveStateInHistory();
+                  clearFuture();
+                }
               }}
               activity={activity}
               selectedActivity={"home"}
@@ -146,23 +150,25 @@ const ActivityBar = ({}) => {
             }
             flexValue={"grow-1"}
           />
-          <ActivityButton
-            onClick={() => {
-              if (!(activity === "settings" && !panelOpened)) {
-                setActivity("settings");
-                setPanelOpened(false);
-                saveStateInHistory();
-                clearFuture();
+          {deviceType === "mobile" && (
+            <ActivityButton
+              onClick={() => {
+                if (!(activity === "settings" && !panelOpened)) {
+                  setActivity("settings");
+                  setPanelOpened(false);
+                  saveStateInHistory();
+                  clearFuture();
+                }
+              }}
+              activity={activity}
+              selectedActivity={"settings"}
+              deviceType={deviceType}
+              buttonContent={
+                <span className="icon-[material-symbols-light--settings] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
               }
-            }}
-            activity={activity}
-            selectedActivity={"settings"}
-            deviceType={deviceType}
-            buttonContent={
-              <span className="icon-[material-symbols-light--settings] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
-            }
-            flexValue={"grow-1"}
-          />
+              flexValue={"grow-1"}
+            />
+          )}
         </motion.div>
       )}
     </AnimatePresence>
