@@ -308,7 +308,7 @@ const WritingApp = () => {
                   >
                     <g
                       fill="none"
-                      stroke={`"#a3a3a3"`}
+                      stroke={`#a3a3a3`}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={0.3}

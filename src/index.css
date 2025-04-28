@@ -1,4 +1,12 @@
-@tailwind base;
+/* 1. Define the layer order */
+@layer tw-base, mantine, utilities, base;
+
+/* 2. Import Mantine styles defined in `mantine` layer */
+@import "@mantine/core/styles.layer.css";
+
+@layer tw-base {
+  @tailwind base;
+}
 @tailwind components;
 @tailwind utilities;
 
@@ -141,8 +149,8 @@
     --appLayoutSubmitButton: 0 0% 80%;
   }
   .desktop {
-    --libraryManagerNodeIconSize: calc(var(--uiScale) * 2rem);
-    --libraryManagerHeaderHeight: calc(var(--uiScale) * 4.5rem);
+    --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.6rem);
+    --libraryManagerHeaderHeight: calc(var(--uiScale) * 3.5rem);
     --detailsPanelHeaderHeight: calc(var(--uiScale) * 3rem);
     --actionBarHeight: calc(var(--uiScale) * 2.4rem);
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
@@ -184,7 +192,7 @@
     --activityBarIconSize: calc(var(--uiScale) * 2.2rem);
     --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
 
-    --libraryManagerHeaderText: calc(var(--uiScale) * 1.4rem);
+    --libraryManagerHeaderText: calc(var(--uiScale) * 1.2rem);
 
     --homePanelHeaderHeight: calc(var(--uiScale) * 6rem);
     --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
@@ -205,23 +213,23 @@
     --authButtonSize: calc(var(--uiScale) * 1.6rem);
     --authButtonLoadingSize: calc(var(--uiScale) * 1.5rem);
 
-    --libraryManagerNodeHeight: calc(var(--uiScale) * 3.5rem);
-    --libraryManagerNodeText: calc(var(--uiScale) * 1.25rem);
-    --libraryManagerNodeIconSize: calc(var(--uiScale) * 2rem);
-    --libraryManagerAddButtonSize: calc(var(--uiScale) * 2.5rem);
-    --libraryManagerNodeEditButtonWidth: calc(var(--uiScale) * 2.5rem);
+    --libraryManagerNodeHeight: calc(var(--uiScale) * 3rem);
+    --libraryManagerNodeText: calc(var(--uiScale) * 1rem);
+    --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.7rem);
+    --libraryManagerAddButtonSize: calc(var(--uiScale) * 2rem);
+    --libraryManagerNodeEditButtonWidth: calc(var(--uiScale) * 2rem);
 
-    --libraryDirectoryBookNodeHeight: calc(var(--uiScale) * 2.6rem);
-    --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 2.6rem);
-    --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 2.6rem);
+    --libraryDirectoryBookNodeHeight: calc(var(--uiScale) * 2.2rem);
+    --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 2.2rem);
+    --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 2.2rem);
 
-    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 1.2rem);
-    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 1.2rem);
-    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 1.2rem);
+    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 1rem);
+    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 1rem);
+    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 1rem);
 
-    --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 2rem);
-    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 2rem);
-    --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 2rem);
+    --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.3rem);
+    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 1.3rem);
+    --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 1.3rem);
 
     --templateDetailsPanelDeviceHeaderHeight: calc(var(--uiScale) * 4rem);
     --templateDetailsPanelSectionHeaderHeight: calc(var(--uiScale) * 4rem);

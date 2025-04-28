@@ -337,7 +337,7 @@ const DirectoryItemNode = ({
                       }
                     }}
                   >
-                    <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-1">
+                    <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
                       <motion.span
                         animate={{ rotate: 0 }}
                         transition={{ duration: 0.2 }}
@@ -347,11 +347,11 @@ const DirectoryItemNode = ({
 
                     <div
                       ref={textContainerRef}
-                      className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                      className="flex-grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
                     >
                       <span
                         ref={textRef}
-                        className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                        className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap overflow-ellipsis"
                       >
                         {itemMapState.item_title}
                       </span>
@@ -363,7 +363,7 @@ const DirectoryItemNode = ({
               {(itemMapRef.current.get("type") === "section" ||
                 itemMapRef.current.get("type") === "book") && (
                 <button
-                  className={`flex-grow min-w-0 flex items-center justify-start h-full`}
+                  className={`flex-grow min-w-0 flex items-center justify-start h-full `}
                   onClick={() => {
                     setFocusedItemId(itemId);
                     const newOpenedState = !isOpened;
@@ -374,7 +374,7 @@ const DirectoryItemNode = ({
                   <motion.span
                     animate={{ rotate: isOpened ? 90 : 0 }}
                     transition={{ duration: 0.2 }}
-                    className={`icon-[material-symbols-light--keyboard-arrow-right] ${(() => {
+                    className={`icon-[formkit--right] ${(() => {
                       const type = itemMapRef.current.get("type");
 
                       if (type === "section")
@@ -387,7 +387,7 @@ const DirectoryItemNode = ({
 
                   <div
                     ref={textContainerRef}
-                    className="flex-grow text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                    className="flex-grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
                   >
                     <span
                       ref={textRef}
@@ -458,7 +458,7 @@ const DirectoryItemNode = ({
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content
-          className="ContextMenuContent"
+          className="ContextMenuContent z-[6]"
           sideOffset={5}
           align="end"
         >

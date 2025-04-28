@@ -10,6 +10,7 @@ import GrainyButton from "../../../design-system/GrainyButton";
 import syncManager from "../../lib/sync";
 import { wait } from "lib0/promise";
 import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
+import { Textarea } from "@mantine/core";
 
 const LibraryDetailsPanel = ({ libraryId }) => {
   const { deviceType } = useDeviceType();
@@ -177,9 +178,25 @@ const LibraryDetailsPanel = ({ libraryId }) => {
         className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 px-6"
       >
         <div className="prop w-full h-fit relative">
-          <textarea
+          {/* <textarea
             id="libraryDescription"
             className="bg-appBackground field-sizing-content overflow-hidden text-detailsPanelPropsFontSize w-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
+            name="library_description"
+            placeholder="Enter Description"
+            onChange={handleChange}
+            value={libraryProperties.library_description}
+          /> */}
+
+          <Textarea
+            id="libraryDescription"
+            classNames={{
+              root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
+              wrapper:
+                "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
+              input:
+                "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
+            }}
+            autosize
             name="library_description"
             placeholder="Enter Description"
             onChange={handleChange}
