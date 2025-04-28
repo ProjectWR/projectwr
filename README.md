@@ -9,5 +9,17 @@
 - add delete buttons
 - themes
 - add word and character counter
-- make side panel transient when small screen
+  - readability analysis and all those scores
+- ~~make side panel transient when small screen~~
 - Add linking
+- Tabbed Writing Format
+- Grammarly/language tool/etc. integration
+- google drive and one drive sync
+- Completion Status for each item
+- FUTURE:
+- Tabs like vs code
+- Notes
+- Timelines
+- Mind maps (importable from xMind and Freemind and scrapple)
+- import notes from onenote and google keep
+- Search and Replace (only have search right now)
