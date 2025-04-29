@@ -432,7 +432,7 @@ const WritingApp = () => {
                               } `}
                               initial={{ opacity: 0, width: 0, minWidth: 0 }}
                               animate={{
-                                opacity: 1,
+                                opacity: isMd ? 1 : 0.95,
                                 width: `${sidePanelWidth}px`,
                               }}
                               exit={{ opacity: 0, width: 0, minWidth: 0 }}

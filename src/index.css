@@ -134,6 +134,7 @@
   .dark {
     --appBackground: 0 0% 8.9%;
     --appBackgroundAccent: 0 0% 6.9%;
+    --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
     --appLayoutBorder: 0 0% 16.9%;
     --appLayoutText: 0 0% 80%;
     --appLayoutShadow: 0 0% 0%;

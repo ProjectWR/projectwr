@@ -46,6 +46,7 @@ export default {
       colors: {
         appBackground: "hsl(var(--appBackground))",
         appBackgroundAccent: "hsl(var(--appBackgroundAccent))",
+        appBackgroundAccentTransient: "hsla(var(--appBackgroundAccentTransient))",
         appLayoutBorder: "hsl(var(--appLayoutBorder))",
         appLayoutText: "hsl(var(--appLayoutText))",
         appLayoutTextMuted: "hsl(var(--appLayoutTextMuted))",
