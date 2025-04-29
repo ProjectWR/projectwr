@@ -5,6 +5,7 @@
 - Add context menus where it is appropriate
 - Settings page needs to be finished
   - theme selector (currently dark or light mode)
+  - auth
   - zoom selector
 - Finish editor styles integration
 - add delete buttons

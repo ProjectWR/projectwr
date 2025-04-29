@@ -3,7 +3,7 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import useStoreHistory from "../../hooks/useStoreHistory";
 
-const ActivityBar = ({}) => {
+const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const { deviceType } = useDeviceType();
 
   const panelOpened = appStore((state) => state.panelOpened);
@@ -175,24 +175,26 @@ const ActivityBar = ({}) => {
             />
           )}
           <AnimatePresence mode="wait">
-            {deviceType === "desktop" && panelOpened && (
-              <ActivityButton
-                onClick={() => {
-                  if (panelOpened) {
-                    setPanelOpened(false);
-                  }
-                }}
-                activity={"closeSidePanelButton"}
-                deviceType={deviceType}
-                toggleButton={true}
-                buttonContent={
-                  <span className="icon-[material-symbols-light--arrow-menu-close] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
-                }
-                flexValue={"grow-1"}
-              />
-            )}
             {deviceType === "desktop" &&
-              !panelOpened &&
+              panelOpened &&
+              isPanelAwakeOrScreenMd && (
+                <ActivityButton
+                  onClick={() => {
+                    if (panelOpened) {
+                      setPanelOpened(false);
+                    }
+                  }}
+                  activity={"closeSidePanelButton"}
+                  deviceType={deviceType}
+                  toggleButton={true}
+                  buttonContent={
+                    <span className="icon-[material-symbols-light--arrow-menu-close] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                  }
+                  flexValue={"grow-1"}
+                />
+              )}
+            {deviceType === "desktop" &&
+              !(panelOpened && isPanelAwakeOrScreenMd) &&
               (activity === "libraries" ||
                 activity === "templates" ||
                 activity === "dictionary") && (

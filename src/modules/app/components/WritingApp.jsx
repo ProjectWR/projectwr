@@ -42,6 +42,8 @@ import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
 import { setupEnDictionary } from "../../editor/EnDictionary";
 import dictionaryManager from "../lib/dictionary";
+import useRefreshableTimer from "../hooks/useRefreshableTimer";
+import { useDebouncedCallback } from "@mantine/hooks";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -67,6 +69,8 @@ const WritingApp = () => {
 
   const isMd = appStore((state) => state.isMd);
   const setIsMd = appStore((state) => state.setIsMd);
+
+  const [isPanelAwake, refreshPanel] = useRefreshableTimer();
 
   const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
 
@@ -263,7 +267,12 @@ const WritingApp = () => {
 
     const checkScreenSize = () => {
       console.log("WINDOW INNER WIDTH: ", window.innerWidth);
-      setIsMd(window.innerWidth >= 1280);
+      if (window.innerWidth >= 1280) {
+        setIsMd(true);
+      } else {
+        setIsMd(false);
+        refreshPanel();
+      }
     };
 
     checkScreenSize();
@@ -272,7 +281,13 @@ const WritingApp = () => {
     return async () => {
       (await unlisten)();
     };
-  }, [setIsMd, setSidePanelWidth, computedPanelWidth]);
+  }, [setIsMd, setSidePanelWidth, computedPanelWidth, refreshPanel]);
+
+  const debouncedRefreshPanel = useDebouncedCallback(() => {
+    if (deviceType === "desktop") {
+      refreshPanel();
+    }
+  }, 1000);
 
   // Render loading screen if loading is true
   return (
@@ -395,56 +410,65 @@ const WritingApp = () => {
                         minWidth: "fit-content",
                       }}
                       className="h-full flex flex-row items-center relative"
+                      whileHover={() => {
+                        if (deviceType === "desktop") {
+                          refreshPanel();
+                        }
+                      }}
                     >
-                      <ActivityBar />
+                      <ActivityBar
+                        isPanelAwakeOrScreenMd={isMd || isPanelAwake}
+                      />
                       <AnimatePresence mode="wait">
-                        {panelOpened && sideBarOpened && (
-                          <motion.div
-                            key="SidePanelMotionContainer"
-                            id="SidePanelMotionContainer"
-                            className={`h-full border-r border-appLayoutBorder z-[5] bg-appBackgroundAccent ${
-                              !isMd && "absolute top-0 left-full"
-                            } `}
-                            initial={{ opacity: 0, width: 0, minWidth: 0 }}
-                            animate={{
-                              opacity: 1,
-                              width: `${sidePanelWidth}px`,
-                            }}
-                            exit={{ opacity: 0, width: 0, minWidth: 0 }}
-                            transition={{ duration: 0.1 }}
-                            style={{
-                              width: mWidth,
-                              // boxShadow:
-                              //   deviceType === "desktop"
-                              //     ? "0px 0px 6px -1px hsl(var(--appLayoutShadow))"
-                              //     : "", // right shadow
-                              // clipPath:
-                              //   deviceType === "desktop"
-                              //     ? "inset(0 -10px 0 0)"
-                              //     : "", // Clip the shadow except at right
-                            }}
-                          >
-                            <div
-                              id="SidePanelWrapper"
-                              className="h-full w-full relative"
+                        {panelOpened &&
+                          sideBarOpened &&
+                          (isMd || isPanelAwake) && (
+                            <motion.div
+                              key="SidePanelMotionContainer"
+                              id="SidePanelMotionContainer"
+                              className={`h-full border-r border-appLayoutBorder z-[5] bg-appBackgroundAccent ${
+                                !isMd && "absolute top-0 left-full"
+                              } `}
+                              initial={{ opacity: 0, width: 0, minWidth: 0 }}
+                              animate={{
+                                opacity: 1,
+                                width: `${sidePanelWidth}px`,
+                              }}
+                              exit={{ opacity: 0, width: 0, minWidth: 0 }}
+                              transition={{ duration: 0.1 }}
+                              style={{
+                                width: mWidth,
+                                // boxShadow:
+                                //   deviceType === "desktop"
+                                //     ? "0px 0px 6px -1px hsl(var(--appLayoutShadow))"
+                                //     : "", // right shadow
+                                // clipPath:
+                                //   deviceType === "desktop"
+                                //     ? "inset(0 -10px 0 0)"
+                                //     : "", // Clip the shadow except at right
+                              }}
                             >
-                              <SidePanel />
-                              <motion.div
-                                className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
-                                drag="x"
-                                dragConstraints={{
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                }}
-                                dragElastic={0}
-                                dragMomentum={false}
-                                onDrag={handleDrag}
-                              ></motion.div>
-                            </div>
-                          </motion.div>
-                        )}
+                              <div
+                                id="SidePanelWrapper"
+                                className="h-full w-full relative"
+                              >
+                                <SidePanel />
+                                <motion.div
+                                  className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
+                                  drag="x"
+                                  dragConstraints={{
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                  }}
+                                  dragElastic={0}
+                                  dragMomentum={false}
+                                  onDrag={handleDrag}
+                                ></motion.div>
+                              </div>
+                            </motion.div>
+                          )}
                       </AnimatePresence>
                     </motion.div>
 

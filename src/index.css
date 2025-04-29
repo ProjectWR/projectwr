@@ -188,7 +188,7 @@
     --activityBarWidth: calc(var(--uiScale) * 4rem);
     --activityBarHeight: calc(var(--uiScale) * 3.3rem);
     --activityButtonHeight: calc(var(--uiScale) * 4rem);
-    --sidePanelWidth: calc(var(--uiScale) * 25rem);
+    --sidePanelWidth: calc(var(--uiScale) * 20rem);
     --activityBarIconSize: calc(var(--uiScale) * 1.9rem);
     --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
 
@@ -216,7 +216,7 @@
     --libraryManagerNodeHeight: calc(var(--uiScale) * 3rem);
     --libraryManagerNodeText: calc(var(--uiScale) * 1rem);
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.7rem);
-    --libraryManagerAddButtonSize: calc(var(--uiScale) * 2rem);
+    --libraryManagerAddButtonSize: calc(var(--uiScale) * 2.15rem);
     --libraryManagerNodeEditButtonWidth: calc(var(--uiScale) * 2rem);
 
     --libraryDirectoryBookNodeHeight: calc(var(--uiScale) * 2.2rem);
@@ -227,9 +227,9 @@
     --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 1rem);
     --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 1rem);
 
-    --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.3rem);
-    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 1.3rem);
-    --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 1.3rem);
+    --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.1rem);
+    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 1.1rem);
+    --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 1.1rem);
 
     --templateDetailsPanelDeviceHeaderHeight: calc(var(--uiScale) * 4rem);
     --templateDetailsPanelSectionHeaderHeight: calc(var(--uiScale) * 4rem);
