@@ -56,17 +56,17 @@ const ActionBar = () => {
         id="actionBar"
         className="w-full h-full flex justify-start items-center relative"
       >
-        <div className="h-full w-fit pl-1 flex items-center gap-1">
-          <Logo>
-            <div className="h-actionBarLogoSize w-actionBarLogoSize p-px relative">
+        <div className="h-full w-fit flex items-center gap-1">
+          <div className="h-full w-activityBarWidth flex items-center justify-center">
+            <div className="h-actionBarLogoSize w-actionBarLogoSize">
               <span
                 key="logoButtonDisabled"
-                className="icon-[ph--flower-tulip-thin] w-full h-full top-0 left-0 absolute  bg-appLayoutText"
+                className="icon-[ph--flower-tulip-thin] w-full h-full  bg-appLayoutText"
               ></span>
             </div>
-          </Logo>
+          </div>
 
-          <ActionButton
+          {/* <ActionButton
             onClick={() => {
               if (canGoBack) {
                 goBack();
@@ -103,7 +103,7 @@ const ActionBar = () => {
                 className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
               ></motion.span>
             </div>
-          </ActionButton>
+          </ActionButton> */}
           <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
             <div className="h-full w-actionBarButtonIconSize relative">
               <AnimatePresence mode="sync">
@@ -250,9 +250,7 @@ export default ActionBar;
 const Logo = ({ children }) => {
   return (
     <div className="h-full w-fit">
-      <div
-        className={`h-full w-fitrounded-md flex items-center justify-center`}
-      >
+      <div className={`h-full w-fit flex items-center justify-center`}>
         {children}
       </div>
     </div>

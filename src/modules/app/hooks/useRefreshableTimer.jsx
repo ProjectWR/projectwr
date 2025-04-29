@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const useRefreshableTimer = ({ time = 1000 } = {}) => {
+const useRefreshableTimer = ({ time = 750 } = {}) => {
   // timerState increments every time the timer expires
   const [timerState, setTimerState] = useState(false);
   const timerRef = useRef(null);
