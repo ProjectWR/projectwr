@@ -70,7 +70,7 @@ const WritingApp = () => {
   const isMd = appStore((state) => state.isMd);
   const setIsMd = appStore((state) => state.setIsMd);
 
-  const [isPanelAwake, refreshPanel] = useRefreshableTimer();
+  const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer();
 
   const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
 
@@ -410,10 +410,11 @@ const WritingApp = () => {
                         minWidth: "fit-content",
                       }}
                       className="h-full flex flex-row items-center relative"
-                      whileHover={() => {
-                        if (deviceType === "desktop") {
-                          refreshPanel();
-                        }
+                      onHoverStart={() => {
+                        keepAwake();
+                      }}
+                      onHoverEnd={() => {
+                        refreshPanel();
                       }}
                     >
                       <ActivityBar

@@ -5,17 +5,26 @@ const useRefreshableTimer = ({ time = 1000 } = {}) => {
   const [timerState, setTimerState] = useState(false);
   const timerRef = useRef(null);
 
+  const keepAwake = useCallback(() => {
+    setTimerState(true);
+    // Clear any existing timer
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  });
+
   const refreshTimer = useCallback(() => {
+    setTimerState(true);
+
     // Clear any existing timer
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
-    setTimerState(true);
-
     // Start a new timer
     timerRef.current = setTimeout(() => {
       setTimerState(false);
+      console.log("TIMER STATE SET TO FALSE");
     }, time);
   }, [time]);
 
@@ -29,7 +38,7 @@ const useRefreshableTimer = ({ time = 1000 } = {}) => {
     };
   }, [time, refreshTimer]);
 
-  return [timerState, refreshTimer];
+  return [timerState, refreshTimer, keepAwake];
 };
 
 export default useRefreshableTimer;
