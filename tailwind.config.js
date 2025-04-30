@@ -201,9 +201,5 @@ export default {
     scrollbarGutter(), // no options to configure
     scrollbarWidth(), // no options to configure
     scrollbarColor(), // no options to configure
-    addIconSelectors(["mdi", "vscode-icons"]),
-    addDynamicIconSelectors(["mdi"]),
-    require("tailwindcss-animate"),
-    require("tailwind-scrollbar-hide"),
   ],
 };
