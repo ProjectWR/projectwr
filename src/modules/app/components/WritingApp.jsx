@@ -398,7 +398,7 @@ const WritingApp = () => {
 
               <div
                 id="AppBodyContainer"
-                className={`w-full flex-grow min-h-0 flex 
+                className={`w-full grow min-h-0 flex 
               ${deviceType === "desktop" && "flex-row"}
               ${deviceType === "mobile" && "flex-col"}
               `}
@@ -432,7 +432,7 @@ const WritingApp = () => {
                             <motion.div
                               key="SidePanelMotionContainer"
                               id="SidePanelMotionContainer"
-                              className={`h-full border-r border-appLayoutBorder z-[5] bg-appBackgroundAccent ${
+                              className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
                                 !isMd && "absolute top-0 left-full"
                               } `}
                               initial={{ opacity: 0, width: 0, minWidth: 0 }}
@@ -487,7 +487,7 @@ const WritingApp = () => {
                     <ActivityBar />
                     <div
                       id="MobileAppBodyContainer"
-                      className="relative flex-grow"
+                      className="relative grow"
                     >
                       <motion.div
                         id="SidePanelContainer"

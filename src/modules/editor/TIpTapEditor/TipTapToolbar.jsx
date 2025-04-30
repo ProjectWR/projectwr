@@ -53,7 +53,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
 
   return (
     <div className="h-full w-full no-scrollbar overflow-y-hidden overflow-x-scroll">
-      <div className="h-full w-fit min-w-fit m-auto flex-shrink-0 flex items-center">
+      <div className="h-full w-fit min-w-fit m-auto shrink-0 flex items-center">
         <style>
           {`
             .toolbarButton {
@@ -66,7 +66,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           `}
         </style>
         <button
-          className="toolbarButton flex-shrink-0"
+          className="toolbarButton shrink-0"
           style={{
             height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,

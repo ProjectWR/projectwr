@@ -110,12 +110,12 @@ const LibraryDirectory = ({ libraryId }) => {
         >
           <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
             <h1
-              className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
+              className={`h-fit grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
                 deviceType === "mobile" ? "ml-3" : "ml-6"
               }`}
             >
               <p
-                className="w-fit max-w-full h-fit text-nowrap overflow-hidden overflow-ellipsis"
+                className="w-fit max-w-full h-fit text-nowrap overflow-hidden text-ellipsis"
               >
                 {libraryPropsMapState.library_name}
               </p>
@@ -126,7 +126,7 @@ const LibraryDirectory = ({ libraryId }) => {
       {deviceType === "mobile" && (
         <div
           id="LibraryDirectoryHeader"
-          className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  z-[1]`}
+          className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  z-1`}
         >
           <OptionsButton
             className={`order-5`}
@@ -236,7 +236,7 @@ const LibraryDirectory = ({ libraryId }) => {
       
       <div
         id="LibraryDirectoryHeader"
-        className={`flex flex-col items-center justify-between h-fit min-h-fit mt-1 border-appLayoutBorder   z-[1]`}
+        className={`flex flex-col items-center justify-between h-fit min-h-fit mt-1 border-appLayoutBorder   z-1`}
       >
         <div className="h-fit min-h-fit py-1 px-1 w-full flex flex-row gap-2 items-center order-2">
           <button
@@ -338,7 +338,7 @@ const LibraryDirectory = ({ libraryId }) => {
       </div>
       <div
         id="libraryDirectoryBodyContainer"
-        className={`flex-grow min-h-0 w-full`}
+        className={`grow min-h-0 w-full`}
       >
         <div
           id="libraryDirectoryBody"
@@ -584,7 +584,7 @@ const OptionsButton = ({
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}
                 </span>
-                <span className="flex-grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
+                <span className="grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
                   {option.label}
                 </span>
               </motion.button>

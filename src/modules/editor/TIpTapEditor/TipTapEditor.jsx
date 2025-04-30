@@ -401,7 +401,7 @@ const TiptapEditor = ({
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 mt-2 w-fit rounded-lg border shadow-sm shadow-appLayoutShadow relative z-[2]"
+                : "order-0 mt-2 w-fit rounded-lg border shadow-sm shadow-appLayoutShadow relative z-2"
             }
           `}
         >
@@ -416,7 +416,7 @@ const TiptapEditor = ({
             <EditorContent
               spellCheck={false}
               editor={editor}
-              className={`h-fit outline-none focus:outline-none z-[1]
+              className={`h-fit outline-none focus:outline-none z-1
             shadow-${isMobile ? "none" : paperShadow}
             shadow-black
             font-serif  

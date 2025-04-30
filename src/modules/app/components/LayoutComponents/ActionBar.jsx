@@ -49,7 +49,7 @@ const ActionBar = () => {
     <div
       data-tauri-drag-region
       id="actionBarContainer"
-      className="border-b z-[1000] border-appLayoutBorder w-full h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
+      className="border-b z-1000 border-appLayoutBorder w-full h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
     >
       <div
         data-tauri-drag-region
@@ -174,7 +174,7 @@ const ActionBar = () => {
           <SearchBar />
         </div>
 
-        <div className="flex-grow"></div>
+        <div className="grow"></div>
 
         <div className="h-full w-fit pl-1 flex items-center gap-1">
           <ActionButton
@@ -364,7 +364,7 @@ const SearchBar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="absolute top-[100%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-[1000] border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
+            className="absolute top-[100%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-1000 border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
           >
             <div
               style={{
@@ -383,7 +383,7 @@ const SearchBar = () => {
                 Last opened at
               </span>
             </div>
-            <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
+            <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>
             <div
               style={{
                 paddingLeft: `var(--scrollbarWidth)`,
@@ -476,7 +476,7 @@ const SearchBar = () => {
                 </motion.div>
               )}
             </div>
-            <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
+            <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>
 
             <div className="w-full px-2 h-actionBarSearchFooterHeight text-actionBarResultHeaderTextSize flex items-center"></div>
           </motion.div>

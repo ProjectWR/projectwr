@@ -6,29 +6,9 @@
 
 @import "@mantine/core/styles.layer.css";
 
+@config '../tailwind.config.js';
+
 @plugin "@iconify/tailwind4";
-
-@layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  .grow-1 {
-    flex-grow: 1;
-  }
-  .grow-2 {
-    flex-grow: 2;
-  }
-  .grow-3 {
-    flex-grow: 3;
-  }
-}
 
 .noiseFine {
   /* ... */
@@ -326,69 +306,175 @@
     --optionsDropdownOptionFont: 1.2rem;
   }
 }
-@layer components {
-  .contextMenuContent,
-  .contextMenuSubContent {
-    @apply min-w-[var(--optionsDropdownWidth)] 
-           bg-appBackground 
-           border border-appLayoutBorder 
-           rounded-md 
-           overflow-hidden 
-           p-1 
-           shadow-2xl shadow-appLayoutGentleShadow;
-  }
 
-  .contextMenuItem,
-  .contextMenuCheckboxItem,
-  .contextMenuRadioItem,
-  .contextMenuSubTrigger {
-    @apply text-[length:var(--optionsDropdownOptionFont)]
-           text-appLayoutText 
-           hover:bg-appLayoutInverseHover 
-           rounded-sm 
-           flex items-center 
-           h-[var(--optionsDropdownOptionHeight)] 
-           py-1 px-2 
-           justify-start gap-2 
-           relative 
-           select-none 
-           outline-none;
-  }
+@theme inline {
+  --color-appBackground: hsl(var(--appBackground));
+  --color-appLayoutBorder: hsl(var(--appLayoutBorder));
+  --color-appLayoutText: hsl(var(--appLayoutText));
+  --color-appLayoutTextMuted: hsl(var(--appLayoutTextMuted));
+  --color-appLayoutShadow: hsl(var(--appLayoutShadow));
+  --color-appLayoutGentleShadow: hsl(var(--appLayoutGentleShadow));
+  --color-appLayoutHover: hsl(var(--appLayoutHover));
+  --color-appLayoutHoverLight: hsl(var(--appLayoutHoverLight));
+  --color-appLayoutHoverGentle: hsl(var(--appLayoutHoverGentle));
+  --color-appLayoutInverseHover: hsl(var(--appLayoutInverseHover));
+  --color-appLayoutInputBackground: hsl(var(--appLayoutInputBackground));
+  --color-appLayoutPressed: hsl(var(--appLayoutPressed));
+  --color-appLayoutDestruct: hsl(var(--appLayoutDestruct));
+  --color-appLayoutDirectoryNodeHover: hsl(var(--appLayoutDirectoryNodeHover));
+  --color-specialButton: hsl(var(--specialButton));
+  --color-specialButtonHover: hsl(var(--specialButtonHover));
+  --color-specialButtonDisabled: hsl(var(--specialButtonDisabled));
+  --color-activitySelectLine: hsl(var(--activitySelectLine));
+  --color-validationErrorText: hsl(var(--validationErrorText));
+  --color-sidePanelDragHandle: hsl(var(--sidePanelDragHandle));
+  --color-appBackgroundAccent: hsl(var(--appBackgroundAccent));
+  --color-appLayoutDarkHover: hsl(var(--appLayoutDarkHover));
+  --color-appLayoutHighlight: hsl(var(--appLayoutHighlight));
+  --color-appLayoutSubmitButton: hsl(var(--appLayoutSubmitButton));
 
-  .contextMenuItem[data-disabled],
-  .contextMenuCheckboxItem[data-disabled],
-  .contextMenuRadioItem[data-disabled] {
-    @apply text-appLayoutText pointer-events-none;
-  }
+  --animate-scale-in: scaleIn 200ms ease;
+  --animate-scale-out: scaleOut 200ms ease;
+  --animate-fade-in: fadeIn 200ms ease;
+  --animate-fade-out: fadeOut 200ms ease;
+  --animate-enter-from-left: enterFromLeft 250ms ease;
+  --animate-enter-from-right: enterFromRight 250ms ease;
+  --animate-exit-to-left: exitToLeft 250ms ease;
+  --animate-exit-to-right: exitToRight 250ms ease;
 
-  .contextMenuLabel {
-    @apply text-[length:var(--optionsDropdownOptionFont)]
-           text-appLayoutTextMuted 
-           rounded-sm 
-           flex items-center 
-           h-[var(--optionsDropdownOptionHeight)] 
-           py-1 px-2 
-           justify-start gap-2 
-           relative 
-           select-none 
-           outline-none;
-  }
+  --spacing-scrollbarWidth: var(--scrollbarWidth);
+  --spacing-scrollbarWidth: var(--scrollbarWidth);
+  --spacing-actionBarHeight: var(--actionBarHeight);
+  --spacing-actionBarLogoSize: var(--actionBarLogoSize);
+  --spacing-activityBarWidth: var(--activityBarWidth);
+  --spacing-activityBarHeight: var(--activityBarHeight);
+  --spacing-activityButtonHeight: var(--activityButtonHeight);
+  --spacing-activityBarIconSize: var(--activityBarIconSize);
+  --spacing-sidePanelWidth: var(--sidePanelWidth);
+  --spacing-libraryManagerHeaderHeight: var(--libraryManagerHeaderHeight);
+  --spacing-libraryManagerNodeHeight: var(--libraryManagerNodeHeight);
+  --spacing-libraryManagerAddButtonSize: var(--libraryManagerAddButtonSize);
+  --spacing-libraryManagerNodeEditButtonWidth: var(
+    --libraryManagerNodeEditButtonWidth
+  );
+  --spacing-libraryManagerNodeIconSize: var(--libraryManagerNodeIconSize);
+  --spacing-detailsPanelHeaderHeight: var(--detailsPanelHeaderHeight);
+  --spacing-detailsPanelDescriptionInputSize: var(
+    --detailsPanelDescriptionInputSize
+  );
+  --spacing-detailsPanelPropLabelHeight: var(--detailsPanelPropLabelHeight);
+  --spacing-libraryDirectoryBookNodeHeight: var(
+    --libraryDirectoryBookNodeHeight
+  );
+  --spacing-libraryDirectoryPaperNodeHeight: var(
+    --libraryDirectoryPaperNodeHeight
+  );
+  --spacing-libraryDirectorySectionNodeHeight: var(
+    --libraryDirectorySectionNodeHeight
+  );
+  --spacing-libraryDirectoryBookNodeIconSize: var(
+    --libraryDirectoryBookNodeIconSize
+  );
+  --spacing-libraryDirectoryPaperNodeIconSize: var(
+    --libraryDirectoryPaperNodeIconSize
+  );
+  --spacing-libraryDirectorySectionNodeIconSize: var(
+    --libraryDirectorySectionNodeIconSize
+  );
+  --spacing-templateDetailsPanelDeviceHeaderHeight: var(
+    --templateDetailsPanelDeviceHeaderHeight
+  );
+  --spacing-templateDetailsPanelSectionHeaderHeight: var(
+    --templateDetailsPanelSectionHeaderHeight
+  );
+  --spacing-templateDetailsPreferenceInputHeight: var(
+    --templateDetailsPreferenceInputHeight
+  );
+  --spacing-templateDetailsPreferenceLabelWidth: var(
+    --templateDetailsPreferenceLabelWidth
+  );
+  --spacing-templateDetailsPreferencesColorInputSize: var(
+    --templateDetailsPreferencesColorInputSize
+  );
+  --spacing-loadingSpinnerSize: var(--loadingSpinnerSize);
+  --spacing-authInputHeight: var(--authInputHeight);
+  --spacing-optionsDropdownWidth: var(--optionsDropdownWidth);
+  --spacing-optionsDropdownOptionHeight: var(--optionsDropdownOptionHeight);
+  --spacing-authButtonLoadingSize: var(--authButtonLoadingSize);
+  --spacing-authButtonSize: var(--authButtonSize);
+  --spacing-actionBarButtonIconSize: var(--actionBarButtonIconSize);
+  --spacing-libraryDirectoryHeaderHeight: var(--libraryDirectoryHeaderHeight);
+  --spacing-detailsPanelWidth: var(--detailsPanelWidth);
+  --spacing-homePanelHeaderHeight: var(--homePanelHeaderHeight);
+  --spacing-userPlanDisplayHeight: var(--userPlanDisplayHeight);
+  --spacing-footerHeight: var(--footerHeight);
+  --spacing-detailsPanelHeaderTwoHeight: var(--detailsPanelHeaderTwoHeight);
+  --spacing-fontContainerHeight: var(--fontContainerHeight);
+  --spacing-fontAddButtonSize: var(--fontAddButtonSize);
+  --spacing-fontItemHeight: var(--fontItemHeight);
+  --spacing-libraryDetailsActionButtonHeight: var(
+    --libraryDetailsActionButtonHeight
+  );
+  --spacing-libraryDetailsActionButtonWidth: var(
+    --libraryDetailsActionButtonWidth
+  );
+  --spacing-ZoomButtonWidth: var(--ZoomButtonWidth);
+  --spacing-ZoomIconSize: var(--ZoomIconSize);
+  --spacing-ZoomDisplayWidth: var(--ZoomDisplayWidth);
+  --spacing-actionBarSearchWidth: var(--actionBarSearchWidth);
+  --spacing-actionBarSearchMaxHeight: var(--actionBarSearchMaxHeight);
+  --spacing-actionBarSearchHeaderHeight: var(--actionBarSearchHeaderHeight);
+  --spacing-actionBarResultNodeHeight: var(--actionBarResultNodeHeight);
+  --spacing-actionBarSearchFooterHeight: var(--actionBarSearchFooterHeight);
+  --spacing-actionBarWindowButtonIconSize: var(--actionBarWindowButtonIconSize);
+  --spacing-optionsDropdownIconHeight: var(--optionsDropdownIconHeight);
+  --spacing-libraryDetailsActionButtonIconSize: var(
+    --libraryDetailsActionButtonIconSize
+  );
+  --spacing-actionBarLogoHeight: var(--actionBarLogoHeight);
+  --spacing-templateContentEditorHeaderPreferenceHeight: var(
+    --templateContentEditorHeaderPreferenceHeight
+  );
+  --spacing-templateContentEditorHeaderGroupHeight: var(
+    --templateContentEditorHeaderGroupHeight
+  );
 
-  .contextMenuSeparator {
-    @apply h-px bg-appLayoutBorder m-px;
-  }
-
-  .rightSlot {
-    @apply ml-auto pl-5 text-appLayoutText;
-  }
-
-  [data-highlighted] > .rightSlot {
-    @apply text-appLayoutText;
-  }
-
-  [data-disabled] .rightSlot {
-    @apply text-appLayoutText;
-  }
+  --text-activityBarFontSize: var(--activityBarFontSize);
+  --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
+  --text-libraryManagerNodeText: var(--libraryManagerNodeText);
+  --text-detailsPanelNameFontSize: var(--detailsPanelNameFontSize);
+  --text-detailsPanelPropsFontSize: var(--detailsPanelPropsFontSize);
+  --text-detailsPanelPropLabelFontSize: var(--detailsPanelPropLabelFontSize);
+  --text-detailsPanelSaveButtonFontSize: var(--detailsPanelSaveButtonFontSize);
+  --text-libraryDirectoryBookNodeFontSize: var(
+    --libraryDirectoryBookNodeFontSize
+  );
+  --text-libraryDirectoryPaperNodeFontSize: var(
+    --libraryDirectoryPaperNodeFontSize
+  );
+  --text-libraryDirectorySectionNodeFontSize: var(
+    --libraryDirectorySectionNodeFontSize
+  );
+  --text-templateDetailsPanelPreferenceFontSize: var(
+    --templateDetailsPanelPreferenceFontSize
+  );
+  --text-templateDetailsPanelPreferenceInputFontSize: var(
+    --templateDetailsPanelPreferenceInputFontSize
+  );
+  --text-optionsDropdownOptionFont: var(--optionsDropdownOptionFont);
+  --text-homePanelHeaderFontSize: var(--homePanelHeaderFontSize);
+  --text-homePanelSubtitleFontSize: var(--homePanelSubtitleFontSize);
+  --text-detailsPanelHeaderTwoFontSize: var(--detailsPanelHeaderTwoFontSize);
+  --text-ZoomDisplayFontSize: var(--ZoomDisplayFontSize);
+  --text-actionBarSearchTextSize: var(--actionBarSearchTextSize);
+  --text-actionBarResultHeaderTextSize: var(--actionBarResultHeaderTextSize);
+  --text-actionBarResultTextSize: var(--actionBarResultTextSize);
+  --text-libraryDetailsActionButtonFontSize: var(
+    --libraryDetailsActionButtonFontSize
+  );
+  --text-actionBarResultDateFontSize: var(--actionBarResultDateFontSize);
+  --text-recentlyOpenedDateFontSize: var(--recentlyOpenedDateFontSize);
+  --text-recentlyOpenedNodeFontSize: var(--recentlyOpenedNodeFontSize);
 }
 
 :root {

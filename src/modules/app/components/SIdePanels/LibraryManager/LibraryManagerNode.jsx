@@ -195,7 +195,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
               ? "border-t border-b border-b-transparent border-t-neutral-200"
               : "border-b border-t border-t-transparent border-b-neutral-200";
           } else {
-            return "border-y border-black border-opacity-0";
+            return "border-y border-transparent";
           }
         })()}
 
@@ -296,7 +296,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
               >
                 <button
                   className={
-                    "flex-grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
+                    "grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
                   }
                   onClick={() => {
                     if (
@@ -351,10 +351,10 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
                   <div
                     ref={textContainerRef}
-                    className="flex-grow text-libraryManagerNodeText min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
+                    className="grow text-libraryManagerNodeText min-w-0 flex justify-start items-center  transition-colors duration-0 pt-px ml-3"
                   >
                     <p
-                      className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                      className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
                       ref={textRef}
                     >
                       {libraryPropsMapState.library_name}
@@ -560,7 +560,7 @@ const OptionsButton = ({
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}
                 </span>
-                <span className="flex-grow h-full text-optionsDropdownOptionFont flex pt-px items-center justify-start">
+                <span className="grow h-full text-optionsDropdownOptionFont flex pt-px items-center justify-start">
                   {option.label}
                 </span>
               </motion.button>

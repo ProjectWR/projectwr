@@ -130,7 +130,7 @@ const PaperPanel = ({ ytree, paperId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="CreatePaperHeader"
-          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 flex-shrink-0
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 shrink-0
             
             ${deviceType === "desktop" && "px- py-0"}
             ${inputFocused && "bg-appLayoutInputBackground"}
@@ -151,7 +151,7 @@ const PaperPanel = ({ ytree, paperId }) => {
           )}
 
           <input
-            className="bg-transparent flex-grow h-full text-detailsPanelNameFontSize focus:outline-none py-1 px-4 transition-colors duration-200 order-2"
+            className="bg-transparent grow h-full text-detailsPanelNameFontSize focus:outline-none py-1 px-4 transition-colors duration-200 order-2"
             name="item_title"
             onFocus={() => {
               setInputFocused(true);
@@ -211,7 +211,7 @@ const PaperPanel = ({ ytree, paperId }) => {
 
       <motion.div
         id="CreatePaperBody"
-        className="w-full flex-grow min-h-0 min-w-0 basis-0"
+        className="w-full grow min-h-0 min-w-0 basis-0"
       >
         <TipTapEditor
           key={paperId}

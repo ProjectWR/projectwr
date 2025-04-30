@@ -61,7 +61,7 @@ const TemplateManager = () => {
         className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder`}
       >
         <h1
-          className={`h-fit flex-grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
+          className={`h-fit grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
             deviceType === "mobile" ? "ml-3" : "ml-6"
           }`}
         >
@@ -81,7 +81,7 @@ const TemplateManager = () => {
       </div>
       <div
         id="TemplateManagerBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${
+        className={`grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${
           deviceType === "mobile" ? "no-scrollbar" : ""
         }`}
         style={{
@@ -135,7 +135,7 @@ const TemplateManagerNode = ({ templateId, template }) => {
   return (
     <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg">
       <button
-        className={`flex-grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0 rounded-l-lg`}
+        className={`grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0 rounded-l-lg`}
         onClick={() => {
           if (appStoreTemplateId !== templateId || templateMode !== "preview") {
             setTemplateId(templateId);

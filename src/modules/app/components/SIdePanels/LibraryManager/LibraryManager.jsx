@@ -112,7 +112,7 @@ const LibraryManager = () => {
         )}
 
         <h1
-          className={`h-fit flex-grow text-libraryManagerHeaderText text-appLayoutText order-2 ${
+          className={`h-fit grow text-libraryManagerHeaderText text-appLayoutText order-2 ${
             deviceType === "mobile" ? "ml-3" : "ml-6"
           }`}
         >
@@ -144,7 +144,7 @@ const LibraryManager = () => {
       </div>
       <div
         id="LibraryManagerBody"
-        className={`flex-grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${
+        className={`grow flex flex-col w-full justify-start items-center overflow-y-scroll pt-1 ${
           deviceType === "mobile" ? "no-scrollbar" : ""
         }`}
         style={{

@@ -81,7 +81,7 @@ const DictionaryDetailsPanel = ({ word }) => {
           </button>
         )}
 
-        <p className="bg-appBackground flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2">
+        <p className="bg-appBackground grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2">
           {wordProperties.word}
         </p>
       </div>
@@ -91,7 +91,7 @@ const DictionaryDetailsPanel = ({ word }) => {
       </div>
       <div
         id="CreateWordBody"
-        className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
+        className="grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
       >
         <AnimatePresence>
           {unsavedChangesExist && (

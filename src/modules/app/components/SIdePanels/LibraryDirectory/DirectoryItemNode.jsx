@@ -315,7 +315,7 @@ const DirectoryItemNode = ({
                 <>
                   <></>
                   <button
-                    className="flex-grow min-w-0 flex items-center justify-start h-full"
+                    className="grow min-w-0 flex items-center justify-start h-full"
                     onClick={() => {
                       console.log("edit paper button");
                       if (
@@ -347,11 +347,11 @@ const DirectoryItemNode = ({
 
                     <div
                       ref={textContainerRef}
-                      className="flex-grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                      className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
                     >
                       <span
                         ref={textRef}
-                        className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap overflow-ellipsis"
+                        className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis"
                       >
                         {itemMapState.item_title}
                       </span>
@@ -363,7 +363,7 @@ const DirectoryItemNode = ({
               {(itemMapRef.current.get("type") === "section" ||
                 itemMapRef.current.get("type") === "book") && (
                 <button
-                  className={`flex-grow min-w-0 flex items-center justify-start h-full `}
+                  className={`grow min-w-0 flex items-center justify-start h-full `}
                   onClick={() => {
                     setFocusedItemId(itemId);
                     const newOpenedState = !isOpened;
@@ -387,11 +387,11 @@ const DirectoryItemNode = ({
 
                   <div
                     ref={textContainerRef}
-                    className="flex-grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                    className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
                   >
                     <span
                       ref={textRef}
-                      className="w-fit max-w-full overflow-hidden text-nowrap overflow-ellipsis"
+                      className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
                     >
                       {itemMapState.item_title}
                     </span>
@@ -458,7 +458,7 @@ const DirectoryItemNode = ({
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content
-          className="contextMenuContent z-[6]"
+          className="contextMenuContent z-6"
           sideOffset={5}
           align="end"
         >
@@ -707,7 +707,7 @@ const OptionsButton = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
             transition={{ ease: "easeOut", duration: 0.1 }}
-            className={`z-[100] absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
+            className={`z-100 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
                        ${
                          shouldDropdownGoUp
@@ -744,7 +744,7 @@ const OptionsButton = ({
                 <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
                   {option.icon}
                 </span>
-                <span className="flex-grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
+                <span className="grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
                   {option.label}
                 </span>
               </motion.button>

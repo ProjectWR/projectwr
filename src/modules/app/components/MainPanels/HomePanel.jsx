@@ -118,7 +118,7 @@ const HomePanel = () => {
                 transition={{ delay: 1, bounce: 0 }}
                 className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
               >
-                <span className="flex-grow"></span>
+                <span className="grow"></span>
                 <span className="w-fit">- Rohit Kottamasu</span>
               </motion.p>
             </>

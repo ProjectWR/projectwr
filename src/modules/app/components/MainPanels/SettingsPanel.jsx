@@ -547,7 +547,7 @@ const SettingsPanel = () => {
                 <div className="relative w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight  rounded-md">
                   <p
                     id="loggedInUserDisplay"
-                    className="w-full h-fit overflow-x-hidden overflow-ellipsis flex justify-start items-center text-detailsPanelPropsFontSize px-3 pb-2 rounded-md bg-appBackground "
+                    className="w-full h-fit overflow-x-hidden text-ellipsis flex justify-start items-center text-detailsPanelPropsFontSize px-3 pb-2 rounded-md bg-appBackground "
                   >
                     {user.email}
                   </p>
@@ -564,7 +564,7 @@ const SettingsPanel = () => {
                     <div className="relative w-full h-fit border border-appLayoutBorder rounded-md flex items-center">
                       <p
                         id="loggedInUserDisplay"
-                        className="flex-grow h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
+                        className="grow h-fit flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
                       >
                         {user.emailVerified
                           ? "Free Plan"
@@ -625,7 +625,7 @@ const SettingsPanel = () => {
                     <div className="relative w-1/2 h-userPlanDisplayHeight border border-appLayoutBorder rounded-md flex items-center">
                       <p
                         id="loggedInUserDisplay"
-                        className="flex-grow h-full flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
+                        className="grow h-full flex justify-start items-center text-detailsPanelPropsFontSize px-3 py-2 rounded-md bg-appBackground "
                       >
                         {user.emailVerified
                           ? "Free Plan"
@@ -768,7 +768,7 @@ const SettingsPanel = () => {
             style={{
               paddingLeft: `var(--scrollbarWidth)`,
             }}
-            className="h-full w-full py-2 overflow-y-scroll grid grid-cols-3 gap-2 auto-rows-[--fontItemHeight]"
+            className="h-full w-full py-2 overflow-y-scroll grid grid-cols-3 gap-2 auto-rows-(--fontItemHeight)"
           >
             {fonts.map((font) => {
               return (
@@ -778,7 +778,7 @@ const SettingsPanel = () => {
                 >
                   <p
                     style={{ fontFamily: font.family }}
-                    className="text-detailsPanelPropsFontSize text-appLayoutTextMuted flex-grow min-w-0 overflow-ellipsis text-nowrap overflow-hidden"
+                    className="text-detailsPanelPropsFontSize text-appLayoutTextMuted grow min-w-0 text-ellipsis text-nowrap overflow-hidden"
                   >
                     {font.family}
                   </p>
@@ -825,7 +825,7 @@ const SettingsPanel = () => {
             Preferences
           </h1>
 
-          <div className="flex-grow order-2"></div>
+          <div className="grow order-2"></div>
           <button
             className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
  `}

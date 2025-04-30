@@ -102,7 +102,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
 
   return (
     <div
-      className="relative h-full w-fit flex-shrink-0 flex items-center"
+      className="relative h-full w-fit shrink-0 flex items-center"
       ref={innerRef}
     >
       <div
@@ -120,7 +120,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
           onClick={() => setIsOpened(!isOpened)}
         >
           <div className="w-full h-full flex items-center justify-between">
-            <div className="flex-grow px-2 h-full py-[0.3rem] flex justify-center items-center">
+            <div className="grow px-2 h-full py-[0.3rem] flex justify-center items-center">
               <ReturnPlainElementForFormat format={activeHeading} />
             </div>
             <motion.span

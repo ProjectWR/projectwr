@@ -1,9 +1,5 @@
-import autoprefixer from "autoprefixer";
-
 export default {
   plugins: {
-    tailwindcss: {},
-    autoprefixer: { autoprefixer },
     'postcss-preset-mantine': {},
     'postcss-simple-vars': {
       variables: {

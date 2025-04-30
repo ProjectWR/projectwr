@@ -79,7 +79,7 @@ const TemplateViewPanel = ({ templateId }) => {
           }}
           transition={{ duration: 0.1 }}
           id="TemplateViewHeader"
-          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 flex-shrink-0
+          className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 shrink-0
             ${deviceType === "desktop" && "px-6 py-1"}
           `}
         >
@@ -96,7 +96,7 @@ const TemplateViewPanel = ({ templateId }) => {
           )}
 
           <p
-            className="bg-appBackground text-center flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
+            className="bg-appBackground text-center grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 transition-colors duration-200 order-2"
             id="template_name"
           >
             {template.template_name}
@@ -110,7 +110,7 @@ const TemplateViewPanel = ({ templateId }) => {
       
       <motion.div
         id="TemplateViewBody"
-        className="w-full flex-grow min-h-0 min-w-0 basis-0"
+        className="w-full grow min-h-0 min-w-0 basis-0"
       >
         <TipTapEditor
           key={templateId}

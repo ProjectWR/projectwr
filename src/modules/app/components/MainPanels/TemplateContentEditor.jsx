@@ -174,7 +174,7 @@ function GroupEditor({ config, data, onChange }) {
                   {fieldConfig.label}
                 </label>
 
-                <div className="h-px flex-grow bg-appLayoutBorder"></div>
+                <div className="h-px grow bg-appLayoutBorder"></div>
 
                 <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
                   <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
@@ -200,7 +200,7 @@ function GroupEditor({ config, data, onChange }) {
                   {fieldConfig.label}
                 </label>
 
-                <div className="h-px flex-grow bg-appLayoutBorder"></div>
+                <div className="h-px grow bg-appLayoutBorder"></div>
 
                 <div className="w-fit h-full">
                   <input
@@ -232,7 +232,7 @@ function GroupEditor({ config, data, onChange }) {
                   {fieldConfig.label}
                 </label>
 
-                <div className="h-px flex-grow bg-appLayoutBorder"></div>
+                <div className="h-px grow bg-appLayoutBorder"></div>
 
                 <div className="w-fit h-full flex items-center">
                   <NumberOrPercentInput
@@ -367,9 +367,9 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
     <div id="TCEContainer" className="w-full font-sans flex flex-col relative">
       <div
         id="TCEHeader"
-        className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-[1]"
+        className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-1"
       >
-        <div className="TCEDevice bg-appBackground flex-grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-appBackground grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Desktop
           </div>
@@ -381,7 +381,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             {/* ${groupSelected === "desktopPaper" ? "" : ""} */}
             <button
               onClick={() => setGroupSelected("desktopPaper")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              className={`TCEGroup grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
               `}
             >
               <motion.span
@@ -395,7 +395,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
 
             <button
               onClick={() => setGroupSelected("desktopToolbar")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              className={`TCEGroup grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
               `}
             >
               <motion.span
@@ -408,7 +408,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
             </button>
           </div>
         </div>
-        <div className="TCEDevice bg-appBackground flex-grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-appBackground grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Mobile
           </div>
@@ -418,7 +418,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
           <div className="TCEGroups h-fit w-full flex gap-2 px-2 py-1">
             <button
               onClick={() => setGroupSelected("mobilePaper")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              className={`TCEGroup grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
               `}
             >
               <motion.span
@@ -432,7 +432,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
 
             <button
               onClick={() => setGroupSelected("mobileToolbar")}
-              className={`TCEGroup flex-grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
+              className={`TCEGroup grow basis-0 flex items-center justify-center rounded-lg h-fit py-2 text-lg hover:bg-appLayoutInverseHover
               `}
             >
               <motion.span
@@ -447,7 +447,7 @@ const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
         </div>
       </div>
 
-      <div id="TCEBody w-full h-fit mt-1 z-[0]">
+      <div id="TCEBody w-full h-fit mt-1 z-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={groupSelected}
@@ -503,7 +503,7 @@ const ColorPicker = ({ color, onChangeComplete }) => {
   }, [isOpened]);
 
   return (
-    <div className="relative flex-grow h-full rounded-lg" ref={innerRef}>
+    <div className="relative grow h-full rounded-lg" ref={innerRef}>
       <div ref={headerRef} className="w-full h-full rounded-lg">
         <button
           className="w-full h-full rounded-lg"
@@ -524,7 +524,7 @@ const ColorPicker = ({ color, onChangeComplete }) => {
               top: dropdownPosition.top,
               left: dropdownPosition.left,
             }}
-            className="absolute z-[99] bg-appBackground text-appLayoutText rounded-lg shadow-md h-fit w-fit"
+            className="absolute z-99 bg-appBackground text-appLayoutText rounded-lg shadow-md h-fit w-fit"
           >
             <SketchPicker
               className="bg-appBackground text-appLayoutText"

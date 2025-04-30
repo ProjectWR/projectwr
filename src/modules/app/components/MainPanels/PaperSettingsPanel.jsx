@@ -66,7 +66,7 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
         )}
 
         <p
-          className="bg-appBackground flex-grow text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 my-2 px-2 pr-1 transition-colors duration-200"
+          className="bg-appBackground grow text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 my-2 px-2 pr-1 transition-colors duration-200"
           id="item_title"
         >
           {paperMapState.item_title}
@@ -78,7 +78,7 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
       </div>
       <div
         id="PaperSettingsBody"
-        className="flex-grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
+        className="grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
       >
         <EditorStylePickerButton ytree={ytree} paperId={paperId} />
 
@@ -205,12 +205,12 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="absolute top-[105%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-[1000] border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
+            className="absolute top-[105%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-1000 border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
           >
             <div className="w-full px-2 h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center">
               Pick an editor style:
             </div>
-            <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
+            <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>
             <div
               style={{
                 paddingLeft: `var(--scrollbarWidth)`,
@@ -260,7 +260,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
                 </motion.div>
               )}
             </div>
-            <div className="w-[98.5%] h-px flex-shrink-0 bg-appLayoutBorder"></div>
+            <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>
 
             <div className="w-full px-2 h-actionBarSearchFooterHeight text-actionBarResultHeaderTextSize flex items-center"></div>
           </motion.div>

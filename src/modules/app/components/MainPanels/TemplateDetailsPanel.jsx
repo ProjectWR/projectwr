@@ -104,7 +104,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
         )}
 
         <input
-          className="bg-appBackground flex-grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2"
+          className="bg-appBackground grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2"
           name="template_name"
           onChange={handleChange}
           value={newTemplate.template_name}
@@ -117,7 +117,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
 
       <div
         id="TemplateDetailsBody"
-        className="flex-grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"
+        className="grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"
       >
         <AnimatePresence>
           {!wasTemplateChanged && (
@@ -146,7 +146,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
               }}
               className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                flex items-center justify-center flex-shrink-0
+                flex items-center justify-center shrink-0
             `}
             >
               <motion.span
@@ -158,7 +158,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
             </motion.button>
           )}
         </AnimatePresence>
-        <div className="w-full flex-grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
+        <div className="w-full grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
           <div
             className="h-full w-full min-h-0 pr-1 py-4 overflow-y-scroll"
             style={{
