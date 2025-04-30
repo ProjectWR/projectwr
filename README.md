@@ -1,6 +1,6 @@
 # TODO
 
-- Replace all text boxes with a mini editor, or atleast make them fit to content when its typed
+- Replace all text boxes with a mini editor, ~~or atleast make them fit to content when its typed~~
 - Remove history buttons in app shell
 - toolbar buttons active state
 - Add context menus where it is appropriate

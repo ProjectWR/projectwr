@@ -126,6 +126,7 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
       >
         <div className="prop w-full h-fit relative">
           <Textarea
+            maxRows={10}
             id="sectionDescription"
             classNames={{
               root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",

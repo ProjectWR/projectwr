@@ -188,6 +188,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
           /> */}
 
           <Textarea
+            maxRows={10}
             id="libraryDescription"
             classNames={{
               root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
