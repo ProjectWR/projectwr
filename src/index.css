@@ -333,41 +333,41 @@
 }
 
 @layer components {
-  .ContextMenuContent,
-  .ContextMenuSubContent {
+  .contextMenuContent,
+  .contextMenuSubContent {
     @apply min-w-optionsDropdownWidth bg-appBackground border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
   }
 
-  .ContextMenuItem,
-  .ContextMenuCheckboxItem,
-  .ContextMenuRadioItem,
-  .ContextMenuSubTrigger {
+  .contextMenuItem,
+  .contextMenuCheckboxItem,
+  .contextMenuRadioItem,
+  .contextMenuSubTrigger {
     @apply text-optionsDropdownOptionFont text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
   }
 
-  .ContextMenuItem[data-disabled],
-  .ContextMenuCheckboxItem[data-disabled],
-  .ContextMenuRadioItem[data-disabled] {
+  .contextMenuItem[data-disabled],
+  .contextMenuCheckboxItem[data-disabled],
+  .contextMenuRadioItem[data-disabled] {
     @apply text-appLayoutText pointer-events-none;
   }
 
-  .ContextMenuLabel {
+  .contextMenuLabel {
     @apply text-optionsDropdownOptionFont text-appLayoutTextMuted rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
   }
 
-  .ContextMenuSeparator {
+  .contextMenuSeparator {
     @apply h-px bg-appLayoutBorder m-px;
   }
 
-  .RightSlot {
+  .rightSlot {
     @apply ml-auto pl-5 text-appLayoutText;
   }
 
-  [data-highlighted] > .RightSlot {
+  [data-highlighted] > .rightSlot {
     @apply text-appLayoutText;
   }
 
-  [data-disabled] .RightSlot {
+  [data-disabled] .rightSlot {
     @apply text-appLayoutText;
   }
 }

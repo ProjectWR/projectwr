@@ -458,7 +458,7 @@ const DirectoryItemNode = ({
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content
-          className="ContextMenuContent z-[6]"
+          className="contextMenuContent z-[6]"
           sideOffset={5}
           align="end"
         >
@@ -466,7 +466,7 @@ const DirectoryItemNode = ({
             itemMapRef.current.get("type") === "book") && (
             <>
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("edit section details button");
                   if (!(appStoreItemId === itemId && itemMode === "details")) {
@@ -490,7 +490,7 @@ const DirectoryItemNode = ({
                 </span>
               </ContextMenu.Item>{" "}
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("create section button");
                   onCreateSectionClick();
@@ -500,7 +500,7 @@ const DirectoryItemNode = ({
                 <span>Create section</span>
               </ContextMenu.Item>
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("create paper button");
                   onCreatePaperClick();
@@ -509,9 +509,9 @@ const DirectoryItemNode = ({
                 <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                 <span>Create paper</span>
               </ContextMenu.Item>
-              <ContextMenu.Separator className="ContextMenuSeparator" />
+              <ContextMenu.Separator className="contextMenuSeparator" />
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("export section button");
 
@@ -532,7 +532,7 @@ const DirectoryItemNode = ({
           {itemMapRef.current.get("type") === "paper" && (
             <>
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("edit paper editor button");
                   if (
@@ -557,7 +557,7 @@ const DirectoryItemNode = ({
                 <span>Open</span>
               </ContextMenu.Item>{" "}
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("edit paper editor button");
                   if (!(appStoreItemId === itemId && itemMode === "settings")) {
@@ -575,9 +575,9 @@ const DirectoryItemNode = ({
                 <span className="icon-[hugeicons--customize] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                 <span>Edit Paper Settings</span>
               </ContextMenu.Item>{" "}
-              <ContextMenu.Separator className="ContextMenuSeparator" />
+              <ContextMenu.Separator className="contextMenuSeparator" />
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("export paper button");
                   dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
@@ -587,7 +587,7 @@ const DirectoryItemNode = ({
                 <span>Export paper as .docx</span>
               </ContextMenu.Item>
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   console.log("import paper button");
                   console.log(

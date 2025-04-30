@@ -368,12 +368,12 @@ const LibraryManagerNode = ({ libraryId, className }) => {
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content
-          className="ContextMenuContent"
+          className="contextMenuContent"
           sideOffset={5}
           align="end"
         >
           <ContextMenu.Item
-            className="ContextMenuItem"
+            className="contextMenuItem"
             onClick={() => {
               if (
                 !(
@@ -397,9 +397,9 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
             <span>Open</span>
           </ContextMenu.Item>
-          <ContextMenu.Separator className="ContextMenuSeparator" />
+          <ContextMenu.Separator className="contextMenuSeparator" />
           <ContextMenu.Item
-            className="ContextMenuItem"
+            className="contextMenuItem"
             onClick={() => {
               console.log("Saving Archive");
               persistenceManagerForSubdocs.saveArchive(
@@ -411,7 +411,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             <span>Save to device</span>
           </ContextMenu.Item>
           <ContextMenu.Item
-            className="ContextMenuItem"
+            className="contextMenuItem"
             onClick={async () => {
               console.log("Loading Archive");
               setLoading(true);

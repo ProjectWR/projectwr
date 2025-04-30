@@ -450,13 +450,13 @@ const TiptapEditor = ({
           </ContextMenu.Trigger>
           <ContextMenu.Portal>
             <ContextMenu.Content
-              className="ContextMenuContent"
+              className="contextMenuContent"
               sideOffset={5}
               align="end"
             >
               {selectingError.trim().length > 0 && (
                 <ContextMenu.Item
-                  className="ContextMenuItem"
+                  className="contextMenuItem"
                   onClick={async () => {
                     dictionaryManager.addOrUpdateWord(selectingError, "", "");
                     await wait(1000);
@@ -469,7 +469,7 @@ const TiptapEditor = ({
               )}
 
               <ContextMenu.Item
-                className="ContextMenuItem"
+                className="contextMenuItem"
                 onClick={() => {
                   const textSelection = window
                     .getSelection()
@@ -486,17 +486,17 @@ const TiptapEditor = ({
                 <span className="pb-px">Search in your library</span>
               </ContextMenu.Item>
 
-              <ContextMenu.Label className="ContextMenuLabel">
+              <ContextMenu.Label className="contextMenuLabel">
                 <span className="icon-[material-symbols-light--content-copy-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                 <span className="pb-px">Use Ctrl+C to Copy</span>
               </ContextMenu.Label>
 
-              <ContextMenu.Label className="ContextMenuLabel">
+              <ContextMenu.Label className="contextMenuLabel">
                 <span className="icon-[material-symbols-light--content-paste] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                 <span className="pb-px">Use Ctrl+V to Paste</span>
               </ContextMenu.Label>
 
-              <ContextMenu.Label className="ContextMenuLabel">
+              <ContextMenu.Label className="contextMenuLabel">
                 <span className="icon-[material-symbols-light--content-cut] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
                 <span className="pb-px">Use Ctrl+X to Cut</span>
               </ContextMenu.Label>

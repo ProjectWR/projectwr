@@ -84,7 +84,7 @@ export const MenuTriggerItem = React.forwardRef(
 )
 
 export const MenuRadioItemGroup = ChakraMenu.RadioItemGroup
-export const MenuContextTrigger = ChakraMenu.ContextTrigger
+export const MenuContextTrigger = ChakraMenu.contextTrigger
 export const MenuRoot = ChakraMenu.Root
 export const MenuSeparator = ChakraMenu.Separator
 
