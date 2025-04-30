@@ -1,17 +1,12 @@
-/* 1. Define the layer order */
-@layer mantine, tw-base;
+@layer theme, base, components, utilities;
 
-/* 2. Import Mantine styles defined in `mantine` layer */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
 @import "@mantine/core/styles.layer.css";
 
-/* 3. Import Tailwind preflight styles into lowest priority layer */
-@layer tw-base {
-  @tailwind base;
-}
-
-/* 4. Import Tailwind components and utilities into root layer (highest priority) */
-@tailwind components;
-@tailwind utilities;
+@plugin "@iconify/tailwind4";
 
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -299,7 +294,7 @@
     --authButtonLoadingSize: 1.5rem;
 
     --libraryManagerNodeHeight: 4rem;
-    --libraryManagerNodeText: 1.25rem;
+    --libraryManagerNodeText: 1 25rem;
     --libraryManagerNodeIconSize: 2rem;
     --libraryManagerAddButtonSize: 2.5rem;
     --libraryManagerNodeEditButtonWidth: 2.5rem;
@@ -331,18 +326,33 @@
     --optionsDropdownOptionFont: 1.2rem;
   }
 }
-
 @layer components {
   .contextMenuContent,
   .contextMenuSubContent {
-    @apply min-w-optionsDropdownWidth bg-appBackground border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
+    @apply min-w-[var(--optionsDropdownWidth)] 
+           bg-appBackground 
+           border border-appLayoutBorder 
+           rounded-md 
+           overflow-hidden 
+           p-1 
+           shadow-2xl shadow-appLayoutGentleShadow;
   }
 
   .contextMenuItem,
   .contextMenuCheckboxItem,
   .contextMenuRadioItem,
   .contextMenuSubTrigger {
-    @apply text-optionsDropdownOptionFont text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+    @apply text-[length:var(--optionsDropdownOptionFont)]
+           text-appLayoutText 
+           hover:bg-appLayoutInverseHover 
+           rounded-sm 
+           flex items-center 
+           h-[var(--optionsDropdownOptionHeight)] 
+           py-1 px-2 
+           justify-start gap-2 
+           relative 
+           select-none 
+           outline-none;
   }
 
   .contextMenuItem[data-disabled],
@@ -352,7 +362,16 @@
   }
 
   .contextMenuLabel {
-    @apply text-optionsDropdownOptionFont text-appLayoutTextMuted rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+    @apply text-[length:var(--optionsDropdownOptionFont)]
+           text-appLayoutTextMuted 
+           rounded-sm 
+           flex items-center 
+           h-[var(--optionsDropdownOptionHeight)] 
+           py-1 px-2 
+           justify-start gap-2 
+           relative 
+           select-none 
+           outline-none;
   }
 
   .contextMenuSeparator {
