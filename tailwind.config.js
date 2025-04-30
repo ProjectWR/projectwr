@@ -198,8 +198,5 @@ export default {
     },
   },
   plugins: [
-    scrollbarGutter(), // no options to configure
-    scrollbarWidth(), // no options to configure
-    scrollbarColor(), // no options to configure
   ],
 };
