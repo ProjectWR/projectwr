@@ -1,12 +1,15 @@
 /* 1. Define the layer order */
-@layer tw-base, mantine, utilities, base;
+@layer mantine, tw-base;
 
 /* 2. Import Mantine styles defined in `mantine` layer */
 @import "@mantine/core/styles.layer.css";
 
+/* 3. Import Tailwind preflight styles into lowest priority layer */
 @layer tw-base {
   @tailwind base;
 }
+
+/* 4. Import Tailwind components and utilities into root layer (highest priority) */
 @tailwind components;
 @tailwind utilities;
 

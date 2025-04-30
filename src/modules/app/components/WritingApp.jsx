@@ -62,6 +62,8 @@ const WritingApp = () => {
 
   const { deviceType } = useDeviceType();
 
+  const activity = appStore((state) => state.activity);
+
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
@@ -423,7 +425,10 @@ const WritingApp = () => {
                       <AnimatePresence mode="wait">
                         {panelOpened &&
                           sideBarOpened &&
-                          (isMd || isPanelAwake) && (
+                          (isMd || isPanelAwake) &&
+                          (activity === "libraries" ||
+                            activity === "templates" ||
+                            activity === "dictionary") && (
                             <motion.div
                               key="SidePanelMotionContainer"
                               id="SidePanelMotionContainer"

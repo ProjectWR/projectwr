@@ -17,6 +17,17 @@ import firebaseApp from "../../lib/Firebase";
 import GrainyButton from "../../../design-system/GrainyButton";
 import { useFonts } from "../../hooks/useFonts";
 import fontManager from "../../lib/font";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  Button,
+  Fieldset,
+  LoadingOverlay,
+  Modal,
+  PasswordInput,
+  TextInput,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useLoadingCallback } from "react-loading-hook";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -29,6 +40,9 @@ const maxLengthRegex = /^.{1,128}$/;
 const SettingsPanel = () => {
   console.log("rendering settings panel");
   const { deviceType } = useDeviceType();
+
+  const [isLoginOpen, loginModalControl] = useDisclosure(false);
+
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
 
@@ -45,11 +59,31 @@ const SettingsPanel = () => {
   const [isResetLoading, setIsResetLoading] = useState(false);
 
   const [isLoginLoading, setIsLoginLoading] = useState(false);
-  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [isLogoutLoading, setIsLogoutLoading] = useState(false);
 
   const [isEmailTouched, setIsEmailTouched] = useState(false);
   const [isPasswordTouched, setIsPasswordTouched] = useState(false);
+
+  const loginForm = useForm({
+    mode: "uncontrolled",
+    onSubmitPreventDefault: "always",
+    initialValues: {
+      email: "",
+      password: "",
+    },
+
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    },
+  });
+
+  const [handleLoginWithEmailAndPassword, isEmailLoading, loginError] =
+    useLoadingCallback(async ({ email, password }) => {
+      setIsLoginLoading(true);
+
+      await signInWithEmailAndPassword(getAuth(firebaseApp), email, password);
+      setIsLoginLoading(false);
+    });
 
   const [authProps, setAuthProps] = useState({
     displayName: "",
@@ -142,56 +176,6 @@ const SettingsPanel = () => {
     }
   }, []);
 
-  const registerUser = useCallback(async () => {
-    const email = authProps.email;
-    const password = authProps.password;
-
-    try {
-      setIsRegisterLoading(true);
-
-      if (!emailRegex.test(email)) {
-        throw new Error("Invalid Email");
-      }
-
-      const passwordStatus = await validatePassword(
-        getAuth(firebaseApp),
-        password
-      );
-
-      if (!passwordStatus.isValid) {
-        console.log(passwordStatus);
-        throw new Error("Invalid Password");
-      }
-    } catch {
-      resetAuthProps();
-      setIsEmailTouched(true);
-      setIsPasswordTouched(true);
-      setIsRegisterLoading();
-      return;
-    }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        getAuth(firebaseApp),
-        email,
-        password
-      );
-
-      await updateProfile(getAuth(firebaseApp).currentUser, {
-        displayName: email,
-      });
-
-      await sendEmailVerification(userCredential.user);
-
-      setIsRegisterLoading(false);
-    } catch {
-      resetAuthProps();
-      setIsEmailTouched(false);
-      setIsPasswordTouched(false);
-      setIsRegisterLoading(false);
-    }
-  }, [authProps]);
-
   const handleAuthPropChange = (e) => {
     const { name, value } = e.target;
     if (name === "email") setIsEmailTouched(true);
@@ -277,6 +261,97 @@ const SettingsPanel = () => {
         id="SettingsBody"
         className="h-fit w-full flex flex-col items-center justify-start py-4 gap-4 px-6"
       >
+        <Modal
+          opened={isLoginOpen}
+          onClose={loginModalControl.close}
+          withCloseButton={false}
+          p={0}
+          zIndex={1000}
+          size="auto"
+          classNames={{
+            root: "bg-transparent",
+            content: "bg-transparent",
+            body: "bg-transparent",
+          }}
+        >
+          {/* Modal content */}
+          <form
+            className="h-fit w-fit md:w-fit mx-auto relative"
+            onSubmit={loginForm.onSubmit(handleLoginWithEmailAndPassword)}
+          >
+            <LoadingOverlay
+              visible={isEmailLoading}
+              zIndex={1000}
+              overlayProps={{ blur: 0, opacity: 0 }}
+            />
+
+            <Fieldset
+              variant="unstyled"
+              legend="Log in "
+              classNames={{
+                legend:
+                  "text-3xl pb-1 px-2 mx-auto font-light text-appLayoutText",
+                root: "md:border border border-appLayoutBorder rounded-xl overflow-hidden mx-auto xl:mx-auto w-full md:w-[35rem] md:bg-appBackgroundAccent border-appLayoutBorder font-serif w-full pt-2 pb-4 md:pb-6 px-4 md:px-10 flex flex-col gap-4 md:gap-6 md:shadow-2xl shadow-appLayoutDarkHover",
+              }}
+              radius="lg"
+              pos="relative"
+            >
+              <TextInput
+                size="lg"
+                classNames={{
+                  input:
+                    "focus:bg-appLayoutInputBackground h-fit w-full px-2 py-1 text-[1.2rem] text-appLayoutText border p-1 bg-appBackgroundAccent md:bg-appBackground focus:border-appLayoutTextMuted border-appLayoutBorder",
+                  label: "text-lg mb-2 pl-1 text-appLayoutTextMuted",
+                }}
+                key={loginForm.key("email")}
+                {...loginForm.getInputProps("email")}
+                label="Email"
+                placeholder="Email"
+                radius="md"
+              />
+
+              <div className="flex h-fit w-full flex-col items-end gap-3 md:flex-row md:items-center">
+                <PasswordInput
+                  size="lg"
+                  classNames={{
+                    root: "w-full md:grow-1",
+                    innerInput:
+                      " focus:bg-appLayoutInputBackground text-appLayoutText px-2 py-1 font-serif text-[1.2rem]   bg-appBackgroundAccent md:bg-appBackground border border-appLayoutBorder overflow-hidden rounded-lg focus:border-appLayoutTextMuted",
+                    input:
+                      "bg-transparent border-appLayoutBorder focus:border-appLayoutTextMuted",
+                    label: "text-lg mb-2 pl-1 text-appLayoutTextMuted",
+                  }}
+                  key={loginForm.key("password")}
+                  {...loginForm.getInputProps("password")}
+                  label="Password"
+                  radius="md"
+                  placeholder="Password"
+                />
+                <Button
+                  radius="md"
+                  classNames={{
+                    root: "w-1/3 md:w-fit md:px-4 mt-3 md:mt-9 font-normal border border-appLayoutText text-appBackground bg-appLayoutText hover:bg-appLayoutTextMuted hover:text-appBackgroundAccent hover:border-appLayoutTextMuted",
+                  }}
+                  size="lg"
+                  variant="outline"
+                  type="submit"
+                >
+                  <span className="icon-[ep--right] h-full w-[2rem]"></span>
+                </Button>
+              </div>
+
+              <div className="my-2 flex h-fit w-full items-center gap-2 md:my-4">
+                <span className="bg-appLayoutInverseHover h-px grow-1"></span>
+                <span className="text-appLayoutTextMuted flex items-center justify-center h-[1rem] w-fit md:h-[1.5rem]">
+                  or
+                </span>
+                <span className="bg-appLayoutInverseHover h-px grow-1"></span>
+              </div>
+
+              <div className="h-[15rem] w-full"></div>
+            </Fieldset>
+          </form>
+        </Modal>
         <motion.div
           id="AuthContainer"
           animate={{ height: "fit-content" }}
@@ -432,48 +507,11 @@ const SettingsPanel = () => {
                       <button
                         className={`w-full h-fit py-2 rounded-md text-detailsPanelPropsFontSize 
                         
-                        ${
-                          !isRegisterLoading
-                            ? "hover:bg-specialButtonHover"
-                            : ""
-                        }
-                          
-                        shadow-sm shadow-appLayoutShadow
-                        bg-specialButton text-appLayoutHover transition-colors duration-200`}
-                        onClick={registerUser}
-                        disabled={isRegisterLoading}
-                      >
-                        <motion.span
-                          key={
-                            isRegisterLoading
-                              ? "registerLoading"
-                              : "registerNotLoading"
-                          }
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="h-authButtonSize flex items-center justify-center"
-                        >
-                          {!isRegisterLoading ? (
-                            <span>Register</span>
-                          ) : (
-                            <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize text-appBackground"></span>
-                          )}
-                        </motion.span>
-                      </button>
-                    </AnimatePresence>
-                  </div>
-                  <div className="w-1/2 h-fit border border-appLayoutBorder rounded-md">
-                    <AnimatePresence mode="wait">
-                      <button
-                        className={`w-full h-fit py-2 rounded-md text-detailsPanelPropsFontSize 
-                        
                         ${!isLoginLoading ? "hover:bg-specialButtonHover" : ""}
                           
                         shadow-sm shadow-appLayoutShadow
                         bg-specialButton text-appLayoutHover transition-colors duration-200`}
-                        onClick={loginUser}
+                        onClick={loginModalControl.open}
                         disabled={isLoginLoading}
                       >
                         <motion.span

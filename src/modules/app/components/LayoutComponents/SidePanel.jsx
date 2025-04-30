@@ -35,7 +35,7 @@ const SidePanel = ({}) => {
       key.current = "empty";
       return (
         <div className="h-full w-full flex flex-col items-center justify-start py-5 md:py-10 text-appLayoutTextMuted">
-          <p> The cake is a lie </p>
+          {/* <p> The cake is a lie </p> */}
         </div>
       );
     }
