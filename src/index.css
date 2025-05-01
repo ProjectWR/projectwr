@@ -538,3 +538,43 @@ input[type="number"] {
     opacity: 0;
   }
 }
+
+@layer components {
+  .contextMenuContent,
+  .contextMenuSubContent {
+    @apply min-w-optionsDropdownWidth bg-appBackground border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
+  }
+
+  .contextMenuItem,
+  .contextMenuCheckboxItem,
+  .contextMenuRadioItem,
+  .contextMenuSubTrigger {
+    @apply text-optionsDropdownOptionFont text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+  }
+
+  .contextMenuItem[data-disabled],
+  .contextMenuCheckboxItem[data-disabled],
+  .contextMenuRadioItem[data-disabled] {
+    @apply text-appLayoutText pointer-events-none;
+  }
+
+  .contextMenuLabel {
+    @apply text-optionsDropdownOptionFont text-appLayoutTextMuted rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+  }
+
+  .contextMenuSeparator {
+    @apply h-px bg-appLayoutBorder m-px;
+  }
+
+  .rightSlot {
+    @apply ml-auto pl-5 text-appLayoutText;
+  }
+
+  [data-highlighted] > .rightSlot {
+    @apply text-appLayoutText;
+  }
+
+  [data-disabled] .rightSlot {
+    @apply text-appLayoutText;
+  }
+}

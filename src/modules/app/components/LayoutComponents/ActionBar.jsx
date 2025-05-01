@@ -66,7 +66,7 @@ const ActionBar = () => {
             </div>
           </div>
 
-          {/* <ActionButton
+          <ActionButton
             onClick={() => {
               if (canGoBack) {
                 goBack();
@@ -103,7 +103,7 @@ const ActionBar = () => {
                 className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
               ></motion.span>
             </div>
-          </ActionButton> */}
+          </ActionButton>
           <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
             <div className="h-full w-actionBarButtonIconSize relative">
               <AnimatePresence mode="sync">
