@@ -37,6 +37,7 @@ import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExten
 import dictionaryManager from "../../app/lib/dictionary";
 import { wait } from "lib0/promise";
 import { appStore } from "../../app/stores/appStore";
+import ContextMenuWrapper from "../../app/components/LayoutComponents/ContextMenuWrapper";
 
 const content = "<p>Hello World!</p>";
 
@@ -290,6 +291,71 @@ const TiptapEditor = ({
     }),
   });
 
+  const options = useMemo(() => {
+    const options = [];
+
+    if (selectingError.trim().length > 0) {
+      options.push({
+        label: "Add word to dictionary",
+        icon: (
+          <span className="icon-[material-symbols-light--add-2-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          dictionaryManager.addOrUpdateWord(selectingError, "", "");
+          await wait(1000);
+          editor.commands.forceSpellcheck();
+        },
+      });
+    }
+
+    options.push(
+      ...[
+        {
+          label: "Search in your library",
+          icon: (
+            <span className="icon-[material-symbols-light--search] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            const textSelection = window.getSelection()?.toString().trim();
+            setSearchQuery(textSelection);
+            console.log(document.getElementById("searchInput"));
+            setTimeout(() => {
+              document.getElementById("searchInput").focus();
+            }, 100);
+          },
+        },
+
+        {
+          label: "Use Ctrl+C to Copy",
+          icon: (
+            <span className="icon-[material-symbols-light--content-copy-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          disabled: true,
+        },
+
+        {
+          label: "Use Ctrl+V to Paste",
+          icon: (
+            <span className="icon-[material-symbols-light--content-paste] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          disabled: true,
+        },
+
+        {
+          label: "Use Ctrl+X to Cut",
+          icon: (
+            <span className="icon-[material-symbols-light--content-cut] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          disabled: true,
+        },
+      ]
+    );
+
+    console.log("OPTIONS: ", options);
+
+    return options;
+  }, [editor, selectingError, setSearchQuery]);
+
   return (
     <div
       id="EditorContainer"
@@ -410,99 +476,40 @@ const TiptapEditor = ({
             toolbarPreferences={editorPreferences.toolbarPreferences}
           />
         </div>
-
-        <ContextMenu.Root modal={false}>
-          <ContextMenu.Trigger>
-            <EditorContent
-              spellCheck={false}
-              editor={editor}
-              className={`h-fit outline-none focus:outline-none z-1
+        <ContextMenuWrapper options={options}>
+          <EditorContent
+            spellCheck={false}
+            editor={editor}
+            className={`h-fit outline-none focus:outline-none z-1
             shadow-${isMobile ? "none" : paperShadow}
             shadow-black
             font-serif  
             `}
-              style={{
-                width: isMobile
-                  ? "100%"
-                  : typeof width === "string" && width.trim().endsWith("%")
-                  ? width
-                  : `calc(${width}rem * var(--uiScale))`,
-                minWidth: isMobile
-                  ? "100%"
-                  : typeof width === "string" && width.trim().endsWith("%")
-                  ? width
-                  : `calc(${width}rem * var(--uiScale))`,
-                backgroundColor: `${paperColor}`,
-                borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-                borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-                borderBottomWidth: isMobile ? "0" : `0`,
-                borderLeftWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-                borderTopColor: `${paperBorderColor}`,
-                borderLeftColor: `${paperBorderColor}`,
-                borderRightColor: `${paperBorderColor}`,
-                marginTop: isMobile
-                  ? "0"
-                  : `calc(${gapTop}rem * var(--uiScale))`,
-                borderTopRightRadius: `${roundRadius}rem`,
-                borderTopLeftRadius: `${roundRadius}rem`,
-              }}
-            />
-          </ContextMenu.Trigger>
-          <ContextMenu.Portal>
-            <ContextMenu.Content
-              className="contextMenuContent"
-              sideOffset={5}
-              align="end"
-            >
-              {selectingError.trim().length > 0 && (
-                <ContextMenu.Item
-                  className="contextMenuItem"
-                  onClick={async () => {
-                    dictionaryManager.addOrUpdateWord(selectingError, "", "");
-                    await wait(1000);
-                    editor.commands.forceSpellcheck();
-                  }}
-                >
-                  <span className="icon-[material-symbols-light--add-2-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                  <span className="pb-px">Add word to dictionary</span>
-                </ContextMenu.Item>
-              )}
-
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  const textSelection = window
-                    .getSelection()
-                    ?.toString()
-                    .trim();
-                  setSearchQuery(textSelection);
-                  console.log(document.getElementById("searchInput"));
-                  setTimeout(() => {
-                    document.getElementById("searchInput").focus();
-                  }, 100);
-                }}
-              >
-                <span className="icon-[material-symbols-light--search] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span className="pb-px">Search in your library</span>
-              </ContextMenu.Item>
-
-              <ContextMenu.Label className="contextMenuLabel">
-                <span className="icon-[material-symbols-light--content-copy-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span className="pb-px">Use Ctrl+C to Copy</span>
-              </ContextMenu.Label>
-
-              <ContextMenu.Label className="contextMenuLabel">
-                <span className="icon-[material-symbols-light--content-paste] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span className="pb-px">Use Ctrl+V to Paste</span>
-              </ContextMenu.Label>
-
-              <ContextMenu.Label className="contextMenuLabel">
-                <span className="icon-[material-symbols-light--content-cut] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span className="pb-px">Use Ctrl+X to Cut</span>
-              </ContextMenu.Label>
-            </ContextMenu.Content>
-          </ContextMenu.Portal>
-        </ContextMenu.Root>
+            style={{
+              width: isMobile
+                ? "100%"
+                : typeof width === "string" && width.trim().endsWith("%")
+                ? width
+                : `calc(${width}rem * var(--uiScale))`,
+              minWidth: isMobile
+                ? "100%"
+                : typeof width === "string" && width.trim().endsWith("%")
+                ? width
+                : `calc(${width}rem * var(--uiScale))`,
+              backgroundColor: `${paperColor}`,
+              borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+              borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+              borderBottomWidth: isMobile ? "0" : `0`,
+              borderLeftWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+              borderTopColor: `${paperBorderColor}`,
+              borderLeftColor: `${paperBorderColor}`,
+              borderRightColor: `${paperBorderColor}`,
+              marginTop: isMobile ? "0" : `calc(${gapTop}rem * var(--uiScale))`,
+              borderTopRightRadius: `${roundRadius}rem`,
+              borderTopLeftRadius: `${roundRadius}rem`,
+            }}
+          />
+        </ContextMenuWrapper>
       </div>
     </div>
   );

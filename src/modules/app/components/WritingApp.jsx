@@ -433,11 +433,11 @@ const WritingApp = () => {
                               key="SidePanelMotionContainer"
                               id="SidePanelMotionContainer"
                               className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
-                                !isMd && "absolute top-0 left-full"
+                                !isMd && "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
                               } `}
                               initial={{ opacity: 0, width: 0, minWidth: 0 }}
                               animate={{
-                                opacity: isMd ? 1 : 0.95,
+                                opacity: 1,
                                 width: `${sidePanelWidth}px`,
                               }}
                               exit={{ opacity: 0, width: 0, minWidth: 0 }}

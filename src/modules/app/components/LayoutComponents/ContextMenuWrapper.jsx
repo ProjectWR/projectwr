@@ -42,7 +42,7 @@ const ContextMenuWrapper = ({ children, triggerClassname, options }) => {
             return (
               <ContextMenu.Label key={label} className="contextMenuLabel">
                 {icon}
-                <span> {label}</span>
+                <span className="pt-[3px]"> {label}</span>
               </ContextMenu.Label>
             );
           }
@@ -54,7 +54,7 @@ const ContextMenuWrapper = ({ children, triggerClassname, options }) => {
               onClick={action}
             >
               {icon}
-              <span> {label}</span>
+              <span className="pt-[3px]"> {label}</span>
             </ContextMenu.Item>
           );
         })}

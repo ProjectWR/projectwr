@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import PropTypes from "prop-types";
 import { YTree } from "yjs-orderedtree";
 import { useDrag, useDrop } from "react-dnd";
@@ -13,6 +19,7 @@ import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { ContextMenu } from "radix-ui";
 import useStoreHistory from "../../../hooks/useStoreHistory";
+import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 
 /**
  *
@@ -247,13 +254,184 @@ const DirectoryItemNode = ({
   // Connect the ref to both drag and drop.
   drag(drop(dndRef));
 
+  const options = useMemo(() => {
+    if (
+      itemMapRef.current.get("type") === "section" ||
+      itemMapRef.current.get("type") === "book"
+    ) {
+      return [
+        {
+          label: "Edit",
+          icon: (
+            <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("edit section details button");
+            if (!(appStoreItemId === itemId && itemMode === "details")) {
+              setItemId(itemId);
+              setItemMode("details");
+
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              saveStateInHistory();
+              clearFuture();
+            }
+          },
+        },
+
+        {
+          label: "Create section",
+          icon: (
+            <span className="icon-[fluent--folder-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("create section button");
+            onCreateSectionClick();
+          },
+        },
+
+        {
+          label: "Create paper",
+          icon: (
+            <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("create paper button");
+            onCreatePaperClick();
+          },
+        },
+
+        {
+          isDivider: true,
+        },
+
+        {
+          label: `Export 
+                  ${
+                    itemMapRef.current.get("type") === "section" &&
+                    "section as .docx"
+                  }
+                  ${
+                    itemMapRef.current.get("type") === "book" && "book as .docx"
+                  }`,
+          icon: (
+            <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+
+          action: () => {
+            console.log("export section button");
+
+            dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+          },
+        },
+      ];
+    }
+
+    if (itemMapRef.current.get("type") === "paper") {
+      return [
+        {
+          label: "Open",
+          icon: (
+            <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("edit paper editor button");
+            if (
+              !(
+                appStoreItemId === itemId &&
+                itemMode === "details" &&
+                panelOpened
+              )
+            ) {
+              setItemId(itemId);
+              setItemMode("details");
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              saveStateInHistory();
+              clearFuture();
+            }
+          },
+        },
+
+        {
+          label: "Edit Paper Settings",
+          icon: (
+            <span className="icon-[hugeicons--customize] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("edit paper editor button");
+            if (!(appStoreItemId === itemId && itemMode === "settings")) {
+              setItemId(itemId);
+              setItemMode("settings");
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              saveStateInHistory();
+              clearFuture();
+            }
+          },
+        },
+
+        {
+          isDivider: true,
+        },
+
+        {
+          label: "Export paper as .docx",
+          icon: (
+            <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("export paper button");
+            dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+          },
+        },
+
+        {
+          label: "Import paper",
+          icon: (
+            <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("import paper button");
+            console.log(
+              dataManagerSubdocs.setHtmlToPaper(
+                ytree,
+                itemId,
+                "<p> Imported Content </p>"
+              )
+            );
+          },
+        },
+      ];
+    }
+  }, [
+    appStoreItemId,
+    clearFuture,
+    deviceType,
+    itemId,
+    itemMode,
+    onCreatePaperClick,
+    onCreateSectionClick,
+    panelOpened,
+    saveStateInHistory,
+    setItemId,
+    setItemMode,
+    setPanelOpened,
+    ytree,
+  ]);
+
   return (
-    <ContextMenu.Root modal={false}>
-      <ContextMenu.Trigger className={`w-full h-fit`}>
-        <div
-          id="DirectoryItemNodeContainer"
-          ref={dndRef}
-          className={`
+    <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>
+      <div
+        id="DirectoryItemNodeContainer"
+        ref={dndRef}
+        className={`
         flex flex-col
 
         w-full h-fit
@@ -277,16 +455,16 @@ const DirectoryItemNode = ({
    
           
           `}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              id="DirectoryItemNodeHeader"
-              key={`itemNodeHeader-${itemId}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.05 }}
-              className={`flex justify-between items-center  hover:bg-appLayoutHover
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            id="DirectoryItemNodeHeader"
+            key={`itemNodeHeader-${itemId}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.05 }}
+            className={`flex justify-between items-center  hover:bg-appLayoutHover
             pl-1
           ${focusedItemId === itemId ? "bg-appLayoutHover" : ""} 
             rounded-md
@@ -304,86 +482,46 @@ const DirectoryItemNode = ({
           duration-0
 
         `}
-              onMouseEnter={() => {
-                setIsHovered(true);
-              }}
-              onMouseLeave={() => {
-                setIsHovered(false);
-              }}
-            >
-              {itemMapRef.current.get("type") == "paper" && (
-                <>
-                  <></>
-                  <button
-                    className="grow min-w-0 flex items-center justify-start h-full"
-                    onClick={() => {
-                      console.log("edit paper button");
-                      if (
-                        !(
-                          appStoreItemId === itemId &&
-                          itemMode === "details" &&
-                          panelOpened
-                        )
-                      ) {
-                        setItemId(itemId);
-                        setItemMode("details");
-                        if (deviceType === "mobile") {
-                          setPanelOpened(false);
-                        }
-
-                        setPanelOpened(true);
-                        saveStateInHistory();
-                        clearFuture();
-                      }
-                    }}
-                  >
-                    <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
-                      <motion.span
-                        animate={{ rotate: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className={`icon-[fluent--document-one-page-24-regular] h-full w-full`}
-                      ></motion.span>
-                    </div>
-
-                    <div
-                      ref={textContainerRef}
-                      className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
-                    >
-                      <span
-                        ref={textRef}
-                        className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis"
-                      >
-                        {itemMapState.item_title}
-                      </span>
-                    </div>
-                  </button>
-                </>
-              )}
-
-              {(itemMapRef.current.get("type") === "section" ||
-                itemMapRef.current.get("type") === "book") && (
+            onMouseEnter={() => {
+              setIsHovered(true);
+            }}
+            onMouseLeave={() => {
+              setIsHovered(false);
+            }}
+          >
+            {itemMapRef.current.get("type") == "paper" && (
+              <>
+                <></>
                 <button
-                  className={`grow min-w-0 flex items-center justify-start h-full `}
+                  className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
-                    setFocusedItemId(itemId);
-                    const newOpenedState = !isOpened;
-                    setIsOpened(newOpenedState);
-                    itemLocalStateManager.setItemOpened(itemId, newOpenedState);
+                    console.log("edit paper button");
+                    if (
+                      !(
+                        appStoreItemId === itemId &&
+                        itemMode === "details" &&
+                        panelOpened
+                      )
+                    ) {
+                      setItemId(itemId);
+                      setItemMode("details");
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
+
+                      setPanelOpened(true);
+                      saveStateInHistory();
+                      clearFuture();
+                    }
                   }}
                 >
-                  <motion.span
-                    animate={{ rotate: isOpened ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={`icon-[formkit--right] ${(() => {
-                      const type = itemMapRef.current.get("type");
-
-                      if (type === "section")
-                        return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                      if (type === "book")
-                        return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                      return "";
-                    })()}`}
-                  ></motion.span>
+                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
+                    <motion.span
+                      animate={{ rotate: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`icon-[fluent--document-one-page-24-regular] h-full w-full`}
+                    ></motion.span>
+                  </div>
 
                   <div
                     ref={textContainerRef}
@@ -391,222 +529,109 @@ const DirectoryItemNode = ({
                   >
                     <span
                       ref={textRef}
-                      className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
+                      className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis"
                     >
                       {itemMapState.item_title}
                     </span>
                   </div>
                 </button>
-              )}
-            </motion.div>
-          </AnimatePresence>
+              </>
+            )}
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              className="w-full"
-              key={isOpened ? "opened" : "closed"}
-              initial={{ y: -10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -10, opacity: 0 }}
-              transition={{ duration: 0.1 }}
-            >
-              {isOpened &&
-                (itemMapRef.current.get("type") === "section" ||
-                  itemMapRef.current.get("type") === "book") && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "fit-content", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    id="DirectoryItemNodeBodyContainer"
-                    className={`w-full flex flex-row justify-start`}
+            {(itemMapRef.current.get("type") === "section" ||
+              itemMapRef.current.get("type") === "book") && (
+              <button
+                className={`grow min-w-0 flex items-center justify-start h-full `}
+                onClick={() => {
+                  setFocusedItemId(itemId);
+                  const newOpenedState = !isOpened;
+                  setIsOpened(newOpenedState);
+                  itemLocalStateManager.setItemOpened(itemId, newOpenedState);
+                }}
+              >
+                <motion.span
+                  animate={{ rotate: isOpened ? 90 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`icon-[formkit--right] ${(() => {
+                    const type = itemMapRef.current.get("type");
+
+                    if (type === "section")
+                      return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    if (type === "book")
+                      return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    return "";
+                  })()}`}
+                ></motion.span>
+
+                <div
+                  ref={textContainerRef}
+                  className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
+                >
+                  <span
+                    ref={textRef}
+                    className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
                   >
-                    <div
-                      style={{
-                        marginLeft:
-                          "calc(3px + var(--libraryDirectoryBookNodeIconSize) / 2)",
-                      }}
-                      className={`w-px flex items-center justify-center`}
-                    >
-                      <span
-                        className={`h-full w-full bg-appLayoutBorder`}
-                      ></span>
-                    </div>
-                    <div
-                      id="DirectoryItemNodeBody"
-                      className="h-fit w-full grid grid-cols-1"
-                    >
-                      {nodeChildrenState !== null &&
-                        ytree
-                          .sortChildrenByOrder(nodeChildrenState, itemId)
-                          .map((childKey) => (
-                            <div id="DirectoryItemNodeChild" key={childKey}>
-                              <DirectoryItemNode
-                                ytree={ytree}
-                                itemId={childKey}
-                                setFocusedItemId={setFocusedItemId}
-                                focusedItemId={focusedItemId}
-                              />
-                            </div>
-                          ))}
-                    </div>
-                  </motion.div>
-                )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Content
-          className="contextMenuContent z-6"
-          sideOffset={5}
-          align="end"
-        >
-          {(itemMapRef.current.get("type") === "section" ||
-            itemMapRef.current.get("type") === "book") && (
-            <>
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("edit section details button");
-                  if (!(appStoreItemId === itemId && itemMode === "details")) {
-                    setItemId(itemId);
-                    setItemMode("details");
+                    {itemMapState.item_title}
+                  </span>
+                </div>
+              </button>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
-
-                    saveStateInHistory();
-                    clearFuture();
-                  }
-                }}
-              >
-                <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>
-                  Edit{" "}
-                  {itemMapRef.current.get("type") === "section" && "section"}{" "}
-                  {itemMapRef.current.get("type") === "book" && "book"} details
-                </span>
-              </ContextMenu.Item>{" "}
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("create section button");
-                  onCreateSectionClick();
-                }}
-              >
-                <span className="icon-[fluent--folder-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Create section</span>
-              </ContextMenu.Item>
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("create paper button");
-                  onCreatePaperClick();
-                }}
-              >
-                <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Create paper</span>
-              </ContextMenu.Item>
-              <ContextMenu.Separator className="contextMenuSeparator" />
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("export section button");
-
-                  dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
-                }}
-              >
-                <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>
-                  Export{" "}
-                  {itemMapRef.current.get("type") === "section" &&
-                    "section as .docx"}
-                  {itemMapRef.current.get("type") === "book" && "book as .docx"}
-                </span>
-              </ContextMenu.Item>
-            </>
-          )}
-
-          {itemMapRef.current.get("type") === "paper" && (
-            <>
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("edit paper editor button");
-                  if (
-                    !(
-                      appStoreItemId === itemId &&
-                      itemMode === "details" &&
-                      panelOpened
-                    )
-                  ) {
-                    setItemId(itemId);
-                    setItemMode("details");
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
-
-                    saveStateInHistory();
-                    clearFuture();
-                  }
-                }}
-              >
-                <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Open</span>
-              </ContextMenu.Item>{" "}
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("edit paper editor button");
-                  if (!(appStoreItemId === itemId && itemMode === "settings")) {
-                    setItemId(itemId);
-                    setItemMode("settings");
-                    if (deviceType === "mobile") {
-                      setPanelOpened(false);
-                    }
-
-                    saveStateInHistory();
-                    clearFuture();
-                  }
-                }}
-              >
-                <span className="icon-[hugeicons--customize] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Edit Paper Settings</span>
-              </ContextMenu.Item>{" "}
-              <ContextMenu.Separator className="contextMenuSeparator" />
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("export paper button");
-                  dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
-                }}
-              >
-                <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Export paper as .docx</span>
-              </ContextMenu.Item>
-              <ContextMenu.Item
-                className="contextMenuItem"
-                onClick={() => {
-                  console.log("import paper button");
-                  console.log(
-                    dataManagerSubdocs.setHtmlToPaper(
-                      ytree,
-                      itemId,
-                      "<p> Imported Content </p>"
-                    )
-                  );
-                }}
-              >
-                <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-                <span>Import .docx as paper</span>
-              </ContextMenu.Item>
-            </>
-          )}
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>
+        <AnimatePresence mode="wait">
+          <motion.div
+            className="w-full"
+            key={isOpened ? "opened" : "closed"}
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.1 }}
+          >
+            {isOpened &&
+              (itemMapRef.current.get("type") === "section" ||
+                itemMapRef.current.get("type") === "book") && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "fit-content", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  id="DirectoryItemNodeBodyContainer"
+                  className={`w-full flex flex-row justify-start`}
+                >
+                  <div
+                    style={{
+                      marginLeft:
+                        "calc(3px + var(--libraryDirectoryBookNodeIconSize) / 2)",
+                    }}
+                    className={`w-px flex items-center justify-center`}
+                  >
+                    <span className={`h-full w-full bg-appLayoutBorder`}></span>
+                  </div>
+                  <div
+                    id="DirectoryItemNodeBody"
+                    className="h-fit w-full grid grid-cols-1"
+                  >
+                    {nodeChildrenState !== null &&
+                      ytree
+                        .sortChildrenByOrder(nodeChildrenState, itemId)
+                        .map((childKey) => (
+                          <div id="DirectoryItemNodeChild" key={childKey}>
+                            <DirectoryItemNode
+                              ytree={ytree}
+                              itemId={childKey}
+                              setFocusedItemId={setFocusedItemId}
+                              focusedItemId={focusedItemId}
+                            />
+                          </div>
+                        ))}
+                  </div>
+                </motion.div>
+              )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </ContextMenuWrapper>
   );
 };
 

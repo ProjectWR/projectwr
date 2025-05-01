@@ -112,6 +112,7 @@
   .dark {
     --appBackground: 0 0% 8.9%;
     --appBackgroundAccent: 0 0% 6.9%;
+    --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
     --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
     --appLayoutBorder: 0 0% 16.9%;
     --appLayoutText: 0 0% 80%;
@@ -329,6 +330,7 @@
   --color-validationErrorText: hsl(var(--validationErrorText));
   --color-sidePanelDragHandle: hsl(var(--sidePanelDragHandle));
   --color-appBackgroundAccent: hsl(var(--appBackgroundAccent));
+  --color-appBackgroundTransient: hsl(var(--appBackgroundAccentTransient));
   --color-appLayoutDarkHover: hsl(var(--appLayoutDarkHover));
   --color-appLayoutHighlight: hsl(var(--appLayoutHighlight));
   --color-appLayoutSubmitButton: hsl(var(--appLayoutSubmitButton));
@@ -542,7 +544,7 @@ input[type="number"] {
 @layer components {
   .contextMenuContent,
   .contextMenuSubContent {
-    @apply min-w-optionsDropdownWidth bg-appBackground border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
+    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/95 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
   }
 
   .contextMenuItem,
