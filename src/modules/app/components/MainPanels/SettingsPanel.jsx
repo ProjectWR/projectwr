@@ -28,6 +28,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useLoadingCallback } from "react-loading-hook";
+import { GrainyElement } from "../../../design-system/GrainyElement";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -505,33 +506,33 @@ const SettingsPanel = () => {
                 <div className={`w-full flex gap-2`}>
                   <div className="w-1/2 h-fit border border-appLayoutBorder rounded-md">
                     <AnimatePresence mode="wait">
-                      <button
-                        className={`w-full h-fit py-2 rounded-md text-detailsPanelPropsFontSize 
-                        
-                        ${!isLoginLoading ? "hover:bg-specialButtonHover" : ""}
-                          
-                        shadow-sm shadow-appLayoutShadow
-                        bg-specialButton text-appLayoutHover transition-colors duration-200`}
-                        onClick={loginModalControl.open}
-                        disabled={isLoginLoading}
-                      >
-                        <motion.span
-                          key={
-                            isLoginLoading ? "loginLoading" : "loginNotLoading"
-                          }
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="h-authButtonSize flex items-center justify-center"
+                      <GrainyElement className="w-full h-fit rounded-md overflow-hidden">
+                        <button
+                          className={`w-full h-fit py-2 rounded-md 
+                          `}
+                          onClick={loginModalControl.open}
+                          disabled={isLoginLoading}
                         >
-                          {!isLoginLoading ? (
-                            <span>Login</span>
-                          ) : (
-                            <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize text-appBackground"></span>
-                          )}
-                        </motion.span>
-                      </button>
+                          <motion.span
+                            key={
+                              isLoginLoading
+                                ? "loginLoading"
+                                : "loginNotLoading"
+                            }
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="h-authButtonSize flex items-center justify-center"
+                          >
+                            {!isLoginLoading ? (
+                              <span>Login</span>
+                            ) : (
+                              <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize text-appBackground"></span>
+                            )}
+                          </motion.span>
+                        </button>
+                      </GrainyElement>
                     </AnimatePresence>
                   </div>
                 </div>
@@ -541,7 +542,7 @@ const SettingsPanel = () => {
               <motion.div
                 key={"loggedInComponent"}
                 initial={{ opacity: 0 }}
-                animate={{ height: "fit-conte t", opacity: 1 }}
+                animate={{ height: "fit-content", opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="w-full flex flex-col items-start rounded-md gap-2"
               >

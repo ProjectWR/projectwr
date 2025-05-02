@@ -10,6 +10,14 @@
 
 @plugin "@iconify/tailwind4";
 
+
+.noiseFiner {
+  /* ... */
+  background: url(/src/assets/noiseFiner.svg);
+  filter: contrast(100%) brightness(100%);
+}
+
+
 .noiseFine {
   /* ... */
   background: url(/src/assets/noiseFine.svg);
@@ -120,6 +128,7 @@
     --appLayoutGentleShadow: 0 0% 3%;
     --appLayoutHover: 0 0% 15%;
     --appLayoutDarkHover: 0 0% 3.9%;
+    --appLayoutHoverGentle: 0 0% 12%;
     --appLayoutInverseHover: 0 0% 20%;
     --appLayoutInputBackground: 0 0% 14.9%;
     --appLayoutPressed: 0 0% 3%;
