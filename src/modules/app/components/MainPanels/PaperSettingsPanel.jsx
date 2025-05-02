@@ -13,6 +13,10 @@ import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/Tip
 import templateManager from "../../lib/templates";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import { YTree } from "yjs-orderedtree";
+import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 
 /**
  *
@@ -32,25 +36,8 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
   console.log("Paper Props Map STATE: ", paperMapState);
 
   return (
-    <div
-      id="PaperSettingsContainer"
-      className={`h-full flex flex-col items-center justify-start 
-      ${deviceType === "mobile" && "w-full"}   
-      ${deviceType === "desktop" && "mt-10"}       
-    `}
-      style={
-        deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-        }
-      }
-    >
-      <div
-        id="PaperSettingsHeader"
-        className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
-          ${deviceType === "desktop" && "px-6"}
-        `}
-      >
+    <DetailsPanel>
+      <DetailsPanelHeader>
         {deviceType === "mobile" && (
           <button
             className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
@@ -71,15 +58,10 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
         >
           {paperMapState.item_title}
         </p>
-      </div>
+      </DetailsPanelHeader>
 
-      <div className="divider w-full px-3">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
-      <div
-        id="PaperSettingsBody"
-        className="grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 gap-3 px-6"
-      >
+      <DetailsPanelDivider />
+      <DetailsPanelBody>
         <EditorStylePickerButton ytree={ytree} paperId={paperId} />
 
         <div className="PaperActionButtons w-full h-fit flex flex-wrap items-center justify-start font-sans gap-4">
@@ -112,8 +94,8 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
             </div>
           </PaperActionButton>
         </div>
-      </div>
-    </div>
+      </DetailsPanelBody>
+    </DetailsPanel>
   );
 };
 
@@ -179,7 +161,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
   return (
     <div
       ref={EditorStylePickerRef}
-      className="relative w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight rounded-md flex flex-col items-center"
+      className="relative mb-4 w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight rounded-md flex flex-col items-center"
     >
       <div className="w-[98.5%] h-px bg-appLayoutBorder"></div>
       <button

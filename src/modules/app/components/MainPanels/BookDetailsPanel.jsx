@@ -7,6 +7,10 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { equalityDeep } from "lib0/function";
 import { AnimatePresence, motion } from "motion/react";
 import { Textarea } from "@mantine/core";
+import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 
 /**
  *
@@ -70,109 +74,108 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        handleSave();
-      }}
-      id="LibraryDetailContainer"
-      className={`h-full flex flex-col items-center justify-start 
-      ${deviceType === "mobile" && "w-full"}   
-      ${deviceType === "desktop" && "mt-10"}       
-    `}
-      style={
-        deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-        }
-      }
-    >
-      <div
-        id="CreateLibraryHeader"
-        className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
-          ${deviceType === "desktop" && "px-6"}
-        `}
+    <DetailsPanel>
+      <form
+        onSubmit={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          handleSave();
+        }}
+        id="BookDetailsContent"
+        className="h-full w-full"
       >
-        {deviceType === "mobile" && (
-          <button
-            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+        <DetailsPanelHeader>
+          {deviceType === "mobile" && (
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
              order-first
           `}
-            onClick={() => {
-              setPanelOpened(true);
-              setItemId("unselected");
-            }}
-          >
-            <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-          </button>
-        )}
-
-        <input
-          className="bg-appBackground grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2"
-          name="item_title"
-          onChange={handleChange}
-          value={bookProperties.item_title}
-        />
-      </div>
-
-      <div className="divider w-full px-3">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
-      <div
-        id="CreateLibraryBody"
-        className="grow w-full flex flex-col items-center justify-start border-b h-detailsPanelDescriptionInputSize border-appLayoutBorder py-4 gap-3 px-6"
-      >
-        <div className="prop w-full h-fit relative">
-          <Textarea
-            maxRows={10}
-            id="bookDescription"
-            classNames={{
-              root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
-              wrapper:
-                "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
-              input:
-                "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
-            }}
-            autosize
-            name="book_description"
-            placeholder="Enter Description"
-            onChange={handleChange}
-            value={bookProperties.book_description}
-          />
-
-          <label
-            htmlFor="libraryDescription"
-            className="absolute top-2 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
-          >
-            Book Description
-          </label>
-        </div>
-
-        <AnimatePresence>
-          {unsavedChangesExist && (
-            <motion.button
-              type="submit"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full 
-                hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                flex items-center justify-center
-                order-last
-            `}
+              onClick={() => {
+                setPanelOpened(true);
+                setItemId("unselected");
+              }}
             >
-              <motion.span
-                animate={{
-                  opacity: 1,
-                }}
-                className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-              ></motion.span>
-            </motion.button>
+              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
           )}
-        </AnimatePresence>
-      </div>
-    </form>
+
+          <input
+            className="bg-appBackground grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2"
+            name="item_title"
+            onChange={handleChange}
+            value={bookProperties.item_title}
+          />
+        </DetailsPanelHeader>
+        <DetailsPanelDivider />
+        <DetailsPanelBody>
+          <div className="prop w-full h-fit relative">
+            <Textarea
+              maxRows={10}
+              id="bookDescription"
+              classNames={{
+                root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
+                wrapper:
+                  "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
+                input:
+                  "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
+              }}
+              autosize
+              name="book_description"
+              placeholder="Enter Description"
+              onChange={handleChange}
+              value={bookProperties.book_description}
+            />
+
+            <label
+              htmlFor="libraryDescription"
+              className="absolute top-2 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
+            >
+              Book Description
+            </label>
+          </div>
+
+          <AnimatePresence>
+            {unsavedChangesExist && (
+              <motion.button
+                type="submit"
+                initial={{
+                  height: 0,
+                  opacity: 0,
+                  marginTop: 0,
+                  marginBottom: 0,
+                  padding: 0,
+                }}
+                animate={{
+                  height: "var(--libraryManagerAddButtonSize) ",
+                  opacity: 1,
+                  marginTop: `0.25rem`,
+                  marginBottom: 0,
+                  padding: `0.25rem`,
+                }}
+                exit={{
+                  height: 0,
+                  opacity: 0,
+                  marginTop: 0,
+                  marginBottom: 0,
+                  padding: 0,
+                }}
+                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+                            hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                            flex items-center justify-center
+                        `}
+              >
+                <motion.span
+                  animate={{
+                    opacity: 1,
+                  }}
+                  className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+                ></motion.span>
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </DetailsPanelBody>
+      </form>
+    </DetailsPanel>
   );
 };
 

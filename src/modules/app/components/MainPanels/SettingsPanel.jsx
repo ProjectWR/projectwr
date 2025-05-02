@@ -273,6 +273,7 @@ const SettingsPanel = () => {
             content: "bg-transparent",
             body: "bg-transparent",
           }}
+          centered
         >
           {/* Modal content */}
           <form
@@ -300,7 +301,7 @@ const SettingsPanel = () => {
                 size="lg"
                 classNames={{
                   input:
-                    "focus:bg-appLayoutInputBackground h-fit w-full px-2 py-1 text-[1.2rem] text-appLayoutText border p-1 bg-appBackgroundAccent md:bg-appBackground focus:border-appLayoutTextMuted border-appLayoutBorder",
+                    "focus:bg-appLayoutInputBackground font-serif h-fit w-full px-2 py-0 text-appLayoutText border bg-appBackgroundAccent md:bg-appBackground focus:border-appLayoutTextMuted border-appLayoutBorder transition-colors duration-100",
                   label: "text-lg mb-2 pl-1 text-appLayoutTextMuted",
                 }}
                 key={loginForm.key("email")}
@@ -316,9 +317,9 @@ const SettingsPanel = () => {
                   classNames={{
                     root: "w-full md:grow-1",
                     innerInput:
-                      " focus:bg-appLayoutInputBackground text-appLayoutText px-2 py-1 font-serif text-[1.2rem]   bg-appBackgroundAccent md:bg-appBackground border border-appLayoutBorder overflow-hidden rounded-lg focus:border-appLayoutTextMuted",
+                      " focus:bg-appLayoutInputBackground text-appLayoutText px-2 py-0 font-serif  bg-appBackgroundAccent md:bg-appBackground border border-appLayoutBorder overflow-hidden rounded-lg focus:border-appLayoutTextMuted transition-colors duration-100",
                     input:
-                      "bg-transparent border-appLayoutBorder focus:border-appLayoutTextMuted",
+                      "bg-transparent border-appLayoutBorder border-none focus:border-appLayoutTextMuted transition-colors duration-100",
                     label: "text-lg mb-2 pl-1 text-appLayoutTextMuted",
                   }}
                   key={loginForm.key("password")}
@@ -348,7 +349,7 @@ const SettingsPanel = () => {
                 <span className="bg-appLayoutInverseHover h-px grow-1"></span>
               </div>
 
-              <div className="h-[15rem] w-full"></div>
+              <div className="h-[5rem] w-full"></div>
             </Fieldset>
           </form>
         </Modal>
