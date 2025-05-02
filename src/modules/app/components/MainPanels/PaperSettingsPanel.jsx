@@ -17,6 +17,14 @@ import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import {
+  HoverListBody,
+  HoverListDivider,
+  HoverListFooter,
+  HoverListHeader,
+  HoverListItem,
+  HoverListShell,
+} from "../LayoutComponents/HoverListShell";
 
 /**
  *
@@ -180,77 +188,53 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
         Editor Style:
       </label>
 
-      <AnimatePresence>
-        {pickingEditorStyle && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.1 }}
-            className="absolute top-[105%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-1000 border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
-          >
-            <div className="w-full px-2 h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center">
-              Pick an editor style:
-            </div>
-            <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>
-            <div
+      <HoverListShell condition={pickingEditorStyle}>
+        <HoverListHeader>Pick an editor style:</HoverListHeader>
+        <HoverListDivider />
+        <HoverListBody>
+          {Object.entries(templates).length > 0 &&
+            Object.entries(templates).map(([templateId, template]) => {
+              return (
+                <HoverListItem key={templateId}>
+                  <button
+                    onClick={() => {
+                      itemLocalStateManager.setPaperEditorTemplate(
+                        paperId,
+                        templateId
+                      );
+                      setPickingEditorStyle(false);
+                    }}
+                    className="w-full h-full flex items-center"
+                  >
+                    {template.template_name}
+                  </button>
+                </HoverListItem>
+              );
+            })}
+
+          {Object.entries(templates).length == 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              key="noResults"
               style={{
-                paddingLeft: `var(--scrollbarWidth)`,
-                maxHeight: `calc(var(--actionBarSearchMaxHeight) / 2)`,
+                paddingTop: `var(--scrollbarWidth)`,
+                paddingBottom: `var(--scrollbarWidth)`,
               }}
-              className="w-full overflow-y-scroll text-actionBarResultTextSize flex flex-col py-1"
+              className="px-1 h-actionBarResultNodeHeight flex items-center justify-center text-appLayoutTextMuted"
             >
-              {Object.entries(templates).length > 0 &&
-                Object.entries(templates).map(([templateId, template]) => {
-                  return (
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      key={templateId}
-                      style={{
-                        paddingTop: `var(--scrollbarWidth)`,
-                        paddingBottom: `var(--scrollbarWidth)`,
-                      }}
-                      className="px-3 h-actionBarResultNodeHeight w-full flex items-center hover:bg-appLayoutInverseHover rounded-md "
-                      onClick={() => {
-                        itemLocalStateManager.setPaperEditorTemplate(
-                          paperId,
-                          templateId
-                        );
-                        setPickingEditorStyle(false);
-                      }}
-                    >
-                      {template.template_name}
-                    </motion.button>
-                  );
-                })}
-
-              {Object.entries(templates).length == 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  key="noResults"
-                  style={{
-                    paddingTop: `var(--scrollbarWidth)`,
-                    paddingBottom: `var(--scrollbarWidth)`,
-                  }}
-                  className="px-1 h-actionBarResultNodeHeight flex items-center justify-center text-appLayoutTextMuted"
-                >
-                  No existing editor styles found :{"("}
-                </motion.div>
-              )}
-            </div>
-            <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>
-
-            <div className="w-full px-2 h-actionBarSearchFooterHeight text-actionBarResultHeaderTextSize flex items-center"></div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              No existing editor styles found :{"("}
+            </motion.div>
+          )}
+        </HoverListBody>
+        <HoverListDivider />
+        <HoverListFooter />
+      </HoverListShell>
     </div>
   );
 };
+
 const PaperActionButton = ({ children, onClick, disabled = false }) => (
   <GrainyButton
     disabled={disabled}
