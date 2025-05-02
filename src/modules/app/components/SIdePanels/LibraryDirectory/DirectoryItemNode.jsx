@@ -31,6 +31,7 @@ const DirectoryItemNode = ({
   itemId,
   focusedItemId,
   setFocusedItemId,
+  isChildOfRoot = true,
 }) => {
   console.log("Directory item node rendered: ", itemId);
   const { deviceType } = useDeviceType();
@@ -438,18 +439,18 @@ const DirectoryItemNode = ({
          
         ${isDragging ? "opacity-20" : ""}
 
-        border border-transparent
+        border-0
 
         ${(() => {
           if (!isSelfSelected && !isAncestor && isOverCurrent) {
             if (areaSelected === "top")
-              return "border-t border-b border-t-appLayoutDirectoryNodeHover";
+              return "border-t-2 border-t-appLayoutDirectoryNodeHover";
             if (areaSelected === "bottom")
-              return "border-b border-t border-b-appLayoutDirectoryNodeHover";
+              return "border-b-2 border-b-appLayoutDirectoryNodeHover";
             if (areaSelected === "middle")
               return "bg-appLayoutDirectoryNodeHover";
           }
-          return "border-y border-appBackground";
+          return "";
         })()}
 
    
@@ -466,8 +467,10 @@ const DirectoryItemNode = ({
             transition={{ duration: 0.05 }}
             className={`flex justify-between items-center  hover:bg-appLayoutHover
             pl-1
-          ${focusedItemId === itemId ? "bg-appLayoutHover" : ""} 
-            rounded-md
+            ${focusedItemId === itemId ? "bg-appLayoutHover" : ""} 
+            
+            rounded-r-sm
+            ${isChildOfRoot && "rounded-l-sm"}
 
           ${(() => {
             const type = itemMapRef.current.get("type");
@@ -622,6 +625,7 @@ const DirectoryItemNode = ({
                               itemId={childKey}
                               setFocusedItemId={setFocusedItemId}
                               focusedItemId={focusedItemId}
+                              isChildOfRoot={false}
                             />
                           </div>
                         ))}
@@ -641,142 +645,3 @@ DirectoryItemNode.propTypes = {
 };
 
 export default DirectoryItemNode;
-
-const OptionsButton = ({
-  options,
-  className,
-  buttonIcon,
-  origin = "topRight",
-  mainButtonHovered,
-}) => {
-  const [isOpened, setIsOpened] = useState(false);
-
-  const buttonContainerRef = useOuterClick(() => {
-    setIsOpened(false);
-  });
-
-  const buttonRef = useRef(null);
-
-  const [shouldDropdownGoUp, setShouldDropdownGoUp] = useState(false);
-  const [top, setTop] = useState(0);
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpened) {
-      if (dropdownRef.current) {
-        const buttonRect = buttonRef.current.getBoundingClientRect();
-        const dropdownRect = dropdownRef.current.getBoundingClientRect();
-        const containerRect = document
-          .querySelector("#libraryDirectoryBody")
-          .getBoundingClientRect();
-
-        console.log("all rects: ", buttonRect, dropdownRect, containerRect);
-
-        console.log("button rect something: ", buttonRect.top + window.scrollY);
-
-        const bottomLimit = containerRect.bottom;
-        const bottomOfDropdown =
-          buttonRect.top + window.scrollY + dropdownRect.height * 2 + 3;
-
-        const distanceOverflowed = bottomOfDropdown - bottomLimit;
-
-        console.log("values: ", bottomLimit, bottomOfDropdown);
-
-        if (distanceOverflowed > 0) {
-          setShouldDropdownGoUp(true);
-          setTop(0 - distanceOverflowed);
-        } else {
-          setShouldDropdownGoUp(false);
-          setTop(3);
-        }
-      }
-    }
-  }, [isOpened]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
-      ref={buttonContainerRef}
-      className={`relative w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1
-                  text-appLayoutText bg-appBackground rounded-lg
-                  ${
-                    isOpened
-                      ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
-                      : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
-                  }
-
-                  flex items-center justify-center
-
-                  ${mainButtonHovered && "bg-appLayoutHover"}
-
-                  ${className}
-      `}
-    >
-      <button
-        ref={buttonRef}
-        className="w-full h-full p-1"
-        onClick={() => {
-          setIsOpened(!isOpened);
-        }}
-      >
-        {buttonIcon}
-      </button>
-      <AnimatePresence>
-        {isOpened && (
-          <motion.div
-            ref={dropdownRef}
-            style={{ top: `${top}px` }}
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.5, opacity: 0 }}
-            transition={{ ease: "easeOut", duration: 0.1 }}
-            className={`z-100 absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
-                       rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
-                       ${
-                         shouldDropdownGoUp
-                           ? `                      
-                              ${
-                                origin === "topRight" &&
-                                "origin-bottom-right right-0"
-                              } 
-                              ${origin === "topMiddle" && "origin-bottom"}`
-                           : `                       
-                              ${
-                                origin === "topRight" &&
-                                "origin-top-right right-0"
-                              } 
-                              ${origin === "topMiddle" && "origin-top"}`
-                       }
-
-
-                       `}
-          >
-            {options?.map((option) => (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                key={option.label}
-                onClick={() => {
-                  setIsOpened(false);
-                  option.callback();
-                }}
-                className="flex items-center justify-start w-full h-optionsDropdownOptionHeight pl-1 py-1 gap-px
-                           hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight transition-colors duration-0"
-              >
-                <span className="h-optionsDropdownOptionHeight w-optionsDropdownOptionHeight min-w-optionsDropdownOptionHeight p-1">
-                  {option.icon}
-                </span>
-                <span className="grow h-full pl-1 text-optionsDropdownOptionFont flex items-center justify-start">
-                  {option.label}
-                </span>
-              </motion.button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
