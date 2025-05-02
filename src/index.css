@@ -10,13 +10,11 @@
 
 @plugin "@iconify/tailwind4";
 
-
 .noiseFiner {
   /* ... */
   background: url(/src/assets/noiseFiner.svg);
   filter: contrast(100%) brightness(100%);
 }
-
 
 .noiseFine {
   /* ... */
@@ -130,6 +128,7 @@
     --appLayoutDarkHover: 0 0% 3.9%;
     --appLayoutHoverGentle: 0 0% 12%;
     --appLayoutInverseHover: 0 0% 20%;
+    --appLayoutGradientHover: 0 0% 30%;
     --appLayoutInputBackground: 0 0% 14.9%;
     --appLayoutPressed: 0 0% 3%;
     --appLayoutDestruct: 0 90% 38%;
@@ -328,6 +327,7 @@
   --color-appLayoutHoverLight: hsl(var(--appLayoutHoverLight));
   --color-appLayoutHoverGentle: hsl(var(--appLayoutHoverGentle));
   --color-appLayoutInverseHover: hsl(var(--appLayoutInverseHover));
+  --color-appLayoutGradientHover: hsl(var(--appLayoutGradientHover));
   --color-appLayoutInputBackground: hsl(var(--appLayoutInputBackground));
   --color-appLayoutPressed: hsl(var(--appLayoutPressed));
   --color-appLayoutDestruct: hsl(var(--appLayoutDestruct));

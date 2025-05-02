@@ -30,8 +30,8 @@ export function GrainyElement(props) {
     disabled = false,
     children,
     restingPosX = 50,
-    restingPosY = -750,
-    gradientSize = 100,
+    restingPosY = -200,
+    gradientSize = 10,
   } = props;
 
   const grainyDivRef = useRef(null);
@@ -62,7 +62,7 @@ export function GrainyElement(props) {
     mouseY.set(restingPosY);
   }
 
-  const spotlightBackground = useMotionTemplate`radial-gradient(circle at ${mouseXSpring}% ${mouseYSpring}%, hsl(var(--appLayoutInverseHover)) 0%, hsl(var(--appBackground)) ${gradientSize}% ${gradientSize}%)`;
+  const spotlightBackground = useMotionTemplate`radial-gradient(${gradientSize}rem ${gradientSize}rem at ${mouseXSpring}% ${mouseYSpring}%, hsl(var(--appLayoutInverseHover)) 0%, hsl(var(--appBackgroundAccent)))`;
 
   console.log(spotlightBackground);
   return (

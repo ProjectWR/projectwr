@@ -289,7 +289,7 @@ const SettingsPanel = () => {
 
             <Fieldset
               variant="unstyled"
-              legend="Log in "
+              legend="Log in to Tulip Writer"
               classNames={{
                 legend:
                   "text-3xl pb-1 px-2 mx-auto font-light text-appLayoutText",
@@ -329,10 +329,11 @@ const SettingsPanel = () => {
                   radius="md"
                   placeholder="Password"
                 />
+
                 <Button
                   radius="md"
                   classNames={{
-                    root: "w-1/3 md:w-fit md:px-4 mt-3 md:mt-9 font-normal border border-appLayoutText text-appBackground bg-appLayoutText hover:bg-appLayoutTextMuted hover:text-appBackgroundAccent hover:border-appLayoutTextMuted",
+                    root: "w-1/3 md:w-fit md:px-4 mt-3 md:mt-9 font-normal border border-appLayoutText text-appBackground bg-appLayoutText hover:bg-appLayoutTextMuted hover:text-appBackgroundAccent hover:border-appLayoutTextMuted transition-colors duration-100",
                   }}
                   size="lg"
                   variant="outline"
@@ -354,6 +355,7 @@ const SettingsPanel = () => {
             </Fieldset>
           </form>
         </Modal>
+
         <motion.div
           id="AuthContainer"
           animate={{ height: "fit-content" }}
@@ -364,177 +366,47 @@ const SettingsPanel = () => {
               <motion.div
                 key={"loggedOutComponent"}
                 initial={{ opacity: 0 }}
-                animate={{ height: "fit-content", opacity: 1 }}
+                animate={{ height: "3rem", opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="w-full h-fit flex flex-col items-start rounded-md gap-2"
+                className="w-full flex rounded-md gap-1"
               >
-                <div className="w-full h-fit border border-appLayoutBorder rounded-md shadow-sm shadow-appLayoutShadow">
-                  <p className="w-full h-fit flex justify-center items-center text-detailsPanelPropsFontSize text-appLayoutTextMuted px-3 py-2 rounded-md bg-appBackground ">
-                    You are not logged in
+                <div className="grow-9 basis-0 h-full border border-appLayoutBorder rounded-md ">
+                  <p className="w-full h-full flex justify-center items-center text-detailsPanelPropsFontSize text-appLayoutText rounded-md bg-appBackground ">
+                    Log in to protect your story's journey
                   </p>
                 </div>
 
-                <motion.div
-                  animate={{ height: "fit-content" }}
-                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding shadow-sm shadow-appLayoutShadow`}
-                >
-                  <input
-                    id="emailInput"
-                    name="email"
-                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 shadow-inner shadow-appLayoutGentleShadow"
-                    onChange={handleAuthPropChange}
-                    value={authProps.email}
-                  />
-                  <label
-                    htmlFor="emailInput"
-                    className="absolute top-1 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none"
-                  >
-                    Email
-                  </label>
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isEmailTouched && !isValidEmail
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
-                  >
-                    Email is not valid
-                  </motion.p>
-                </motion.div>
-
-                <motion.div
-                  animate={{ height: "fit-content" }}
-                  className={`relative w-full border border-appLayoutBorder rounded-md overflow-hidden bg-clip-padding shadow-sm shadow-appLayoutShadow`}
-                >
-                  <input
-                    id="passwordInput"
-                    name="password"
-                    className="w-full h-fit text-detailsPanelPropsFontSize px-3 pb-2 pt-detailsPanelPropLabelHeight rounded-t-md bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 shadow-inner shadow-appLayoutGentleShadow"
-                    onChange={handleAuthPropChange}
-                    value={authProps.password}
-                  />
-                  <label
-                    htmlFor="passwordInput"
-                    className="absolute top-1 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none"
-                  >
-                    Password
-                  </label>
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isPasswordTouched && !passwordValidityStatus.lowercase
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden `}
-                  >
-                    should contain lowercase letter *
-                  </motion.p>
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isPasswordTouched && !passwordValidityStatus.uppercase
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
-                  >
-                    should contain uppercase letter *
-                  </motion.p>
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isPasswordTouched && !passwordValidityStatus.digit
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
-                  >
-                    should contain digit *
-                  </motion.p>
-
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isPasswordTouched && !passwordValidityStatus.specialChar
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
-                  >
-                    should contain special character *
-                  </motion.p>
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isPasswordTouched && !passwordValidityStatus.minLength
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
-                  >
-                    should be more than 8 characters long *
-                  </motion.p>
-                  <motion.p
-                    initial={{ height: 0 }}
-                    animate={{
-                      height:
-                        isPasswordTouched && !passwordValidityStatus.maxLength
-                          ? "var(--detailsPanelPropLabelHeight)"
-                          : 0,
-                    }}
-                    exit={{ height: 0 }}
-                    className={`px-3 flex items-center text-appLayoutHighlight bg-validationErrorText text-detailsPanelPropLabelFontSize pointer-events-none overflow-hidden`}
-                  >
-                    should be less than 128 characters long *
-                  </motion.p>
-                </motion.div>
-                <div className={`w-full flex gap-2`}>
-                  <div className="w-1/2 h-fit border border-appLayoutBorder rounded-md">
-                    <AnimatePresence mode="wait">
-                      <GrainyElement className="w-full h-fit rounded-md overflow-hidden">
-                        <button
-                          className={`w-full h-fit py-2 rounded-md 
+                <div className="grow basis-0 h-full">
+                  <AnimatePresence mode="wait">
+                    <button
+                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden
                           `}
-                          onClick={loginModalControl.open}
-                          disabled={isLoginLoading}
+                      type="button"
+                      onClick={() => {
+                        loginModalControl.open();
+                      }}
+                      disabled={isLoginLoading}
+                    >
+                      <GrainyElement className="w-full h-full overflow-hidden flex items-center justify-center">
+                        <motion.span
+                          key={
+                            isLoginLoading ? "loginLoading" : "loginNotLoading"
+                          }
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="h-authButtonSize w-authButtonSize flex items-center justify-center"
                         >
-                          <motion.span
-                            key={
-                              isLoginLoading
-                                ? "loginLoading"
-                                : "loginNotLoading"
-                            }
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="h-authButtonSize flex items-center justify-center"
-                          >
-                            {!isLoginLoading ? (
-                              <span>Login</span>
-                            ) : (
-                              <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize text-appBackground"></span>
-                            )}
-                          </motion.span>
-                        </button>
+                          {!isLoginLoading ? (
+                            <span className="icon-[ep--right] h-full w-full"></span>
+                          ) : (
+                            <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize text-appBackground"></span>
+                          )}
+                        </motion.span>
                       </GrainyElement>
-                    </AnimatePresence>
-                  </div>
+                    </button>
+                  </AnimatePresence>
                 </div>
               </motion.div>
             )}
