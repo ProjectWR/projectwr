@@ -157,6 +157,10 @@
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
     --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
+    --breadcrumbHeight: calc(var(--uiScale) * 2rem);
+    --breadcrumbFontSize: calc(var(--uiScale) * 1rem);
+    --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
+
     --scrollbarWidth: calc(
       var(--uiScale) *
         (
@@ -449,6 +453,8 @@
   --spacing-templateContentEditorHeaderGroupHeight: var(
     --templateContentEditorHeaderGroupHeight
   );
+  --spacing-breadcrumbHeight: var(--breadcrumbHeight);
+  --spacing-breadcrumbSeperatorSize: var(--breadcrumbSeperatorSize);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
@@ -486,6 +492,7 @@
   --text-actionBarResultDateFontSize: var(--actionBarResultDateFontSize);
   --text-recentlyOpenedDateFontSize: var(--recentlyOpenedDateFontSize);
   --text-recentlyOpenedNodeFontSize: var(--recentlyOpenedNodeFontSize);
+  --text-breadcrumbFontSize: var(--breadcrumbFontSize);
 }
 
 :root {

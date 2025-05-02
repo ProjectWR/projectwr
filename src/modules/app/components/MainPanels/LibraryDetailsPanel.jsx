@@ -86,7 +86,12 @@ const LibraryDetailsPanel = ({ libraryId }) => {
   };
 
   return (
-    <DetailsPanel>
+    <DetailsPanel
+      breadcrumbs={[
+        { label: "Your Libraries", action: () => {} },
+        { label: libraryProperties.library_name, action: () => {} },
+      ]}
+    >
       <form
         onSubmit={(e) => {
           e.stopPropagation();
