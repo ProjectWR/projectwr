@@ -140,9 +140,27 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
             {unsavedChangesExist && (
               <motion.button
                 type="submit"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{
+                  height: 0,
+                  opacity: 0,
+                  marginTop: 0,
+                  marginBottom: 0,
+                  padding: 0,
+                }}
+                animate={{
+                  height: "var(--libraryManagerAddButtonSize) ",
+                  opacity: 1,
+                  marginTop: `0.25rem`,
+                  marginBottom: 0,
+                  padding: `0.25rem`,
+                }}
+                exit={{
+                  height: 0,
+                  opacity: 0,
+                  marginTop: 0,
+                  marginBottom: 0,
+                  padding: 0,
+                }}
                 className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full 
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                 flex items-center justify-center
