@@ -4,7 +4,7 @@ const DetailsPanelBody = ({ children }) => {
   return (
     <section
       id="DetailsPanelBody"
-      className="grow w-full flex flex-col items-center justify-start border-b border-appLayoutBorder py-4 px-6"
+      className="grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"
     >
       {children}
     </section>

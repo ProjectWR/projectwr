@@ -8,7 +8,7 @@ const DetailsPanel = ({ children }) => {
       id="DetailsPanel"
       className={`h-full flex flex-col items-center justify-start 
         ${deviceType === "mobile" && "w-full"}   
-        ${deviceType === "desktop" && "mt-10"}       
+        ${deviceType === "desktop" && "pt-10"}       
       `}
       style={
         deviceType === "desktop" && {

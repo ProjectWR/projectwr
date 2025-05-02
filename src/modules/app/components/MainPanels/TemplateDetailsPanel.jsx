@@ -13,6 +13,10 @@ import templateManager from "../../lib/templates";
 import { equalityDeep } from "lib0/function";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TemplateContentEditor from "./TemplateContentEditor";
+import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 
 /**
  * TemplateDetailsPanel component for viewing and editing templates.
@@ -73,24 +77,8 @@ const TemplateDetailsPanel = ({ templateId }) => {
   };
 
   return (
-    <div
-      id="TemplateDetailsContainer"
-      className={`h-full max-h-full flex flex-col items-center justify-start 
-        ${deviceType === "mobile" && "w-full"}   
-      `}
-      style={
-        deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-        }
-      }
-    >
-      <div
-        id="TemplateDetailsHeader"
-        className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
-          ${deviceType === "desktop" && "px-6 mt-10"}
-        `}
-      >
+    <DetailsPanel>
+      <DetailsPanelHeader>
         {deviceType === "mobile" && (
           <button
             className="w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center order-first"
@@ -109,16 +97,11 @@ const TemplateDetailsPanel = ({ templateId }) => {
           onChange={handleChange}
           value={newTemplate.template_name}
         />
-      </div>
+      </DetailsPanelHeader>
 
-      <div className="divider w-full px-3">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
+      <DetailsPanelDivider />
 
-      <div
-        id="TemplateDetailsBody"
-        className="grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6"
-      >
+      <DetailsPanelBody>
         <AnimatePresence>
           {!wasTemplateChanged && (
             <motion.button
@@ -174,8 +157,8 @@ const TemplateDetailsPanel = ({ templateId }) => {
             />
           </div>
         </div>
-      </div>
-    </div>
+      </DetailsPanelBody>
+    </DetailsPanel>
   );
 };
 
