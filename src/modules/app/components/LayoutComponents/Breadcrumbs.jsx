@@ -98,7 +98,11 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
             >
               <button
                 onClick={action}
-                className="w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText"
+                className={`w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis ${
+                  index === breadcrumbsRight.length - 1
+                    ? "text-appLayoutText"
+                    : "text-appLayoutTextMuted"
+                }  hover:text-appLayoutText`}
               >
                 {label}
               </button>
@@ -122,7 +126,11 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
           >
             <button
               onClick={action}
-              className="w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText"
+              className={`w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis ${
+                index === breadcrumbs.length - 1
+                  ? "text-appLayoutText"
+                  : "text-appLayoutTextMuted"
+              }  hover:text-appLayoutText`}
             >
               {label}
             </button>

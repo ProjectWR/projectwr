@@ -33,6 +33,14 @@ import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import {
+  HoverListBody,
+  HoverListDivider,
+  HoverListHeader,
+  HoverListItem,
+  HoverListShell,
+  ListShell,
+} from "../LayoutComponents/HoverListShell";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -613,63 +621,50 @@ const SettingsPanel = () => {
           </AnimatePresence>
         </motion.div>
 
-        <div className="flex flex-row gap-2 grow basis-0 w-full">
-          <motion.div
-            id="FontContainer"
-            animate={{
-              paddingTop: "var(--detailsPanelPropLabelHeight)",
-            }}
-            className="h-full min-w-0 grow basis-0 flex flex-col gap-2 rounded-lg border border-appLayoutBorder  relative"
-          >
-            <div
-              style={{
-                paddingLeft: `var(--scrollbarWidth)`,
-              }}
-              className="h-full w-full py-2 overflow-y-scroll flex flex-col gap-2"
-            >
-              {fonts.map((font) => {
-                return (
-                  <div
-                    key={font.id}
-                    className={`flex items-center justify-between gap-2 pl-3 pr-1 rounded-md bg-appBackground border border-appLayoutBorder`}
-                  >
-                    <p
-                      style={{ fontFamily: font.family }}
-                      className="text-detailsPanelPropsFontSize text-appLayoutTextMuted grow min-w-0 text-ellipsis text-nowrap overflow-hidden"
-                    >
-                      {font.family}
-                    </p>
-                    <button
-                      className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center`}
-                      onClick={async () => {
-                        await fontManager.deleteFont(font.id);
-                      }}
-                    >
-                      <span className="icon-[ph--trash-thin] w-full h-full"></span>
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-            <label
-              htmlFor="FontContainer"
-              className="absolute top-1 left-0 px-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit w-full flex items-center justify-between"
-            >
+        <div className="flex flex-row grow basis-0 gap-2 w-full box-border">
+          <ListShell className={`h-full grow basis-0 min-w-0`}>
+            <HoverListHeader>
               <p>Fonts</p>
+              <span className="grow"></span>
               <button
                 onClick={async () => {
                   await fontManager.addFont();
                 }}
-                className="h-fontAddButtonSize w-fontAddButtonSize hover:bg-appLayoutInverseHover rounded-full"
+                className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full"
               >
                 <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
               </button>
-            </label>
-          </motion.div>
+            </HoverListHeader>
+            <HoverListDivider />
+            <HoverListBody>
+              {fonts.map((font) => {
+                return (
+                  <HoverListItem key={font.id}>
+                    <div className="w-full h-full flex items-center justify-between">
+                      <p
+                        style={{ fontFamily: font.family }}
+                        className="text-detailsPanelPropsFontSize text-appLayoutTextMuted grow min-w-0 text-ellipsis text-nowrap overflow-hidden"
+                      >
+                        {font.family}
+                      </p>
+                      <button
+                        className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                        onClick={async () => {
+                          await fontManager.deleteFont(font.id);
+                        }}
+                      >
+                        <span className="icon-[ph--trash-thin] w-full h-full"></span>
+                      </button>
+                    </div>
+                  </HoverListItem>
+                );
+              })}
+            </HoverListBody>
+          </ListShell>
 
           <div
             id="PreferencesContainer"
-            className="grow basis-0 h-fit flex flex-col items-center"
+            className="grow basis-0 px-1 border border-transparent min-w-0 h-full flex flex-col items-center"
           >
             <div
               id="PreferencesHeader"

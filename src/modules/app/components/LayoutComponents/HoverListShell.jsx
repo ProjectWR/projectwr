@@ -1,10 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 
-export const HoverListShell = ({
-  children,
-  condition,
-  position = "absolute",
-}) => {
+export const HoverListShell = ({ children, condition }) => {
   return (
     <AnimatePresence mode="sync">
       {condition && (
@@ -13,15 +9,28 @@ export const HoverListShell = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className={`${
-            position === "absolute" &&
-            "absolute top-[100%] left-1/2 -translate-x-1/2"
-          } pt-1 px-1 h-fit w-full min-w-actionBarSearchWidth bg-appBackground/95 backdrop-blur-[1px] rounded-md z-1000 border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col`}
+          className={`
+            absolute top-[100%] left-1/2 -translate-x-1/2 w-full h-fit min-w-actionBarSearchWidth shadow-2xl shadow-appLayoutGentleShadow z-1000 pt-1 px-1 border border-appLayoutInverseHover
+           bg-appBackground/95 backdrop-blur-[1px] rounded-md  overflow-hidden flex items-center flex-col`}
         >
           {children}
         </motion.div>
       )}
     </AnimatePresence>
+  );
+};
+
+export const ListShell = ({ children, className }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className={` bg-appBackground/95 backdrop-blur-[1px] rounded-md  overflow-hidden flex items-center flex-col pt-1 px-1 border border-appLayoutBorder ${className}`}
+    >
+      {children}
+    </motion.div>
   );
 };
 

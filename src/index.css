@@ -244,7 +244,7 @@
     --userPlanDisplayHeight: calc(var(--uiScale) * 3rem);
 
     --fontContainerHeight: calc(var(--uiScale) * 15rem);
-    --fontAddButtonSize: calc(var(--uiScale) * 2rem);
+    --fontAddButtonSize: calc(var(--uiScale) * 1.5rem);
     --fontItemHeight: calc(var(--uiScale) * 3rem);
 
     --libraryDetailsActionButtonHeight: calc(var(--uiScale) * 6rem);
