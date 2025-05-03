@@ -282,8 +282,7 @@ const DirectoryItemNode = ({
 
               activatePanel("libraries", "details", breadcrumbs);
 
-              saveStateInHistory();
-              clearFuture();
+             
             }
           },
         },
@@ -360,8 +359,7 @@ const DirectoryItemNode = ({
 
               activatePanel("libraries", "details", breadcrumbs);
 
-              saveStateInHistory();
-              clearFuture();
+
             }
           },
         },
@@ -382,8 +380,6 @@ const DirectoryItemNode = ({
 
               activatePanel("libraries", "settings", breadcrumbs);
 
-              saveStateInHistory();
-              clearFuture();
             }
           },
         },
@@ -527,8 +523,7 @@ const DirectoryItemNode = ({
                       activatePanel("libraries", "details", breadcrumbs);
 
                       setPanelOpened(true);
-                      saveStateInHistory();
-                      clearFuture();
+                     
                     }
                   }}
                 >

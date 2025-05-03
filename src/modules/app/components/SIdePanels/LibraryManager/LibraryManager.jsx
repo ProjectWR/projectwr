@@ -131,8 +131,7 @@ const LibraryManager = () => {
             }
 
             setPanelOpened(true);
-            saveStateInHistory();
-            clearFuture();
+         
           }}
         >
           <span className="icon-[material-symbols-light--add-2-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>

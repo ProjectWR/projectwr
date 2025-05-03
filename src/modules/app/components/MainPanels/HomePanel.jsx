@@ -22,6 +22,7 @@ import { checkForYTree, YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
 import useStoreHistory from "../../hooks/useStoreHistory";
+import useMainPanel from "../../hooks/useMainPanel";
 
 const HomePanel = () => {
   const { deviceType } = useDeviceType();
@@ -40,6 +41,8 @@ const HomePanel = () => {
   const setItemMode = appStore((state) => state.setItemMode);
   const setActivity = appStore((state) => state.setActivity);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+  const { activatePanel } = useMainPanel();
 
   const prevLatestItemsRef = useRef(null);
 
@@ -65,8 +68,6 @@ const HomePanel = () => {
       }
     }
   );
-
-  console.log("Latest ITems: ", latestItems);
 
   return (
     <AnimatePresence mode="wait">
@@ -160,6 +161,12 @@ const HomePanel = () => {
                     </div>{" "}
                     {latestItems.map(({ itemId, props, type }) => {
                       let name = "";
+
+                      /**
+                       * @type {YTree}
+                       */
+                      let ytree;
+
                       if (type !== "library") {
                         if (
                           !dataManagerSubdocs.getLibrary(props.libraryId) ||
@@ -172,7 +179,7 @@ const HomePanel = () => {
                           return null;
                         }
 
-                        const ytree = new YTree(
+                        ytree = new YTree(
                           dataManagerSubdocs
                             .getLibrary(props.libraryId)
                             .getMap("library_directory")
@@ -212,8 +219,8 @@ const HomePanel = () => {
                                   setPanelOpened(false);
                                 }
                                 setPanelOpened(true);
-                                saveStateInHistory();
-                                clearFuture();
+
+                                activatePanel("libraries", "details", [itemId]);
                               }
 
                               if (
@@ -237,8 +244,30 @@ const HomePanel = () => {
                                   setPanelOpened(false);
                                 }
                                 setPanelOpened(true);
-                                saveStateInHistory();
-                                clearFuture();
+
+                                const ancestors = [itemId];
+
+                                while (true) {
+                                  try {
+                                    ancestors.unshift(
+                                      ytree.getNodeParentFromKey(ancestors[0])
+                                    );
+                                  } catch {
+                                    break;
+                                  }
+                                }
+
+                                ancestors.shift();
+
+                                ancestors.unshift(props.libraryId);
+
+                                console.log("ANCESTORS ", ancestors);
+
+                                activatePanel(
+                                  "libraries",
+                                  "details",
+                                  ancestors
+                                );
                               }
 
                               setActivity("libraries");

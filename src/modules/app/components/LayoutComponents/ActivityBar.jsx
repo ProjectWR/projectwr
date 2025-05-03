@@ -77,16 +77,12 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             onClick={() => {
               if (activity !== "libraries") {
                 setActivity("libraries");
-                saveStateInHistory();
-                clearFuture();
               }
 
               setPanelOpened(true);
 
               if (activity === "libraries" && libraryId !== "unselected") {
                 setLibraryId("unselected");
-                saveStateInHistory();
-                clearFuture();
               }
             }}
             activity={activity}
@@ -103,8 +99,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               onClick={() => {
                 if (activity !== "home") {
                   setActivity("home");
-                  saveStateInHistory();
-                  clearFuture();
+            
                 }
 
                 setPanelOpened(false);
@@ -122,8 +117,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             onClick={() => {
               if (activity !== "templates") {
                 setActivity("templates");
-                saveStateInHistory();
-                clearFuture();
+                
               }
 
               setPanelOpened(true);
@@ -140,8 +134,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             onClick={() => {
               if (activity !== "dictionary") {
                 setActivity("dictionary");
-                saveStateInHistory();
-                clearFuture();
+          
               }
 
               setPanelOpened(true);
@@ -159,8 +152,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               onClick={() => {
                 if (activity !== "settings") {
                   setActivity("settings");
-                  saveStateInHistory();
-                  clearFuture();
+                  
                 }
 
                 setPanelOpened(false);

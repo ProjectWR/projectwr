@@ -32,8 +32,8 @@ const useStoreHistory = () => {
   useEffect(() => {
     console.log(
       "State History past and future length check: ",
-      past.length,
-      future.length
+      past,
+      future
     );
     if (past.length > 0) setCanGoBack(true);
     else setCanGoBack(false);

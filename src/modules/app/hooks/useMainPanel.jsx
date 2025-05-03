@@ -26,7 +26,7 @@ const useMainPanel = () => {
       saveStateInHistory();
       clearFuture();
     },
-    [setMainPanelState]
+    [setMainPanelState, clearFuture, saveStateInHistory]
   );
 
   return { mainPanelState, activatePanel };

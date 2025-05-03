@@ -170,8 +170,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
-                  saveStateInHistory();
-                  clearFuture();
+                  
                 },
               },
               {
@@ -192,8 +191,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
-                  saveStateInHistory();
-                  clearFuture();
+                 
                 },
               },
               {
@@ -214,8 +212,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
-                  saveStateInHistory();
-                  clearFuture();
+             
                 },
               },
             ]}
@@ -278,8 +275,7 @@ const LibraryDirectory = ({ libraryId }) => {
 
               setPanelOpened(true);
               itemLocalStateManager.setItemOpened(bookId, true);
-              saveStateInHistory();
-              clearFuture();
+       
             }}
           >
             <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -307,8 +303,7 @@ const LibraryDirectory = ({ libraryId }) => {
               if (focusedItemId)
                 itemLocalStateManager.setItemOpened(focusedItemId, true);
               itemLocalStateManager.setItemOpened(sectionId, true);
-              saveStateInHistory();
-              clearFuture();
+            
             }}
           >
             <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -334,8 +329,7 @@ const LibraryDirectory = ({ libraryId }) => {
               if (focusedItemId)
                 itemLocalStateManager.setItemOpened(focusedItemId, true);
               itemLocalStateManager.setItemOpened(paperId, true);
-              saveStateInHistory();
-              clearFuture();
+   
             }}
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
