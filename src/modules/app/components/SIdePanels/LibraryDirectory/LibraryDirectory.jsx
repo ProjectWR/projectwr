@@ -12,6 +12,8 @@ import { max, min } from "lib0/math";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
+import useMainPanel from "../../../hooks/useMainPanel";
+
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
@@ -32,6 +34,8 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
+
+  const {activatePanel } = useMainPanel();
 
   const [focusedItemId, setFocusedItemId] = useState(null);
 
@@ -250,6 +254,8 @@ const LibraryDirectory = ({ libraryId }) => {
                 setPanelOpened(false);
               }
 
+              activatePanel("libraries", "details", [libraryId])
+
               setPanelOpened(true);
             }}
           >
@@ -373,6 +379,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   <DirectoryItemNode
                     ytree={libraryYTreeRef.current}
                     itemId={bookId}
+                    breadcrumbs={[libraryId, bookId]}
                     focusedItemId={focusedItemId}
                     setFocusedItemId={setFocusedItemId}
                   />

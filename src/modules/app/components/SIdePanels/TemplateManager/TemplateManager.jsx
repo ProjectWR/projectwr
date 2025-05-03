@@ -11,12 +11,15 @@ import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "../../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
 import { equalityDeep } from "lib0/function";
 import useStoreHistory from "../../../hooks/useStoreHistory";
+import useMainPanel from "../../../hooks/useMainPanel";
 
 const TemplateManager = () => {
   console.log("Template Manager was rendered");
   const { deviceType } = useDeviceType();
 
   const prevTemplatesRef = useRef(null);
+
+  const { activatePanel } = useMainPanel();
 
   const templates = useSyncExternalStore(
     (callback) => {
@@ -132,6 +135,8 @@ const TemplateManagerNode = ({ templateId, template }) => {
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const panelOpened = appStore((state) => state.panelOpened);
 
+  const { activatePanel } = useMainPanel();
+
   return (
     <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg">
       <button
@@ -144,8 +149,8 @@ const TemplateManagerNode = ({ templateId, template }) => {
               setPanelOpened(false);
             }
             setPanelOpened(true);
-            saveStateInHistory();
-            clearFuture();
+
+            activatePanel("templates", "preview", [templateId]);
           }
         }}
       >
@@ -166,8 +171,8 @@ const TemplateManagerNode = ({ templateId, template }) => {
               setPanelOpened(false);
             }
             setPanelOpened(true);
-            saveStateInHistory();
-            clearFuture();
+
+            activatePanel("templates", "details", [templateId]);
           }
         }}
       >

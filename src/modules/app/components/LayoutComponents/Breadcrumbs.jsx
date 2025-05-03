@@ -6,7 +6,7 @@
  */
 export const Breadcrumbs = ({ breadcrumbs = [] }) => {
   return (
-    <section className="w-full h-breadCrumbHeight gap-1 flex flex-row flex-nowrap justify-start items-center">
+    <section className="w-full h-breadCrumbHeight gap-1 flex flex-row flex-nowrap justify-center items-center">
       {breadcrumbs.map(({ label, action }, index) => {
         return (
           <>

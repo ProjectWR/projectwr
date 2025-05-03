@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { appStore } from "../stores/appStore";
+import { mainPanelStore } from "../stores/mainPanelStore";
 
 const past = [];
 const future = [];
@@ -16,34 +16,13 @@ const future = [];
  */
 
 const useStoreHistory = () => {
-  const activity = appStore((state) => state.activity);
-  const libraryId = appStore((state) => state.libraryId);
-  const itemId = appStore((state) => state.itemId);
-  const itemMode = appStore((state) => state.itemMode);
-  const templateId = appStore((state) => state.templateId);
-  const templateMode = appStore((state) => state.templateMode);
-  const dictionaryMode = appStore((state) => state.dictionaryMode);
-  const dictionaryWord = appStore((state) => state.dictionaryWord);
+  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
 
-  const setActivity = appStore((state) => state.setActivity);
-  const setLibraryId = appStore((state) => state.setLibraryId);
-  const setItemId = appStore((state) => state.setItemId);
-  const setItemMode = appStore((state) => state.setItemMode);
-  const setTemplateId = appStore((state) => state.setTemplateId);
-  const setTemplateMode = appStore((state) => state.setTemplateMode);
-  const setDictionaryMode = appStore((state) => state.setDictionaryMode);
-  const setDictionaryWord = appStore((state) => state.setDictionaryWord);
+  const setMainPanelState = mainPanelStore((state) => state.setMainPanelState);
 
   const saveStateInHistory = () => {
     past.push({
-      activity,
-      libraryId,
-      itemId,
-      itemMode,
-      templateId,
-      templateMode,
-      dictionaryMode,
-      dictionaryWord,
+      mainPanelState,
     });
   };
 
@@ -60,16 +39,7 @@ const useStoreHistory = () => {
     else setCanGoBack(false);
     if (future.length > 0) setCanGoForward(true);
     else setCanGoForward(false);
-  }, [
-    activity,
-    libraryId,
-    itemId,
-    itemMode,
-    templateId,
-    templateMode,
-    dictionaryMode,
-    dictionaryWord,
-  ]);
+  }, [mainPanelState]);
 
   const goBack = () => {
     if (!canGoBack) return;
@@ -79,41 +49,20 @@ const useStoreHistory = () => {
 
     const state = past.pop();
 
-    setActivity(state.activity);
-    setLibraryId(state.libraryId);
-    setItemId(state.itemId);
-    setItemMode(state.itemMode);
-    setTemplateId(state.templateId);
-    setTemplateMode(state.templateMode);
-    setDictionaryMode(state.dictionaryMode);
-    setDictionaryWord(state.dictionaryWord);
+    setMainPanelState(state.mainPanelState);
   };
 
   const goForward = () => {
     if (!canGoForward) return;
 
     future.push({
-      activity,
-      libraryId,
-      itemId,
-      itemMode,
-      templateId,
-      templateMode,
-      dictionaryMode,
-      dictionaryWord,
+      mainPanelState,
     });
 
     past.push(future.pop());
 
     const state = future.pop();
-    setActivity(state.activity);
-    setLibraryId(state.libraryId);
-    setItemId(state.itemId);
-    setItemMode(state.itemMode);
-    setTemplateId(state.templateId);
-    setTemplateMode(state.templateMode);
-    setDictionaryMode(state.dictionaryMode);
-    setDictionaryWord(state.dictionaryWord);
+    setMainPanelState(state.mainPanelState);
   };
 
   const clearFuture = () => {

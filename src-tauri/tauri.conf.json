@@ -16,7 +16,7 @@
         "width": 1024,
         "height": 768,
         "minHeight": 768,
-        "minWidth": 1024,
+        "minWidth": 768,
         "resizable": true,
         "fullscreen": false,
         "dragDropEnabled": false,

@@ -30,6 +30,7 @@ import { ContextMenu } from "radix-ui";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
+import useMainPanel from "../../../hooks/useMainPanel";
 /**
  *
  * @param {{libraryId: string, className: string}} param0
@@ -61,6 +62,8 @@ const LibraryManagerNode = ({ libraryId, className }) => {
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const appStorePanelOpened = appStore((state) => state.panelOpened);
+
+  const { activatePanel } = useMainPanel();
 
   const libraryPropsMapRef = useRef(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
@@ -205,8 +208,8 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             itemLocalStateManager.setItemOpened(libraryId, true);
 
             setPanelOpened(true);
-            saveStateInHistory();
-            clearFuture();
+            activatePanel("libraries", "details", [libraryId]);
+
           }
         },
       },
@@ -386,8 +389,8 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     itemLocalStateManager.setItemOpened(libraryId, true);
 
                     setPanelOpened(true);
-                    saveStateInHistory();
-                    clearFuture();
+
+                    activatePanel("libraries", "details", [libraryId]);
                   }
                 }}
                 onMouseEnter={() => {

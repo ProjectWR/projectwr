@@ -10,7 +10,7 @@ import {
   sortArrayByOrder,
   sortArrayWithPropsByOrder,
 } from "../../../utils/orderUtil";
-import LibraryManagerNode from "./LibraryManagerNode";
+import LibraryManagerNode from "../LibraryManager/LibraryManagerNode";
 import dataManagerSubdocs, {
   getArrayFromYDocMap,
 } from "../../../lib/dataSubDoc";

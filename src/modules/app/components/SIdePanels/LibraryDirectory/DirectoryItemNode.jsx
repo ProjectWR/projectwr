@@ -20,6 +20,7 @@ import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { ContextMenu } from "radix-ui";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
+import useMainPanel from "../../../hooks/useMainPanel";
 
 /**
  *
@@ -29,6 +30,7 @@ import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 const DirectoryItemNode = ({
   ytree,
   itemId,
+  breadcrumbs,
   focusedItemId,
   setFocusedItemId,
   isChildOfRoot = true,
@@ -52,6 +54,8 @@ const DirectoryItemNode = ({
 
   const setItemMode = appStore((state) => state.setItemMode);
   const itemMode = appStore((state) => state.itemMode);
+
+  const { activatePanel } = useMainPanel();
 
   const dndRef = useRef(null);
 
@@ -276,6 +280,8 @@ const DirectoryItemNode = ({
                 setPanelOpened(false);
               }
 
+              activatePanel("libraries", "details", breadcrumbs);
+
               saveStateInHistory();
               clearFuture();
             }
@@ -352,6 +358,8 @@ const DirectoryItemNode = ({
                 setPanelOpened(false);
               }
 
+              activatePanel("libraries", "details", breadcrumbs);
+
               saveStateInHistory();
               clearFuture();
             }
@@ -371,6 +379,8 @@ const DirectoryItemNode = ({
               if (deviceType === "mobile") {
                 setPanelOpened(false);
               }
+
+              activatePanel("libraries", "settings", breadcrumbs);
 
               saveStateInHistory();
               clearFuture();
@@ -425,6 +435,8 @@ const DirectoryItemNode = ({
     setItemMode,
     setPanelOpened,
     ytree,
+    activatePanel,
+    breadcrumbs,
   ]);
 
   return (
@@ -511,6 +523,8 @@ const DirectoryItemNode = ({
                       if (deviceType === "mobile") {
                         setPanelOpened(false);
                       }
+
+                      activatePanel("libraries", "details", breadcrumbs);
 
                       setPanelOpened(true);
                       saveStateInHistory();
@@ -623,6 +637,7 @@ const DirectoryItemNode = ({
                             <DirectoryItemNode
                               ytree={ytree}
                               itemId={childKey}
+                              breadcrumbs={[...breadcrumbs, childKey]}
                               setFocusedItemId={setFocusedItemId}
                               focusedItemId={focusedItemId}
                               isChildOfRoot={false}

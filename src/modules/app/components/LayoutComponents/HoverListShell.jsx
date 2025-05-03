@@ -9,7 +9,7 @@ export const HoverListShell = ({ children, condition }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-[100%] pt-1 px-1 h-fit w-full bg-appBackground rounded-md z-1000 border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
+          className="absolute top-[100%] pt-1 px-1 h-fit w-full bg-appBackground/95 backdrop-blur-[1px] rounded-md z-1000 border border-appLayoutInverseHover overflow-hidden shadow-2xl shadow-appLayoutGentleShadow flex items-center flex-col"
         >
           {children}
         </motion.div>

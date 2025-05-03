@@ -3,8 +3,10 @@
 - Replace all text boxes with a mini editor, ~~or atleast make them fit to content when its typed~~
 - ~~Remove history buttons in app shell~~
 - toolbar buttons active state
+- breadcrumbs
 - ~~upgraded to tailwind v4~~
 - make local state self correcting
+- templates should be stored as files
 - Add context menus where it is appropriate
 - Settings page needs to be finished
   - theme selector (currently dark or light mode)

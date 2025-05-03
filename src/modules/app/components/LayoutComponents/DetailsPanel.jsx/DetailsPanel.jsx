@@ -6,9 +6,6 @@ const DetailsPanel = ({ children, breadcrumbs }) => {
 
   return (
     <main className="w-full h-full flex flex-col items-center">
-      <section className="w-full h-fit py-[5px] px-3 flex items-center justify-start">
-        <Breadcrumbs breadcrumbs={breadcrumbs} />{" "}
-      </section>
       <section
         id="DetailsPanel"
         className={`h-full flex flex-col items-center justify-start 

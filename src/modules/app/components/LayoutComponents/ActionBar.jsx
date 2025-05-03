@@ -15,6 +15,7 @@ import {
   HoverListItem,
   HoverListShell,
 } from "./HoverListShell";
+import useMainPanel from "../../hooks/useMainPanel";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
@@ -37,6 +38,8 @@ const ActionBar = () => {
 
   const activity = appStore((state) => state.activity);
   const setActivity = appStore((state) => state.setActivity);
+
+  const { activatePanel } = useMainPanel();
 
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -144,11 +147,11 @@ const ActionBar = () => {
               if (activity !== "home") {
                 setActivity("home");
                 setPanelOpened(false);
-                saveStateInHistory();
-                clearFuture();
+
+                activatePanel("home", null, []);
               }
             }}
-            className={`${activity === "home" && "bg-appLayoutPressed"}`}
+            className={`${false && "bg-appLayoutPressed"}`}
           >
             <div className={`h-full w-actionBarButtonIconSize relative`}>
               <motion.span
@@ -189,11 +192,12 @@ const ActionBar = () => {
             onClick={() => {
               if (!(activity === "settings")) {
                 setActivity("settings");
-                saveStateInHistory();
-                clearFuture();
+                setPanelOpened(false);
+
+                activatePanel("settings", null, []);
               }
             }}
-            className={`${activity === "settings" && "bg-appLayoutPressed"}`}
+            className={`${false && "bg-appLayoutPressed"}`}
           >
             <div className={`h-full w-actionBarButtonIconSize relative`}>
               <motion.span

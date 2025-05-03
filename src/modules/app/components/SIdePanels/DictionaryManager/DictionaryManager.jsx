@@ -11,6 +11,7 @@ import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { equalityDeep } from "lib0/function";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import dictionaryManager from "../../../lib/dictionary";
+import useMainPanel from "../../../hooks/useMainPanel";
 
 const DictionaryManager = () => {
   console.log("Template Manager was rendered");
@@ -27,6 +28,8 @@ const DictionaryManager = () => {
 
   const dictionaryMode = appStore((state) => state.dictionaryMode);
   const setDictionaryMode = appStore((state) => state.setDictionaryMode);
+
+  const { activatePanel } = useMainPanel();
 
   const prevWordArrayRef = useRef(null);
 
@@ -67,8 +70,8 @@ const DictionaryManager = () => {
   const handleCreateWord = () => {
     if (dictionaryMode !== "create") {
       setDictionaryMode("create");
-      saveStateInHistory();
-      clearFuture();
+
+      activatePanel("dictionary", "create", []);
     }
   };
 
@@ -150,6 +153,7 @@ const DictionaryManagerNode = ({ word }) => {
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
+  const { activatePanel } = useMainPanel();
 
   return (
     <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg">
@@ -164,8 +168,8 @@ const DictionaryManagerNode = ({ word }) => {
             }
 
             setPanelOpened(true);
-            saveStateInHistory();
-            clearFuture();
+
+            activatePanel("dictionary", "details", [word]);
           }
         }}
       >
