@@ -41,6 +41,8 @@ import {
   HoverListShell,
   ListShell,
 } from "../LayoutComponents/HoverListShell";
+import useZoom from "../../hooks/useZoom";
+import { round } from "lib0/math";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -54,6 +56,10 @@ const SettingsPanel = () => {
   console.log("rendering settings panel");
   const { deviceType } = useDeviceType();
 
+  const zoom = appStore((state) => state.zoom);
+
+  const { zoomIn, zoomOut } = useZoom();
+
   const [isLoginOpen, loginModalControl] = useDisclosure(false);
 
   const user = appStore((state) => state.user);
@@ -62,20 +68,9 @@ const SettingsPanel = () => {
   const fonts = useFonts();
   console.log("fonts: ", fonts);
 
-  const defaultSettings = settingsStore((state) => state.defaultSettings);
   const settings = settingsStore((state) => state.settings);
 
-  const setSettings = settingsStore((state) => state.setSettings);
-
-  const [newSettings, setNewSettings] = useState(settings);
-  const [isSaveLoading, setIsSaveLoading] = useState(false);
-  const [isResetLoading, setIsResetLoading] = useState(false);
-
-  const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [isLogoutLoading, setIsLogoutLoading] = useState(false);
-
-  const [isEmailTouched, setIsEmailTouched] = useState(false);
-  const [isPasswordTouched, setIsPasswordTouched] = useState(false);
 
   const loginForm = useForm({
     mode: "uncontrolled",
@@ -92,92 +87,8 @@ const SettingsPanel = () => {
 
   const [handleLoginWithEmailAndPassword, isEmailLoading, loginError] =
     useLoadingCallback(async ({ email, password }) => {
-      setIsLoginLoading(true);
-
       await signInWithEmailAndPassword(getAuth(firebaseApp), email, password);
-      setIsLoginLoading(false);
     });
-
-  const [authProps, setAuthProps] = useState({
-    displayName: "",
-    email: "",
-    password: "",
-  });
-
-  const resetAuthProps = useCallback(() => {
-    setAuthProps({
-      displayName: "",
-      email: "",
-      password: "",
-    });
-  }, [setAuthProps]);
-
-  const isValidEmail = useMemo(() => {
-    return emailRegex.test(authProps.email);
-  }, [authProps]);
-
-  const passwordValidityStatus = useMemo(() => {
-    const pwd = authProps.password;
-    return {
-      uppercase: uppercaseRegex.test(pwd),
-      lowercase: lowercaseRegex.test(pwd),
-      digit: digitRegex.test(pwd),
-      specialChar: specialCharRegex.test(pwd),
-      minLength: minLengthRegex.test(pwd),
-      maxLength: maxLengthRegex.test(pwd),
-    };
-  }, [authProps]);
-
-  const passwordValidityStatusWithoutEmpty = useMemo(() => {
-    const pwd = authProps.password;
-    return (
-      uppercaseRegex.test(pwd) &&
-      lowercaseRegex.test(pwd) &&
-      digitRegex.test(pwd) &&
-      specialCharRegex.test(pwd) &&
-      minLengthRegex.test(pwd) &&
-      maxLengthRegex.test(pwd)
-    );
-  }, [authProps]);
-
-  const loginUser = useCallback(async () => {
-    const email = authProps.email;
-    const password = authProps.password;
-
-    try {
-      setIsLoginLoading(true);
-
-      if (!emailRegex.test(email)) {
-        throw new Error("Invalid Email");
-      }
-
-      const passwordStatus = await validatePassword(
-        getAuth(firebaseApp),
-        password
-      );
-
-      if (!passwordStatus.isValid) {
-        console.log(passwordStatus);
-        throw new Error("Invalid Password");
-      }
-    } catch {
-      resetAuthProps();
-      setIsEmailTouched(true);
-      setIsPasswordTouched(true);
-      setIsLoginLoading();
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(getAuth(firebaseApp), email, password);
-      setIsLoginLoading(false);
-    } catch {
-      resetAuthProps();
-      setIsEmailTouched(false);
-      setIsPasswordTouched(false);
-      setIsLoginLoading(false);
-    }
-  }, [authProps, resetAuthProps]);
 
   const logoutUser = useCallback(async () => {
     try {
@@ -189,58 +100,7 @@ const SettingsPanel = () => {
     }
   }, []);
 
-  const handleAuthPropChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "email") setIsEmailTouched(true);
-    if (name === "password") setIsPasswordTouched(true);
-    setAuthProps({
-      ...authProps,
-      [name]: value,
-    });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewSettings({
-      ...newSettings,
-      [name]: value,
-    });
-  };
-
-  const handleSave = () => {
-    setIsSaveLoading(true);
-    (async () => {
-      try {
-        await saveSettings(newSettings);
-        const loadedSettings = await loadSettings();
-
-        setSettings(loadedSettings);
-        setNewSettings(loadedSettings);
-      } catch (error) {
-        console.error("Error saving settings: ", error);
-      } finally {
-        setIsSaveLoading(false);
-      }
-    })();
-  };
-
-  const handleResetToDefault = () => {
-    setIsResetLoading(true);
-    (async () => {
-      try {
-        await saveSettings(defaultSettings);
-        const loadedSettings = await loadSettings();
-
-        setSettings(loadedSettings);
-
-        setNewSettings(loadedSettings);
-      } catch (error) {
-        console.error("Error saving settings: ", error);
-      } finally {
-        setIsResetLoading(false);
-      }
-    })();
-  };
+  console.log("settings: ", settings);
 
   return (
     <DetailsPanel>
@@ -376,24 +236,17 @@ const SettingsPanel = () => {
                       onClick={() => {
                         loginModalControl.open();
                       }}
-                      disabled={isLoginLoading}
                     >
                       <GrainyElement className="w-full h-full overflow-hidden flex items-center justify-center">
                         <motion.span
-                          key={
-                            isLoginLoading ? "loginLoading" : "loginNotLoading"
-                          }
+                          key={"loginButton"}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.2 }}
                           className="h-authButtonSize w-authButtonSize flex items-center justify-center"
                         >
-                          {!isLoginLoading ? (
-                            <span className="icon-[ep--right] h-full w-full"></span>
-                          ) : (
-                            <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize text-appBackground"></span>
-                          )}
+                          <span className="icon-[ep--right] h-full w-full"></span>
                         </motion.span>
                       </GrainyElement>
                     </button>
@@ -624,7 +477,7 @@ const SettingsPanel = () => {
         <div className="flex flex-row grow basis-0 gap-2 w-full box-border">
           <ListShell className={`h-full grow basis-0 min-w-0`}>
             <HoverListHeader>
-              <p>Fonts</p>
+              <p className="text-appLayoutText">Fonts</p>
               <span className="grow"></span>
               <button
                 onClick={async () => {
@@ -639,7 +492,7 @@ const SettingsPanel = () => {
             <HoverListBody>
               {fonts.map((font) => {
                 return (
-                  <HoverListItem key={font.id}>
+                  <HoverListItem disabled={true} key={font.id}>
                     <div className="w-full h-full flex items-center justify-between">
                       <p
                         style={{ fontFamily: font.family }}
@@ -653,7 +506,7 @@ const SettingsPanel = () => {
                           await fontManager.deleteFont(font.id);
                         }}
                       >
-                        <span className="icon-[ph--trash-thin] w-full h-full"></span>
+                        <span className="icon-[typcn--delete] w-full h-full"></span>
                       </button>
                     </div>
                   </HoverListItem>
@@ -672,28 +525,51 @@ const SettingsPanel = () => {
                 ${deviceType === "desktop" && "px-3"}
               `}
             >
-              <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelHeaderTwoFontSize text-neutral-300 order-1">
+              <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelHeaderTwoFontSize text-appLayoutText order-1">
                 Preferences
               </h1>
-
-              <div className="grow order-2"></div>
-              <button
-                className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
-                `}
-                onClick={handleResetToDefault}
-              >
-                <span className="icon-[material-symbols-light--reset-settings] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-              </button>
-              <button
-                className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
-                            `}
-                onClick={handleSave}
-              >
-                <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-              </button>
             </div>
             <div className="divider w-full px-3">
               <div className="w-full h-px bg-appLayoutBorder"></div>
+            </div>
+            <div
+              id="PreferencesBody"
+              className={`grow basis-0 w-full flex flex-col gap-2 items-center justify-start py-1 px-1                 ${
+                deviceType === "desktop" && "px-6"
+              }
+              `}
+            >
+              <div className="w-full h-[3rem] flex items-center justify-between">
+                <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
+                  Zoom
+                </h1>
+
+                <div className="ZoomContainer w-fit h-full px-1 flex flex-row items-center">
+                  <button
+                    className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center  border-appLayoutBorder hover:bg-appLayoutInverseHover"
+                    onClick={zoomIn}
+                  >
+                    <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
+                  </button>
+                  <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md select-none">
+                    {zoom && `${round(zoom * 100)}%`}
+                  </div>
+                  <button
+                    className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center    border-appLayoutBorder  hover:bg-appLayoutInverseHover"
+                    onClick={zoomOut}
+                  >
+                    <span className="icon-[material-symbols-light--remove-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="w-full h-[3rem] flex items-center justify-between">
+                <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
+                  Theme
+                </h1>
+
+                Dark
+              </div>
             </div>
           </div>
         </div>

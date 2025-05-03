@@ -6,7 +6,7 @@ static SETTINGS: OnceCell<Settings> = OnceCell::new();
 #[derive(serde::Serialize, serde::Deserialize, Clone)]
 struct Settings {
     theme: String,
-    uisize: String,
+    ui_scale: f64,
 }
 
 #[command]

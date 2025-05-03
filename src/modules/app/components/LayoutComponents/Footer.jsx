@@ -1,11 +1,14 @@
 import { round } from "lib0/math";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import useZoom from "../../hooks/useZoom";
+import { appStore } from "../../stores/appStore";
 
 const Footer = () => {
   const { deviceType } = useDeviceType();
 
-  const { scale, setScale, zoomIn, zoomOut } = useZoom();
+  const zoom = appStore((state) => state.zoom);
+
+  const { zoomIn, zoomOut } = useZoom();
 
   if (deviceType === "mobile") return;
 
@@ -21,9 +24,9 @@ const Footer = () => {
         >
           <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
         </button>
-        <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md select-none">{`${round(
-          scale * 100
-        )}%`}</div>
+        <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md select-none">
+          {zoom && `${round(zoom * 100)}%`}
+        </div>
         <button
           className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center    border-appLayoutBorder  hover:bg-appLayoutInverseHover"
           onClick={zoomOut}

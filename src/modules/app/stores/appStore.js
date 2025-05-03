@@ -34,10 +34,10 @@ export const appStore = create((set) => ({
   },
 
   zoom: 1,
-  setZoom: (zoom) => {
-    return set({ zoom: zoom });
-  },
-
+  setZoom: (nextZoom) =>
+    set((state) => ({
+      zoom: typeof nextZoom === 'function' ? nextZoom(state.zoom) : nextZoom,
+    })),
   activity: "home",
   setActivity: (activity) => {
     return set({ activity: activity });
@@ -93,5 +93,5 @@ export const appStore = create((set) => ({
     return set({ sidePanelWidth: sidePanelWidth })
   },
 
-  
+
 }));

@@ -48,7 +48,7 @@ import { useDebouncedCallback } from "@mantine/hooks";
 const WritingApp = () => {
   console.log("rendering writing app");
 
-  const zoom = useZoom();
+  const setZoom = appStore((state) => state.setZoom);
 
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -146,6 +146,10 @@ const WritingApp = () => {
 
         const defaultSettings = await loadDefaultSettings();
         setDefaultSettings(defaultSettings);
+
+        const settings = await loadSettings();
+        console.log("SETTINGS: ", settings["ui_scale"]);
+        setZoom(settings["ui_scale"]);
 
         setLoadingStage("Loading dictionaries and spellchecker");
 
@@ -433,7 +437,8 @@ const WritingApp = () => {
                               key="SidePanelMotionContainer"
                               id="SidePanelMotionContainer"
                               className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
-                                !isMd && "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
+                                !isMd &&
+                                "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
                               } `}
                               initial={{ opacity: 0, width: 0, minWidth: 0 }}
                               animate={{
@@ -485,10 +490,7 @@ const WritingApp = () => {
                 {deviceType === "mobile" && (
                   <>
                     <ActivityBar />
-                    <div
-                      id="MobileAppBodyContainer"
-                      className="relative grow"
-                    >
+                    <div id="MobileAppBodyContainer" className="relative grow">
                       <motion.div
                         id="SidePanelContainer"
                         className="absolute h-full order-2 w-full bg-appBackground z-50"
