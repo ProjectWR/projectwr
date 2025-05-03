@@ -16,6 +16,8 @@ import {
   HoverListShell,
 } from "./HoverListShell";
 import useMainPanel from "../../hooks/useMainPanel";
+import { YTree } from "yjs-orderedtree";
+import dataManagerSubdocs from "../../lib/dataSubDoc";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
@@ -65,7 +67,7 @@ const ActionBar = () => {
       <div
         data-tauri-drag-region
         id="actionBar"
-        className="w-full h-full flex justify-start items-center relative"
+        className="w-full h-full flex justify-between items-center relative"
       >
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-activityBarWidth flex items-center justify-center">
@@ -77,44 +79,6 @@ const ActionBar = () => {
             </div>
           </div>
 
-          <ActionButton
-            onClick={() => {
-              if (canGoBack) {
-                goBack();
-              }
-            }}
-            disabled={!canGoBack}
-          >
-            <div className="h-full w-actionBarButtonIconSize relative">
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: canGoBack ? 1 : 0.6 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="historyGoBack"
-                className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
-          </ActionButton>
-          <ActionButton
-            onClick={() => {
-              if (canGoForward) {
-                goForward();
-              }
-            }}
-            disabled={!canGoForward}
-          >
-            <div className="h-full w-actionBarButtonIconSize relative">
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: canGoForward ? 1 : 0.6 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="historyGoForward"
-                className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
-          </ActionButton>
           <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
             <div className="h-full w-actionBarButtonIconSize relative">
               <AnimatePresence mode="sync">
@@ -166,92 +130,111 @@ const ActionBar = () => {
           </ActionButton>
         </div>
 
-        {/* 
-        <div
-          className={`logo h-full w-actionBarLogoSize flex items-center justify-center font-serif pointer-events-none select-none`}
-        >
-          <span className="icon-[ph--flower-tulip-thin] h-actionBarLogoSize w-actionBarLogoSize"></span>
-        </div> */}
-
-        {/* <ActionButton
-          onClick={async () => {
-            console.log(await queryData("Untitled"));
-          }}
-        >
-          <span className="icon-[material-symbols-light--search] h-actionBarButtonIconSize w-actionBarButtonIconSize"></span>
-        </ActionButton> */}
-
-        <div className="absolute h-full w-fit top-0 left-1/2 -translate-x-1/2">
-          <SearchBar />
-        </div>
-
-        <div className="grow"></div>
-
-        <div className="h-full w-fit pl-1 flex items-center gap-1">
+        <div className="h-full w-fit flex">
           <ActionButton
             onClick={() => {
-              if (!(activity === "settings")) {
-                setActivity("settings");
-                setPanelOpened(false);
-
-                activatePanel("settings", null, []);
+              if (canGoBack) {
+                goBack();
               }
             }}
-            className={`${false && "bg-appLayoutPressed"}`}
+            disabled={!canGoBack}
           >
-            <div className={`h-full w-actionBarButtonIconSize relative`}>
+            <div className="h-full w-actionBarButtonIconSize relative">
               <motion.span
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: canGoBack ? 1 : 0.6 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.1 }}
-                key="settingsButton"
-                className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                key="historyGoBack"
+                className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
               ></motion.span>
             </div>
           </ActionButton>
+          <ActionButton
+            onClick={() => {
+              if (canGoForward) {
+                goForward();
+              }
+            }}
+            disabled={!canGoForward}
+          >
+            <div className="h-full w-actionBarButtonIconSize relative">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: canGoForward ? 1 : 0.6 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="historyGoForward"
+                className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </ActionButton>
+          <SearchBar />
         </div>
 
-        {/* <ActionButton>
-          <span className="icon-[line-md--question] h-actionBarButtonIconSize w-actionBarButtonIconSize"></span>
-        </ActionButton> */}
+        <div className="h-full w-fit flex items-center gap-1">
+          <div className="h-full w-fit pl-1 flex items-center gap-1">
+            <ActionButton
+              onClick={() => {
+                if (!(activity === "settings")) {
+                  setActivity("settings");
+                  setPanelOpened(false);
 
-        {deviceType !== "mobile" && (
-          <>
-            <WindowButton
-              className={``}
-              buttonContent={
-                <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-              }
-              onClick={() => {
-                appWindow.minimize();
+                  activatePanel("settings", null, []);
+                }
               }}
-            />
-            <WindowButton
-              className={``}
-              buttonContent={
-                isMaximized ? (
-                  <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                ) : (
-                  <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                )
-              }
-              onClick={() => {
-                appWindow.toggleMaximize();
-              }}
-            />
-            <WindowButton
-              destructive={true}
-              className={``}
-              buttonContent={
-                <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-              }
-              onClick={() => {
-                appWindow.close();
-              }}
-            />
-          </>
-        )}
+              className={`${false && "bg-appLayoutPressed"}`}
+            >
+              <div className={`h-full w-actionBarButtonIconSize relative`}>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="settingsButton"
+                  className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                ></motion.span>
+              </div>
+            </ActionButton>
+          </div>
+
+          {deviceType !== "mobile" && (
+            <>
+              <WindowButton
+                className={``}
+                buttonContent={
+                  <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                }
+                onClick={() => {
+                  appWindow.minimize();
+                }}
+              />
+              <WindowButton
+                className={``}
+                buttonContent={
+                  isMaximized ? (
+                    <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  ) : (
+                    <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  )
+                }
+                onClick={() => {
+                  appWindow.toggleMaximize();
+                }}
+              />
+              <WindowButton
+                destructive={true}
+                className={``}
+                buttonContent={
+                  <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                }
+                onClick={() => {
+                  appWindow.close();
+                }}
+              />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -309,6 +292,8 @@ const SearchBar = () => {
   const searchQuery = appStore((state) => state.searchQuery);
   const setSearchQuery = appStore((state) => state.setSearchQuery);
 
+  const { activatePanel } = useMainPanel();
+
   const [isFocused, setIsFocused] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
@@ -325,24 +310,8 @@ const SearchBar = () => {
     }
   }, [searchQuery]);
 
-  console.log(
-    "Sroted results: ",
-    searchResults.toSorted((a, b) => {
-      if (!itemLocalStateManager.getLastOpened(a.id)) {
-        return false;
-      } else if (!itemLocalStateManager.getLastOpened(b.id)) {
-        return true;
-      } else {
-        return (
-          itemLocalStateManager.getLastOpened(b.id) -
-          itemLocalStateManager.getLastOpened(a.id)
-        );
-      }
-    })
-  );
-
   return (
-    <div className="relative h-full py-1 w-actionBarSearchWidth ml-1 text-actionBarSearchTextSize">
+    <div className="relative h-full py-1 w-actionBarSearchWidth/2 lg:w-actionBarSearchWidth min-w-0 ml-1 text-actionBarSearchTextSize">
       <input
         name="searchQuery"
         ref={searchInputRef}
@@ -399,7 +368,12 @@ const SearchBar = () => {
                             setPanelOpened(false);
                           }
                           setPanelOpened(true);
+
+                          activatePanel("libraries", "details", [
+                            result.libraryId,
+                          ]);
                         }
+
                         if (
                           result.type === "book" ||
                           result.type === "paper" ||
@@ -423,6 +397,32 @@ const SearchBar = () => {
                           setPanelOpened(true);
                         }
                         setActivity("libraries");
+
+                        const ytree = new YTree(
+                          dataManagerSubdocs
+                            .getLibrary(result.libraryId)
+                            .getMap("library_directory")
+                        );
+
+                        const ancestors = [result.id];
+
+                        console.log("CHECKING IN SEARCH: ", ytree, ancestors);
+
+                        while (true) {
+                          try {
+                            ancestors.unshift(
+                              ytree.getNodeParentFromKey(ancestors[0])
+                            );
+                          } catch {
+                            break;
+                          }
+                        }
+
+                        ancestors.shift();
+
+                        ancestors.unshift(result.libraryId);
+
+                        activatePanel("libraries", "details", ancestors);
                       }}
                       className="w-full h-full flex items-center"
                     >

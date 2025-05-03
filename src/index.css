@@ -160,6 +160,7 @@
     --breadcrumbHeight: calc(var(--uiScale) * 2rem);
     --breadcrumbFontSize: calc(var(--uiScale) * 1rem);
     --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
+    --breadcrumbItemMaxWidth: calc(var(--uiScale) * 10rem);
 
     --scrollbarWidth: calc(
       var(--uiScale) *
@@ -455,6 +456,7 @@
   );
   --spacing-breadcrumbHeight: var(--breadcrumbHeight);
   --spacing-breadcrumbSeperatorSize: var(--breadcrumbSeperatorSize);
+  --spacing-breadcrumbItemMaxWidth: var(--breadcrumbItemMaxWidth);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);

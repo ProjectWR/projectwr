@@ -54,25 +54,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
           exit={deviceType !== "mobile" ? { width: 0 } : { height: 0 }}
           transition={{ duration: 0.1 }}
         >
-          {/* {deviceType === "desktop" && (
-            <ActivityButton
-              onClick={() => {
-                if (!(activity === "home" && !panelOpened)) {
-                  setActivity("home");
-                  setPanelOpened(false);
-                  saveStateInHistory();
-                  clearFuture();
-                }
-              }}
-              activity={activity}
-              selectedActivity={"home"}
-              deviceType={deviceType}
-              buttonContent={
-                <span className="icon-[material-symbols-light--home] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
-              }
-              flexValue={"grow-1"}
-            />
-          )} */}
           <ActivityButton
             onClick={() => {
               if (activity !== "libraries") {
@@ -99,7 +80,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               onClick={() => {
                 if (activity !== "home") {
                   setActivity("home");
-            
                 }
 
                 setPanelOpened(false);
@@ -117,7 +97,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             onClick={() => {
               if (activity !== "templates") {
                 setActivity("templates");
-                
               }
 
               setPanelOpened(true);
@@ -134,7 +113,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             onClick={() => {
               if (activity !== "dictionary") {
                 setActivity("dictionary");
-          
               }
 
               setPanelOpened(true);
@@ -152,7 +130,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               onClick={() => {
                 if (activity !== "settings") {
                   setActivity("settings");
-                  
                 }
 
                 setPanelOpened(false);

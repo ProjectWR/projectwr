@@ -2,6 +2,7 @@
 
 - Replace all text boxes with a mini editor, ~~or atleast make them fit to content when its typed~~
 - ~~Remove history buttons in app shell~~
+- ~~breadcrumbs~~
 - toolbar buttons active state
 - breadcrumbs
 - ~~upgraded to tailwind v4~~

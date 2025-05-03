@@ -185,8 +185,6 @@ const HomePanel = () => {
                             .getMap("library_directory")
                         );
 
-                        console.log(ytree._ymap.toJSON());
-
                         name = ytree
                           .getNodeValueFromKey(itemId)
                           .get("item_title");
@@ -260,8 +258,6 @@ const HomePanel = () => {
                                 ancestors.shift();
 
                                 ancestors.unshift(props.libraryId);
-
-                                console.log("ANCESTORS ", ancestors);
 
                                 activatePanel(
                                   "libraries",

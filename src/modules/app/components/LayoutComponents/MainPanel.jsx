@@ -35,11 +35,17 @@ const MainPanel = ({}) => {
   const mainPanelPreviousRef = useRef(null);
 
   const libraryId = appStore((state) => state.libraryId);
+  const setActivity = appStore((state) => state.setActivity);
+
+  const setLibraryId = appStore((state) => state.setLibraryId);
+
   const itemId = appStore((state) => state.itemId);
   const itemMode = appStore((state) => state.itemMode);
 
   const templateId = appStore((state) => state.templateId);
   const templateMode = appStore((state) => state.templateMode);
+
+  const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const dictionaryWord = appStore((state) => state.dictionaryWord);
   const dictionaryMode = appStore((state) => state.dictionaryMode);
@@ -89,7 +95,11 @@ const MainPanel = ({}) => {
       const breadcrumbValues = [
         {
           label: "Your Libraries",
-          action: () => {},
+          action: () => {
+            setActivity("libraries");
+            setPanelOpened(true);
+            setLibraryId("unselected");
+          },
         },
         {
           label: dataManagerSubdocs

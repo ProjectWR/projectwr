@@ -15,7 +15,8 @@ const DetailsPanel = ({ children, breadcrumbs }) => {
         style={
           deviceType === "desktop" && {
             width: `var(--detailsPanelWidth)`,
-            minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+            maxWidth: `100%`,
+            minWidth: `calc(var(--detailsPanelWidth) * 0.25)`,
           }
         }
       >
