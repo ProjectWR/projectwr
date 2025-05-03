@@ -67,7 +67,7 @@ const ActionBar = () => {
       <div
         data-tauri-drag-region
         id="actionBar"
-        className="w-full h-full flex justify-between items-center relative"
+        className="w-full h-full flex justify-between gap-4 items-center relative"
       >
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-activityBarWidth flex items-center justify-center">

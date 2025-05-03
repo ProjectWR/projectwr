@@ -29,6 +29,10 @@ import {
 import { useForm } from "@mantine/form";
 import { useLoadingCallback } from "react-loading-hook";
 import { GrainyElement } from "../../../design-system/GrainyElement";
+import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -231,37 +235,16 @@ const SettingsPanel = () => {
   };
 
   return (
-    <div
-      id="SettingsContainer"
-      className={`h-full flex flex-col items-center justify-start 
-      ${deviceType === "mobile" && "w-full"}   
-      ${deviceType === "desktop" && "mt-10"}       
-    `}
-      style={
-        deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-        }
-      }
-    >
-      <div
-        id="SettingsHeader"
-        className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-center justify-start py-1 px-1 
-          ${deviceType === "desktop" && "px-6"}
-        `}
-      >
+    <DetailsPanel>
+      <DetailsPanelHeader>
         <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-detailsPanelNameFontSize text-neutral-300 order-1">
           Settings
         </h1>
-      </div>
+      </DetailsPanelHeader>
 
-      <div className="divider w-full px-3">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
-      <div
-        id="SettingsBody"
-        className="h-fit w-full flex flex-col items-center justify-start py-4 gap-4 px-6"
-      >
+      <DetailsPanelDivider />
+
+      <DetailsPanelBody>
         <Modal
           opened={isLoginOpen}
           onClose={loginModalControl.close}
@@ -630,95 +613,97 @@ const SettingsPanel = () => {
           </AnimatePresence>
         </motion.div>
 
-        <motion.div
-          id="FontContainer"
-          animate={{
-            height: "var(--fontContainerHeight)",
-            paddingTop: "var(--detailsPanelPropLabelHeight)",
-          }}
-          className="w-full flex flex-row gap-2 rounded-lg border border-appLayoutBorder  relative"
-        >
-          <div
-            style={{
-              paddingLeft: `var(--scrollbarWidth)`,
+        <div className="flex flex-row gap-2 grow basis-0 w-full">
+          <motion.div
+            id="FontContainer"
+            animate={{
+              paddingTop: "var(--detailsPanelPropLabelHeight)",
             }}
-            className="h-full w-full py-2 overflow-y-scroll grid grid-cols-3 gap-2 auto-rows-(--fontItemHeight)"
+            className="h-full min-w-0 grow basis-0 flex flex-col gap-2 rounded-lg border border-appLayoutBorder  relative"
           >
-            {fonts.map((font) => {
-              return (
-                <div
-                  key={font.id}
-                  className={`flex items-center justify-between gap-2 pl-3 pr-1 rounded-md bg-appBackground border border-appLayoutBorder`}
-                >
-                  <p
-                    style={{ fontFamily: font.family }}
-                    className="text-detailsPanelPropsFontSize text-appLayoutTextMuted grow min-w-0 text-ellipsis text-nowrap overflow-hidden"
-                  >
-                    {font.family}
-                  </p>
-                  <button
-                    className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center`}
-                    onClick={async () => {
-                      await fontManager.deleteFont(font.id);
-                    }}
-                  >
-                    <span className="icon-[ph--trash-thin] w-full h-full"></span>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          <label
-            htmlFor="FontContainer"
-            className="absolute top-1 left-0 px-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit w-full flex items-center justify-between"
-          >
-            <p>Fonts</p>
-            <button
-              onClick={async () => {
-                await fontManager.addFont();
+            <div
+              style={{
+                paddingLeft: `var(--scrollbarWidth)`,
               }}
-              className="h-fontAddButtonSize w-fontAddButtonSize hover:bg-appLayoutInverseHover rounded-full"
+              className="h-full w-full py-2 overflow-y-scroll flex flex-col gap-2"
             >
-              <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
-            </button>
-          </label>
-        </motion.div>
-      </div>
+              {fonts.map((font) => {
+                return (
+                  <div
+                    key={font.id}
+                    className={`flex items-center justify-between gap-2 pl-3 pr-1 rounded-md bg-appBackground border border-appLayoutBorder`}
+                  >
+                    <p
+                      style={{ fontFamily: font.family }}
+                      className="text-detailsPanelPropsFontSize text-appLayoutTextMuted grow min-w-0 text-ellipsis text-nowrap overflow-hidden"
+                    >
+                      {font.family}
+                    </p>
+                    <button
+                      className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center`}
+                      onClick={async () => {
+                        await fontManager.deleteFont(font.id);
+                      }}
+                    >
+                      <span className="icon-[ph--trash-thin] w-full h-full"></span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+            <label
+              htmlFor="FontContainer"
+              className="absolute top-1 left-0 px-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit w-full flex items-center justify-between"
+            >
+              <p>Fonts</p>
+              <button
+                onClick={async () => {
+                  await fontManager.addFont();
+                }}
+                className="h-fontAddButtonSize w-fontAddButtonSize hover:bg-appLayoutInverseHover rounded-full"
+              >
+                <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
+              </button>
+            </label>
+          </motion.div>
 
-      <div
-        id="PreferencesContainer"
-        className="w-[96%] h-fit flex flex-col items-center"
-      >
-        <div
-          id="PreferencesHeader"
-          className={`h-detailsPanelHeaderTwoHeight min-h-detailsPanelHeaderTwoHeight w-full flex items-center justify-start py-1 px-1 
-          ${deviceType === "desktop" && "px-6"}
-        `}
-        >
-          <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-detailsPanelHeaderTwoFontSize text-neutral-300 order-1">
-            Preferences
-          </h1>
+          <div
+            id="PreferencesContainer"
+            className="grow basis-0 h-fit flex flex-col items-center"
+          >
+            <div
+              id="PreferencesHeader"
+              className={`h-detailsPanelHeaderTwoHeight min-h-detailsPanelHeaderTwoHeight w-full flex items-center justify-start py-1 px-1 
+                ${deviceType === "desktop" && "px-3"}
+              `}
+            >
+              <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelHeaderTwoFontSize text-neutral-300 order-1">
+                Preferences
+              </h1>
 
-          <div className="grow order-2"></div>
-          <button
-            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
- `}
-            onClick={handleResetToDefault}
-          >
-            <span className="icon-[material-symbols-light--reset-settings] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-          </button>
-          <button
-            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
- `}
-            onClick={handleSave}
-          >
-            <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-          </button>
+              <div className="grow order-2"></div>
+              <button
+                className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mr-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-3
+                `}
+                onClick={handleResetToDefault}
+              >
+                <span className="icon-[material-symbols-light--reset-settings] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+              </button>
+              <button
+                className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center order-4
+                            `}
+                onClick={handleSave}
+              >
+                <span className="icon-[material-symbols-light--check-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+              </button>
+            </div>
+            <div className="divider w-full px-3">
+              <div className="w-full h-px bg-appLayoutBorder"></div>
+            </div>
+          </div>
         </div>
-
-        <div className="w-[93.5%] h-px bg-appLayoutBorder"></div>
-      </div>
-    </div>
+      </DetailsPanelBody>
+    </DetailsPanel>
   );
 };
 
