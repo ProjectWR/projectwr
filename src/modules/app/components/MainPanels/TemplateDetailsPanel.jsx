@@ -28,10 +28,6 @@ const TemplateDetailsPanel = ({ templateId }) => {
 
   console.log("TemplateDetailsPanel rendering: ", templateId);
 
-  const [fakeInput, setFakeInput] = useState({
-    fakeInput: "",
-  });
-
   const setTemplateId = appStore((state) => state.setTemplateId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
@@ -54,11 +50,13 @@ const TemplateDetailsPanel = ({ templateId }) => {
     [newTemplate]
   );
 
+  const [templateValid, setTemplateValid] = useState(true);
+
   const handleSave = useCallback(() => {
-    if (wasTemplateChanged) {
+    if (templateValid && wasTemplateChanged) {
       templateManager.updateTemplate(templateId, newTemplate);
     }
-  }, [newTemplate, templateId, wasTemplateChanged]);
+  }, [newTemplate, templateId, wasTemplateChanged, templateValid]);
 
   useEffect(() => {
     const callback = () => {
@@ -120,7 +118,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
         />
 
         <AnimatePresence>
-          {wasTemplateChanged && (
+          {templateValid && wasTemplateChanged && (
             <motion.button
               type="button"
               onClick={handleSave}
@@ -171,9 +169,7 @@ const TemplateDetailsPanel = ({ templateId }) => {
             <TemplateContentEditor
               newTemplate={newTemplate}
               setNewTemplate={setNewTemplate}
-              handleSave={() => {
-                templateManager.updateTemplate(templateId, newTemplate);
-              }}
+              setTemplateValid={setTemplateValid}
             />
           </div>
         </div>

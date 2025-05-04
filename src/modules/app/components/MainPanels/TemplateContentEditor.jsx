@@ -3,7 +3,12 @@ import { ChromePicker, SketchPicker } from "react-color";
 import useOuterClick from "../../../design-system/useOuterClick";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
-import { desktopPaperConfig, desktopToolbarConfig, mobilePaperConfig, mobileToolbarConfig } from "./Templates/configs";
+import {
+  desktopPaperConfig,
+  desktopToolbarConfig,
+  mobilePaperConfig,
+  mobileToolbarConfig,
+} from "./Templates/configs";
 
 // Add this helper component (place it at the top of GroupEditor, before the return statement)
 const NumberOrPercentInput = ({ value, onChange }) => {
@@ -34,11 +39,10 @@ const NumberOrPercentInput = ({ value, onChange }) => {
   };
 
   return (
-    <div className="flex gap-2 items-center ">
+    <div className="h-full flex gap-2 items-center ">
       <input
         id="rem-input"
         type="number"
-
         value={remValue}
         onChange={handleRemChange}
         min="0"
@@ -46,7 +50,7 @@ const NumberOrPercentInput = ({ value, onChange }) => {
           setActive("rem");
         }}
         placeholder="rem"
-        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
+        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[4rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
           active !== "rem"
             ? "bg-appBackgroundAccent text-appLayoutBorder"
             : "bg-appBackground"
@@ -63,7 +67,7 @@ const NumberOrPercentInput = ({ value, onChange }) => {
           setActive("%");
         }}
         placeholder="%"
-        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
+        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
           active !== "%"
             ? "bg-appBackgroundAccent text-appLayoutBorder"
             : "bg-appBackground"
@@ -76,13 +80,32 @@ const NumberOrPercentInput = ({ value, onChange }) => {
 // ─── GROUP EDITOR ───────────────────────────────────────────────
 // Renders a series of input fields (or a ChromePicker for color fields)
 // with a floating label and inline error display.
-function GroupEditor({ config, data, onChange }) {
+function GroupEditor({ config, data, onChange, setGroupValid }) {
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    console.log("ENTRIES ERRORS: ", Object.values(errors));
+    if (Object.values(errors).join("").length === 0) {
+      console.log("GROUP IS TRUE", config);
+      setGroupValid(true);
+    } else {
+      console.log("GROUP IS TRUE", config);
+
+      setGroupValid(false);
+    }
+  }, [errors, setGroupValid, config]);
 
   const validateField = (key, value, fieldConfig) => {
     let error = "";
+    if (fieldConfig.type === "numberOrPercent") {
+      const numberValue = String(value).replace(/(rem|%)/, "");
+      if (!value || numberValue <= 0) {
+        error = "Must be a valid number";
+      }
+    }
+
     if (fieldConfig.type === "number") {
-      if (value === "" || isNaN(Number(value))) {
+      if (value === "" || isNaN(Number(value)) || Number(value) <= 0) {
         error = "Must be a valid number";
       }
     }
@@ -118,7 +141,7 @@ function GroupEditor({ config, data, onChange }) {
                 <div className="h-px grow bg-appLayoutBorder"></div>
 
                 <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
-                  <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
+                  <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
                     <ColorPicker
                       color={data[key]}
                       onChangeComplete={(color) => handleChange(key, color)}
@@ -143,19 +166,28 @@ function GroupEditor({ config, data, onChange }) {
 
                 <div className="h-px grow bg-appLayoutBorder"></div>
 
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
                 <div className="w-fit h-full">
                   <input
                     id={`input-${key}`}
                     type={fieldConfig.type === "number" ? "number" : "text"}
                     value={data[key]}
                     onChange={(e) => handleChange(key, e.target.value)}
-                    className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[6rem] bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+                    className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
                   />
                 </div>
-
-                {errors[key] && (
-                  <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
-                )}
               </div>
             </div>
           );
@@ -174,6 +206,18 @@ function GroupEditor({ config, data, onChange }) {
                 </label>
 
                 <div className="h-px grow bg-appLayoutBorder"></div>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
 
                 <div className="w-fit h-full flex items-center">
                   <NumberOrPercentInput
@@ -181,10 +225,6 @@ function GroupEditor({ config, data, onChange }) {
                     onChange={(val) => handleChange(key, val)}
                   />
                 </div>
-
-                {errors[key] && (
-                  <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
-                )}
               </div>
             </div>
           );
@@ -205,17 +245,48 @@ function GroupEditor({ config, data, onChange }) {
  * - setNewTemplate: function to update the template object
  * - handleSave: callback to be called when saving changes
  */
-const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
+const TemplateContentEditor = ({
+  newTemplate,
+  setNewTemplate,
+  setTemplateValid,
+}) => {
   // For convenience, work directly with the nested template_content.
   const content = newTemplate.template_content;
 
-  // // Collapsible section states.
-  // const [desktopPaperOpen, setDesktopPaperOpen] = useState(false);
-  // const [desktopToolbarOpen, setDesktopToolbarOpen] = useState(false);
-  // const [mobilePaperOpen, setMobilePaperOpen] = useState(false);
-  // const [mobileToolbarOpen, setMobileToolbarOpen] = useState(false);
-
   const [groupSelected, setGroupSelected] = useState("desktopPaper");
+
+  const [desktopPaperValid, setDesktopPaperValid] = useState(true);
+  const [desktopToolbarValid, setDesktopToolbarValid] = useState(true);
+
+  const [mobilePaperValid, setMobilePaperValid] = useState(true);
+  const [mobileToolbarValid, setMobileToolbarValid] = useState(true);
+
+  useEffect(() => {
+    console.log(
+      "VALIDS: ",
+      desktopPaperValid,
+      desktopToolbarValid,
+      mobilePaperValid,
+      mobileToolbarValid
+    );
+    if (
+      desktopPaperValid &&
+      desktopToolbarValid &&
+      mobilePaperValid &&
+      mobileToolbarValid
+    ) {
+      setTemplateValid(true);
+    } else {
+      setTemplateValid(false);
+    }
+  }, [
+    newTemplate,
+    setTemplateValid,
+    desktopPaperValid,
+    desktopToolbarValid,
+    mobilePaperValid,
+    mobileToolbarValid,
+  ]);
 
   // Update a subgroup in template_content by calling setNewTemplate.
   const handleGroupChange = useCallback(
@@ -239,6 +310,7 @@ const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) =>
     if (groupSelected === "desktopPaper") {
       return (
         <GroupEditor
+          setGroupValid={setDesktopPaperValid}
           config={desktopPaperConfig}
           data={content.desktopDefaultPreferences.paperPreferences}
           onChange={(newData) =>
@@ -253,6 +325,7 @@ const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) =>
     } else if (groupSelected === "desktopToolbar") {
       return (
         <GroupEditor
+          setGroupValid={setDesktopToolbarValid}
           config={desktopToolbarConfig}
           data={content.desktopDefaultPreferences.toolbarPreferences}
           onChange={(newData) =>
@@ -267,6 +340,7 @@ const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) =>
     } else if (groupSelected === "mobilePaper") {
       return (
         <GroupEditor
+          setGroupValid={setMobilePaperValid}
           config={mobilePaperConfig}
           data={content.mobileDefaultPreferences.paperPreferences}
           onChange={(newData) =>
@@ -281,6 +355,7 @@ const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) =>
     } else if (groupSelected === "mobileToolbar") {
       return (
         <GroupEditor
+          setGroupValid={setMobileToolbarValid}
           config={mobileToolbarConfig}
           data={content.mobileDefaultPreferences.toolbarPreferences}
           onChange={(newData) =>
@@ -310,7 +385,7 @@ const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) =>
         id="TCEHeader"
         className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-1"
       >
-        <div className="TCEDevice bg-appBackground grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-transparent backdrop-blur-xl shadow-md shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Desktop
           </div>
@@ -349,7 +424,7 @@ const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) =>
             </button>
           </div>
         </div>
-        <div className="TCEDevice bg-appBackground grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-transparent backdrop-blur-xl shadow-md shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Mobile
           </div>

@@ -229,13 +229,14 @@
 
     --templateDetailsPanelDeviceHeaderHeight: calc(var(--uiScale) * 4rem);
     --templateDetailsPanelSectionHeaderHeight: calc(var(--uiScale) * 4rem);
-    --templateDetailsPreferenceInputHeight: calc(var(--uiScale) * 2.7rem);
+    --templateDetailsPreferenceInputHeight: calc(var(--uiScale) * 2rem);
     --templateDetailsPreferenceLabelWidth: calc(var(--uiScale) * 15rem);
     --templateDetailsPreferencesColorInputSize: calc(var(--uiScale) * 1.8rem);
     --templateDetailsPanelPreferenceFontSize: calc(var(--uiScale) * 1.2rem);
     --templateDetailsPanelPreferenceInputFontSize: calc(
-      var(--uiScale) * 1.2rem
+      var(--uiScale) * 1rem
     );
+    --templateDetailsPreferenceInputWidth: calc(var(--uiScale) * 4rem);
 
     --loadingSpinnerSize: calc(var(--uiScale) * 12rem);
 
@@ -462,6 +463,9 @@
   --spacing-breadcrumbItemMaxWidth: var(--breadcrumbItemMaxWidth);
   --spacing-preferencesItemHeight: var(--preferencesItemHeight);
   --spacing-preferencesItemButtonSize: var(--preferencesItemButtonSize);
+  --spacing-templateDetailsPreferenceInputWidth: var(
+    --templateDetailsPreferenceInputWidth
+  );
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);

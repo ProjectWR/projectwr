@@ -32,6 +32,9 @@ export default {
     },
     {
       pattern: /grow-*/,
+    },
+    {
+      pattern: /backdrop-*/
     }
   ],
   variants: {
