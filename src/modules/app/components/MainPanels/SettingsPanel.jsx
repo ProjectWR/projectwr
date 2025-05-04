@@ -546,7 +546,7 @@ const SettingsPanel = () => {
 
                 <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
 
-                <div className="ZoomContainer w-fit h-full flex flex-row items-center">
+                <div className="ZoomContainer w-fit h-full flex gap-2 flex-row items-center">
                   <button
                     className="zoomInButton w-preferencesItemButtonSize h-preferencesItemButtonSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
                     onClick={zoomIn}
