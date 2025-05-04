@@ -30,11 +30,6 @@ const useStoreHistory = () => {
   const [canGoForward, setCanGoForward] = useState(false);
 
   useEffect(() => {
-    console.log(
-      "State History past and future length check: ",
-      past,
-      future
-    );
     if (past.length > 0) setCanGoBack(true);
     else setCanGoBack(false);
     if (future.length > 0) setCanGoForward(true);

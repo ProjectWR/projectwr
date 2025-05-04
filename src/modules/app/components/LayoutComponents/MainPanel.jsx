@@ -207,8 +207,9 @@ const MainPanel = ({}) => {
             return (
               <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
                 <PaperSettingsPanel
-                  ytree={libraryYTreeRef}
+                  ytree={libraryYTree}
                   paperId={youngestId}
+                  key={youngestId}
                 />
               </PrependBreadcrumbs>
             );

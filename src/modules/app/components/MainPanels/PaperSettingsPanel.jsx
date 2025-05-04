@@ -19,6 +19,7 @@ import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPan
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import {
   HoverListBody,
+  HoverListButton,
   HoverListDivider,
   HoverListFooter,
   HoverListHeader,
@@ -172,6 +173,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
       className="relative mb-4 w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight rounded-md flex flex-col items-center"
     >
       <div className="w-[98.5%] h-px bg-appLayoutBorder"></div>
+
       <button
         id="EditorPicker"
         className="w-full h-templateDetailsPreferenceInputHeight flex justify-start items-center text-detailsPanelPropsFontSize px-3 rounded-b-md bg-appBackground hover:bg-appLayoutInverseHover"
@@ -195,20 +197,18 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
           {Object.entries(templates).length > 0 &&
             Object.entries(templates).map(([templateId, template]) => {
               return (
-                <HoverListItem key={templateId}>
-                  <button
-                    onClick={() => {
-                      itemLocalStateManager.setPaperEditorTemplate(
-                        paperId,
-                        templateId
-                      );
-                      setPickingEditorStyle(false);
-                    }}
-                    className="w-full h-full flex items-center"
-                  >
-                    {template.template_name}
-                  </button>
-                </HoverListItem>
+                <HoverListButton
+                  key={templateId}
+                  onClick={() => {
+                    itemLocalStateManager.setPaperEditorTemplate(
+                      paperId,
+                      templateId
+                    );
+                    setPickingEditorStyle(false);
+                  }}
+                >
+                  {template.template_name}
+                </HoverListButton>
               );
             })}
 

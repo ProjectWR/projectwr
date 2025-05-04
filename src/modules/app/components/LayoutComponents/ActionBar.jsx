@@ -9,6 +9,7 @@ import { max } from "lib0/math";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import {
   HoverListBody,
+  HoverListButton,
   HoverListDivider,
   HoverListFooter,
   HoverListHeader,
@@ -170,7 +171,7 @@ const ActionBar = () => {
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
             <ActionButton
-              onClick={() => {  
+              onClick={() => {
                 activatePanel("settings", null, []);
               }}
               className={`${false && "bg-appLayoutPressed"}`}
@@ -348,82 +349,82 @@ const SearchBar = () => {
               })
               .map((result) => {
                 return (
-                  <HoverListItem key={result.id}>
-                    <button
-                      onClick={() => {
-                        if (result.library_name) {
-                          setLibraryId(result.libraryId);
-                          setItemId("unselected");
-                          if (deviceType === "mobile") {
-                            setPanelOpened(false);
-                          }
-                          setPanelOpened(true);
+                  <HoverListButton
+                    key={result.id}
+                    onClick={() => {
+                      console.log("ONCLICK RESULT", result);
 
-                          activatePanel("libraries", "details", [
-                            result.libraryId,
-                          ]);
+                      if (result.library_name) {
+                        setLibraryId(result.libraryId);
+                        setItemId("unselected");
+                        if (deviceType === "mobile") {
+                          setPanelOpened(false);
                         }
+                        setPanelOpened(true);
 
-                        if (
-                          result.type === "book" ||
-                          result.type === "paper" ||
-                          result.type === "section"
-                        ) {
-                          itemLocalStateManager.setItemAndParentsOpened(
-                            result.libraryId,
-                            result.id
-                          );
-                          console.log(
-                            "Opening from search: ",
-                            result.libraryId,
-                            result.id
-                          );
-                          setLibraryId(result.libraryId);
-                          setItemId(result.id);
-                          setItemMode("details");
-                          if (deviceType === "mobile") {
-                            setPanelOpened(false);
-                          }
-                          setPanelOpened(true);
-                        }
-                        setActivity("libraries");
+                        activatePanel("libraries", "details", [
+                          result.libraryId,
+                        ]);
+                      }
 
-                        const ytree = new YTree(
-                          dataManagerSubdocs
-                            .getLibrary(result.libraryId)
-                            .getMap("library_directory")
+                      if (
+                        result.type === "book" ||
+                        result.type === "paper" ||
+                        result.type === "section"
+                      ) {
+                        itemLocalStateManager.setItemAndParentsOpened(
+                          result.libraryId,
+                          result.id
                         );
-
-                        const ancestors = [result.id];
-
-                        console.log("CHECKING IN SEARCH: ", ytree, ancestors);
-
-                        while (true) {
-                          try {
-                            ancestors.unshift(
-                              ytree.getNodeParentFromKey(ancestors[0])
-                            );
-                          } catch {
-                            break;
-                          }
+                        console.log(
+                          "Opening from search: ",
+                          result.libraryId,
+                          result.id
+                        );
+                        setLibraryId(result.libraryId);
+                        setItemId(result.id);
+                        setItemMode("details");
+                        if (deviceType === "mobile") {
+                          setPanelOpened(false);
                         }
+                        setPanelOpened(true);
+                      }
+                      setActivity("libraries");
 
-                        ancestors.shift();
+                      const ytree = new YTree(
+                        dataManagerSubdocs
+                          .getLibrary(result.libraryId)
+                          .getMap("library_directory")
+                      );
 
-                        ancestors.unshift(result.libraryId);
+                      const ancestors = [result.id];
 
-                        activatePanel("libraries", "details", ancestors);
-                      }}
-                      className="w-full h-full flex items-center"
-                    >
-                      <span> {result.library_name || result.item_title}</span>
-                      <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
-                        {new Date(
-                          itemLocalStateManager.getLastOpened(result.id)
-                        ).toLocaleString()}
-                      </span>
-                    </button>
-                  </HoverListItem>
+                      console.log("CHECKING IN SEARCH: ", ytree, ancestors);
+
+                      while (true) {
+                        try {
+                          ancestors.unshift(
+                            ytree.getNodeParentFromKey(ancestors[0])
+                          );
+                        } catch {
+                          break;
+                        }
+                      }
+
+                      ancestors.shift();
+
+                      ancestors.unshift(result.libraryId);
+
+                      activatePanel("libraries", "details", ancestors);
+                    }}
+                  >
+                    <span> {result.library_name || result.item_title}</span>
+                    <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
+                      {new Date(
+                        itemLocalStateManager.getLastOpened(result.id)
+                      ).toLocaleString()}
+                    </span>
+                  </HoverListButton>
                 );
               })}
 

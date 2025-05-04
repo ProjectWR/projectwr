@@ -85,6 +85,27 @@ export const HoverListItem = ({ children, disabled }) => {
   );
 };
 
+export const HoverListButton = ({ children, disabled, onClick }) => {
+  return (
+    <motion.button
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+      style={{
+        paddingTop: `var(--scrollbarWidth)`,
+        paddingBottom: `var(--scrollbarWidth)`,
+      }}
+      className={`px-3 h-actionBarResultNodeHeight w-full hover:bg-appLayoutInverseHover ${
+        disabled && "hover:bg-transparent text-appLayoutTextMuted"
+      } rounded-md flex items-center justify-between `}
+      onClick={onClick}
+    >
+      {children}
+    </motion.button>
+  );
+};
+
 export const HoverListFooter = () => {
   return (
     <div className="w-full px-2 h-actionBarSearchFooterHeight text-actionBarResultHeaderTextSize flex items-center"></div>
