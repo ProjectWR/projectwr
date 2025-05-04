@@ -116,6 +116,8 @@ const TemplateDetailsPanel = ({ templateId }) => {
     activatePanel("home", "", []);
 
     await templateManager.renameTemplate(templateId, templateName);
+
+    activatePanel("templates", "details", [templateName]);
   }, [activatePanel, templateId, templateName]);
 
   return (
