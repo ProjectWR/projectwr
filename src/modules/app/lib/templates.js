@@ -1,4 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
+import { appDataDir, join } from '@tauri-apps/api/path';
+import { mkdir, exists, readDir, readTextFile, remove, rename, writeTextFile } from '@tauri-apps/plugin-fs';
 
 let instance;
 
@@ -8,75 +9,204 @@ class TemplateManager {
       throw new Error("TemplateManager is a singleton class. Use getInstance() instead.");
     }
 
-    this.callbacks = new Set(); // Array to store callbacks
-    this.storageKey = 'templates'; // Key for localStorage
+    this.callbacks = new Set();
+    this.templatesDirName = 'templates';
+    this.templatesDirPath = '';
     instance = this;
   }
 
-  // Add a callback
+  async initialize() {
+    this.templatesDirPath = await join(await appDataDir(), this.templatesDirName);
+
+    // Ensure templates directory exists
+    if (!await exists(this.templatesDirPath)) {
+      await mkdir(this.templatesDirPath, { recursive: true });
+    }
+  }
+
   addCallback(callback) {
     this.callbacks.add(callback);
   }
 
-  // Remove a callback
   removeCallback(callback) {
-    this.callbacks.delete(callback)
+    this.callbacks.delete(callback);
   }
 
-  // Trigger all registered callbacks
   _triggerCallbacks(eventType, template) {
     this.callbacks.forEach(callback => callback(eventType, template));
   }
 
-  // Get all templates from localStorage
-  getTemplates() {
-    const templates = localStorage.getItem(this.storageKey);
-    return templates ? JSON.parse(templates) : {};
-  }
+  async getTemplate(templateId) {
+    try {
+      const entries = await readDir(this.templatesDirPath);
 
-  // Save templates to localStorage
-  _saveTemplates(templates) {
-    localStorage.setItem(this.storageKey, JSON.stringify(templates));
-  }
+      console.log("ENTRIES: ", entries);
 
-  // Create a new template
-  createTemplate(templateProps) {
-    const templates = this.getTemplates();
-    const uuid = uuidv4(); // Generate a UUID
-    templates[uuid] = { ...templateProps, template_id: uuid }; // Add the template with its UUID
-    this._saveTemplates(templates); // Save to localStorage
-    this._triggerCallbacks('added', templates[uuid]); // Notify callbacks
-    return uuid;
-  }
+      try {
+        const stylePath = await join(this.templatesDirPath, templateId, 'style.json');
+        const content = await readTextFile(stylePath);
+        const templateData = JSON.parse(content);
 
-  // Delete a template by UUID
-  deleteTemplate(uuid) {
-    const templates = this.getTemplates();
-    if (templates[uuid]) {
-      const deletedTemplate = templates[uuid];
-      delete templates[uuid]; // Remove the template
-      this._saveTemplates(templates); // Save to localStorage
-      this._triggerCallbacks('removed', deletedTemplate); // Notify callbacks
+        console.log("TEMPLATE DATA", templateData);
 
+        return templateData;
+
+      } catch (e) {
+        console.error(`Error reading template ${entry.name}:`, e);
+      }
+
+
+    } catch (e) {
+      console.error('Error reading templates directory:', e);
+      return {};
     }
-    throw new Error(`[template] Template with UUID ${uuid} not found`);
   }
 
-  // Update a template by UUID
-  updateTemplate(uuid, updatedProps) {
-    const templates = this.getTemplates();
-    console.log(templates);
-    if (templates[uuid]) {
-      templates[uuid] = { ...templates[uuid], ...updatedProps }; // Update the template
-      this._saveTemplates(templates); // Save to localStorage
-      this._triggerCallbacks('updated', templates[uuid]); // Notify callbacks
+  async getTemplates() {
+    const templates = {};
+
+    try {
+      const entries = await readDir(this.templatesDirPath);
+
+      console.log("ENTRIES: ", entries);
+
+      for (const entry of entries) {
+        console.log("ENTRY: ", entry);
+        if (entry?.isDirectory) { // Check if it's a directory
+          try {
+            const stylePath = await join(this.templatesDirPath, entry.name, 'style.json');
+            const content = await readTextFile(stylePath);
+            const templateData = JSON.parse(content);
+
+            // Ensure template_id matches folder name
+            templates[entry.name] = {
+              ...templateData,
+              template_id: entry.name
+            };
+          } catch (e) {
+            console.error(`Error reading template ${entry.name}:`, e);
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Error reading templates directory:', e);
+      return {};
     }
-    else {
-      throw new Error(`[template] Template with UUID ${uuid} not found`);
+
+    return templates;
+  }
+
+  async createTemplate(templateName, templateProps) {
+    const templatePath = await join(this.templatesDirPath, templateName);
+
+    try {
+      if (await exists(templatePath)) {
+        throw new Error(`Template "${templateName}" already exists`);
+      }
+
+      await mkdir(templatePath, { recursive: true });
+
+      const templateData = {
+        ...templateProps,
+        template_id: templateName
+      };
+
+      const stylePath = await join(templatePath, 'style.json');
+      await writeTextFile(stylePath, JSON.stringify(templateData));
+
+      this._triggerCallbacks('added', templateData);
+      return templateName;
+    } catch (e) {
+      console.error('Error creating template:', e);
+      throw e;
+    }
+  }
+
+  async deleteTemplate(templateName) {
+    const templatePath = await join(this.templatesDirPath, templateName);
+
+    try {
+      if (!await exists(templatePath)) {
+        throw new Error(`Template "${templateName}" not found`);
+      }
+
+      const stylePath = await join(templatePath, 'style.json');
+      const content = await readTextFile(stylePath);
+      const deletedTemplate = JSON.parse(content);
+
+      await remove(templatePath, { recursive: true });
+
+      this._triggerCallbacks('removed', deletedTemplate);
+    } catch (e) {
+      console.error('Error deleting template:', e);
+      throw e;
+    }
+  }
+
+  async updateTemplate(templateName, updatedProps) {
+    try {
+      const templatePath = await join(this.templatesDirPath, templateName);
+      const stylePath = await join(templatePath, 'style.json');
+
+      if (!await exists(stylePath)) {
+        throw new Error(`Template "${templateName}" not found`);
+      }
+
+      const content = await readTextFile(stylePath);
+      const existingData = JSON.parse(content);
+      const newData = {
+        ...existingData,
+        ...updatedProps,
+        template_id: templateName
+      };
+
+      await writeTextFile(stylePath, JSON.stringify(newData));
+      this._triggerCallbacks('updated', newData);
+    } catch (e) {
+      console.error('Error updating template:', e);
+      throw e;
+    }
+  }
+
+  async renameTemplate(oldName, newName) {
+    const oldPath = await join(this.templatesDirPath, oldName);
+    const newPath = await join(this.templatesDirPath, newName);
+
+    try {
+      if (!await exists(oldPath)) {
+        throw new Error(`Template "${oldName}" not found`);
+      }
+
+      if (await exists(newPath)) {
+        throw new Error(`Template "${newName}" already exists`);
+      }
+
+      // Read existing data
+      const stylePath = await join(oldPath, 'style.json');
+      const content = await readTextFile(stylePath);
+      const templateData = JSON.parse(content);
+
+      // Rename directory
+      await rename(oldPath, newPath);
+
+      // Update template_id in JSON
+      const updatedData = { ...templateData, template_id: newName };
+      const newStylePath = await join(newPath, 'style.json');
+      await writeTextFile(newStylePath, JSON.stringify(updatedData));
+
+      this._triggerCallbacks('removed', templateData);
+      this._triggerCallbacks('added', updatedData);
+
+      return newName;
+    } catch (e) {
+      console.error('Error renaming template:', e);
+      throw e;
     }
   }
 }
 
-const templateManager = Object.freeze(new TemplateManager());
+// Initialize the manager immediately
+const templateManager = new TemplateManager();
+templateManager.initialize(); // Start initialization but don't wait here
 
 export default templateManager;

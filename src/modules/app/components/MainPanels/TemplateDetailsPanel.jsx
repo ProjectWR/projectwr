@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../stores/appStore";
 import TipTapEditor from "../../../editor/TipTapEditor/TipTapEditor";
 import templateManager from "../../lib/templates";
-import { equalityDeep } from "lib0/function";
+import { equalityDeep, equalityFlat } from "lib0/function";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TemplateContentEditor from "./TemplateContentEditor";
 import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
@@ -18,6 +18,7 @@ import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPane
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import useMainPanel from "../../hooks/useMainPanel";
 
 /**
  * TemplateDetailsPanel component for viewing and editing templates.
@@ -27,28 +28,28 @@ import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/Deta
 const TemplateDetailsPanel = ({ templateId }) => {
   const { deviceType } = useDeviceType();
 
+  const { activatePanel } = useMainPanel();
+
   console.log("TemplateDetailsPanel rendering: ", templateId);
 
   const setTemplateId = appStore((state) => state.setTemplateId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-  if (templateManager.getTemplates()[templateId] === undefined) {
-    setPanelOpened(true);
-    setTemplateId("unselected");
-    throw new Error("[templates] template id not found in local storage");
-  }
+  const [templateName, setTemplateName] = useState(templateId);
 
-  /* For useSyncExernalStore to check if object changed */
-  const templateRef = useRef(templateManager.getTemplates()[templateId]);
+  const [templateFromFile, setTemplateFromFile] = useState(null);
 
   /* For the template edit form, should update everytime  */
-  const [newTemplate, setNewTemplate] = useState(
-    templateManager.getTemplates()[templateId]
+  const [newTemplate, setNewTemplate] = useState(null);
+
+  const wasTemplateNameChanged = useMemo(
+    () => !equalityFlat(templateName, templateId),
+    [templateId, templateName]
   );
 
   const wasTemplateChanged = useMemo(
-    () => !equalityDeep(templateRef.current, newTemplate),
-    [newTemplate]
+    () => !equalityDeep(templateFromFile, newTemplate),
+    [newTemplate, templateFromFile]
   );
 
   const [templateValid, setTemplateValid] = useState(true);
@@ -60,12 +61,22 @@ const TemplateDetailsPanel = ({ templateId }) => {
   }, [newTemplate, templateId, wasTemplateChanged, templateValid]);
 
   useEffect(() => {
-    const callback = () => {
-      setNewTemplate(templateManager.getTemplates()[templateId]);
-      templateRef.current = templateManager.getTemplates()[templateId];
+    const callback = async () => {
+      try {
+        const templateJSON = await templateManager.getTemplate(templateId);
+        console.log("TEMPLATE JSON: ", templateJSON);
+        setTemplateFromFile(templateJSON);
+        setNewTemplate(templateJSON);
+      } catch (e) {
+        console.error(`Error finding template with name ${templateId}:`, e);
+        setTemplateFromFile(null);
+        setNewTemplate(null);
+      }
     };
 
     templateManager.addCallback(callback);
+
+    callback();
 
     return () => {
       templateManager.removeCallback(callback);
@@ -96,6 +107,17 @@ const TemplateDetailsPanel = ({ templateId }) => {
     });
   };
 
+  const handleNameChange = (e) => {
+    const { value } = e.target;
+    setTemplateName(value);
+  };
+
+  const handleNameSave = useCallback(async () => {
+    activatePanel("home", "", []);
+
+    await templateManager.renameTemplate(templateId, templateName);
+  }, [activatePanel, templateId, templateName]);
+
   return (
     <DetailsPanel>
       <DetailsPanelHeader>
@@ -113,8 +135,8 @@ const TemplateDetailsPanel = ({ templateId }) => {
 
         <DetailsPanelNameInput
           name="template_name"
-          onChange={handleChange}
-          value={newTemplate.template_name}
+          onChange={handleNameChange}
+          value={templateName}
         />
 
         <AnimatePresence>
@@ -125,25 +147,69 @@ const TemplateDetailsPanel = ({ templateId }) => {
               initial={{
                 width: 0,
                 opacity: 0,
-
+                marginLeft: 0,
+                marginBottom: 0,
                 padding: 0,
               }}
               animate={{
-                width: "var(--libraryManagerAddButtonSize)",
+                width: "var(--libraryManagerAddButtonSize) ",
                 opacity: 1,
-
+                marginLeft: `0.5rem`,
+                marginBottom: 0,
                 padding: `0.25rem`,
               }}
               exit={{
                 width: 0,
                 opacity: 0,
-
+                marginLeft: 0,
+                marginBottom: 0,
                 padding: 0,
               }}
               className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                flex items-center justify-center shrink-0
-            `}
+                flex items-center justify-center order-3 mx-2
+                `}
+            >
+              <motion.span
+                animate={{
+                  opacity: 1,
+                }}
+                className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+              ></motion.span>
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {wasTemplateNameChanged && (
+            <motion.button
+              type="button"
+              onClick={handleNameSave}
+              initial={{
+                width: 0,
+                opacity: 0,
+                marginLeft: 0,
+                marginBottom: 0,
+                padding: 0,
+              }}
+              animate={{
+                width: "var(--libraryManagerAddButtonSize) ",
+                opacity: 1,
+                marginLeft: `0.5rem`,
+                marginBottom: 0,
+                padding: `0.25rem`,
+              }}
+              exit={{
+                width: 0,
+                opacity: 0,
+                marginLeft: 0,
+                marginBottom: 0,
+                padding: 0,
+              }}
+              className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+                hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                flex items-center justify-center order-0 mx-2
+                `}
             >
               <motion.span
                 animate={{
@@ -166,11 +232,13 @@ const TemplateDetailsPanel = ({ templateId }) => {
               paddingLeft: `calc(0.25rem + var(--scrollbarWidth))`,
             }}
           >
-            <TemplateContentEditor
-              newTemplate={newTemplate}
-              setNewTemplate={setNewTemplate}
-              setTemplateValid={setTemplateValid}
-            />
+            {templateFromFile && newTemplate && (
+              <TemplateContentEditor
+                newTemplate={newTemplate ? newTemplate : null}
+                setNewTemplate={setNewTemplate}
+                setTemplateValid={setTemplateValid}
+              />
+            )}
           </div>
         </div>
       </DetailsPanelBody>

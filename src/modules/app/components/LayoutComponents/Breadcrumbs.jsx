@@ -36,7 +36,7 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
     );
 
     return (
-      <section className="w-full h-breadCrumbHeight overflow-hidden gap-1 flex flex-row flex-nowrap justify-start items-center">
+      <section className="w-full h-breadcrumbHeight overflow-hidden gap-1 flex flex-row flex-nowrap justify-start items-center">
         {breadcrumbsLeft.map(({ label, action }, index) => {
           return (
             <span

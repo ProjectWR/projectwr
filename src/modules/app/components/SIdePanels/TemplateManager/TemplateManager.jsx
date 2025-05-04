@@ -17,32 +17,21 @@ const TemplateManager = () => {
   console.log("Template Manager was rendered");
   const { deviceType } = useDeviceType();
 
-  const prevTemplatesRef = useRef(null);
+  const [templates, setTemplates] = useState({});
 
-  const { activatePanel } = useMainPanel();
+  useEffect(() => {
+    const callback = async () => {
+      const newTemplates = await templateManager.getTemplates();
 
-  const templates = useSyncExternalStore(
-    (callback) => {
-      templateManager.addCallback(callback);
+      setTemplates(newTemplates);
+    };
 
-      return () => {
-        templateManager.removeCallback(callback);
-      };
-    },
-    () => {
-      const templates = templateManager.getTemplates();
-      if (
-        prevTemplatesRef.current !== null &&
-        prevTemplatesRef.current !== undefined &&
-        equalityDeep(prevTemplatesRef.current, templates)
-      ) {
-        return prevTemplatesRef.current;
-      } else {
-        prevTemplatesRef.current = templates;
-        return prevTemplatesRef.current;
-      }
-    }
-  );
+    templateManager.addCallback(callback);
+    // Initial fetch
+    callback();
+
+    return () => templateManager.removeCallback(callback);
+  }, []);
 
   // Create a new template
   const handleCreateTemplate = () => {
@@ -51,8 +40,10 @@ const TemplateManager = () => {
       template_editor: "TipTapEditor",
       template_content: TipTapEditorDefaultPreferences,
     };
-    templateManager.createTemplate(templateProps);
+    templateManager.createTemplate("New Template", templateProps);
   };
+
+  console.log("TEMPLATES", templates);
 
   return (
     <div
@@ -101,11 +92,7 @@ const TemplateManager = () => {
               id={`TemplateListNode-${templateId}`}
               className="w-full h-libraryManagerNodeHeight min-h-libraryManagerNodeHeight"
             >
-              <TemplateManagerNode
-                templateId={templateId}
-                template={templates[templateId]}
-                key={templateId}
-              />
+              <TemplateManagerNode templateId={templateId} key={templateId} />
             </div>
           ))}
         </div>
@@ -116,7 +103,7 @@ const TemplateManager = () => {
 
 export default TemplateManager;
 
-const TemplateManagerNode = ({ templateId, template }) => {
+const TemplateManagerNode = ({ templateId }) => {
   const { deviceType } = useDeviceType();
 
   const {
@@ -156,9 +143,7 @@ const TemplateManagerNode = ({ templateId, template }) => {
       >
         <div className="flex items-center gap-2">
           <span className="icon-[carbon--template] h-libraryManagerNodeIconSize w-libraryManagerNodeIconSize transition-colors duration-100"></span>
-          <p className="transition-colors duration-100">
-            {template.template_name}
-          </p>
+          <p className="transition-colors duration-100">{templateId}</p>
         </div>
       </button>
       <button

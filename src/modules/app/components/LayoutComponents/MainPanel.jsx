@@ -45,6 +45,8 @@ const MainPanel = ({}) => {
   const templateId = appStore((state) => state.templateId);
   const templateMode = appStore((state) => state.templateMode);
 
+  const setTemplateId = appStore((state) => state.setTemplateId);
+
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const dictionaryWord = appStore((state) => state.dictionaryWord);
@@ -219,11 +221,35 @@ const MainPanel = ({}) => {
     } else if (panelType === "templates") {
       key.current = "templateDetails-" + rootId + "-" + mode;
 
+      const breadcrumbValues = [
+        {
+          label: "Your editor styles",
+          action: () => {
+            setActivity("templates");
+            setPanelOpened(true);
+          },
+        },
+        {
+          label: templateId,
+          action: () => {
+            activatePanel("templateId", mode, [rootId]);
+          },
+        },
+      ];
+
       if (mode === "details") {
-        return <TemplateDetailsPanel templateId={rootId} key={rootId} />;
+        return (
+          <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+            <TemplateDetailsPanel templateId={rootId} key={rootId} />
+          </PrependBreadcrumbs>
+        );
       }
       if (mode === "preview") {
-        return <TemplateViewPanel templateId={rootId} key={rootId} />;
+        return (
+          <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+            <TemplateViewPanel templateId={rootId} key={rootId} />;
+          </PrependBreadcrumbs>
+        );
       }
     } else if (panelType === "dictionary") {
       if (mode === "create") {
@@ -415,7 +441,7 @@ const PrependBreadcrumbs = ({ breadcrumbValues, children }) => {
       <section className="w-full h-fit py-[5px] px-3 flex items-center justify-start">
         <Breadcrumbs breadcrumbs={breadcrumbValues} />{" "}
       </section>
-      <section className="MainPanelShell, w-full grow basis-0 overflow-hidden">
+      <section className="MainPanelShell w-full grow basis-0 overflow-hidden">
         {children}
       </section>
     </>

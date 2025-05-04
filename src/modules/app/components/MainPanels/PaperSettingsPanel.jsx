@@ -26,6 +26,7 @@ import {
   HoverListItem,
   HoverListShell,
 } from "../LayoutComponents/HoverListShell";
+import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 
 /**
  *
@@ -61,12 +62,9 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
           </button>
         )}
 
-        <p
-          className="bg-appBackground grow text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 my-2 px-2 pr-1 transition-colors duration-200"
-          id="item_title"
-        >
+        <DetailsPanelNameLabel>
           {paperMapState.item_title}
-        </p>
+        </DetailsPanelNameLabel>
       </DetailsPanelHeader>
 
       <DetailsPanelDivider />

@@ -372,12 +372,11 @@ const TemplateContentEditor = ({
     }
   }, [
     groupSelected,
-    content.desktopDefaultPreferences.paperPreferences,
-    content.desktopDefaultPreferences.toolbarPreferences,
-    content.mobileDefaultPreferences.paperPreferences,
-    content.mobileDefaultPreferences.toolbarPreferences,
+    content,
     handleGroupChange,
   ]);
+
+  if (content === null || content === undefined) return null;
 
   return (
     <div id="TCEContainer" className="w-full font-sans flex flex-col relative">

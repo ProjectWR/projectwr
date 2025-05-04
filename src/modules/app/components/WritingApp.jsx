@@ -44,6 +44,7 @@ import { setupEnDictionary } from "../../editor/EnDictionary";
 import dictionaryManager from "../lib/dictionary";
 import useRefreshableTimer from "../hooks/useRefreshableTimer";
 import { useDebouncedCallback } from "@mantine/hooks";
+import templateManager from "../lib/templates";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -160,6 +161,10 @@ const WritingApp = () => {
         setLoadingStage("Loading fonts");
 
         await fontManager.init();
+
+        setLoadingStage("Loading templates");
+
+        await templateManager.initialize();
 
         setLoadingStage("Fetching local storage");
 
