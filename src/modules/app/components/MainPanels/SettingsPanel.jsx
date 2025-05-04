@@ -495,13 +495,14 @@ const SettingsPanel = () => {
               {fonts.map((font) => {
                 return (
                   <HoverListItem disabled={true} key={font.id}>
-                    <div className="w-full h-full flex items-center justify-between">
+                    <div className="w-full h-full flex items-center gap-2 justify-between">
                       <p
                         style={{ fontFamily: font.family }}
-                        className="text-detailsPanelPropsFontSize text-appLayoutTextMuted grow min-w-0 text-ellipsis text-nowrap overflow-hidden"
+                        className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
                       >
                         {font.family}
                       </p>
+                      <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
                       <button
                         className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
                         onClick={async () => {

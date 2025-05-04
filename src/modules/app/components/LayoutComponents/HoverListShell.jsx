@@ -11,7 +11,7 @@ export const HoverListShell = ({ children, condition }) => {
           transition={{ duration: 0.2 }}
           className={`
             absolute top-[100%] left-1/2 -translate-x-1/2 w-full h-fit min-w-actionBarSearchWidth shadow-2xl shadow-appLayoutGentleShadow z-1000 pt-1 px-1 border border-appLayoutInverseHover
-           bg-appBackground/95 backdrop-blur-[1px] rounded-md  overflow-hidden flex items-center flex-col`}
+           bg-appBackgroundAccent/95 backdrop-blur-[1px] rounded-md  overflow-hidden flex items-center flex-col`}
         >
           {children}
         </motion.div>

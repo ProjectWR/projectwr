@@ -176,7 +176,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
 
       <button
         id="EditorPicker"
-        className="w-full h-templateDetailsPreferenceInputHeight flex justify-start items-center text-detailsPanelPropsFontSize px-3 rounded-b-md bg-appBackground hover:bg-appLayoutInverseHover"
+        className="w-full h-fit py-2 flex justify-start items-center text-detailsPanelPropLabelFontSize px-3 rounded-b-md bg-appBackground hover:bg-appLayoutInverseHover"
         onClick={() => {
           setPickingEditorStyle(!pickingEditorStyle);
         }}
@@ -194,6 +194,21 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
         <HoverListHeader>Pick an editor style:</HoverListHeader>
         <HoverListDivider />
         <HoverListBody>
+          {Object.entries(templates).length != 0 && (
+            <HoverListButton
+              key={`resetToDefault`}
+              onClick={() => {
+                itemLocalStateManager.setPaperEditorTemplate(
+                  paperId,
+                  null
+                );
+                setPickingEditorStyle(false);
+              }}
+            >
+              Use the default editor style
+            </HoverListButton>
+          )}
+
           {Object.entries(templates).length > 0 &&
             Object.entries(templates).map(([templateId, template]) => {
               return (

@@ -35,7 +35,7 @@ const DirectoryItemNode = ({
   setFocusedItemId,
   isChildOfRoot = true,
 }) => {
-  console.log("Directory item node rendered: ", itemId);
+  // console.log("Directory item node rendered: ", itemId);
   const { deviceType } = useDeviceType();
   const {
     saveStateInHistory,
@@ -281,8 +281,6 @@ const DirectoryItemNode = ({
               }
 
               activatePanel("libraries", "details", breadcrumbs);
-
-             
             }
           },
         },
@@ -358,8 +356,6 @@ const DirectoryItemNode = ({
               }
 
               activatePanel("libraries", "details", breadcrumbs);
-
-
             }
           },
         },
@@ -367,7 +363,7 @@ const DirectoryItemNode = ({
         {
           label: "Edit Paper Settings",
           icon: (
-            <span className="icon-[hugeicons--customize] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+            <span className="icon-[bi--sliders2] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
             console.log("edit paper editor button");
@@ -379,7 +375,6 @@ const DirectoryItemNode = ({
               }
 
               activatePanel("libraries", "settings", breadcrumbs);
-
             }
           },
         },
@@ -400,9 +395,9 @@ const DirectoryItemNode = ({
         },
 
         {
-          label: "Import paper",
+          label: "Import paper from .docx",
           icon: (
-            <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+            <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
             console.log("import paper button");
@@ -419,14 +414,12 @@ const DirectoryItemNode = ({
     }
   }, [
     appStoreItemId,
-    clearFuture,
     deviceType,
     itemId,
     itemMode,
     onCreatePaperClick,
     onCreateSectionClick,
     panelOpened,
-    saveStateInHistory,
     setItemId,
     setItemMode,
     setPanelOpened,
@@ -523,7 +516,6 @@ const DirectoryItemNode = ({
                       activatePanel("libraries", "details", breadcrumbs);
 
                       setPanelOpened(true);
-                     
                     }
                   }}
                 >

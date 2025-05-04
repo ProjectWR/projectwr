@@ -150,7 +150,7 @@
     --actionBarSearchHeaderHeight: calc(var(--uiScale) * 2rem);
     --actionBarSearchFooterHeight: calc(var(--uiScale) * 0.4rem);
     --actionBarResultHeaderTextSize: calc(var(--uiScale) * 1rem);
-    --actionBarResultNodeHeight: calc(var(--uiScale) * 1.75rem);
+    --actionBarResultNodeHeight: calc(var(--uiScale) * 2.5rem);
     --actionBarWindowButtonIconSize: calc(var(--uiScale) * 1.3rem);
     --actionBarResultDateFontSize: calc(var(--uiScale) * 1rem);
     --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.5rem);
