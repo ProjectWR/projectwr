@@ -64,7 +64,17 @@ const TiptapEditor = ({
     ? mobileDefaultPreferences
     : desktopDefaultPreferences;
 
-  const editorPreferences = preferences || defaultPreferences;
+  const editorPreferences = { ...defaultPreferences, ...preferences };
+
+  const paperPreferences = {
+    ...defaultPreferences.paperPreferences,
+    ...preferences?.paperPreferences,
+  };
+
+  const toolbarPreferences = {
+    ...defaultPreferences.toolbarPreferences,
+    ...preferences?.toolbarPreferences,
+  };
 
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
@@ -118,9 +128,9 @@ const TiptapEditor = ({
     blockquoteBorderWidth,
     blockquotePadding,
     blockquoteBorderColor,
-  } = editorPreferences.paperPreferences;
+  } = paperPreferences;
 
-  const { dividerColor } = editorPreferences.toolbarPreferences;
+  const { dividerColor } = toolbarPreferences;
 
   const extensions = useRef([
     Document,
@@ -457,9 +467,9 @@ const TiptapEditor = ({
         <div
           id="EditableToolbar"
           style={{
-            height: `calc(${editorPreferences.toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-            minHeight: `calc(${editorPreferences.toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-            backgroundColor: `${editorPreferences.toolbarPreferences.backgroundColor}`,
+            height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+            minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+            backgroundColor: `${toolbarPreferences.backgroundColor}`,
             borderColor: `${dividerColor}`,
           }}
           className={`
@@ -473,7 +483,7 @@ const TiptapEditor = ({
         >
           <TipTapToolbar
             editor={editor}
-            toolbarPreferences={editorPreferences.toolbarPreferences}
+            toolbarPreferences={toolbarPreferences}
           />
         </div>
         <ContextMenuWrapper options={options}>

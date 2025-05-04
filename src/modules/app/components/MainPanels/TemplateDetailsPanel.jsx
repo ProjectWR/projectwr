@@ -64,7 +64,6 @@ const TemplateDetailsPanel = ({ templateId }) => {
     const callback = async () => {
       try {
         const templateJSON = await templateManager.getTemplate(templateId);
-        console.log("TEMPLATE JSON: ", templateJSON);
         setTemplateFromFile(templateJSON);
         setNewTemplate(templateJSON);
       } catch (e) {

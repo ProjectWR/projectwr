@@ -123,7 +123,21 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
     setPickingEditorStyle(false);
   });
 
-  const templates = useTemplates();
+  const [templates, setTemplates] = useState({});
+
+  useEffect(() => {
+    const callback = async () => {
+      setTemplates(await templateManager.getTemplates());
+    };
+
+    templateManager.addCallback(callback);
+
+    callback();
+
+    return () => {
+      templateManager.removeCallback(callback);
+    };
+  }, []);
 
   const templateOfPaperId = useMemo(() => {
     if (templates[paperEditorTemplateId]) {
@@ -179,7 +193,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
           setPickingEditorStyle(!pickingEditorStyle);
         }}
       >
-        {templateOfPaperId?.template_name || "Default editor style"}
+        {templateOfPaperId ? paperEditorTemplateId : "Default Editor style"}
       </button>
       <label
         htmlFor="EditorPicker"
@@ -196,10 +210,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
             <HoverListButton
               key={`resetToDefault`}
               onClick={() => {
-                itemLocalStateManager.setPaperEditorTemplate(
-                  paperId,
-                  null
-                );
+                itemLocalStateManager.setPaperEditorTemplate(paperId, null);
                 setPickingEditorStyle(false);
               }}
             >

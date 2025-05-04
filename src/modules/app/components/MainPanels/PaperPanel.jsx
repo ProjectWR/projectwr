@@ -14,6 +14,7 @@ import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/Deta
 import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+import templateManager from "../../lib/templates";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -34,24 +35,46 @@ const PaperPanel = ({ ytree, paperId }) => {
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
 
-  const templates = useTemplates();
+  const [templateFromFile, setTemplateFromFile] = useState(null);
 
   const preferences = useMemo(() => {
-    if (templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]) {
-      return templates[itemLocalStateManager.getPaperEditorTemplate(paperId)]
-        .template_content.desktopDefaultPreferences;
-    } else {
-      return null;
-    }
-  }, [templates, paperId]);
+    if (templateFromFile === null || templateFromFile === undefined) return null;
+    return isMobile
+      ? templateFromFile?.template_content.mobileDefaultPreferences
+      : templateFromFile?.template_content.desktopDefaultPreferences;
+  }, [templateFromFile, isMobile]);
 
-  const defaultPreferences = isMobile
-    ? mobileDefaultPreferences
-    : desktopDefaultPreferences;
+  useEffect(() => { 
+    const callback = async () => {
+      try {
+        const templateJSON = await templateManager.getTemplate(
+          itemLocalStateManager.getPaperEditorTemplate(paperId)
+        );
+        console.log(
+          "TEMPLATE JSON: ",
+          itemLocalStateManager.getPaperEditorTemplate(paperId),
+          templateJSON
+        );
+        setTemplateFromFile(templateJSON);
+      } catch (e) {
+        console.error(
+          `Error finding template with name ${itemLocalStateManager.getPaperEditorTemplate(
+            paperId
+          )}:`,
+          e
+        );
+        setTemplateFromFile(null);
+      }
+    };
 
-  const editorPreferences = preferences || defaultPreferences;
+    templateManager.addCallback(callback);
 
-  const { backgroundColor } = editorPreferences.paperPreferences;
+    callback();
+
+    return () => {
+      templateManager.removeCallback(callback);
+    };
+  }, [paperId]);
 
   useEffect(() => {
     if (deviceType === "mobile") {
@@ -100,6 +123,9 @@ const PaperPanel = ({ ytree, paperId }) => {
 
     paperMap.set("item_title", paperProperties.item_title);
   };
+
+
+  console.log("PREFERENCES ", preferences);
 
   return (
     <DetailsPanel>
