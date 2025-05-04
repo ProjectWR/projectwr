@@ -157,7 +157,7 @@
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
     --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
-    --breadcrumbHeight: calc(var(--uiScale) * 2rem);
+    --breadcrumbHeight: calc(var(--uiScale) * 1.1rem);
     --breadcrumbFontSize: calc(var(--uiScale) * 1rem);
     --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
     --breadcrumbItemMaxWidth: calc(1 / var(--uiScale) * 10rem);
@@ -194,8 +194,8 @@
     --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
     --homePanelSubtitleFontSize: calc(var(--uiScale) * 1.5rem);
 
-    --detailsPanelHeaderHeight: calc(var(--uiScale) * 4.5rem);
-    --detailsPanelNameFontSize: calc(var(--uiScale) * 2rem);
+    --detailsPanelHeaderHeight: calc(var(--uiScale) * 2.25rem);
+    --detailsPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
     --detailsPanelHeaderTwoHeight: calc(var(--uiScale) * 3rem);
     --detailsPanelHeaderTwoFontSize: calc(var(--uiScale) * 1.5rem);
     --detailsPanelPropsFontSize: calc(var(--uiScale) * 1.2rem);
@@ -204,6 +204,9 @@
     --detailsPanelSaveButtonFontSize: calc(var(--uiScale) * 1.2rem);
     --detailsPanelDescriptionInputHeight: calc(var(--uiScale) * 15rem);
     --detailsPanelWidth: calc(var(--uiScale) * 60rem);
+
+    --paperPanelHeaderHeight: calc(var(--uiScale) * 2.25rem);
+    --paperPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
 
     --authInputHeight: calc(var(--uiScale) * 4rem);
     --authButtonSize: calc(var(--uiScale) * 1.6rem);
@@ -465,6 +468,8 @@
   --spacing-templateDetailsPreferenceInputWidth: var(
     --templateDetailsPreferenceInputWidth
   );
+  --spacing-paperPanelHeaderHeight: var(--paperPanelHeaderHeight);
+
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
@@ -504,6 +509,8 @@
   --text-recentlyOpenedNodeFontSize: var(--recentlyOpenedNodeFontSize);
   --text-breadcrumbFontSize: var(--breadcrumbFontSize);
   --text-preferencesItemFontSize: var(--preferencesItemFontSize);
+  --text-paperPanelNameFontSize: var(--paperPanelNameFontSize);
+
 }
 
 :root {

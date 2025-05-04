@@ -181,7 +181,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
           setPickingEditorStyle(!pickingEditorStyle);
         }}
       >
-        {templateOfPaperId?.template_name || "No editor style selected"}
+        {templateOfPaperId?.template_name || "Default editor style"}
       </button>
       <label
         htmlFor="EditorPicker"

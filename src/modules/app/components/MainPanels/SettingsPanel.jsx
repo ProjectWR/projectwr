@@ -105,7 +105,11 @@ const SettingsPanel = () => {
   return (
     <DetailsPanel>
       <DetailsPanelHeader>
-        <h1 className="h-fit w-fit pt-1 pb-[0.38rem] ml-4 text-detailsPanelNameFontSize text-neutral-300 order-1">
+        <h1
+          className={`bg-appBackground grow h-full text-detailsPanelNameFontSize 
+                      rounded-lg focus:outline-none 
+                      px-2 pr-1 transition-colors duration-200 order-0`}
+        >
           Settings
         </h1>
       </DetailsPanelHeader>

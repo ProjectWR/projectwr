@@ -15,6 +15,7 @@ import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 
 const LibraryDetailsPanel = ({ libraryId }) => {
   const { deviceType } = useDeviceType();
@@ -158,8 +159,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
             </>
           )}
 
-          <input
-            className="bg-appBackground grow h-full text-detailsPanelNameFontSize focus:bg-appLayoutInputBackground rounded-lg focus:outline-none py-1 px-2 pr-1 transition-colors duration-200 order-2"
+          <DetailsPanelNameInput
             name="library_name"
             onChange={handleChange}
             value={libraryProperties.library_name}
