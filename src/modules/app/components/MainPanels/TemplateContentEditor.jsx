@@ -3,66 +3,7 @@ import { ChromePicker, SketchPicker } from "react-color";
 import useOuterClick from "../../../design-system/useOuterClick";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
-
-// ─── CONFIG OBJECTS FOR EACH GROUP ───────────────────────────────
-const desktopPaperConfig = {
-  width: { type: "numberOrPercent", label: "Width" },
-  gapTop: { type: "number", label: "Gap Top" },
-  paddingTop: { type: "number", label: "Padding Top" },
-  paddingLeft: { type: "number", label: "Padding Left" },
-  paddingRight: { type: "number", label: "Padding Right" },
-  paddingBottom: { type: "number", label: "Padding Bottom" },
-  font: { type: "text", label: "Font" },
-  fontSize: { type: "number", label: "Font Size" },
-  lineHeight: { type: "number", label: "Line Height" },
-  marginBottom: { type: "number", label: "Margin Bottom" },
-  backgroundColor: { type: "color", label: "Background Color" },
-  paperBorderWidth: { type: "number", label: "Paper Border Width" },
-  paperColor: { type: "color", label: "Paper Color" },
-  paperBorderColor: { type: "color", label: "Paper Border Color" },
-  roundRadius: { type: "number", label: "Round Radius" },
-  paperShadow: { type: "text", label: "Paper Shadow" },
-  paperShadowColor: { type: "color", label: "Paper Shadow Color" },
-  h1FontSize: { type: "number", label: "Title Font Size" },
-  h1LineHeight: { type: "number", label: "Title Line Height" },
-  h1MarginBottom: { type: "number", label: "Title Margin Bottom" },
-  h2FontSize: { type: "number", label: "Heading 1 Font Size" },
-  h2LineHeight: { type: "number", label: "Heading 1 Line Height" },
-  h2MarginBottom: { type: "number", label: "Heading 1 Margin Bottom" },
-  h3FontSize: { type: "number", label: "Heading 2 Font Size" },
-  h3LineHeight: { type: "number", label: "Heading 2 Line Height" },
-  h3MarginBottom: { type: "number", label: "Heading 2 Margin Bottom" },
-  h4FontSize: { type: "number", label: "Heading 3 Font Size" },
-  h4LineHeight: { type: "number", label: "Heading 3 Line Height" },
-  h4MarginBottom: { type: "number", label: "Heading 3 Margin Bottom" },
-  h5FontSize: { type: "number", label: "Heading 4 Font Size" },
-  h5LineHeight: { type: "number", label: "Heading 4 Line Height" },
-  h5MarginBottom: { type: "number", label: "Heading 4 Margin Bottom" },
-  listPaddingLeft: { type: "number", label: "List Padding Left" },
-  listMarginTop: { type: "number", label: "List Margin Top" },
-  listMarginBottom: { type: "number", label: "List Margin Bottom" },
-  hrMarginTop: { type: "number", label: "HR Margin Top" },
-  hrMarginBottom: { type: "number", label: "HR Margin Bottom" },
-  hrBorderColor: { type: "color", label: "HR Border Color" },
-};
-
-const desktopToolbarConfig = {
-  toolbarHeight: { type: "number", label: "Toolbar Height" },
-  toolbarButtonHeight: { type: "number", label: "Toolbar Button Height" },
-  marginTop: { type: "number", label: "Margin Top" },
-  marginBottom: { type: "number", label: "Margin Bottom" },
-  marginLeft: { type: "number", label: "Margin Left" },
-  marginRight: { type: "number", label: "Margin Right" },
-  buttonHeight: { type: "number", label: "Button Height" },
-  buttonWidth: { type: "number", label: "Button Width" },
-  backgroundColor: { type: "color", label: "Background Color" },
-  buttonColor: { type: "color", label: "Button Color" },
-  dividerColor: { type: "color", label: "Divider Color" },
-  hoverColor: { type: "color", label: "Hover Color" },
-};
-
-const mobilePaperConfig = { ...desktopPaperConfig };
-const mobileToolbarConfig = { ...desktopToolbarConfig };
+import { desktopPaperConfig, desktopToolbarConfig, mobilePaperConfig, mobileToolbarConfig } from "./Templates/configs";
 
 // Add this helper component (place it at the top of GroupEditor, before the return statement)
 const NumberOrPercentInput = ({ value, onChange }) => {
@@ -264,7 +205,7 @@ function GroupEditor({ config, data, onChange }) {
  * - setNewTemplate: function to update the template object
  * - handleSave: callback to be called when saving changes
  */
-const TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
+const   TemplateContentEditor = ({ newTemplate, setNewTemplate, handleSave }) => {
   // For convenience, work directly with the nested template_content.
   const content = newTemplate.template_content;
 

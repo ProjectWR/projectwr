@@ -475,7 +475,9 @@ const SettingsPanel = () => {
         </motion.div>
 
         <div className="flex flex-row grow basis-0 gap-2 w-full box-border">
-          <ListShell className={`h-full grow basis-0 min-w-0`}>
+          <ListShell
+            className={`h-full grow basis-0 min-w-0 bg-appBackgroundAccent`}
+          >
             <HoverListHeader>
               <p className="text-appLayoutText">Fonts</p>
               <span className="grow"></span>
@@ -565,11 +567,12 @@ const SettingsPanel = () => {
                 </div>
               </div>
 
-              <div className="w-full h-[3rem] flex items-center justify-between">
+              <div className="w-full h-preferencesItemHeight flex gap-2 items-center justify-between">
                 <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
                   Theme
                 </h1>
-                Dark
+                <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
+                <span>Dark</span>
               </div>
             </div>
           </div>

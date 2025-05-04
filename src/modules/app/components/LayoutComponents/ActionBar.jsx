@@ -108,12 +108,7 @@ const ActionBar = () => {
 
           <ActionButton
             onClick={() => {
-              if (activity !== "home") {
-                setActivity("home");
-                setPanelOpened(false);
-
-                activatePanel("home", null, []);
-              }
+              activatePanel("home", null, []);
             }}
             className={`${false && "bg-appLayoutPressed"}`}
           >
@@ -175,13 +170,8 @@ const ActionBar = () => {
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
             <ActionButton
-              onClick={() => {
-                if (!(activity === "settings")) {
-                  setActivity("settings");
-                  setPanelOpened(false);
-
-                  activatePanel("settings", null, []);
-                }
+              onClick={() => {  
+                activatePanel("settings", null, []);
               }}
               className={`${false && "bg-appLayoutPressed"}`}
             >

@@ -429,10 +429,7 @@ const WritingApp = () => {
                       <AnimatePresence mode="wait">
                         {panelOpened &&
                           sideBarOpened &&
-                          (isMd || isPanelAwake) &&
-                          (activity === "libraries" ||
-                            activity === "templates" ||
-                            activity === "dictionary") && (
+                          (isMd || isPanelAwake) && (
                             <motion.div
                               key="SidePanelMotionContainer"
                               id="SidePanelMotionContainer"

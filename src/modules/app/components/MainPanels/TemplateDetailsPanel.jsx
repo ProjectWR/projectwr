@@ -50,9 +50,15 @@ const TemplateDetailsPanel = ({ templateId }) => {
   );
 
   const wasTemplateChanged = useMemo(
-    () => equalityDeep(templateRef.current, newTemplate),
+    () => !equalityDeep(templateRef.current, newTemplate),
     [newTemplate]
   );
+
+  const handleSave = useCallback(() => {
+    if (wasTemplateChanged) {
+      templateManager.updateTemplate(templateId, newTemplate);
+    }
+  }, [newTemplate, templateId, wasTemplateChanged]);
 
   useEffect(() => {
     const callback = () => {
@@ -66,6 +72,21 @@ const TemplateDetailsPanel = ({ templateId }) => {
       templateManager.removeCallback(callback);
     };
   }, [templateId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleSave]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -97,37 +118,31 @@ const TemplateDetailsPanel = ({ templateId }) => {
           onChange={handleChange}
           value={newTemplate.template_name}
         />
-      </DetailsPanelHeader>
 
-      <DetailsPanelDivider />
-
-      <DetailsPanelBody>
         <AnimatePresence>
-          {!wasTemplateChanged && (
+          {wasTemplateChanged && (
             <motion.button
-              type="submit"
+              type="button"
+              onClick={handleSave}
               initial={{
-                height: 0,
+                width: 0,
                 opacity: 0,
-                marginTop: 0,
-                marginBottom: 0,
+
                 padding: 0,
               }}
               animate={{
-                height: "var(--libraryManagerAddButtonSize)",
+                width: "var(--libraryManagerAddButtonSize)",
                 opacity: 1,
-                marginTop: `0`,
-                marginBottom: "1rem",
+
                 padding: `0.25rem`,
               }}
               exit={{
-                height: 0,
+                width: 0,
                 opacity: 0,
-                marginTop: 0,
-                marginBottom: 0,
+
                 padding: 0,
               }}
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+              className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                 hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                 flex items-center justify-center shrink-0
             `}
@@ -141,6 +156,11 @@ const TemplateDetailsPanel = ({ templateId }) => {
             </motion.button>
           )}
         </AnimatePresence>
+      </DetailsPanelHeader>
+
+      <DetailsPanelDivider />
+
+      <DetailsPanelBody>
         <div className="w-full grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
           <div
             className="h-full w-full min-h-0 pr-1 py-4 overflow-y-scroll"
