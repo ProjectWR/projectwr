@@ -165,7 +165,7 @@
     --scrollbarWidth: calc(
       var(--uiScale) *
         (
-          0.75rem + var(--libraryManagerAddButtonSize) / 2 -
+          0.25rem + var(--libraryManagerAddButtonSize) / 2 -
             var(--libraryDirectoryBookNodeIconSize) / 2
         )
     );
@@ -236,7 +236,7 @@
     --templateDetailsPanelPreferenceInputFontSize: calc(
       var(--uiScale) * 1rem
     );
-    --templateDetailsPreferenceInputWidth: calc(var(--uiScale) * 4rem);
+    --templateDetailsPreferenceInputWidth: calc(var(--uiScale) * 5rem);
 
     --loadingSpinnerSize: calc(var(--uiScale) * 12rem);
 
@@ -362,7 +362,6 @@
   --animate-exit-to-left: exitToLeft 250ms ease;
   --animate-exit-to-right: exitToRight 250ms ease;
 
-  --spacing-scrollbarWidth: var(--scrollbarWidth);
   --spacing-scrollbarWidth: var(--scrollbarWidth);
   --spacing-actionBarHeight: var(--actionBarHeight);
   --spacing-actionBarLogoSize: var(--actionBarLogoSize);

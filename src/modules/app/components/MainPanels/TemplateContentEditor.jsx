@@ -471,7 +471,7 @@ const TemplateContentEditor = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-0"
+            className="grid grid-cols-1 py-1 gap-y-2 gap-x-0"
           >
             {returnGroupEditor()}
           </motion.div>
