@@ -539,26 +539,28 @@ const SettingsPanel = () => {
               }
               `}
             >
-              <div className="w-full h-[3rem] flex items-center justify-between">
+              <div className="w-full h-preferencesItemHeight flex gap-2 items-center justify-between">
                 <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
                   Zoom
                 </h1>
 
-                <div className="ZoomContainer w-fit h-full px-1 flex flex-row items-center">
+                <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
+
+                <div className="ZoomContainer w-fit h-full flex flex-row items-center">
                   <button
-                    className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center  border-appLayoutBorder hover:bg-appLayoutInverseHover"
+                    className="zoomInButton w-preferencesItemButtonSize h-preferencesItemButtonSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
                     onClick={zoomIn}
                   >
-                    <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
+                    <span className="icon-[material-symbols-light--add-rounded] w-full h-full"></span>
                   </button>
-                  <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md select-none">
+                  <div className="zoomDisplay text-preferencesItemFontSize w-ZoomDisplayWidth h-preferencesItemButtonSize pb-px flex items-center justify-center select-none border border-appLayoutBorder rounded-lg">
                     {zoom && `${round(zoom * 100)}%`}
                   </div>
                   <button
-                    className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center    border-appLayoutBorder  hover:bg-appLayoutInverseHover"
+                    className="zoomInButton w-preferencesItemButtonSize h-preferencesItemButtonSize flex items-center justify-center  rounded-full  hover:bg-appLayoutInverseHover"
                     onClick={zoomOut}
                   >
-                    <span className="icon-[material-symbols-light--remove-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
+                    <span className="icon-[material-symbols-light--remove-rounded] w-full h-full"></span>
                   </button>
                 </div>
               </div>
@@ -567,7 +569,6 @@ const SettingsPanel = () => {
                 <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
                   Theme
                 </h1>
-
                 Dark
               </div>
             </div>

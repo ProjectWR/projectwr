@@ -175,6 +175,9 @@
     --ZoomIconSize: calc(var(--uiScale) * 1.2rem);
     --ZoomDisplayWidth: calc(var(--uiScale) * 3.5rem);
     --ZoomDisplayFontSize: calc(var(--uiScale) * 0.9rem);
+    --preferencesItemHeight: calc(var(--uiScale) * 3rem);
+    --preferencesItemButtonSize: calc(var(--uiScale) * 2rem);
+    --preferencesItemFontSize: calc(var(--uiScale) * 1rem);
 
     --libraryDirectoryHeaderHeight: calc(var(--uiScale) * 4.5rem);
 
@@ -457,6 +460,8 @@
   --spacing-breadcrumbHeight: var(--breadcrumbHeight);
   --spacing-breadcrumbSeperatorSize: var(--breadcrumbSeperatorSize);
   --spacing-breadcrumbItemMaxWidth: var(--breadcrumbItemMaxWidth);
+  --spacing-preferencesItemHeight: var(--preferencesItemHeight);
+  --spacing-preferencesItemButtonSize: var(--preferencesItemButtonSize);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
@@ -495,6 +500,7 @@
   --text-recentlyOpenedDateFontSize: var(--recentlyOpenedDateFontSize);
   --text-recentlyOpenedNodeFontSize: var(--recentlyOpenedNodeFontSize);
   --text-breadcrumbFontSize: var(--breadcrumbFontSize);
+  --text-preferencesItemFontSize: var(--preferencesItemFontSize);
 }
 
 :root {
