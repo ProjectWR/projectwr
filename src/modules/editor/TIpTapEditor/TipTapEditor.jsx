@@ -22,7 +22,6 @@ import Heading from "@tiptap/extension-heading";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Image from "@tiptap/extension-image";
 import OrderedList from "@tiptap/extension-ordered-list";
-import TabIndentExtension from "./Extensions/TabIndentExtension";
 import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
 
@@ -38,6 +37,7 @@ import dictionaryManager from "../../app/lib/dictionary";
 import { wait } from "lib0/promise";
 import { appStore } from "../../app/stores/appStore";
 import ContextMenuWrapper from "../../app/components/LayoutComponents/ContextMenuWrapper";
+import { Indent } from "./Extensions/indent";
 
 const content = "<p>Hello World!</p>";
 
@@ -139,9 +139,6 @@ const TiptapEditor = ({
     Collaboration.configure({
       fragment: yXmlFragment,
     }),
-    TabIndentExtension.configure({
-      spaces: 8,
-    }),
     Strike,
     Bold,
     Italic,
@@ -166,15 +163,17 @@ const TiptapEditor = ({
     }),
     ProsemirrorProofreadExtension,
     ProsemirrorVirtualCursor,
+    Indent.configure({
+      types: ["listItem", "paragraph"],
+      minLevel: 0,
+      maxLevel: 4,
+    }),
   ]);
 
   const previewTemplateExtensions = useRef([
     Document,
     Paragraph,
     Text,
-    TabIndentExtension.configure({
-      spaces: 8,
-    }),
     Strike,
     Bold,
     Italic,
@@ -449,6 +448,24 @@ const TiptapEditor = ({
             border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #ff0000e6;
           }
+
+          [data-indent='1'] {
+            padding-left: calc(1 * 3rem);
+          }
+
+          [data-indent='2'] {
+            padding-left: calc(2 * 3rem);
+          }
+          
+          [data-indent='3'] {
+            padding-left: calc(3 * 3rem);
+          }
+          
+          [data-indent='4'] {
+            padding-left: calc(4 * 3rem);
+          }
+          
+          
           
 
         `}

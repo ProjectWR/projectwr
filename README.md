@@ -1,18 +1,20 @@
 # TODO
 
-- Replace all text boxes with a mini editor, ~~or atleast make them fit to content when its typed~~
+- ~~Replace all text boxes with a mini editor, or atleast make them fit to content when its typed~~
 - ~~Remove history buttons in app shell~~
 - ~~breadcrumbs~~
+- details panel buttons should be restyled and modularized
 - toolbar buttons active state
-- breadcrumbs
+- ~~breadcrumbs~~
 - ~~upgraded to tailwind v4~~
 - make local state self correcting
-- templates should be stored as files
+- ~~templates should be stored as files~~
 - Add context menus where it is appropriate
 - Settings page needs to be finished
   - theme selector (currently dark or light mode)
+  - ~~fonts~~
   - auth
-  - zoom selector
+  - ~~zoom selector~~
 - Finish editor styles integration
 - add delete buttons
 - themes
@@ -20,13 +22,13 @@
   - readability analysis and all those scores
 - ~~make side panel transient when small screen~~
 - Add linking
-- Tabbed Writing Format
+- ~~Tabbed Writing Format~~
 - Grammarly/language tool/etc. integration
 - google drive and one drive sync
 - Completion Status for each item
 - change internal structure of yjs ordered tree
 - FUTURE:
-- Tabs like vs code
+- Tabs like vs code (half done)
 - Notes
 - Timelines
 - Mind maps (importable from xMind and Freemind and scrapple)
