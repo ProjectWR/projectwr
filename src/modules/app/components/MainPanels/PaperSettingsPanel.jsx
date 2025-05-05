@@ -231,7 +231,7 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
                     setPickingEditorStyle(false);
                   }}
                 >
-                  {template.template_name}
+                  {templateId}
                 </HoverListButton>
               );
             })}

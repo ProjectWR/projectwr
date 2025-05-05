@@ -43,6 +43,7 @@ import {
 } from "../LayoutComponents/HoverListShell";
 import useZoom from "../../hooks/useZoom";
 import { round } from "lib0/math";
+import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -105,13 +106,7 @@ const SettingsPanel = () => {
   return (
     <DetailsPanel>
       <DetailsPanelHeader>
-        <h1
-          className={`bg-appBackground grow h-full text-detailsPanelNameFontSize 
-                      rounded-lg focus:outline-none 
-                      px-2 pr-1 transition-colors duration-200 order-0`}
-        >
-          Settings
-        </h1>
+        <DetailsPanelNameLabel>Settings</DetailsPanelNameLabel>
       </DetailsPanelHeader>
 
       <DetailsPanelDivider />
