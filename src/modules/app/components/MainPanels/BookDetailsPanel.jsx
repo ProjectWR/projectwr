@@ -7,7 +7,9 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { equalityDeep } from "lib0/function";
 import { AnimatePresence, motion } from "motion/react";
 import { Textarea } from "@mantine/core";
-import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanel, {
+  formClassName,
+} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
@@ -83,7 +85,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
           handleSave();
         }}
         id="BookDetailsContent"
-        className="h-full w-full"
+        className={formClassName}
       >
         <DetailsPanelHeader>
           {deviceType === "mobile" && (

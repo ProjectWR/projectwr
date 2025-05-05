@@ -1,6 +1,8 @@
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { Breadcrumbs } from "../Breadcrumbs";
 
+export const formClassName = "h-full w-full flex flex-col items-center justify-start"
+
 const DetailsPanel = ({ children, breadcrumbs, className }) => {
   const { deviceType } = useDeviceType();
 
@@ -8,7 +10,7 @@ const DetailsPanel = ({ children, breadcrumbs, className }) => {
     <main className="w-full h-full flex flex-col items-start">
       <section
         id="DetailsPanel"
-        className={`h-full w-full flex flex-col items-start justify-start 
+        className={`${formClassName}
         ${deviceType === "mobile" && "w-full"}   
         ${deviceType === "desktop" && "pt-0"}    
         ${className}   

@@ -157,8 +157,8 @@
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
     --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
-    --breadcrumbHeight: calc(var(--uiScale) * 1.1rem);
-    --breadcrumbFontSize: calc(var(--uiScale) * 1rem);
+    --breadcrumbHeight: calc(var(--uiScale) * 1.2rem);
+    --breadcrumbFontSize: calc(var(--uiScale) * 0.95rem);
     --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
     --breadcrumbItemMaxWidth: calc(1 / var(--uiScale) * 10rem);
 

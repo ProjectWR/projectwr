@@ -230,7 +230,7 @@ const MainPanel = ({}) => {
           },
         },
         {
-          label: templateId,
+          label: rootId,
           action: () => {
             activatePanel("templateId", mode, [rootId]);
           },

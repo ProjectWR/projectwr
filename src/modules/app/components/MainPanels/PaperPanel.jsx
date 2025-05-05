@@ -11,7 +11,9 @@ import itemLocalStateManager from "../../lib/itemLocalState";
 import useTemplates from "../../hooks/useTemplates";
 import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
-import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanel, {
+  formClassName,
+} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import templateManager from "../../lib/templates";
@@ -38,13 +40,18 @@ const PaperPanel = ({ ytree, paperId }) => {
   const [templateFromFile, setTemplateFromFile] = useState(null);
 
   const preferences = useMemo(() => {
-    if (templateFromFile === null || templateFromFile === undefined) return null;
+    if (
+      !itemLocalStateManager.getPaperEditorTemplate(paperId) ||
+      templateFromFile === null ||
+      templateFromFile === undefined
+    )
+      return null;
     return isMobile
       ? templateFromFile?.template_content.mobileDefaultPreferences
       : templateFromFile?.template_content.desktopDefaultPreferences;
-  }, [templateFromFile, isMobile]);
+  }, [templateFromFile, isMobile, paperId]);
 
-  useEffect(() => { 
+  useEffect(() => {
     const callback = async () => {
       try {
         const templateJSON = await templateManager.getTemplate(
@@ -124,98 +131,99 @@ const PaperPanel = ({ ytree, paperId }) => {
     paperMap.set("item_title", paperProperties.item_title);
   };
 
-
   console.log("PREFERENCES ", preferences);
 
   return (
     <DetailsPanel>
-      <AnimatePresence>
+      <form
+        noValidate
+        onSubmit={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          handleSave();
+        }}
+        className={formClassName}
+      >
         <DetailsPanelHeader>
-          <form
-            noValidate
-            onSubmit={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              handleSave();
-            }}
-            className="w-full h-full flex items-center justify-start"
-          >
-            {deviceType === "mobile" && (
-              <button
-                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+          {deviceType === "mobile" && (
+            <button
+              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
              order-first
           `}
-                onClick={() => {
-                  setPanelOpened(true);
-                  setItemId("unselected");
+              onClick={() => {
+                setPanelOpened(true);
+                setItemId("unselected");
+              }}
+            >
+              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </button>
+          )}
+
+          <AnimatePresence>
+            {unsavedChangesExist && (
+              <motion.button
+                type="submit"
+                initial={{
+                  width: 0,
+                  opacity: 0,
+                  marginRight: 0,
+                  marginLeft: 0,
+                  marginBottom: 0,
+                  padding: 0,
                 }}
-              >
-                <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-              </button>
-            )}
+                animate={{
+                  width: "var(--libraryManagerAddButtonSize) ",
+                  opacity: 1,
+                  marginRight: `0.5rem`,
+                  marginLeft: `0.5rem`,
+                  marginBottom: 0,
+                  padding: `0.25rem`,
+                }}
+                exit={{
+                  width: 0,
+                  opacity: 0,
+                  marginRight: 0,
+                  marginLeft: 0,
 
-            <AnimatePresence>
-              {unsavedChangesExist && (
-                <motion.button
-                  type="submit"
-                  initial={{
-                    width: 0,
-                    opacity: 0,
-                    marginLeft: 0,
-                    marginBottom: 0,
-                    padding: 0,
-                  }}
-                  animate={{
-                    width: "var(--libraryManagerAddButtonSize) ",
-                    opacity: 1,
-                    marginLeft: `0.5rem`,
-                    marginBottom: 0,
-                    padding: `0.25rem`,
-                  }}
-                  exit={{
-                    width: 0,
-                    opacity: 0,
-                    marginLeft: 0,
-                    marginBottom: 0,
-                    padding: 0,
-                  }}
-                  className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+                  marginBottom: 0,
+                  padding: 0,
+                }}
+                className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-3 mx-2
+                    flex items-center justify-center order-3
                     `}
-                >
-                  <motion.span
-                    animate={{
-                      opacity: 1,
-                    }}
-                    className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-                  ></motion.span>
-                </motion.button>
-              )}
-            </AnimatePresence>
+              >
+                <motion.span
+                  animate={{
+                    opacity: 1,
+                  }}
+                  className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+                ></motion.span>
+              </motion.button>
+            )}
+          </AnimatePresence>
 
-            <DetailsPanelNameInput
-              name="item_title"
-              onChange={handleChange}
-              value={paperProperties.item_title}
-            />
-          </form>
+          <DetailsPanelNameInput
+            name="item_title"
+            onChange={handleChange}
+            value={paperProperties.item_title}
+          />
         </DetailsPanelHeader>
-      </AnimatePresence>
 
-      <DetailsPanelDivider />
+        <DetailsPanelDivider />
 
-      <motion.div
-        id="PaperBody"
-        className="w-full grow min-h-0 min-w-0 basis-0"
-      >
-        <TipTapEditor
-          key={paperId}
-          yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
-          setHeaderOpened={setHeaderOpened}
-          preferences={preferences}
-        />
-      </motion.div>
+        <motion.div
+          id="PaperBody"
+          className="w-full grow min-h-0 min-w-0 basis-0"
+        >
+          <TipTapEditor
+            key={paperId}
+            yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
+            setHeaderOpened={setHeaderOpened}
+            preferences={preferences}
+          />
+        </motion.div>
+      </form>
     </DetailsPanel>
   );
 };

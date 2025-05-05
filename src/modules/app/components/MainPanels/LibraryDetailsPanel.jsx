@@ -11,7 +11,9 @@ import syncManager from "../../lib/sync";
 import { wait } from "lib0/promise";
 import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
 import { Textarea } from "@mantine/core";
-import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
+import DetailsPanel, {
+  formClassName,
+} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
@@ -100,7 +102,7 @@ const LibraryDetailsPanel = ({ libraryId }) => {
           handleSave();
         }}
         id="LibraryDetailsContent"
-        className="w-full h-full"
+        className={formClassName}
       >
         <DetailsPanelHeader>
           {deviceType === "mobile" && (
@@ -170,15 +172,6 @@ const LibraryDetailsPanel = ({ libraryId }) => {
 
         <DetailsPanelBody>
           <div className="prop w-full h-fit relative">
-            {/* <textarea
-            id="libraryDescription"
-            className="bg-appBackground field-sizing-content overflow-hidden text-detailsPanelPropsFontSize w-full border border-appLayoutBorder px-3 pt-detailsPanelPropLabelHeight rounded-md  focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200"
-            name="library_description"
-            placeholder="Enter Description"
-            onChange={handleChange}
-            value={libraryProperties.library_description}
-          /> */}
-
             <Textarea
               maxRows={10}
               id="libraryDescription"
