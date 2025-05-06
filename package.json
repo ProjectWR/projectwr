@@ -15,6 +15,7 @@
     "@emotion/css": "^11.13.5",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fabianlars/tauri-plugin-oauth": "^2.0.0",
     "@faker-js/faker": "^9.4.0",
     "@farscrl/tiptap-extension-spellchecker": "^1.0.7",
     "@headlessui/react": "^2.2.0",

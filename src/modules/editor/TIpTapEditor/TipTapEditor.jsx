@@ -376,8 +376,9 @@ const TiptapEditor = ({
             min-height: calc(20rem * var(--uiScale));
             padding: calc(${paddingTop}rem * var(--uiScale))
                      calc(${paddingRight}rem * var(--uiScale))
-                     ${paddingBottom}rem
+                     calc(${paddingBottom}rem / var(--uiScale))
                      calc(${paddingLeft}rem * var(--uiScale));
+            font-family: ${font}, serif ;
           }
 
           #EditorContainer h1 {
@@ -409,6 +410,7 @@ const TiptapEditor = ({
           #EditorContainer p {
             font-size: calc(${fontSize}rem * var(--uiScale));
             line-height: calc(${lineHeight}rem * var(--uiScale));
+            margin-bottom: calc(${marginBottom}rem * var(--uiScale));
             margin: 0;
           }
 
@@ -464,6 +466,8 @@ const TiptapEditor = ({
           [data-indent='4'] {
             padding-left: calc(4 * 3rem);
           }
+
+          
           
           
           
@@ -508,32 +512,24 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             className={`h-fit outline-none focus:outline-none z-1
-            shadow-${isMobile ? "none" : paperShadow}
-            shadow-black
+      
             font-serif  
             `}
             style={{
-              width: isMobile
-                ? "100%"
-                : typeof width === "string" && width.trim().endsWith("%")
-                ? width
-                : `calc(${width}rem * var(--uiScale))`,
-              minWidth: isMobile
-                ? "100%"
-                : typeof width === "string" && width.trim().endsWith("%")
-                ? width
-                : `calc(${width}rem * var(--uiScale))`,
+              width: `${width}`,
+              minWidth: `${width}`,
               backgroundColor: `${paperColor}`,
-              borderTopWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-              borderRightWidth: isMobile ? "0" : `${paperBorderWidth}px`,
-              borderBottomWidth: isMobile ? "0" : `0`,
-              borderLeftWidth: isMobile ? "0" : `${paperBorderWidth}px`,
+              borderTopWidth: `${paperBorderWidth}px`,
+              borderRightWidth: `${paperBorderWidth}px`,
+              borderBottomWidth: `0`,
+              borderLeftWidth: `${paperBorderWidth}px`,
               borderTopColor: `${paperBorderColor}`,
               borderLeftColor: `${paperBorderColor}`,
               borderRightColor: `${paperBorderColor}`,
-              marginTop: isMobile ? "0" : `calc(${gapTop}rem * var(--uiScale))`,
+              marginTop: `calc(${gapTop}rem * var(--uiScale))`,
               borderTopRightRadius: `${roundRadius}rem`,
               borderTopLeftRadius: `${roundRadius}rem`,
+              boxShadow: `0px 0px ${paperShadow} ${paperShadowColor}`,
             }}
           />
         </ContextMenuWrapper>

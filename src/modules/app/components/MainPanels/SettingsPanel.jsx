@@ -229,7 +229,7 @@ const SettingsPanel = () => {
                 <div className="grow basis-0 h-full">
                   <AnimatePresence mode="wait">
                     <button
-                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden
+                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg shadow-appLayoutGentleShadow
                           `}
                       type="button"
                       onClick={() => {

@@ -1,10 +1,8 @@
-import { load } from "@tauri-apps/plugin-store";
 import * as Y from "yjs";
 import persistenceManagerForSubdocs from "./persistenceSubDocs";
 import nspell from "nspell";
 import { resolveResource } from '@tauri-apps/api/path';
 import { readTextFile } from '@tauri-apps/plugin-fs';
-import { word } from "lib0/prng";
 
 let instance;
 
@@ -124,7 +122,7 @@ class DictionaryManager {
 
         console.log("Getting Word Map: ", wordMap.toJSON());
 
-        return Object.values(wordMap.toJSON()).map((value, index) => value.word);
+        return Object.values(wordMap.toJSON()).map((value) => value.word);
     }
 
 }

@@ -1,7 +1,7 @@
 // Separate default preferences for desktop
 const TiptapDesktopDefaultPreferences = {
   paperPreferences: {
-    width: 55,
+    width: '55rem',
     gapTop: 1,
     paddingTop: 5, // Updated from marginTop
     paddingLeft: 6, // Updated from marginLeft
@@ -17,7 +17,7 @@ const TiptapDesktopDefaultPreferences = {
     paperBorderColor: "#525252",
     paperColor: "#171717",
     roundRadius: 0.5,
-    paperShadow: "xl",
+    paperShadow: 30,
     paperShadowColor: "#000",
 
     h1FontSize: 1.25 * 2,
@@ -75,7 +75,7 @@ const TiptapDesktopDefaultPreferences = {
 // Mobile preferences updated with padding
 const TiptapMobileDefaultPreferences = {
   paperPreferences: {
-    width: 55,
+    width: `100%`,
     gapTop: 0,
     paddingTop: 1.2, // Updated from marginTop
     paddingLeft: 1.2, // Updated from marginLeft
@@ -85,7 +85,7 @@ const TiptapMobileDefaultPreferences = {
     fontSize: 1.1,
     lineHeight: 1.5,
     backgroundColor: "#171717",
-    paperBorderWidth: 1,
+    paperBorderWidth: 0,
     paperColor: "#171717",
     paperBorderColor: "#525252",
     roundRadius: 0,

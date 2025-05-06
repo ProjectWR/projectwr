@@ -1,19 +1,4 @@
-/**
- * GrainyDiv component displays a div with a dynamic, animated background gradient that simulates a "spotlight" effect following the mouse position.
- * It utilizes motion values and springs for a smooth transition effect, and supports disabling the interaction as well as an active state styling.
- *
- * @component
- * @param {object} props - The component props.
- * @param {string} [props.className] - Additional CSS class names to apply to the div.
- * @param {boolean} [props.disabled=false] - Flag indicating if the interactive spotlight effect is disabled.
- * @param {React.ReactNode} [props.children] - Child nodes to render within the div.
- * @param {number} [props.restingPosX=0] - The x-coordinate (as a percentage) where the gradient centers when at rest.
- * @param {number} [props.restingPosY=50] - The y-coordinate (as a percentage) where the gradient centers when at rest.
- * @param {number} [props.gradientSize=125] - The size of the gradient effect.
- * @param {boolean} [props.active=false] - Flag indicating if the active state style should be applied.
- * @returns {JSX.Element} The rendered GrainyDiv component.
- */
-
+import { GrainyElement } from "../../../design-system/GrainyElement";
 import PropTypes from "prop-types";
 import {
   motion,
@@ -23,17 +8,16 @@ import {
 } from "motion/react";
 import { useCallback, useRef } from "react";
 
-export function GrainyElement(props) {
-  const {
-    className,
-    active = false,
-    disabled = false,
-    children,
-    restingPosX = 50,
-    restingPosY = -200,
-    gradientSize = 10,
-  } = props;
-
+export const GrainyElementButton = ({
+  className,
+  active = false,
+  disabled = false,
+  children,
+  onClick,
+  restingPosX = 50,
+  restingPosY = -200,
+  gradientSize = 10,
+}) => {
   const grainyDivRef = useRef(null);
 
   const mouseX = useMotionValue(restingPosX);
@@ -66,15 +50,16 @@ export function GrainyElement(props) {
 
   console.log(spotlightBackground);
   return (
-    <motion.div
+    <motion.button
+      onClick={onClick}
       ref={grainyDivRef}
       onMouseMove={({ clientX, clientY, currentTarget }) => {
         if (disabled) return;
         handleMouseMove({ clientX, clientY, currentTarget });
       }}
       onMouseLeave={handleMouseLeave}
-      className={`transition-colors ease-out duration-200 relative ${
-        active && "bg-appLayoutInverseHover" 
+      className={`transition-all ease-out relative duration-200 hover:-translate-y-1 hover:shadow-lg shadow-appLayoutGentleShadow ${
+        active && "bg-appLayoutInverseHover"
       } ${className}`}
       style={{
         backgroundBlendMode: "color",
@@ -84,16 +69,6 @@ export function GrainyElement(props) {
     >
       <div className="absolute w-full h-full bg-repeat top-0 left-0 noiseFine mix-blend-multiply"></div>
       {children}
-    </motion.div>
+    </motion.button>
   );
-}
-
-GrainyElement.propTypes = {
-  className: PropTypes.string,
-  active: PropTypes.bool,
-  disabled: PropTypes.bool,
-  children: PropTypes.node,
-  restingPosX: PropTypes.number,
-  restingPosY: PropTypes.number,
-  gradientSize: PropTypes.number,
 };

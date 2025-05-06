@@ -1,5 +1,5 @@
 import { open } from '@tauri-apps/plugin-dialog';
-import { readFile, writeFile, exists, mkdir, remove, readDir, BaseDirectory } from '@tauri-apps/plugin-fs';
+import { readFile, writeFile, exists, mkdir, remove, readDir } from '@tauri-apps/plugin-fs';
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { v4 as uuidv4 } from 'uuid';
 
