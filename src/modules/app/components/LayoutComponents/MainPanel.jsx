@@ -223,7 +223,7 @@ const MainPanel = ({}) => {
 
       const breadcrumbValues = [
         {
-          label: "Your editor styles",
+          label: "Your Editor Styles",
           action: () => {
             setActivity("templates");
             setPanelOpened(true);

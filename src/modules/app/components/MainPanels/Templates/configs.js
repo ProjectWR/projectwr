@@ -7,7 +7,7 @@ export const desktopPaperConfig = {
     paddingLeft: { type: "number", label: "Padding Left" },
     paddingRight: { type: "number", label: "Padding Right" },
     paddingBottom: { type: "number", label: "Padding Bottom" },
-    font: { type: "text", label: "Font" },
+    font: { type: "font", label: "Font" },
     fontSize: { type: "number", label: "Font Size" },
     lineHeight: { type: "number", label: "Line Height" },
     marginBottom: { type: "number", label: "Margin Bottom" },

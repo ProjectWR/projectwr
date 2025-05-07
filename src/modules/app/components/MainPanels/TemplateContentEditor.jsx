@@ -9,6 +9,40 @@ import {
   mobilePaperConfig,
   mobileToolbarConfig,
 } from "./Templates/configs";
+import { DropdownMenu } from "radix-ui";
+import { useFonts } from "../../hooks/useFonts";
+
+const FontInput = ({ value, onChange }) => {
+  const fonts = useFonts();
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <button style={{fontFamily: value}} className="w-fit text-templateDetailsPanelPreferenceInputFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+          {value || "Select Font"}
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        style={{ opacity: 1 }}
+        className="contextMenuContent z-[1100] max-h-  overflow-y-scroll"
+        sideOffset={5}
+        align="center"
+      >
+        {fonts.map((font, index) => (
+          <DropdownMenu.Item
+            key={`${font.family}-${index}`}
+            className="contextMenuItem"
+            onClick={() => onChange(font.family)}
+          >
+            <span className="pt-[3px]" style={{ fontFamily: font.family }}>
+              {font.family}
+            </span>
+          </DropdownMenu.Item>
+        ))}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+};
 
 // Add this helper component (place it at the top of GroupEditor, before the return statement)
 const NumberOrPercentInput = ({ value, onChange }) => {
@@ -230,6 +264,42 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           );
         }
 
+        if (fieldConfig.type === "font") {
+          return (
+            <div key={key} className="flex items-center justify-center">
+              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+
+                <div className="h-px grow bg-appLayoutBorder"></div>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
+                <div className="w-fit h-full flex items-center">
+                  <FontInput
+                    value={data[key]}
+                    onChange={(val) => handleChange(key, val)}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        }
+
         return null;
       })}
     </>
@@ -370,11 +440,7 @@ const TemplateContentEditor = ({
     } else {
       return null;
     }
-  }, [
-    groupSelected,
-    content,
-    handleGroupChange,
-  ]);
+  }, [groupSelected, content, handleGroupChange]);
 
   if (content === null || content === undefined) return null;
 

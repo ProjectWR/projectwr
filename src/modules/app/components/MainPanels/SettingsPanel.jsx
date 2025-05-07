@@ -229,7 +229,7 @@ const SettingsPanel = () => {
                 <div className="grow basis-0 h-full">
                   <AnimatePresence mode="wait">
                     <button
-                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg shadow-appLayoutGentleShadow
+                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md shadow-sm shadow-appLayoutGentleShadow
                           `}
                       type="button"
                       onClick={() => {
@@ -484,7 +484,7 @@ const SettingsPanel = () => {
                 onClick={async () => {
                   await fontManager.addFont();
                 }}
-                className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full"
+                className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
               >
                 <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
               </button>
