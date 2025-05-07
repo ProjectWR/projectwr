@@ -56,6 +56,7 @@ const TiptapDesktopDefaultPreferences = {
     toolbarButtonHeight: 2.3,
     toolbarBorderWidth: 0.0625,
     textFormatButtonWidth: 12,
+    toolbarFontSize: 1.25,
     marginTop: 0.25,
     marginBottom: 0.25,
     marginLeft: 0.25,

@@ -385,32 +385,38 @@ const TiptapEditor = ({
             font-size: calc(${h1FontSize}rem * var(--uiScale));
             line-height: calc(${h1LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h1MarginBottom}rem * var(--uiScale));
+            font-family: ${font}, serif ;
           }
           #EditorContainer h2 {
             font-size: calc(${h2FontSize}rem * var(--uiScale));
             line-height: calc(${h2LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h2MarginBottom}rem * var(--uiScale));
+            font-family: ${font}, serif ;
           }
           #EditorContainer h3 {
             font-size: calc(${h3FontSize}rem * var(--uiScale));
             line-height: calc(${h3LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h3MarginBottom}rem * var(--uiScale));
+            font-family: ${font}, serif ;
           }
           #EditorContainer h4 {
             font-size: calc(${h4FontSize}rem * var(--uiScale));
             line-height: calc(${h4LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h4MarginBottom}rem * var(--uiScale));
+            font-family: ${font}, serif ;
           }
           #EditorContainer h5 {
             font-size: calc(${h5FontSize}rem * var(--uiScale));
             line-height: calc(${h5LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h5MarginBottom}rem * var(--uiScale));
+            font-family: ${font}, serif ;
           }
 
           #EditorContainer p {
             font-size: calc(${fontSize}rem * var(--uiScale));
             line-height: calc(${lineHeight}rem * var(--uiScale));
             margin-bottom: calc(${marginBottom}rem * var(--uiScale));
+            font-family: ${font}, serif ;
             margin: 0;
           }
 
@@ -498,7 +504,7 @@ const TiptapEditor = ({
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 mt-2 w-fit rounded-lg border shadow-sm shadow-appLayoutShadow relative z-2"
+                : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
             }
           `}
         >
@@ -512,9 +518,7 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             className={`h-fit outline-none focus:outline-none z-1
-      
-            font-serif  
-            `}
+                  `}
             style={{
               width: `${width}`,
               minWidth: `${width}`,

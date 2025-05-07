@@ -55,6 +55,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
     buttonColor,
     dividerColor,
     textFormatButtonWidth,
+    toolbarFontSize,
     hoverColor,
     pressedColor,
   } = toolbarPreferences;
@@ -74,7 +75,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
 
   useEffect(() => {
     onSelectionUpdate();
-  }, [editorState, onSelectionUpdate])
+  }, [editorState, onSelectionUpdate]);
 
   useEffect(() => {
     if (isOpened && headerRef.current && dropdownRef.current) {
@@ -109,7 +110,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
         style={{ height: `${buttonHeight}rem` }}
         id="TextFormatButtonHeader"
         ref={headerRef}
-        className="px-1 w-fit"
+        className="px-1 w-fit flex items-center justify-center"
       >
         <button
           style={{
@@ -121,7 +122,10 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
         >
           <div className="w-full h-full flex items-center justify-between">
             <div className="grow px-2 h-full py-[0.3rem] flex justify-center items-center">
-              <ReturnPlainElementForFormat format={activeHeading} />
+              <ReturnPlainElementForFormat
+                format={activeHeading}
+                toolbarFontSize={toolbarFontSize}
+              />
             </div>
             <motion.span
               animate={{
@@ -144,57 +148,75 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
-              width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+              width: `fit-content`,
               border: `1px solid ${dividerColor}`,
             }}
           >
             <button
-              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center relative`}
+              className={`w-fit h-fit px-4 py-1 toolbarButton flex items-center justify-center relative`}
               onClick={() => {
                 setFormat("p", editor);
               }}
             >
-              <ReturnElementForFormat format={"p"} />
+              <ReturnElementForFormat
+                format={"p"}
+                toolbarFontSize={toolbarFontSize}
+              />
             </button>
             <button
-              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
+              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h1", editor);
               }}
             >
-              <ReturnElementForFormat format={"h1"} />
+              <ReturnElementForFormat
+                format={"h1"}
+                toolbarFontSize={toolbarFontSize}
+              />
             </button>
             <button
-              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
+              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h2", editor);
               }}
             >
-              <ReturnElementForFormat format={"h2"} />
+              <ReturnElementForFormat
+                format={"h2"}
+                toolbarFontSize={toolbarFontSize}
+              />
             </button>
             <button
-              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
+              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h3", editor);
               }}
             >
-              <ReturnElementForFormat format={"h3"} />
+              <ReturnElementForFormat
+                format={"h3"}
+                toolbarFontSize={toolbarFontSize}
+              />
             </button>
             <button
-              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
+              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h4", editor);
               }}
             >
-              <ReturnElementForFormat format={"h4"} />
+              <ReturnElementForFormat
+                format={"h4"}
+                toolbarFontSize={toolbarFontSize}
+              />
             </button>
             <button
-              className={`w-full h-fit px-2 py-[0.3rem] toolbarButton flex items-center justify-center`}
+              className={`w-full h-fit px-4 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
                 setFormat("h5", editor);
               }}
             >
-              <ReturnElementForFormat format={"h5"} />
+              <ReturnElementForFormat
+                format={"h5"}
+                toolbarFontSize={toolbarFontSize}
+              />
             </button>
           </motion.div>
         )}
@@ -205,48 +227,114 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
 
 export default TextFormatButton;
 
-const ReturnPlainElementForFormat = ({ format }) => {
+const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
   switch (format) {
     case "h1":
       console.log("Inside plain element renderer: ", format);
-      return <p className="min-w-fit w-fit">Title</p>;
+      return (
+        <p
+          className="min-w-fit w-fit"
+          style={{ fontSize: `${toolbarFontSize}rem` }}
+        >
+          Title
+        </p>
+      );
 
     case "h2":
-      return <p className="min-w-fit w-fit">Heading 1</p>;
+      return (
+        <p
+          className="min-w-fit w-fit"
+          style={{ fontSize: `${toolbarFontSize}rem` }}
+        >
+          Heading 1
+        </p>
+      );
 
     case "h3":
-      return <p className="min-w-fit w-fit">Heading 2</p>;
+      return (
+        <p
+          className="min-w-fit w-fit"
+          style={{ fontSize: `${toolbarFontSize}rem` }}
+        >
+          Heading 2
+        </p>
+      );
 
     case "h4":
-      return <p className="min-w-fit w-fit">Heading 3</p>;
+      return (
+        <p
+          className="min-w-fit w-fit"
+          style={{ fontSize: `${toolbarFontSize}rem` }}
+        >
+          Heading 3
+        </p>
+      );
 
     case "h5":
-      return <p className="min-w-fit w-fit">Heading 4</p>;
+      return (
+        <p
+          className="min-w-fit w-fit"
+          style={{ fontSize: `${toolbarFontSize}rem` }}
+        >
+          Heading 4
+        </p>
+      );
 
     default:
-      return <p className="min-w-fit w-fit">Normal Text</p>;
+      return (
+        <p
+          className="min-w-fit w-fit"
+          style={{ fontSize: `${toolbarFontSize}rem` }}
+        >
+          Normal Text
+        </p>
+      );
   }
 };
 
-const ReturnElementForFormat = ({ format }) => {
+const ReturnElementForFormat = ({ format, toolbarFontSize }) => {
   switch (format) {
     case "p":
-      return <p>Normal Text</p>;
+      return (
+        <p style={{}} className="text-nowrap w-fit">
+          Normal Text
+        </p>
+      );
 
     case "h1":
-      return <h1 style={{ margin: 0 }}>Title</h1>;
+      return (
+        <h1 style={{ margin: 0 }} className="text-nowrap w-fit">
+          Title
+        </h1>
+      );
 
     case "h2":
-      return <h2 style={{ margin: 0 }}>Heading 1</h2>;
+      return (
+        <h2 style={{ margin: 0 }} className="text-nowrap w-fit">
+          Heading 1
+        </h2>
+      );
 
     case "h3":
-      return <h3 style={{ margin: 0 }}>Heading 2</h3>;
+      return (
+        <h3 style={{ margin: 0 }} className="text-nowrap w-fit">
+          Heading 2
+        </h3>
+      );
 
     case "h4":
-      return <h4 style={{ margin: 0 }}>Heading 3</h4>;
+      return (
+        <h4 style={{ margin: 0 }} className="text-nowrap w-fit">
+          Heading 3
+        </h4>
+      );
 
     case "h5":
-      return <h5 style={{ margin: 0 }}>Heading 4</h5>;
+      return (
+        <h5 style={{ margin: 0 }} className="text-nowrap w-fit">
+          Heading 4
+        </h5>
+      );
 
     default:
       return null;

@@ -39,21 +39,30 @@ export const desktopPaperConfig = {
     hrMarginTop: { type: "number", label: "HR Margin Top" },
     hrMarginBottom: { type: "number", label: "HR Margin Bottom" },
     hrBorderColor: { type: "color", label: "HR Border Color" },
+    blockquoteBorderWidth: { type: "number", label: "Blockquote border width" },
+    blockquotePadding: { type: "number", label: "Blockquote padding" },
+    blockquoteBorderColor: { type: "color", label: "Blockquote Border Color" },
 };
 
 export const desktopToolbarConfig = {
     toolbarHeight: { type: "number", label: "Toolbar Height" },
     toolbarButtonHeight: { type: "number", label: "Toolbar Button Height" },
+    toolbarButtonWidth: { type: "number", label: "Toolbar Button Width" },
+    textFormatButtonWidth: { type: "number", label: "Text Format Button Width" },
+    toolbarFontSize: { type: "number", label: "Toolbar Font Size Width" },
     marginTop: { type: "number", label: "Margin Top" },
     marginBottom: { type: "number", label: "Margin Bottom" },
     marginLeft: { type: "number", label: "Margin Left" },
     marginRight: { type: "number", label: "Margin Right" },
     buttonHeight: { type: "number", label: "Button Height" },
     buttonWidth: { type: "number", label: "Button Width" },
+    buttonRadius: { type: "number", label: "Button Radius" },
+    buttonGap: { type: "number", label: "Button Gap" },
     backgroundColor: { type: "color", label: "Background Color" },
     buttonColor: { type: "color", label: "Button Color" },
     dividerColor: { type: "color", label: "Divider Color" },
     hoverColor: { type: "color", label: "Hover Color" },
+    pressedColor: { type: "color", label: "Pressed Color" },
 };
 
 export const mobilePaperConfig = { ...desktopPaperConfig };
