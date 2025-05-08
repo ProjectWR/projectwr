@@ -155,6 +155,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <button
               className={`w-fit h-fit px-4 py-1 toolbarButton flex items-center justify-center relative`}
               onClick={() => {
+                setIsOpened(false);
+
                 setFormat("p", editor);
               }}
             >
@@ -166,6 +168,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <button
               className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
+                setIsOpened(false);
+
                 setFormat("h1", editor);
               }}
             >
@@ -177,6 +181,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <button
               className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
+                setIsOpened(false);
+
                 setFormat("h2", editor);
               }}
             >
@@ -188,6 +194,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <button
               className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
+                setIsOpened(false);
+
                 setFormat("h3", editor);
               }}
             >
@@ -199,6 +207,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <button
               className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
               onClick={() => {
+                setIsOpened(false);
+
                 setFormat("h4", editor);
               }}
             >
@@ -210,6 +220,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <button
               className={`w-full h-fit px-4 py-[0.3rem] toolbarButton flex items-center justify-center`}
               onClick={() => {
+                setIsOpened(false);
+
                 setFormat("h5", editor);
               }}
             >
