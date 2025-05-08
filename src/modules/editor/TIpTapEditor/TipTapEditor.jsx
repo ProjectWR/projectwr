@@ -366,12 +366,13 @@ const TiptapEditor = ({
   }, [editor, selectingError, setSearchQuery]);
 
   return (
-    <div
-      id="EditorContainer"
-      className="h-full w-full flex flex-col items-center bg-appBackgroundAccent"
-    >
-      <style>
-        {`
+    <ContextMenuWrapper options={options}>
+      <div
+        id="EditorContainer"
+        className="h-full w-full flex flex-col items-center bg-appBackgroundAccent"
+      >
+        <style>
+          {`
           .tiptap {
             min-height: calc(20rem * var(--uiScale));
             padding: calc(${paddingTop}rem * var(--uiScale))
@@ -479,49 +480,53 @@ const TiptapEditor = ({
           
 
         `}
-      </style>
+        </style>
 
-      <div
-        id="EditableContainer"
-        className={`h-full w-full flex justify-start flex-col items-center relative
+        <div
+          id="EditableContainer"
+          className={`h-full w-full flex justify-start flex-col items-center relative
            overflow-y-scroll min-h-0 text-neutral-200
           `}
-        style={{
-          paddingLeft: `var(--scrollbarWidth)`,
-          backgroundColor: backgroundColor,
-        }}
-      >
-        <div
-          id="EditableToolbar"
           style={{
-            height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-            minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-            backgroundColor: `${toolbarPreferences.backgroundColor}`,
-            borderColor: `${dividerColor}`,
+            paddingLeft: `var(--scrollbarWidth)`,
+            backgroundColor: backgroundColor,
           }}
-          className={`
-            min-w-0 top-2 sticky
+        >
+          <div
+            id="EditableToolbar"
+            style={{
+              height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+              minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+              backgroundColor: `${toolbarPreferences.backgroundColor}`,
+              borderColor: `${dividerColor}`,
+              top: `calc(${toolbarPreferences.toolbarGapTop}rem * var(--uiScale))`,
+            }}
+            className={`
+            min-w-0 sticky
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 mt-2 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
+                : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
             }
           `}
-        >
-          <TipTapToolbar
-            editor={editor}
-            toolbarPreferences={toolbarPreferences}
-          />
-        </div>
-        <ContextMenuWrapper options={options}>
+          >
+            <TipTapToolbar
+              editor={editor}
+              toolbarPreferences={toolbarPreferences}
+            />
+          </div>
           <EditorContent
             spellCheck={false}
             editor={editor}
             className={`h-fit outline-none focus:outline-none z-1
                   `}
             style={{
-              width: `${width}`,
-              minWidth: `${width}`,
+              width: width.endsWith("%")
+                ? `${width}`
+                : `calc(${width} * var(--uiScale))`,
+              minWidth: width.endsWith("%")
+                ? `${width}`
+                : `calc(${width} * var(--uiScale))`,
               backgroundColor: `${paperColor}`,
               borderTopWidth: `${paperBorderWidth}px`,
               borderRightWidth: `${paperBorderWidth}px`,
@@ -530,15 +535,15 @@ const TiptapEditor = ({
               borderTopColor: `${paperBorderColor}`,
               borderLeftColor: `${paperBorderColor}`,
               borderRightColor: `${paperBorderColor}`,
-              marginTop: `calc(${gapTop}rem * var(--uiScale))`,
+              marginTop: `${gapTop}rem`,
               borderTopRightRadius: `${roundRadius}rem`,
               borderTopLeftRadius: `${roundRadius}rem`,
               boxShadow: `0px 0px ${paperShadow} ${paperShadowColor}`,
             }}
           />
-        </ContextMenuWrapper>
+        </div>
       </div>
-    </div>
+    </ContextMenuWrapper>
   );
 };
 

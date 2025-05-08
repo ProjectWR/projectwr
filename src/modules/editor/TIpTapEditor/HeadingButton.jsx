@@ -234,7 +234,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `${toolbarFontSize}rem` }}
+          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Title
         </p>
@@ -244,7 +244,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `${toolbarFontSize}rem` }}
+          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Heading 1
         </p>
@@ -254,7 +254,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `${toolbarFontSize}rem` }}
+          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Heading 2
         </p>
@@ -264,7 +264,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `${toolbarFontSize}rem` }}
+          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Heading 3
         </p>
@@ -274,7 +274,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `${toolbarFontSize}rem` }}
+          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Heading 4
         </p>
@@ -284,7 +284,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `${toolbarFontSize}rem` }}
+          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Normal Text
         </p>

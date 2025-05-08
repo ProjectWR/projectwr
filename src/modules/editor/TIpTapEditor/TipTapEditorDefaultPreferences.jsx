@@ -2,7 +2,7 @@
 const TiptapDesktopDefaultPreferences = {
   paperPreferences: {
     width: '55rem',
-    gapTop: 1,
+    gapTop: 2,
     paddingTop: 5, // Updated from marginTop
     paddingLeft: 6, // Updated from marginLeft
     paddingRight: 6, // Updated from marginRight
@@ -56,6 +56,7 @@ const TiptapDesktopDefaultPreferences = {
     toolbarButtonHeight: 2.3,
     toolbarBorderWidth: 0.0625,
     textFormatButtonWidth: 12,
+    toolbarGapTop: 1,
     toolbarFontSize: 1.25,
     marginTop: 0.25,
     marginBottom: 0.25,
@@ -127,6 +128,7 @@ const TiptapMobileDefaultPreferences = {
   toolbarPreferences: {
     toolbarHeight: 2.8,
     toolbarButtonHeight: 2.3,
+    toolbarGapTop: 0,
     marginTop: 0.25,
     marginBottom: 0.25,
     marginLeft: 0.25,

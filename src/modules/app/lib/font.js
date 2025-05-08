@@ -93,17 +93,15 @@ class FontManager {
       if (parts.length < 2) throw new Error('Invalid font file name');
       const format = parts.pop().toLowerCase();
 
-      const family = parts.shift();
+      const family = parts.join('-');
       // Handle file name conflicts
       if (await exists(fontPath)) {
-        const uniqueId = uuidv4().split('-')[0];
-        fileName = `${family}-${uniqueId}-${format}.${format}`;
-        fontPath = await join(this.fontsDir, fileName);
+        throw new Error(`Font with name "${fileName}" already exists`);
       }
 
       console.log("writing font file now");
 
-      await writeFile(fontPath, fontBuffer);
+      await writeFile(fontPath, fontBuffer); 
 
       console.log("loading font now");
 
@@ -117,6 +115,63 @@ class FontManager {
     } catch (error) {
       console.error('Error adding font:', error);
       throw error;
+    }
+  }
+
+  async addFontsFromPath(path) {
+    
+    console.log("adding fonts from path: ", path);
+
+    const files = await readDir(path);
+
+    console.log("files: ", files);
+
+    for (const file of files) {
+      if (!file.isFile) continue;
+
+      const fileName = file.name;
+      const parts = fileName.split('.');
+      if (parts.length < 2) continue;
+
+      const format = parts.pop().toLowerCase();
+      if (!['ttf', 'otf', 'woff', 'woff2'].includes(format)) continue;
+
+      const fontBuffer = await readFile(await join(path, fileName));
+
+      try {
+        console.log("filename: ", fileName);
+
+        let fontPath = await join(this.fontsDir, fileName);
+
+        console.log("fontPath: ", fontPath);
+
+        const parts = fileName.split('.');
+        if (parts.length < 2) throw new Error('Invalid font file name');
+        const format = parts.pop().toLowerCase();
+
+        const family = parts.shift();
+        // Handle file name conflicts
+        if (await exists(fontPath)) {
+          continue;
+        }
+
+        console.log("writing font file now");
+
+        await writeFile(fontPath, fontBuffer);
+
+        console.log("loading font now");
+
+        await this.loadFontFace(family, fontBuffer, format);
+
+        const fontData = { id: fileName, family: fileName.split('.').shift(), format, fileName };
+        this.fonts.set(fileName, fontData);
+        this.triggerCallbacks('added', fontData);
+
+        return fileName;
+      } catch (error) {
+        console.error('Error adding font:', error);
+        throw error;
+      }
     }
   }
 

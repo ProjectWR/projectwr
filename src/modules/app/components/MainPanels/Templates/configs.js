@@ -49,6 +49,7 @@ export const desktopToolbarConfig = {
     toolbarButtonHeight: { type: "number", label: "Toolbar Button Height" },
     toolbarButtonWidth: { type: "number", label: "Toolbar Button Width" },
     textFormatButtonWidth: { type: "number", label: "Text Format Button Width" },
+    toolbarGapTop: { type: "number", label: "Toolbar Gap Top" },
     toolbarFontSize: { type: "number", label: "Toolbar Font Size Width" },
     marginTop: { type: "number", label: "Margin Top" },
     marginBottom: { type: "number", label: "Margin Bottom" },

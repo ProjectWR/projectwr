@@ -1,5 +1,6 @@
 import { appDataDir, join } from '@tauri-apps/api/path';
 import { mkdir, exists, readDir, readTextFile, remove, rename, writeTextFile } from '@tauri-apps/plugin-fs';
+import fontManager from './font';
 
 let instance;
 
@@ -22,6 +23,8 @@ class TemplateManager {
     if (!await exists(this.templatesDirPath)) {
       await mkdir(this.templatesDirPath, { recursive: true });
     }
+
+    await this.getTemplates();
   }
 
   addCallback(callback) {
@@ -77,6 +80,8 @@ class TemplateManager {
             const stylePath = await join(this.templatesDirPath, entry.name, 'style.json');
             const content = await readTextFile(stylePath);
             const templateData = JSON.parse(content);
+
+            await fontManager.addFontsFromPath(await join(this.templatesDirPath, entry.name));
 
             // Ensure template_id matches folder name
             templates[entry.name] = {
@@ -207,6 +212,5 @@ class TemplateManager {
 
 // Initialize the manager immediately
 const templateManager = new TemplateManager();
-templateManager.initialize(); // Start initialization but don't wait here
 
 export default templateManager;
