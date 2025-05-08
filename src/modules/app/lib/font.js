@@ -93,6 +93,7 @@ class FontManager {
       if (parts.length < 2) throw new Error('Invalid font file name');
       const format = parts.pop().toLowerCase();
 
+
       const family = parts.join('-');
       // Handle file name conflicts
       if (await exists(fontPath)) {
@@ -101,7 +102,7 @@ class FontManager {
 
       console.log("writing font file now");
 
-      await writeFile(fontPath, fontBuffer); 
+      await writeFile(fontPath, fontBuffer);
 
       console.log("loading font now");
 
@@ -118,8 +119,8 @@ class FontManager {
     }
   }
 
-  async addFontsFromPath(path) {
-    
+  async addFontsFromPath(path, source) {
+
     console.log("adding fonts from path: ", path);
 
     const files = await readDir(path);
@@ -141,13 +142,17 @@ class FontManager {
       try {
         console.log("filename: ", fileName);
 
-        let fontPath = await join(this.fontsDir, fileName);
+        const finalName = `${source}-${fileName}.${format}`;
+
+        console.log("finalName: ", finalName);
+
+        let fontPath = await join(this.fontsDir, finalName);
 
         console.log("fontPath: ", fontPath);
 
-        const parts = fileName.split('.');
+        const parts = finalName.split('.');
         if (parts.length < 2) throw new Error('Invalid font file name');
-        const format = parts.pop().toLowerCase();
+
 
         const family = parts.shift();
         // Handle file name conflicts
@@ -163,11 +168,11 @@ class FontManager {
 
         await this.loadFontFace(family, fontBuffer, format);
 
-        const fontData = { id: fileName, family: fileName.split('.').shift(), format, fileName };
-        this.fonts.set(fileName, fontData);
+        const fontData = { id: finalName, family: finalName.split('.').shift(), format, finalName };
+        this.fonts.set(finalName, fontData);
         this.triggerCallbacks('added', fontData);
 
-        return fileName;
+        return finalName;
       } catch (error) {
         console.error('Error adding font:', error);
         throw error;

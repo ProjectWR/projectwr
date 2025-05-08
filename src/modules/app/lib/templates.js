@@ -81,7 +81,7 @@ class TemplateManager {
             const content = await readTextFile(stylePath);
             const templateData = JSON.parse(content);
 
-            await fontManager.addFontsFromPath(await join(this.templatesDirPath, entry.name));
+            await fontManager.addFontsFromPath(await join(this.templatesDirPath, entry.name), entry.name);
 
             // Ensure template_id matches folder name
             templates[entry.name] = {
