@@ -46,6 +46,7 @@ import useRefreshableTimer from "../hooks/useRefreshableTimer";
 import { useDebouncedCallback } from "@mantine/hooks";
 import templateManager from "../lib/templates";
 import useMainPanel from "../hooks/useMainPanel";
+import imageManager from "../lib/image";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -164,6 +165,8 @@ const WritingApp = () => {
         setLoadingStage("Loading fonts");
 
         await fontManager.init();
+
+        await imageManager.init();
 
         setLoadingStage("Loading templates");
 

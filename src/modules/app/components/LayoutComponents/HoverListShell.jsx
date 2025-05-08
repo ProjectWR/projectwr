@@ -34,14 +34,14 @@ export const ListShell = ({ children, className }) => {
   );
 };
 
-export const HoverListHeader = ({ children }) => {
+export const HoverListHeader = ({ children, className }) => {
   return (
     <div
       style={{
         paddingLeft: `var(--scrollbarWidth)`,
         paddingRight: `var(--scrollbarWidth)`,
       }}
-      className="w-full h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center"
+      className={`w-full h-actionBarSearchHeaderHeight text-actionBarResultHeaderTextSize text-appLayoutTextMuted flex items-center ${className}`}
     >
       {children}
     </div>

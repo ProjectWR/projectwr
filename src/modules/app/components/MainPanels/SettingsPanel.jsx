@@ -44,6 +44,8 @@ import {
 import useZoom from "../../hooks/useZoom";
 import { round } from "lib0/math";
 import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import { useImages } from "../../hooks/useImages";
+import imageManager from "../../lib/image";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -63,11 +65,16 @@ const SettingsPanel = () => {
 
   const [isLoginOpen, loginModalControl] = useDisclosure(false);
 
+  const [fontImageToggle, setFontImageToggle] = useState("font");
+
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
 
   const fonts = useFonts();
   console.log("fonts: ", fonts);
+
+  const images = useImages();
+  console.log("images: ", images);
 
   const settings = settingsStore((state) => state.settings);
 
@@ -477,12 +484,43 @@ const SettingsPanel = () => {
           <ListShell
             className={`h-full grow basis-0 min-w-0 bg-appBackgroundAccent`}
           >
-            <HoverListHeader>
-              <p className="text-appLayoutText">Fonts</p>
+            <HoverListHeader className={"gap-4"}>
+              <button
+                className={`
+                  hover:text-appLayoutText
+                  ${
+                    fontImageToggle === "font"
+                      ? "text-appLayoutText"
+                      : "text-appLayoutTextMuted"
+                  } `}
+                onClick={() => setFontImageToggle("font")}
+              >
+                Fonts
+              </button>
+
+              <button
+                className={`
+                  hover:text-appLayoutText
+                  ${
+                    fontImageToggle === "image"
+                      ? "text-appLayoutText"
+                      : "text-appLayoutTextMuted"
+                  } `}
+                onClick={() => setFontImageToggle("image")}
+              >
+                Images
+              </button>
+
               <span className="grow"></span>
               <button
                 onClick={async () => {
-                  await fontManager.addFont();
+                  if (fontImageToggle === "font") {
+                    await fontManager.addFont();
+                  }
+
+                  if (fontImageToggle === "image") {
+                    await imageManager.addImage();
+                  }
                 }}
                 className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
               >
@@ -491,29 +529,52 @@ const SettingsPanel = () => {
             </HoverListHeader>
             <HoverListDivider />
             <HoverListBody>
-              {fonts.map((font) => {
-                return (
-                  <HoverListItem disabled={true} key={font.id}>
-                    <div className="w-full h-full flex items-center gap-2 justify-between">
-                      <p
-                        style={{ fontFamily: font.family }}
-                        className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
-                      >
-                        {font.family}
-                      </p>
-                      <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
-                      <button
-                        className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
-                        onClick={async () => {
-                          await fontManager.deleteFont(font.id);
-                        }}
-                      >
-                        <span className="icon-[typcn--delete] w-full h-full"></span>
-                      </button>
-                    </div>
-                  </HoverListItem>
-                );
-              })}
+              {fontImageToggle === "font" &&
+                fonts.map((font) => {
+                  return (
+                    <HoverListItem disabled={true} key={font.id}>
+                      <div className="w-full h-full flex items-center gap-2 justify-between">
+                        <p
+                          style={{ fontFamily: font.family }}
+                          className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
+                        >
+                          {font.family}
+                        </p>
+                        <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
+                        <button
+                          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                          onClick={async () => {
+                            await fontManager.deleteFont(font.id);
+                          }}
+                        >
+                          <span className="icon-[typcn--delete] w-full h-full"></span>
+                        </button>
+                      </div>
+                    </HoverListItem>
+                  );
+                })}
+
+              {fontImageToggle === "image" &&
+                images.map((image) => {
+                  return (
+                    <HoverListItem disabled={true} key={image.id}>
+                      <div className="w-full h-full flex items-center gap-2 justify-between">
+                        <p className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                          {image.fileName}
+                        </p>
+                        <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
+                        <button
+                          className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                          onClick={async () => {
+                            await imageManager.deleteImage(image.id);
+                          }}
+                        >
+                          <span className="icon-[typcn--delete] w-full h-full"></span>
+                        </button>
+                      </div>
+                    </HoverListItem>
+                  );
+                })}
             </HoverListBody>
           </ListShell>
 
