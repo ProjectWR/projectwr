@@ -16,17 +16,19 @@ const useMainPanel = () => {
   } = useStoreHistory();
 
   const activatePanel = useCallback(
-    (panelType, mode, breadcrumbs) => {
+    async (panelType, mode, breadcrumbs) => {
+      saveStateInHistory();
+      clearFuture();
+
       setMainPanelState({
         panelType: panelType,
         mode: mode,
         breadcrumbs: breadcrumbs,
       });
 
-      saveStateInHistory();
-      clearFuture();
+      console.log("MAIN PANEL STATE BEING SAVED: ", mainPanelState);
     },
-    [setMainPanelState, clearFuture, saveStateInHistory]
+    [setMainPanelState, clearFuture, saveStateInHistory, mainPanelState]
   );
 
   return { mainPanelState, activatePanel };

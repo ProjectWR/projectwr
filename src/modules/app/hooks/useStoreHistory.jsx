@@ -24,6 +24,11 @@ const useStoreHistory = () => {
     past.push({
       mainPanelState,
     });
+
+    if (past.length > 0) setCanGoBack(true);
+    else setCanGoBack(false);
+    if (future.length > 0) setCanGoForward(true);
+    else setCanGoForward(false);
   };
 
   const [canGoBack, setCanGoBack] = useState(false);

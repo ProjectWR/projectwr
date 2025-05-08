@@ -112,11 +112,9 @@ const TemplateDetailsPanel = ({ templateId }) => {
   };
 
   const handleNameSave = useCallback(async () => {
-    activatePanel("home", "", []);
-
     await templateManager.renameTemplate(templateId, templateName);
 
-    activatePanel("templates", "details", [templateName]);
+    await activatePanel("templates", "details", [templateName]);
   }, [activatePanel, templateId, templateName]);
 
   return (

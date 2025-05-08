@@ -270,7 +270,7 @@ const MainPanel = ({}) => {
     }
 
     return null;
-  }, [mainPanelState, activatePanel]);
+  }, [mainPanelState, activatePanel, setActivity, setPanelOpened, setLibraryId]);
 
   const renderMainPanelOld = useCallback(() => {
     if (activity === "libraries") {

@@ -45,6 +45,7 @@ import dictionaryManager from "../lib/dictionary";
 import useRefreshableTimer from "../hooks/useRefreshableTimer";
 import { useDebouncedCallback } from "@mantine/hooks";
 import templateManager from "../lib/templates";
+import useMainPanel from "../hooks/useMainPanel";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -62,6 +63,8 @@ const WritingApp = () => {
   const [loadingStage, setLoadingStage] = useState("Loading App");
 
   const { deviceType } = useDeviceType();
+
+  const { activatePanel } = useMainPanel();
 
   const activity = appStore((state) => state.activity);
 
@@ -252,6 +255,7 @@ const WritingApp = () => {
 
         // await wait(1000);
         setLoadingStage("Finished Loading");
+
         return () => {};
       } catch (error) {
         console.error("Failed to initialize app:", error);
@@ -265,7 +269,14 @@ const WritingApp = () => {
       initializeWritingApp();
       setWasLocalSetup(true);
     }
-  }, [setDefaultSettings, setSettings, setLoading, user, wasLocalSetup]);
+  }, [
+    setDefaultSettings,
+    setSettings,
+    setLoading,
+    setZoom,
+    user,
+    wasLocalSetup,
+  ]);
 
   useEffect(() => {
     setSidePanelWidth(computedPanelWidth);
