@@ -518,7 +518,7 @@ const TiptapEditor = ({
           <EditorContent
             spellCheck={false}
             editor={editor}
-            className={`h-fit outline-none focus:outline-none z-1
+            className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200
                   `}
             style={{
               width: width.endsWith("%")
