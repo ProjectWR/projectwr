@@ -3,7 +3,7 @@ export const DetailsPanelNameInput = ({ className, name, onChange, value }) => {
     <input
       className={`bg-appBackground grow h-full text-detailsPanelNameFontSize text-center
                     focus:bg-appLayoutInputBackground rounded-none focus:outline-none 
-                    pt-px pb-2 px-3 transition-colors duration-200 order-2 ${className}`}
+                     px-3 pb-1 transition-colors duration-200 order-2 ${className}`}
       name={name}
       onChange={onChange}
       value={value}

@@ -139,7 +139,6 @@
   .desktop {
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.6rem);
     --libraryManagerHeaderHeight: calc(var(--uiScale) * 4rem);
-    --detailsPanelHeaderHeight: calc(var(--uiScale) * 3rem);
     --actionBarHeight: calc(var(--uiScale) * 2.4rem);
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
     --actionBarButtonIconSize: calc(var(--uiScale) * 1.4rem);
@@ -194,7 +193,7 @@
     --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
     --homePanelSubtitleFontSize: calc(var(--uiScale) * 1.5rem);
 
-    --detailsPanelHeaderHeight: calc(var(--uiScale) * 2.25rem);
+    --detailsPanelHeaderHeight: calc(var(--uiScale) * 2.18rem);
     --detailsPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
     --detailsPanelHeaderTwoHeight: calc(var(--uiScale) * 3rem);
     --detailsPanelHeaderTwoFontSize: calc(var(--uiScale) * 1.5rem);

@@ -488,7 +488,8 @@ const TiptapEditor = ({
            overflow-y-scroll min-h-0 text-neutral-200
           `}
           style={{
-            paddingLeft: `var(--scrollbarWidth)`,
+            paddingLeft: `calc(1.1 * var(--scrollbarWidth))`,
+            paddingRight: `calc(1 * var(--scrollbarWidth))`,
             backgroundColor: backgroundColor,
           }}
         >
@@ -524,9 +525,7 @@ const TiptapEditor = ({
               width: width.endsWith("%")
                 ? `${width}`
                 : `calc(${width} * var(--uiScale))`,
-              minWidth: width.endsWith("%")
-                ? `${width}`
-                : `calc(${width} * var(--uiScale))`,
+              maxWidth: "100%",
               backgroundColor: `${paperColor}`,
               borderTopWidth: `${paperBorderWidth}px`,
               borderRightWidth: `${paperBorderWidth}px`,

@@ -4,7 +4,7 @@
 - ~~Remove history buttons in app shell~~
 - ~~breadcrumbs~~
 - details panel buttons should be restyled and modularized
-- toolbar buttons active state
+- ~~toolbar buttons active state~~
 - ~~breadcrumbs~~
 - ~~upgraded to tailwind v4~~
 - make local state self correcting
@@ -15,7 +15,7 @@
   - ~~fonts~~
   - auth
   - ~~zoom selector~~
-- Finish editor styles integration
+- ~~Finish editor styles integration~~
 - add delete buttons
 - themes
 - add word and character counter
