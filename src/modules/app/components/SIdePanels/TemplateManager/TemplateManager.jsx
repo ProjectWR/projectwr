@@ -12,6 +12,7 @@ import { TipTapEditorDefaultPreferences } from "../../../../editor/TipTapEditor/
 import { equalityDeep } from "lib0/function";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
+import { motion } from "motion/react";
 
 const TemplateManager = () => {
   console.log("Template Manager was rendered");
@@ -87,13 +88,17 @@ const TemplateManager = () => {
           className="w-full h-fit flex flex-col justify-start items-center"
         >
           {Object.keys(templates).map((templateId) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
               key={templateId}
               id={`TemplateListNode-${templateId}`}
               className="w-full h-libraryManagerNodeHeight min-h-libraryManagerNodeHeight"
             >
               <TemplateManagerNode templateId={templateId} key={templateId} />
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

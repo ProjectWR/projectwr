@@ -538,7 +538,7 @@ const TiptapEditor = ({
               marginTop: `${gapTop}rem`,
               borderTopRightRadius: `${roundRadius}rem`,
               borderTopLeftRadius: `${roundRadius}rem`,
-              boxShadow: `0px 0px ${paperShadow} ${paperShadowColor}`,
+              boxShadow: `0px 0px ${paperShadow}rem ${paperShadowColor}`,
             }}
           />
         </div>
