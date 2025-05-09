@@ -534,7 +534,7 @@ const TiptapEditor = ({
               borderTopColor: `${paperBorderColor}`,
               borderLeftColor: `${paperBorderColor}`,
               borderRightColor: `${paperBorderColor}`,
-              marginTop: `${gapTop}rem`,
+              marginTop: `calc(${gapTop} * var(--uiScale))`,
               borderTopRightRadius: `${roundRadius}rem`,
               borderTopLeftRadius: `${roundRadius}rem`,
               boxShadow: `0px 0px ${paperShadow}rem ${paperShadowColor}`,
