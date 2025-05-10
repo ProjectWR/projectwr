@@ -391,31 +391,7 @@ const SearchBar = () => {
                       }
                       setActivity("libraries");
 
-                      const ytree = new YTree(
-                        dataManagerSubdocs
-                          .getLibrary(result.libraryId)
-                          .getMap("library_directory")
-                      );
-
-                      const ancestors = [result.id];
-
-                      console.log("CHECKING IN SEARCH: ", ytree, ancestors);
-
-                      while (true) {
-                        try {
-                          ancestors.unshift(
-                            ytree.getNodeParentFromKey(ancestors[0])
-                          );
-                        } catch {
-                          break;
-                        }
-                      }
-
-                      ancestors.shift();
-
-                      ancestors.unshift(result.libraryId);
-
-                      activatePanel("libraries", "details", ancestors);
+                      activatePanel("libraries", "details", [result.libraryId, result.id]);
                     }}
                   >
                     <span> {result.library_name || result.item_title}</span>

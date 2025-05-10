@@ -6,6 +6,10 @@ const useMainPanel = () => {
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
   const setMainPanelState = mainPanelStore((state) => state.setMainPanelState);
 
+  const tabs = mainPanelStore((state) => state.tabs);
+
+  const arr = [];
+
   const {
     saveStateInHistory,
     canGoBack,
@@ -20,11 +24,15 @@ const useMainPanel = () => {
       saveStateInHistory();
       clearFuture();
 
-      setMainPanelState({
+      const newState = {
         panelType: panelType,
         mode: mode,
         breadcrumbs: breadcrumbs,
-      });
+      };
+
+      // if (arr.find())
+
+      setMainPanelState(newState);
 
       console.log("MAIN PANEL STATE BEING SAVED: ", mainPanelState);
     },

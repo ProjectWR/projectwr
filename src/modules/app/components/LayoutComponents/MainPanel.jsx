@@ -19,6 +19,7 @@ import useMainPanel from "../../hooks/useMainPanel";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { Breadcrumbs } from "./Breadcrumbs";
 import templateManager from "../../lib/templates";
+import { getAncestorsForBreadcrumbs } from "../../lib/util";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -137,30 +138,27 @@ const MainPanel = ({}) => {
         dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
       );
 
+      const ancestorIds = getAncestorsForBreadcrumbs(rootId, youngestId);
+
+      console.log("ANCESTOR IDS", ancestorIds);
+
       const itemMap = libraryYTree.getNodeValueFromKey(youngestId);
 
       console.log("ITEM MAP", itemMap);
 
-      const ancestors = [rootId];
-
-      for (let i = 1; i < breadcrumbs.length; i++) {
-        const breadcrumb = breadcrumbs[i];
-        ancestors.push(breadcrumb);
-
-        console.log("ANCESTORS: ", ancestors);
+      for (let i = 1; i < ancestorIds.length; i++) {
+        const breadcrumb = ancestorIds[i];
 
         const breadcrumbItemMap = libraryYTree.getNodeValueFromKey(breadcrumb);
-
-        const valueBreadcrumbs = [...ancestors];
 
         breadcrumbValues.push({
           label: breadcrumbItemMap.get("item_title"),
           action: () => {
             console.log(
               "ACTIVATING PANEL",
-              breadcrumbItemMap.get("item_title", valueBreadcrumbs)
+              breadcrumbItemMap.get("item_title", [rootId, breadcrumb])
             );
-            activatePanel("libraries", "details", valueBreadcrumbs);
+            activatePanel("libraries", "details", [rootId, breadcrumb]);
           },
         });
       }
@@ -200,6 +198,7 @@ const MainPanel = ({}) => {
                   ytree={libraryYTree}
                   paperId={youngestId}
                   key={youngestId}
+                  libraryId={rootId}
                 />
               </PrependBreadcrumbs>
             );

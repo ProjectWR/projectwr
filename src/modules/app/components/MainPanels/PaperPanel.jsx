@@ -17,6 +17,8 @@ import DetailsPanel, {
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import templateManager from "../../lib/templates";
+import useMainPanel from "../../hooks/useMainPanel";
+import { getAncestorsForBreadcrumbs } from "../../lib/util";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -26,7 +28,7 @@ const { desktopDefaultPreferences, mobileDefaultPreferences } =
  * @param {{ytree: YTree, paperId: string}} param0
  * @returns
  */
-const PaperPanel = ({ ytree, paperId }) => {
+const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
 
@@ -36,6 +38,11 @@ const PaperPanel = ({ ytree, paperId }) => {
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
+
+  const appStoreItemId = appStore((state) => state.appStoreItemId);
+  const setItemMode = appStore((state) => state.setItemMode);
+  const { activatePanel } = useMainPanel();
+  const itemMode = appStore((state) => state.itemMode);
 
   const [templateFromFile, setTemplateFromFile] = useState(null);
 
@@ -158,6 +165,87 @@ const PaperPanel = ({ ytree, paperId }) => {
               <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
             </button>
           )}
+          <motion.div
+            initial={{
+              width: 0,
+              opacity: 0,
+              marginRight: 0,
+              marginLeft: 0,
+              marginBottom: 0,
+              padding: 0,
+            }}
+            animate={{
+              width: "var(--libraryManagerAddButtonSize) ",
+              opacity: 1,
+              marginRight: `0.5rem`,
+              marginLeft: `0.5rem`,
+              marginBottom: 0,
+              padding: `0.25rem`,
+            }}
+            exit={{
+              width: 0,
+              opacity: 0,
+              marginRight: 0,
+              marginLeft: 0,
+
+              marginBottom: 0,
+              padding: 0,
+            }}
+            className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
+                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                    flex items-center justify-center order-0
+                    `}
+          ></motion.div>
+
+          <motion.button
+            type="button"
+            onClick={() => {
+              console.log("edit paper editor button");
+              if (!(appStoreItemId === paperId && itemMode === "settings")) {
+                setItemId(paperId);
+                setItemMode("settings");
+                if (deviceType === "mobile") {
+                  setPanelOpened(false);
+                }
+
+                activatePanel("libraries", "settings", [libraryId, paperId]);
+              }
+            }}
+            initial={{
+              width: 0,
+              opacity: 0,
+              paddingRight: 0,
+              paddingLeft: 0,
+              marginBottom: 0,
+              padding: 0,
+            }}
+            animate={{
+              width: "calc(1rem + var(--libraryManagerAddButtonSize))",
+              opacity: 1,
+              paddingRight: `0.75rem`,
+              paddingLeft: `0.75rem`,
+              marginBottom: 0,
+            }}
+            exit={{
+              width: 0,
+              opacity: 0,
+              paddingRight: 0,
+              paddingLeft: 0,
+              marginBottom: 0,
+              padding: 0,
+            }}
+            className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-none
+                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                    flex items-center justify-center order-4
+                    `}
+          >
+            <motion.span
+              animate={{
+                opacity: 1,
+              }}
+              className={`icon-[bi--sliders2] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+            ></motion.span>
+          </motion.button>
 
           <AnimatePresence>
             {unsavedChangesExist && (

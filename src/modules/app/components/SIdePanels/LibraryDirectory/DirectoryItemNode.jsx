@@ -281,7 +281,7 @@ const DirectoryItemNode = ({
                 setPanelOpened(false);
               }
 
-              activatePanel("libraries", "details", breadcrumbs);
+              activatePanel("libraries", "details", [libraryId, itemId]);
             }
           },
         },
@@ -356,7 +356,7 @@ const DirectoryItemNode = ({
                 setPanelOpened(false);
               }
 
-              activatePanel("libraries", "details", breadcrumbs);
+              activatePanel("libraries", "details", [libraryId, itemId]);
             }
           },
         },
@@ -375,7 +375,7 @@ const DirectoryItemNode = ({
                 setPanelOpened(false);
               }
 
-              activatePanel("libraries", "settings", breadcrumbs);
+              activatePanel("libraries", "settings", [libraryId, itemId]);
             }
           },
         },
@@ -514,7 +514,7 @@ const DirectoryItemNode = ({
                         setPanelOpened(false);
                       }
 
-                      activatePanel("libraries", "details", breadcrumbs);
+                      activatePanel("libraries", "details", [libraryId, itemId]);
 
                       setPanelOpened(true);
                     }
@@ -551,7 +551,11 @@ const DirectoryItemNode = ({
                   setFocusedItemId(itemId);
                   const newOpenedState = !isOpened;
                   setIsOpened(newOpenedState);
-                  itemLocalStateManager.setItemOpened(itemId, newOpenedState, libraryId);
+                  itemLocalStateManager.setItemOpened(
+                    itemId,
+                    newOpenedState,
+                    libraryId
+                  );
                 }}
               >
                 <motion.span

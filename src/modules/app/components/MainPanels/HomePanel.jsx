@@ -244,26 +244,10 @@ const HomePanel = () => {
                                 }
                                 setPanelOpened(true);
 
-                                const ancestors = [itemId];
-
-                                while (true) {
-                                  try {
-                                    ancestors.unshift(
-                                      ytree.getNodeParentFromKey(ancestors[0])
-                                    );
-                                  } catch {
-                                    break;
-                                  }
-                                }
-
-                                ancestors.shift();
-
-                                ancestors.unshift(props.libraryId);
-
                                 activatePanel(
                                   "libraries",
                                   "details",
-                                  ancestors
+                                  [props.libraryId, itemId]
                                 );
                               }
 
