@@ -209,6 +209,7 @@ const MainPanel = ({}) => {
             return (
               <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
                 <PaperSettingsPanel
+                  libraryId={rootId}
                   ytree={libraryYTree}
                   paperId={youngestId}
                   key={youngestId}
@@ -270,7 +271,13 @@ const MainPanel = ({}) => {
     }
 
     return null;
-  }, [mainPanelState, activatePanel, setActivity, setPanelOpened, setLibraryId]);
+  }, [
+    mainPanelState,
+    activatePanel,
+    setActivity,
+    setPanelOpened,
+    setLibraryId,
+  ]);
 
   const renderMainPanelOld = useCallback(() => {
     if (activity === "libraries") {

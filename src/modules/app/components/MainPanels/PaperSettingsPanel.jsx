@@ -33,7 +33,7 @@ import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/Deta
  * @param {{ytree: YTree, paperId: string}} param0
  * @returns
  */
-const PaperSettingsPanel = ({ ytree, paperId }) => {
+const PaperSettingsPanel = ({ libraryId, ytree, paperId }) => {
   console.log("library details panel rendering: ", paperId);
 
   const { deviceType } = useDeviceType();
@@ -69,7 +69,11 @@ const PaperSettingsPanel = ({ ytree, paperId }) => {
 
       <DetailsPanelDivider />
       <DetailsPanelBody>
-        <EditorStylePickerButton ytree={ytree} paperId={paperId} />
+        <EditorStylePickerButton
+          ytree={ytree}
+          paperId={paperId}
+          libraryId={libraryId}
+        />
 
         <div className="PaperActionButtons w-full h-fit flex flex-wrap items-center justify-start font-sans gap-4">
           <PaperActionButton
@@ -113,7 +117,7 @@ export default PaperSettingsPanel;
  * @param {{ytree: YTree, paperId: string}} param0
  * @returns
  */
-const EditorStylePickerButton = ({ ytree, paperId }) => {
+const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   const [pickingEditorStyle, setPickingEditorStyle] = useState(false);
   const [paperEditorTemplateId, setPaperEditorTemplateId] = useState(
     itemLocalStateManager.getPaperEditorTemplate(paperId)
@@ -210,7 +214,11 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
             <HoverListButton
               key={`resetToDefault`}
               onClick={() => {
-                itemLocalStateManager.setPaperEditorTemplate(paperId, null);
+                itemLocalStateManager.setPaperEditorTemplate(
+                  paperId,
+                  null,
+                  libraryId
+                );
                 setPickingEditorStyle(false);
               }}
             >
@@ -226,7 +234,8 @@ const EditorStylePickerButton = ({ ytree, paperId }) => {
                   onClick={() => {
                     itemLocalStateManager.setPaperEditorTemplate(
                       paperId,
-                      templateId
+                      templateId,
+                      libraryId
                     );
                     setPickingEditorStyle(false);
                   }}

@@ -14,7 +14,6 @@ import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
 
-
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
   const { deviceType } = useDeviceType();
@@ -35,7 +34,7 @@ const LibraryDirectory = ({ libraryId }) => {
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
 
-  const {activatePanel } = useMainPanel();
+  const { activatePanel } = useMainPanel();
 
   const [focusedItemId, setFocusedItemId] = useState(null);
 
@@ -118,9 +117,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 deviceType === "mobile" ? "ml-3" : "ml-6"
               }`}
             >
-              <p
-                className="w-fit max-w-full h-fit text-nowrap overflow-hidden text-ellipsis"
-              >
+              <p className="w-fit max-w-full h-fit text-nowrap overflow-hidden text-ellipsis">
                 {libraryPropsMapState.library_name}
               </p>
             </h1>
@@ -170,7 +167,6 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
-                  
                 },
               },
               {
@@ -191,7 +187,6 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
-                 
                 },
               },
               {
@@ -212,7 +207,6 @@ const LibraryDirectory = ({ libraryId }) => {
                   }
 
                   setPanelOpened(true);
-             
                 },
               },
             ]}
@@ -234,7 +228,7 @@ const LibraryDirectory = ({ libraryId }) => {
       <div className="divider w-full px-3">
         <div className="w-full h-px bg-appLayoutBorder"></div>
       </div>
-      
+
       <div
         id="LibraryDirectoryHeader"
         className={`flex flex-col items-center justify-between h-fit min-h-fit mt-1 border-appLayoutBorder   z-1`}
@@ -251,7 +245,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 setPanelOpened(false);
               }
 
-              activatePanel("libraries", "details", [libraryId])
+              activatePanel("libraries", "details", [libraryId]);
 
               setPanelOpened(true);
             }}
@@ -274,8 +268,7 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
-              itemLocalStateManager.setItemOpened(bookId, true);
-       
+              itemLocalStateManager.setItemOpened(bookId, true, libraryId);
             }}
           >
             <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -301,9 +294,12 @@ const LibraryDirectory = ({ libraryId }) => {
               setPanelOpened(true);
 
               if (focusedItemId)
-                itemLocalStateManager.setItemOpened(focusedItemId, true);
-              itemLocalStateManager.setItemOpened(sectionId, true);
-            
+                itemLocalStateManager.setItemOpened(
+                  focusedItemId,
+                  true,
+                  libraryId
+                );
+              itemLocalStateManager.setItemOpened(sectionId, true, libraryId);
             }}
           >
             <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -327,19 +323,19 @@ const LibraryDirectory = ({ libraryId }) => {
 
               setPanelOpened(true);
               if (focusedItemId)
-                itemLocalStateManager.setItemOpened(focusedItemId, true);
-              itemLocalStateManager.setItemOpened(paperId, true);
-   
+                itemLocalStateManager.setItemOpened(
+                  focusedItemId,
+                  true,
+                  libraryId
+                );
+              itemLocalStateManager.setItemOpened(paperId, true, libraryId);
             }}
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
           </button>
         </div>
       </div>
-      <div
-        id="libraryDirectoryBodyContainer"
-        className={`grow min-h-0 w-full`}
-      >
+      <div id="libraryDirectoryBodyContainer" className={`grow min-h-0 w-full`}>
         <div
           id="libraryDirectoryBody"
           onClick={(event) => {
@@ -371,6 +367,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   transition={{ duration: 0.2 }}
                 >
                   <DirectoryItemNode
+                    libraryId={libraryId}
                     ytree={libraryYTreeRef.current}
                     itemId={bookId}
                     breadcrumbs={[libraryId, bookId]}

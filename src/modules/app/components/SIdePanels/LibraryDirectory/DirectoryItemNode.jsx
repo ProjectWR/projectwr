@@ -28,6 +28,7 @@ import useMainPanel from "../../../hooks/useMainPanel";
  * @returns
  */
 const DirectoryItemNode = ({
+  libraryId,
   ytree,
   itemId,
   breadcrumbs,
@@ -123,16 +124,16 @@ const DirectoryItemNode = ({
   const onCreateSectionClick = useCallback(() => {
     const newId = dataManagerSubdocs.createEmptySection(ytree, itemId);
     setIsOpened(true);
-    itemLocalStateManager.setItemOpened(itemId, true);
-    itemLocalStateManager.setItemOpened(newId, true);
-  }, [ytree, itemId]);
+    itemLocalStateManager.setItemOpened(itemId, true, libraryId);
+    itemLocalStateManager.setItemOpened(newId, true, libraryId);
+  }, [ytree, itemId, libraryId]);
 
   const onCreatePaperClick = useCallback(() => {
     const newId = dataManagerSubdocs.createEmptyPaper(ytree, itemId);
     setIsOpened(true);
-    itemLocalStateManager.setItemOpened(itemId, true);
-    itemLocalStateManager.setItemOpened(newId, true);
-  }, [ytree, itemId]);
+    itemLocalStateManager.setItemOpened(itemId, true, libraryId);
+    itemLocalStateManager.setItemOpened(newId, true, libraryId);
+  }, [ytree, itemId, libraryId]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
@@ -550,7 +551,7 @@ const DirectoryItemNode = ({
                   setFocusedItemId(itemId);
                   const newOpenedState = !isOpened;
                   setIsOpened(newOpenedState);
-                  itemLocalStateManager.setItemOpened(itemId, newOpenedState);
+                  itemLocalStateManager.setItemOpened(itemId, newOpenedState, libraryId);
                 }}
               >
                 <motion.span
@@ -622,6 +623,7 @@ const DirectoryItemNode = ({
                         .map((childKey) => (
                           <div id="DirectoryItemNodeChild" key={childKey}>
                             <DirectoryItemNode
+                              libraryId={libraryId}
                               ytree={ytree}
                               itemId={childKey}
                               breadcrumbs={[...breadcrumbs, childKey]}

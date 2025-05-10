@@ -70,7 +70,7 @@ class ItemLocalStateManager {
   }
 
   // Get the paper editor template for a specific item
-  setPaperEditorTemplate(itemId, templateId) {
+  setPaperEditorTemplate(itemId, templateId, libraryId) {
     const items = this._getItems();
     if (items[itemId]) {
       items[itemId].props.EditorTemplate = templateId;
@@ -78,6 +78,7 @@ class ItemLocalStateManager {
       this._trigger(itemId, templateId, items[itemId]); // Trigger callbacks for the specific itemId
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
+      this.setItemAndParentsOpened(libraryId, itemId);
     }
   }
 
@@ -94,9 +95,9 @@ class ItemLocalStateManager {
   }
 
   // Set the `isOpened` state of an item
-  setItemOpened(itemId, isOpened) {
+  setItemOpened(itemId, isOpened, libraryId) {
     const items = this._getItems();
-    if (items[itemId]) {
+    if (items[itemId]?.props.libraryId === libraryId) {
       items[itemId].props.isOpened = isOpened;
 
       // Update lastOpened timestamp if the item is being opened
@@ -109,8 +110,9 @@ class ItemLocalStateManager {
 
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
+      this.setItemAndParentsOpened(libraryId, itemId);
     }
-  } 
+  }
 
   // Get the lastOpened timestamp for a specific item
   getLastOpened(itemId) {
@@ -200,10 +202,10 @@ class ItemLocalStateManager {
       if (!itemLocalStateManager.hasItemLocalState(parentKey)) {
         itemLocalStateManager.createItemLocalState(parentKey, {
           type: libraryYTree.getNodeValueFromKey(parentKey).get("type"),
-          props: {libraryId: libraryId},
+          props: { libraryId: libraryId },
         });
       }
-      this.setItemOpened(parentKey, true);
+      this.setItemOpened(parentKey, true, libraryId);
       parentKey = libraryYTree.getNodeParentFromKey(parentKey);
     }
   }

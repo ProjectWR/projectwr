@@ -209,7 +209,8 @@ const HomePanel = () => {
                               if (type === "library") {
                                 itemLocalStateManager.setItemOpened(
                                   itemId,
-                                  true
+                                  true,
+                                  itemId
                                 );
                                 setLibraryId(itemId);
                                 setItemId("unselected");

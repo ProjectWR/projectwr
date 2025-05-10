@@ -32,7 +32,7 @@ const ContextMenuWrapper = ({ children, triggerClassname, options }) => {
           if (isDivider) {
             return (
               <ContextMenu.Separator
-                key={label}
+                key={`${label}`}
                 className="contextMenuSeparator"
               />
             );
