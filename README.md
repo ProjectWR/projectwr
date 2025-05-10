@@ -7,7 +7,7 @@
 - ~~toolbar buttons active state~~
 - ~~breadcrumbs~~
 - ~~upgraded to tailwind v4~~
-- make local state self correcting
+- ~~make local state self correcting~~
 - ~~templates should be stored as files~~
 - Add context menus where it is appropriate
 - Settings page needs to be finished
