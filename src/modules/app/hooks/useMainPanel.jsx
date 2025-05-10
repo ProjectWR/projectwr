@@ -19,6 +19,8 @@ const useMainPanel = () => {
    */
   const tabs = mainPanelStore((state) => state.tabs);
 
+  const setTabs = mainPanelStore((state) => state.setTabs);
+
   const arr = [];
 
   const {
@@ -46,17 +48,27 @@ const useMainPanel = () => {
           return equalityDeep(value, newState);
         })
       ) {
-        tabs.push(newState);
-        if (tabs.size() > 10) {
-          tabs.shift();
+        const newTabs = [...tabs];
+        newTabs.push(newState);
+        if (newTabs.length > 10) {
+          newTabs.shift();
         }
+
+        setTabs(newTabs);
       }
 
       setMainPanelState(newState);
 
       console.log("MAIN PANEL STATE BEING SAVED: ", mainPanelState);
     },
-    [setMainPanelState, clearFuture, saveStateInHistory, mainPanelState]
+    [
+      setMainPanelState,
+      clearFuture,
+      saveStateInHistory,
+      mainPanelState,
+      tabs,
+      setTabs,
+    ]
   );
 
   return { mainPanelState, activatePanel };

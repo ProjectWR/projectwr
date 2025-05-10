@@ -27,3 +27,4 @@ dist-ssr
 .npmrc
 FirebaseConfig.js
 .firebaserc
+.codelineignore

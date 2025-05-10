@@ -20,6 +20,7 @@ import useStoreHistory from "../../hooks/useStoreHistory";
 import { Breadcrumbs } from "./Breadcrumbs";
 import templateManager from "../../lib/templates";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
+import { TabsBar } from "./TabsBar";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -433,6 +434,7 @@ const MainPanel = ({}) => {
         transition={{ duration: 0.1 }}
         className="w-full h-full overflow-hidden z-3 flex flex-col items-center justify-center"
       >
+        <TabsBar />
         {renderMainPanel()}
       </motion.div>
     </AnimatePresence>
