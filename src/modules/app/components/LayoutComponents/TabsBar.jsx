@@ -5,7 +5,7 @@ import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import { ScrollArea } from "@mantine/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDrag } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 
 export const TabsBar = () => {
   /**
@@ -140,9 +140,17 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs }) => {
     }),
   }));
 
-
-
   const [areaSelected, setAreaSelected] = useState("left");
+
+  const [{ isOverCurrent }, drop] = useDrop({
+    accept: "ITEM",
+    hover: (draggedItem, monitor) => {},
+    drop: (draggedItem, monitor) => {},
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
+    }),
+  });
 
   useEffect(() => {
     const rootId = breadcrumbs[0];

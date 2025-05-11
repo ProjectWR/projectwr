@@ -163,6 +163,8 @@ const DirectoryItemNode = ({
     hover: (draggedItem, monitor) => {
       if (!dndRef.current) return;
 
+      if (draggedItem.appItemType !== "libraries") return;
+
       if (draggedItem.id === itemId) {
         setIsSelfSelected(true);
       } else {
