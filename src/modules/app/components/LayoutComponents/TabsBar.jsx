@@ -4,8 +4,9 @@ import { mainPanelStore } from "../../stores/mainPanelStore";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import { ScrollArea } from "@mantine/core";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { AnimatePresence, motion } from "motion/react";
 
 export const TabsBar = () => {
   /**
@@ -47,34 +48,58 @@ export const TabsBar = () => {
       }}
     >
       <div className="w-fit h-fit flex items-center">
-        {tabs?.map((tab) => {
-          const { panelType, mode, breadcrumbs } = tab;
+        <AnimatePresence>
+          {tabs?.map((tab) => {
+            const { panelType, mode, breadcrumbs } = tab;
 
-          return (
-            <TabButton
-              key={
-                breadcrumbs.length >= 1
-                  ? breadcrumbs[0] + "-" + breadcrumbs[breadcrumbs.length - 1]
-                  : panelType
-              }
-              panelType={panelType}
-              mode={mode}
-              breadcrumbs={breadcrumbs}
-              onClick={() => {
-                console.log("CLICKED");
-              }}
-            />
-          );
-        })}
+            return (
+              <motion.div
+                key={
+                  breadcrumbs.length >= 1
+                    ? breadcrumbs[0] + "-" + breadcrumbs[breadcrumbs.length - 1]
+                    : panelType
+                }
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: `12rem` }}
+                exit={{ opacity: 0, width: 0 }}
+                className="h-[2.5rem]"
+              >
+                <TabButton
+                  panelType={panelType}
+                  mode={mode}
+                  breadcrumbs={breadcrumbs}
+                  onClick={() => {
+                    console.log("CLICKED");
+                  }}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </ScrollArea>
   );
 };
 
-const TabButton = ({ onClick, panelType, mode, breadcrumbs }) => {
+const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
+  const dndRef = useRef(null);
+
+  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
+
+  /**
+   * @type {Array<MainPanelState>}
+   */
+  const tabs = mainPanelStore((state) => state.tabs);
+
+  const setTabs = mainPanelStore((state) => state.setTabs);
+
   const { activatePanel } = useMainPanel();
 
   const [label, setLabel] = useState("DEFAULT");
+  const [icon, setIcon] = useState(
+    <span className="icon-[icon-park-outline--dot] w-full h-full"></span>
+  );
+
   const action = useCallback(() => {
     activatePanel(panelType, mode, breadcrumbs);
   }, [panelType, mode, breadcrumbs, activatePanel]);
@@ -140,17 +165,115 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs }) => {
     }),
   }));
 
-  const [areaSelected, setAreaSelected] = useState("left");
+  const [areaSelected, setAreaSelected] = useState("");
 
   const [{ isOverCurrent }, drop] = useDrop({
     accept: "ITEM",
-    hover: (draggedItem, monitor) => {},
-    drop: (draggedItem, monitor) => {},
+    hover: (draggedItem, monitor) => {
+      if (!dndRef.current) return;
+
+      if (!draggedItem.tabProps) return;
+
+      if (
+        equalityDeep(draggedItem.tabProps, { panelType, mode, breadcrumbs })
+      ) {
+        setAreaSelected("");
+        return;
+      }
+
+      const tabDropIndex = tabs.findIndex((x) =>
+        equalityDeep(x, { panelType, mode, breadcrumbs })
+      );
+
+      const tabDraggedIndex = tabs.findIndex((x) =>
+        equalityDeep(x, draggedItem.tabProps)
+      );
+
+      console.log(tabDraggedIndex, tabDropIndex);
+
+      const hoverBoundingRect = dndRef.current.getBoundingClientRect();
+      const buffer = 0; // pixels to define the top/bottom sensitive area
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+
+      const middle = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+
+      if (
+        hoverClientX < middle &&
+        tabDraggedIndex !== -1 &&
+        tabDraggedIndex !== tabDropIndex - 1
+      ) {
+        setAreaSelected("left");
+      } else if (
+        hoverClientX >= middle &&
+        tabDraggedIndex !== -1 &&
+        tabDraggedIndex !== tabDropIndex + 1
+      ) {
+        setAreaSelected("right");
+      } else {
+        setAreaSelected("");
+      }
+    },
+    drop: (draggedItem, monitor) => {
+      // If a nested drop already handled this event, do nothing.
+      if (monitor.didDrop()) return;
+
+      if (!dndRef.current) return;
+
+      if (!draggedItem.tabProps) return;
+
+      if (
+        equalityDeep(draggedItem.tabProps, { panelType, mode, breadcrumbs })
+      ) {
+        setAreaSelected("");
+        return;
+      }
+
+      const tabDropIndex = tabs.findIndex((x) =>
+        equalityDeep(x, { panelType, mode, breadcrumbs })
+      );
+
+      const tabDraggedIndex = tabs.findIndex((x) =>
+        equalityDeep(x, draggedItem.tabProps)
+      );
+
+      const hoverBoundingRect = dndRef.current.getBoundingClientRect();
+      const buffer = 0; // pixels to define the top/bottom sensitive area
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+
+      const middle = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+
+      if (tabDraggedIndex !== -1) {
+        if (hoverClientX < middle && tabDraggedIndex !== tabDropIndex - 1) {
+          const newTabs = JSON.parse(JSON.stringify(tabs));
+
+          let element = newTabs[tabDraggedIndex];
+          newTabs.splice(tabDraggedIndex, 1);
+          newTabs.splice(tabDropIndex, 0, element);
+
+          setTabs(newTabs);
+        } else if (
+          hoverClientX >= middle &&
+          tabDraggedIndex !== tabDropIndex + 1
+        ) {
+          const newTabs = JSON.parse(JSON.stringify(tabs));
+
+          let element = newTabs[tabDraggedIndex];
+          newTabs.splice(tabDraggedIndex, 1);
+          newTabs.splice(tabDropIndex + 1, 0, element);
+
+          setTabs(newTabs);
+        }
+      }
+    },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       isOverCurrent: monitor.isOver({ shallow: true }),
     }),
   });
+
+  drag(drop(dndRef));
 
   useEffect(() => {
     const rootId = breadcrumbs[0];
@@ -209,22 +332,87 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs }) => {
       return () => {
         itemMap?.unobserve(callback);
       };
+    } else if (panelType === "templates") {
+    } else if (panelType === "dictionary") {
+    } else if (panelType === "settings") {
+      setIcon(
+        <span className="icon-[material-symbols-light--settings] w-full h-full"></span>
+      );
+      setLabel("Settings");
+    } else if (panelType === "home") {
+      setIcon(
+        <span className="icon-[material-symbols-light--home] w-full h-full"></span>
+      );
+      setLabel("Home");
     }
   }, [panelType, breadcrumbs]);
 
   return (
-    <div className="w-[12rem] h-[2.5rem] px-1 flex items-center justify-start border-x border-appLayoutBorder hover:bg-appLayoutInverseHover">
+    <div
+      ref={dndRef}
+      className={`h-full w-full flex items-center justify-start hover:bg-appLayoutInverseHover 
+          transition-colors duration-200
+
+          ${isDragging && "opacity-30"} 
+
+          ${isOverCurrent && "border-x border-appLayoutBorder"}
+          
+          ${
+            isOverCurrent &&
+            areaSelected === "left" &&
+            `border-r border-r-appLayoutBorder border-l border-l-appLayoutHighlight`
+          }
+          ${
+            isOverCurrent &&
+            areaSelected === "right" &&
+            `border-l border-l-appLayoutBorder border-r border-r-appLayoutHighlight`
+          }
+          ${
+            (!isOverCurrent || (isOverCurrent && areaSelected === "")) &&
+            "border-x border-appLayoutBorder"
+          }
+
+          ${
+            equalityDeep(mainPanelState, {
+              panelType,
+              mode,
+              breadcrumbs,
+            })
+              ? "border-b-appLayoutHighlight border-b"
+              : "border-b-transparent border-b"
+          }
+        `}
+    >
       <button
         onClick={action}
-        className={`grow px-1 min-h-0 text-nowrap overflow-x-hidden overflow-x-ellipsis basis-0 h-full flex items-center justify-start`}
+        className={`grow basis-0 min-w-0 h-full flex items-center justify-start`}
       >
-        {label}
+        <span className="w-[2rem] h-[2rem] p-1 mb-[3px]">{icon}</span>
+        <div className="grow pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis">
+          {label}
+        </div>
       </button>
       <button
         onClick={() => {
           console.log("DELETING TAB");
+          const newTabs = JSON.parse(JSON.stringify(tabs));
+          const tabIndex = tabs.findIndex((x) =>
+            equalityDeep(x, { panelType, mode, breadcrumbs })
+          );
+
+          newTabs.splice(tabIndex, 1);
+
+          if (newTabs.length > 0) {
+            setTabs(newTabs);
+
+            activatePanel(
+              newTabs[newTabs.length - 1].panelType,
+              newTabs[newTabs.length - 1].mode,
+              newTabs[newTabs.length - 1].breadcrumbs
+            );
+          }
         }}
-        className="w-[2rem] h-[2rem] rounded-md p-1 hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+        className="min-w-[2rem] w-[2rem] h-[2rem] rounded-md p-1 hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
       >
         <span className="icon-[iwwa--delete] w-full h-full"></span>
       </button>

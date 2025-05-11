@@ -48,7 +48,7 @@ const useMainPanel = () => {
           return equalityDeep(value, newState);
         })
       ) {
-        const newTabs = [...tabs];
+        const newTabs = JSON.parse(JSON.stringify(tabs));
         newTabs.push(newState);
         if (newTabs.length > 10) {
           newTabs.shift();
