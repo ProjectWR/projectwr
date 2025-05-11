@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 const ContextMenuWrapper = ({ children, triggerClassname, options }) => {
   return (
     <ContextMenu.Root modal={false}>
-      <ContextMenu.Trigger className={`${triggerClassname} `}>
+      <ContextMenu.Trigger className={`${triggerClassname} w-full h-full`}>
         {children}
       </ContextMenu.Trigger>
       <ContextMenu.Content

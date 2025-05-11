@@ -167,12 +167,12 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
           )}
           <motion.div
             initial={{
-              width: 0,
-              opacity: 0,
-              marginRight: 0,
-              marginLeft: 0,
+              width: "var(--libraryManagerAddButtonSize) ",
+              opacity: 1,
+              marginRight: `0.5rem`,
+              marginLeft: `0.5rem`,
               marginBottom: 0,
-              padding: 0,
+              padding: `0.25rem`,
             }}
             animate={{
               width: "var(--libraryManagerAddButtonSize) ",
@@ -183,13 +183,12 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               padding: `0.25rem`,
             }}
             exit={{
-              width: 0,
-              opacity: 0,
-              marginRight: 0,
-              marginLeft: 0,
-
+              width: "var(--libraryManagerAddButtonSize) ",
+              opacity: 1,
+              marginRight: `0.5rem`,
+              marginLeft: `0.5rem`,
               marginBottom: 0,
-              padding: 0,
+              padding: `0.25rem`,
             }}
             className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
@@ -212,12 +211,11 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               }
             }}
             initial={{
-              width: 0,
-              opacity: 0,
-              paddingRight: 0,
-              paddingLeft: 0,
+              width: "calc(1rem + var(--libraryManagerAddButtonSize))",
+              opacity: 1,
+              paddingRight: `0.75rem`,
+              paddingLeft: `0.75rem`,
               marginBottom: 0,
-              padding: 0,
             }}
             animate={{
               width: "calc(1rem + var(--libraryManagerAddButtonSize))",
@@ -227,12 +225,11 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               marginBottom: 0,
             }}
             exit={{
-              width: 0,
-              opacity: 0,
-              paddingRight: 0,
-              paddingLeft: 0,
+              width: "calc(1rem + var(--libraryManagerAddButtonSize))",
+              opacity: 1,
+              paddingRight: `0.75rem`,
+              paddingLeft: `0.75rem`,
               marginBottom: 0,
-              padding: 0,
             }}
             className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-none
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 

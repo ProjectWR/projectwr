@@ -214,6 +214,8 @@ const DirectoryItemNode = ({
 
       const type = ytree.getNodeValueFromKey(draggedItem.id).get("type");
 
+      const currentItemType = itemMapRef.current.get("type");
+
       if (areaSelected !== "middle") {
         if (parentChildren.includes(draggedItem.id)) {
           console.log("is sibling");
@@ -241,7 +243,7 @@ const DirectoryItemNode = ({
         }
       } else {
         console.log("dropped middle");
-        if (type === "book") return;
+        if (type === "book" || currentItemType === "paper") return;
 
         if (ytree.getNodeChildrenFromKey(itemId).includes(draggedItem.id)) {
           ytree.setNodeOrderToEnd(draggedItem.id, itemId);

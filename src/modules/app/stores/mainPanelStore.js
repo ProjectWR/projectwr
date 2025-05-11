@@ -37,7 +37,7 @@ export const mainPanelStore = create((set) => ({
      *     { panelType: "settings", mode: "edit", breadcrumbs: ["home", "settings"] }
      * ])
      */
-    tabs: [],
+    tabs: [{ panelType: "home", mode: null, breadcrumbs: [] }],
     setTabs: (tabs) => {
         return set({ tabs: tabs })
     }

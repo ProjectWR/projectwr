@@ -4,7 +4,7 @@ import { mainPanelStore } from "../../stores/mainPanelStore";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import { ScrollArea } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const TabsBar = () => {
   /**
@@ -47,7 +47,7 @@ export const TabsBar = () => {
     >
       <div className="w-fit h-fit flex items-center">
         {tabs?.map((tab) => {
-          const { panelType, breadcrumbs } = tab;
+          const { panelType, mode, breadcrumbs } = tab;
 
           return (
             <TabButton
@@ -57,6 +57,7 @@ export const TabsBar = () => {
                   : panelType
               }
               panelType={panelType}
+              mode={mode}
               breadcrumbs={breadcrumbs}
               onClick={() => {
                 console.log("CLICKED");
@@ -69,9 +70,13 @@ export const TabsBar = () => {
   );
 };
 
-const TabButton = ({ onClick, panelType, breadcrumbs }) => {
+const TabButton = ({ onClick, panelType, mode, breadcrumbs }) => {
+  const { activatePanel } = useMainPanel();
+
   const [label, setLabel] = useState("DEFAULT");
-  const [action, setAction] = useState(() => {});
+  const action = useCallback(() => {
+    activatePanel(panelType, mode, breadcrumbs);
+  }, [panelType, mode, breadcrumbs, activatePanel]);
 
   useEffect(() => {
     const rootId = breadcrumbs[0];
@@ -80,8 +85,6 @@ const TabButton = ({ onClick, panelType, breadcrumbs }) => {
 
     if (panelType === "libraries") {
       if (isAtRoot) {
-        const key = "libraryDetails-" + rootId;
-
         const callback = () => {
           setLabel(
             dataManagerSubdocs
@@ -95,6 +98,8 @@ const TabButton = ({ onClick, panelType, breadcrumbs }) => {
           .getLibrary(rootId)
           .getMap("library_props")
           .observe(callback);
+
+        callback();
 
         return () => {
           dataManagerSubdocs
@@ -125,6 +130,8 @@ const TabButton = ({ onClick, panelType, breadcrumbs }) => {
 
       itemMap.observe(callback);
 
+      callback();
+
       return () => {
         itemMap?.unobserve(callback);
       };
@@ -132,18 +139,18 @@ const TabButton = ({ onClick, panelType, breadcrumbs }) => {
   }, [panelType, breadcrumbs]);
 
   return (
-    <div className="w-[12rem] h-[2.5rem] flex items-center justify-start border-x border-appLayoutBorder hover:bg-appLayoutInverseHover">
+    <div className="w-[12rem] h-[2.5rem] px-1 flex items-center justify-start border-x border-appLayoutBorder hover:bg-appLayoutInverseHover">
       <button
-        onClick={onClick}
-        className={`grow px-2 min-h-0 text-nowrap overflow-x-hidden overflow-x-ellipsis basis-0 h-full flex items-center justify-start`}
+        onClick={action}
+        className={`grow px-1 min-h-0 text-nowrap overflow-x-hidden overflow-x-ellipsis basis-0 h-full flex items-center justify-start`}
       >
         {label}
       </button>
       <button
         onClick={() => {
-          console.log("DELETE TAB!");
+          console.log("DELETING TAB");
         }}
-        className="w-[2rem] h-full p-1 hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+        className="w-[2rem] h-[2rem] rounded-md p-1 hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
       >
         <span className="icon-[iwwa--delete] w-full h-full"></span>
       </button>
