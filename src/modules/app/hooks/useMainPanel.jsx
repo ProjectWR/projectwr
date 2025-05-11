@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import useStoreHistory from "./useStoreHistory";
 import { equalityDeep } from "lib0/function";
@@ -43,33 +43,30 @@ const useMainPanel = () => {
         breadcrumbs: breadcrumbs,
       };
 
-      if (
-        !tabs?.find((value) => {
-          return equalityDeep(value, newState);
-        })
-      ) {
-        const newTabs = JSON.parse(JSON.stringify(tabs));
-        newTabs.push(newState);
-        if (newTabs.length > 10) {
-          newTabs.shift();
-        }
-
-        setTabs(newTabs);
-      }
-
       setMainPanelState(newState);
 
       console.log("MAIN PANEL STATE BEING SAVED: ", mainPanelState);
     },
-    [
-      setMainPanelState,
-      clearFuture,
-      saveStateInHistory,
-      mainPanelState,
-      tabs,
-      setTabs,
-    ]
+    [setMainPanelState, clearFuture, saveStateInHistory, mainPanelState]
   );
+
+  useEffect(() => {
+    const newState = JSON.parse(JSON.stringify(mainPanelState));
+
+    if (
+      !tabs?.find((value) => {
+        return equalityDeep(value, newState);
+      })
+    ) {
+      const newTabs = JSON.parse(JSON.stringify(tabs));
+      newTabs.push(newState);
+      if (newTabs.length > 10) {
+        newTabs.shift();
+      }
+
+      setTabs(newTabs);
+    }
+  }, [mainPanelState, setTabs, tabs]);
 
   return { mainPanelState, activatePanel };
 };

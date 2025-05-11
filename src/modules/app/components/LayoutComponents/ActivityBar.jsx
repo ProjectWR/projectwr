@@ -121,7 +121,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             selectedActivity={"dictionary"}
             deviceType={deviceType}
             buttonContent={
-              <span className="icon-[material-symbols-light--dictionary-outline] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+              <span className="icon-[material-symbols-light--match-word-rounded] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
             }
             flexValue={"grow-1"}
           />

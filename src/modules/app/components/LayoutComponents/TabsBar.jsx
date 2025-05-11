@@ -361,7 +361,13 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
         itemMap?.unobserve(callback);
       };
     } else if (panelType === "templates") {
+      setIcon(<span className="icon-[carbon--template] w-full h-full"></span>);
+      setLabel(rootId);
     } else if (panelType === "dictionary") {
+      setIcon(
+        <span className="icon-[material-symbols-light--match-word-rounded] w-full h-full"></span>
+      );
+      setLabel(rootId);
     } else if (panelType === "settings") {
       setIcon(
         <span className="icon-[material-symbols-light--settings] w-full h-full"></span>
