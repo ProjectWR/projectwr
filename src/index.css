@@ -10,6 +10,11 @@
 
 @plugin "@iconify/tailwind4";
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .noiseFiner {
   /* ... */
   background: url(/src/assets/noiseFiner.svg);
@@ -261,6 +266,10 @@
     --templateContentEditorHeaderGroupHeight: calc(var(--uiScale) * 3rem);
 
     --scrollbarSize: calc(var(--uiScale) * 0.25rem);
+    --tabsHeight: calc(var(--uiScale) * 2.5rem);
+    --tabsIconSize: calc(var(--uiScale) * 1.8rem);
+    --tabsFontSize: calc(var(--uiScale) * 1rem);
+    --tabWidth: calc(var(--uiScale) * 12rem);
   }
   .mobile {
     --libraryManagerNodeHeight: 7rem;
@@ -469,6 +478,9 @@
   );
   --spacing-paperPanelHeaderHeight: var(--paperPanelHeaderHeight);
   --spacing-scrollbarSize: var(--scrollbarSize);
+  --spacing-tabsHeight: var(--tabsHeight);
+  --spacing-tabsIconSize: var(--tabsIconSize);
+  --spacing-tabWidth: var(--tabWidth);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
@@ -509,6 +521,7 @@
   --text-breadcrumbFontSize: var(--breadcrumbFontSize);
   --text-preferencesItemFontSize: var(--preferencesItemFontSize);
   --text-paperPanelNameFontSize: var(--paperPanelNameFontSize);
+  --text-tabsFontSize: var(--tabsFontSize);
 }
 
 :root {

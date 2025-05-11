@@ -60,9 +60,9 @@ export const TabsBar = () => {
                     : panelType
                 }
                 initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: `12rem` }}
+                animate={{ opacity: 1, width: `var(--tabWidth)` }}
                 exit={{ opacity: 0, width: 0 }}
-                className="h-[2.5rem]"
+                className="h-tabsHeight"
               >
                 <TabButton
                   panelType={panelType}
@@ -396,7 +396,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
   return (
     <div
       ref={dndRef}
-      className={`h-full w-full flex items-center justify-start
+      className={`h-full w-full flex items-center justify-start gap-1 pr-1
           transition-colors duration-200
 
           ${isDragging && "opacity-30"} 
@@ -437,8 +437,10 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
         onClick={action}
         className={`grow basis-0 min-w-0 h-full flex items-center justify-start`}
       >
-        <span className="w-[2rem] h-[2rem] p-1 mb-[3px]">{icon}</span>
-        <div className="grow pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis">
+        <span className="w-tabsIconSize h-tabsIconSize p-1 mb-[3px]">
+          {icon}
+        </span>
+        <div className="grow pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
           {label}
         </div>
       </button>
@@ -462,7 +464,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
             );
           }
         }}
-        className="min-w-[2rem] w-[2rem] h-[2rem] rounded-md p-[6px] hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+        className="min-w-tabsIconSize w-tabsIconSize h-tabsIconSize p-[3px] rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
       >
         <span className="icon-[iwwa--delete] w-full h-full"></span>
       </button>
@@ -546,7 +548,7 @@ const UnusedSpace = () => {
   return (
     <div
       ref={dndRef}
-      className={`grow basis-b border-b border-b-appLayoutBorder h-[2.5rem] 
+      className={`grow basis-b border-b border-b-appLayoutBorder h-tabsHeight
         ${isOverCurrent && isHovering && `border-l border-l-appLayoutHighlight`}
         `}
     ></div>
