@@ -163,8 +163,16 @@ const DirectoryItemNode = ({
     hover: (draggedItem, monitor) => {
       if (!dndRef.current) return;
 
-      if (draggedItem.appItemType !== "libraries") return;
+      console.log(
+        "APP ITEM TYPE",
+        draggedItem.appItemType,
+        draggedItem.appItemType !== "libraries"
+      );
 
+      if (draggedItem.appItemType !== "libraries") {
+        setAreaSelected("");
+        return;
+      }
       if (draggedItem.id === itemId) {
         setIsSelfSelected(true);
       } else {
@@ -181,6 +189,8 @@ const DirectoryItemNode = ({
       } else {
         setIsAncestor(false);
       }
+
+      const type = ytree.getNodeValueFromKey(draggedItem.id).get("type");
 
       console.log("ancestor: ", isAncestor, " self selected: ", isSelfSelected);
 
@@ -202,6 +212,11 @@ const DirectoryItemNode = ({
     drop: (draggedItem, monitor) => {
       // If a nested drop already handled this event, do nothing.
       if (monitor.didDrop()) return;
+
+      if (draggedItem.appItemType !== "libraries") {
+        setAreaSelected("");
+        return;
+      }
 
       // if (draggedItem.id === itemId) {
       //   setIsSelfSelected(true);

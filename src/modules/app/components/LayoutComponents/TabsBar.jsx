@@ -109,6 +109,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
     item: () => {
+      console.log("PANEL TYPE", panelType);
       if (panelType === "libraries") {
         return {
           appItemType: "libraries",
@@ -374,6 +375,18 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
     }
   }, [panelType, breadcrumbs]);
 
+  useEffect(() => {
+    if (
+      equalityDeep(mainPanelState, {
+        panelType,
+        mode,
+        breadcrumbs,
+      })
+    ) {
+      dndRef.current?.scrollIntoView();
+    }
+  }, [mainPanelState, breadcrumbs, mode, panelType]);
+
   return (
     <div
       ref={dndRef}
@@ -382,7 +395,10 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
 
           ${isDragging && "opacity-30"} 
 
-          ${isOverCurrent && "border-x border-appLayoutBorder"}
+          ${
+            isOverCurrent &&
+            "border-x border-l-transparent border-r-appLayoutBorder"
+          }
           
           ${
             isOverCurrent &&
@@ -396,7 +412,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
           }
           ${
             (!isOverCurrent || (isOverCurrent && areaSelected === "")) &&
-            "border-x border-appLayoutBorder"
+            "border-x border-l-transparent border-r-appLayoutBorder"
           }
 
           ${
@@ -411,6 +427,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
         `}
     >
       <button
+        autoFocus
         onClick={action}
         className={`grow basis-0 min-w-0 h-full flex items-center justify-start`}
       >
@@ -439,7 +456,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
             );
           }
         }}
-        className="min-w-[2rem] w-[2rem] h-[2rem] rounded-md p-1 hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+        className="min-w-[2rem] w-[2rem] h-[2rem] rounded-md p-[6px] hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
       >
         <span className="icon-[iwwa--delete] w-full h-full"></span>
       </button>
@@ -466,7 +483,11 @@ const UnusedSpace = () => {
 
       if (!draggedItem.tabProps) return;
 
-      console.log("EQUALITY DEEP: ", draggedItem.tabProps, tabs[tabs.length - 1])
+      console.log(
+        "EQUALITY DEEP: ",
+        draggedItem.tabProps,
+        tabs[tabs.length - 1]
+      );
 
       if (equalityDeep(draggedItem.tabProps, tabs[tabs.length - 1])) {
         setIsHovering(false);
