@@ -5,6 +5,7 @@ import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import { ScrollArea } from "@mantine/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useDrag } from "react-dnd";
 
 export const TabsBar = () => {
   /**
@@ -77,6 +78,71 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs }) => {
   const action = useCallback(() => {
     activatePanel(panelType, mode, breadcrumbs);
   }, [panelType, mode, breadcrumbs, activatePanel]);
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "ITEM",
+    item: () => {
+      if (panelType === "libraries") {
+        return {
+          appItemType: "libraries",
+          id: breadcrumbs[breadcrumbs.length - 1],
+          libraryId: breadcrumbs[0],
+          tabProps: {
+            panelType,
+            mode,
+            breadcrumbs,
+          },
+        };
+      } else if (panelType === "templates") {
+        return {
+          appItemType: "templates",
+          id: breadcrumbs[0],
+          tabProps: {
+            panelType,
+            mode,
+            breadcrumbs,
+          },
+        };
+      } else if (panelType === "dictionary") {
+        return {
+          appItemType: "dictionary",
+          id: breadcrumbs[0],
+          tabProps: {
+            panelType,
+            mode,
+            breadcrumbs,
+          },
+        };
+      } else if (panelType === "settings") {
+        return {
+          appItemType: "settings",
+          id: null,
+          tabProps: {
+            panelType,
+            mode,
+            breadcrumbs,
+          },
+        };
+      } else if (panelType === "home") {
+        return {
+          appItemType: "home",
+          id: null,
+          tabProps: {
+            panelType,
+            mode,
+            breadcrumbs,
+          },
+        };
+      }
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+
+
+  const [areaSelected, setAreaSelected] = useState("left");
 
   useEffect(() => {
     const rootId = breadcrumbs[0];

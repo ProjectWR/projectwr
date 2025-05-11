@@ -138,8 +138,15 @@ const DirectoryItemNode = ({
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
     item: {
+      appItemType: "libraries",
       id: itemMapRef.current.get("item_id"),
       type: itemMapRef.current.get("type"),
+      libraryId: libraryId,
+      tabProps: {
+        panelType: "libraries",
+        mode: "details",
+        breadcrumbs: [libraryId, itemId],
+      },
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
