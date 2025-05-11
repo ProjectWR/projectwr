@@ -15,7 +15,7 @@ const Footer = () => {
   return (
     <div
       id="FooterContainer"
-      className="border-y border-appLayoutBorder w-full h-footerHeight min-h-footerHeight grow-0 flex flex-row justify-end font-sans"
+      className="border-y basis-0 border-appLayoutBorder w-full h-footerHeight min-h-footerHeight grow-0 flex flex-row justify-end font-sans"
     >
       <div className="ZoomContainer w-fit h-full px-1 flex flex-row items-center">
         <button

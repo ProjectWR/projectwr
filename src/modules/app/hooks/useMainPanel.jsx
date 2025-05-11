@@ -66,7 +66,7 @@ const useMainPanel = () => {
 
       setTabs(newTabs);
     }
-  }, [mainPanelState, setTabs, tabs]);
+  }, [mainPanelState, setTabs]);
 
   return { mainPanelState, activatePanel };
 };

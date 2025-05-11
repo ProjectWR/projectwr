@@ -10,31 +10,9 @@ import { AnimatePresence, motion } from "motion/react";
 
 export const TabsBar = () => {
   /**
-   * @type {MainPanelState}
-   * @typedef {Object} MainPanelState
-   * @property {string} panelType - The current panel type (e.g., "home").
-   * @property {*} mode - The current mode of the panel (can be null or specific mode).
-   * @property {Array} breadcrumbs - An array of breadcrumb strings representing the navigation path.
-   */
-  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
-
-  /**
    * @type {Array<MainPanelState>}
    */
   const tabs = mainPanelStore((state) => state.tabs);
-
-  const { activatePanel } = useMainPanel();
-
-  console.log("TABS: ", tabs);
-
-  console.log("MAIN PANEL STATE: ", mainPanelState);
-
-  console.log(
-    "CAN MAIN PANEL STATE BE FOUND IN TABS: ",
-    tabs?.find((value) => {
-      return equalityDeep(value, mainPanelState);
-    })
-  );
 
   return (
     <ScrollArea
@@ -109,7 +87,6 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
     item: () => {
-      console.log("PANEL TYPE", panelType);
       if (panelType === "libraries") {
         return {
           appItemType: "libraries",
@@ -199,8 +176,6 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
         equalityDeep(x, draggedItem.tabProps)
       );
 
-      console.log(tabDraggedIndex, tabDropIndex);
-
       if (tabDraggedIndex !== -1) {
         if (hoverClientX < middle && tabDraggedIndex !== tabDropIndex - 1) {
           setAreaSelected("left");
@@ -213,12 +188,9 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
           setAreaSelected("");
         }
       } else {
-        if (hoverClientX < middle && tabDraggedIndex !== tabDropIndex - 1) {
+        if (hoverClientX < middle) {
           setAreaSelected("left");
-        } else if (
-          hoverClientX >= middle &&
-          tabDraggedIndex !== tabDropIndex + 1
-        ) {
+        } else if (hoverClientX >= middle) {
           setAreaSelected("right");
         } else {
           setAreaSelected("");
@@ -402,8 +374,8 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
           ${isDragging && "opacity-30"} 
 
           ${
-            isOverCurrent &&
-            "border-x border-l-transparent border-r-appLayoutBorder"
+            (!isOverCurrent || (isOverCurrent && areaSelected === "")) &&
+            "border-l border-l-transparent border-r border-r-appLayoutBorder"
           }
           
           ${
@@ -416,10 +388,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
             areaSelected === "right" &&
             `border-l border-l-appLayoutBorder border-r border-r-appLayoutHighlight`
           }
-          ${
-            (!isOverCurrent || (isOverCurrent && areaSelected === "")) &&
-            "border-x border-l-transparent border-r-appLayoutBorder"
-          }
+         
 
           ${
             equalityDeep(mainPanelState, {
@@ -490,12 +459,6 @@ const UnusedSpace = () => {
       if (!dndRef.current) return;
 
       if (!draggedItem.tabProps) return;
-
-      console.log(
-        "EQUALITY DEEP: ",
-        draggedItem.tabProps,
-        tabs[tabs.length - 1]
-      );
 
       if (equalityDeep(draggedItem.tabProps, tabs[tabs.length - 1])) {
         setIsHovering(false);

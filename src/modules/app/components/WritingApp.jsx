@@ -421,7 +421,7 @@ const WritingApp = () => {
 
               <div
                 id="AppBodyContainer"
-                className={`w-full grow min-h-0 flex 
+                className={`w-full grow min-h-0 basis-0 flex 
               ${deviceType === "desktop" && "flex-row"}
               ${deviceType === "mobile" && "flex-col"}
               `}

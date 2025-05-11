@@ -63,13 +63,6 @@ const DirectoryItemNode = ({
   // Get the node value map and determine its type.
   const itemMapRef = useRef(ytree.getNodeValueFromKey(itemId));
 
-  const textContainerRef = useRef(null);
-  const textRef = useRef(null);
-
-  const computedLibraryDirectoryBookNodeFontSize = useComputedCssVar(
-    "--libraryDirectoryBookNodeFontSize"
-  );
-
   const itemMapState = useYMap(itemMapRef.current);
 
   const [nodeChildrenState, setNodeChildrenState] = useState(
@@ -557,14 +550,8 @@ const DirectoryItemNode = ({
                     ></motion.span>
                   </div>
 
-                  <div
-                    ref={textContainerRef}
-                    className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
-                  >
-                    <span
-                      ref={textRef}
-                      className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis"
-                    >
+                  <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
+                    <span className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis">
                       {itemMapState.item_title}
                     </span>
                   </div>
@@ -602,11 +589,9 @@ const DirectoryItemNode = ({
                 ></motion.span>
 
                 <div
-                  ref={textContainerRef}
                   className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
                 >
                   <span
-                    ref={textRef}
                     className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
                   >
                     {itemMapState.item_title}
