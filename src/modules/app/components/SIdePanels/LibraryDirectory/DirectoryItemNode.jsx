@@ -426,7 +426,7 @@ const DirectoryItemNode = ({
     setPanelOpened,
     ytree,
     activatePanel,
-    breadcrumbs,
+    libraryId,
   ]);
 
   return (
@@ -514,7 +514,10 @@ const DirectoryItemNode = ({
                         setPanelOpened(false);
                       }
 
-                      activatePanel("libraries", "details", [libraryId, itemId]);
+                      activatePanel("libraries", "details", [
+                        libraryId,
+                        itemId,
+                      ]);
 
                       setPanelOpened(true);
                     }

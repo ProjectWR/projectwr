@@ -3,6 +3,7 @@ import useMainPanel from "../../hooks/useMainPanel";
 import { mainPanelStore } from "../../stores/mainPanelStore";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
+import { ScrollArea } from "@mantine/core";
 
 export const TabsBar = () => {
   /**
@@ -33,53 +34,90 @@ export const TabsBar = () => {
   );
 
   return (
-    <div className="w-full h-[3rem] flex items-center">
-      {tabs?.map((tab) => {
-        const { panelType, breadcrumbs } = tab;
+    <ScrollArea overscrollBehavior="none" scrollbars="x" type="hover"  classNames={{
+      root: `w-full h-fit p-0 border-b border-appLayoutBorder`,
+      scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
+      thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`
+    }}>
+      <div className="w-fit h-fit flex items-center">
+        {tabs?.map((tab) => {
+          const { panelType, breadcrumbs } = tab;
 
-        const rootId = breadcrumbs[0];
-        const youngestId = breadcrumbs[breadcrumbs.length - 1];
+          const rootId = breadcrumbs[0];
+          const youngestId = breadcrumbs[breadcrumbs.length - 1];
 
-        const isAtRoot = tab.length === 1;
+          const isAtRoot = youngestId === rootId;
 
-        if (panelType === "libraries") {
-          if (isAtRoot) {
-            const key = "libraryDetails-" + rootId;
+          if (panelType === "libraries") {
+            if (isAtRoot) {
+              const key = "libraryDetails-" + rootId;
+
+              return (
+                <TabButton
+                  key={key}
+                  label={dataManagerSubdocs
+                    .getLibrary(rootId)
+                    .getMap("library_props")
+                    .get("library_name")}
+                  onClick={() => {
+                    console.log("CLICKED");
+                  }}
+                />
+              );
+            }
+
+            if (
+              !dataManagerSubdocs.getLibrary(rootId) ||
+              !checkForYTree(
+                dataManagerSubdocs
+                  .getLibrary(rootId)
+                  .getMap("library_directory")
+              )
+            ) {
+              return null;
+            }
+
+            const ytree = new YTree(
+              dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
+            );
+
+            const itemMap = ytree.getNodeValueFromKey(youngestId);
+
+            const key = "libraryDetails-" + rootId + "-" + youngestId;
 
             return (
-              <div className="w-[12rem] h-full" key={key}>
-                {dataManagerSubdocs
-                  .getLibrary(rootId)
-                  .getMap("library_props")
-                  .get("library_name")}
-              </div>
+              <TabButton
+                key={key}
+                label={itemMap.get("item_title")}
+                onClick={() => {
+                  console.log("CLICKED");
+                }}
+              />
             );
           }
+        })}
+      </div>
+    </ScrollArea>
+  );
+};
 
-          if (
-            !dataManagerSubdocs.getLibrary(rootId) ||
-            !checkForYTree(
-              dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
-            )
-          ) {
-            return null;
-          }
-
-          const ytree = new YTree(
-            dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
-          );
-
-          const itemMap = ytree.getNodeValueFromKey(youngestId);
-
-          const key = "libraryDetails-" + rootId + "-" + youngestId;
-
-          return (
-            <div className="w-[12rem] h-full" key={key}>
-              {itemMap.get("item_title")}
-            </div>
-          );
-        }
-      })}
+const TabButton = ({ label, onClick }) => {
+  return (
+    <div className="w-[12rem] h-[2.5rem] flex items-center justify-start border-x border-appLayoutBorder hover:bg-appLayoutInverseHover">
+      <button
+        onClick={onClick}
+        className={`grow basis-0 h-full flex items-center justify-start`}
+      >
+        {label}
+      </button>
+      <button
+        onClick={() => {
+          console.log("DELETE TAB!");
+        }}
+        className="w-[2rem] h-full p-1 hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+      >
+        <span className="icon-[iwwa--delete] w-full h-full"></span>
+      </button>
     </div>
   );
 };
