@@ -7,6 +7,7 @@ import { ScrollArea } from "@mantine/core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { AnimatePresence, motion } from "motion/react";
+import { appStore } from "../../stores/appStore";
 
 export const TabsBar = () => {
   /**
@@ -64,6 +65,8 @@ export const TabsBar = () => {
 const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
   const dndRef = useRef(null);
 
+  const setFocusedItem = appStore((state) => state.setFocusedItem);
+
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
 
   /**
@@ -82,7 +85,14 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
 
   const action = useCallback(() => {
     activatePanel(panelType, mode, breadcrumbs);
-  }, [panelType, mode, breadcrumbs, activatePanel]);
+    if (panelType === "libraries") {
+      setFocusedItem({
+        type: "libraries",
+        libraryId: breadcrumbs[0],
+        itemId: breadcrumbs[1] ? breadcrumbs[1] : null,
+      });
+    }
+  }, [panelType, mode, breadcrumbs, activatePanel, setFocusedItem]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",

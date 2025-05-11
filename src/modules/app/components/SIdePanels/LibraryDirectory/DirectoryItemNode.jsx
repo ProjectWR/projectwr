@@ -76,6 +76,12 @@ const DirectoryItemNode = ({
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
+    if (focusedItemId === itemId) {
+      dndRef.current?.scrollIntoView();
+    }
+  }, [focusedItemId, itemId]);
+
+  useEffect(() => {
     const updateisOpened = (isOpened) => {
       setIsOpened(isOpened);
     };
@@ -520,6 +526,8 @@ const DirectoryItemNode = ({
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
                     console.log("edit paper button");
+                    setFocusedItemId(itemId);
+
                     if (
                       !(
                         appStoreItemId === itemId &&
@@ -588,12 +596,8 @@ const DirectoryItemNode = ({
                   })()}`}
                 ></motion.span>
 
-                <div
-                  className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start"
-                >
-                  <span
-                    className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
-                  >
+                <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
+                  <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
                     {itemMapState.item_title}
                   </span>
                 </div>

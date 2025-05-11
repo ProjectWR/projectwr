@@ -48,6 +48,11 @@ export const appStore = create((set) => ({
     return set({ libraryId: libraryId });
   },
 
+  focusedItem: null,
+  setFocusedItem: (focusedItem) => {
+    return set({ focusedItem: focusedItem });
+  },
+
   itemId: 'unselected',
   setItemId: (itemId) => {
     return set({ itemId: itemId });

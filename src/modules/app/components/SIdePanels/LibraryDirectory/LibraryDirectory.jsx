@@ -36,7 +36,18 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const { activatePanel } = useMainPanel();
 
+  const focusedItem = appStore((state) => state.focusedItem);
+
   const [focusedItemId, setFocusedItemId] = useState(null);
+
+  useEffect(() => {
+    if (
+      focusedItem?.type === "libraries" &&
+      focusedItem.libraryId === libraryId
+    ) {
+      setFocusedItemId(focusedItem.itemId);
+    }
+  }, [focusedItem, libraryId]);
 
   useEffect(() => {
     console.log("Focused Item: ", focusedItemId);
@@ -115,11 +126,24 @@ const LibraryDirectory = ({ libraryId }) => {
             <h1
               className={`h-fit w-full grow pt-1 px-3 text-libraryManagerHeaderText text-appLayoutText order-2 ${
                 deviceType === "mobile" ? "ml-3" : ""
-              }`}
+              }
+                ${
+                  focusedItem === null &&
+                  "text-shadow-md text-shadow-appLayoutHighlight"
+                }
+              `}
             >
-              <p className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis">
+              <motion.p
+                animate={{
+                  textShadow:
+                    focusedItemId === null
+                      ? `0 0 10px hsl(var(--appLayoutTextMuted))`
+                      : "none",
+                }}
+                className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis"
+              >
                 {libraryPropsMapState.library_name}
-              </p>
+              </motion.p>
             </h1>
           </div>
         </button>
