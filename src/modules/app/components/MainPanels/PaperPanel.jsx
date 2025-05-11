@@ -243,7 +243,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               animate={{
                 opacity: 1,
               }}
-              className={`icon-[bi--sliders2] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+              className={`icon-[bi--sliders2] ${"hover:text-appLayoutHighlight"} rounded-full w-[75%] h-[75%]`}
             ></motion.span>
           </motion.button>
 

@@ -109,15 +109,15 @@ const LibraryDirectory = ({ libraryId }) => {
             setFocusedItemId(null);
           }}
           id="LibraryDirectoryHeader"
-          className={`flex items-center justify-start w-full gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  `}
+          className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  `}
         >
-          <div className="h-fit min-h-fit max-h-full py-3 pr-3 w-full flex items-center justify-center order-2">
+          <div className="h-fit min-h-fit max-h-full py-3 w-full flex items-center justify-start order-2">
             <h1
-              className={`h-fit grow pt-1 text-libraryManagerHeaderText text-appLayoutText order-2 ${
-                deviceType === "mobile" ? "ml-3" : "ml-6"
+              className={`h-fit w-full grow pt-1 px-3 text-libraryManagerHeaderText text-appLayoutText order-2 ${
+                deviceType === "mobile" ? "ml-3" : ""
               }`}
             >
-              <p className="w-fit max-w-full h-fit text-nowrap overflow-hidden text-ellipsis">
+              <p className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis">
                 {libraryPropsMapState.library_name}
               </p>
             </h1>
