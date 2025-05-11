@@ -76,7 +76,8 @@ export const TabsBar = () => {
             );
           })}
         </AnimatePresence>
-        <div className="grow basis-b border-b border-appLayoutBorder h-[2.5rem]"></div>
+
+        <UnusedSpace />
       </div>
     </ScrollArea>
   );
@@ -186,12 +187,6 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
         equalityDeep(x, { panelType, mode, breadcrumbs })
       );
 
-      const tabDraggedIndex = tabs.findIndex((x) =>
-        equalityDeep(x, draggedItem.tabProps)
-      );
-
-      console.log(tabDraggedIndex, tabDropIndex);
-
       const hoverBoundingRect = dndRef.current.getBoundingClientRect();
       const buffer = 0; // pixels to define the top/bottom sensitive area
       const clientOffset = monitor.getClientOffset();
@@ -199,20 +194,34 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
 
       const middle = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
 
-      if (
-        hoverClientX < middle &&
-        tabDraggedIndex !== -1 &&
-        tabDraggedIndex !== tabDropIndex - 1
-      ) {
-        setAreaSelected("left");
-      } else if (
-        hoverClientX >= middle &&
-        tabDraggedIndex !== -1 &&
-        tabDraggedIndex !== tabDropIndex + 1
-      ) {
-        setAreaSelected("right");
+      const tabDraggedIndex = tabs.findIndex((x) =>
+        equalityDeep(x, draggedItem.tabProps)
+      );
+
+      console.log(tabDraggedIndex, tabDropIndex);
+
+      if (tabDraggedIndex !== -1) {
+        if (hoverClientX < middle && tabDraggedIndex !== tabDropIndex - 1) {
+          setAreaSelected("left");
+        } else if (
+          hoverClientX >= middle &&
+          tabDraggedIndex !== tabDropIndex + 1
+        ) {
+          setAreaSelected("right");
+        } else {
+          setAreaSelected("");
+        }
       } else {
-        setAreaSelected("");
+        if (hoverClientX < middle && tabDraggedIndex !== tabDropIndex - 1) {
+          setAreaSelected("left");
+        } else if (
+          hoverClientX >= middle &&
+          tabDraggedIndex !== tabDropIndex + 1
+        ) {
+          setAreaSelected("right");
+        } else {
+          setAreaSelected("");
+        }
       }
     },
     drop: (draggedItem, monitor) => {
@@ -263,6 +272,23 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
           let element = newTabs[tabDraggedIndex];
           newTabs.splice(tabDraggedIndex, 1);
           newTabs.splice(tabDropIndex + 1, 0, element);
+
+          setTabs(newTabs);
+        }
+      } else {
+        if (hoverClientX < middle && tabDraggedIndex !== tabDropIndex - 1) {
+          const newTabs = JSON.parse(JSON.stringify(tabs));
+
+          newTabs.splice(tabDropIndex, 0, draggedItem.tabProps);
+
+          setTabs(newTabs);
+        } else if (
+          hoverClientX >= middle &&
+          tabDraggedIndex !== tabDropIndex + 1
+        ) {
+          const newTabs = JSON.parse(JSON.stringify(tabs));
+
+          newTabs.splice(tabDropIndex + 1, 0, draggedItem.tabProps);
 
           setTabs(newTabs);
         }
@@ -379,7 +405,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
               mode,
               breadcrumbs,
             })
-              ? "border-t-appLayoutHighlight border-t"
+              ? "border-t-appLayoutHighlight border-t border-b border-b-transparent"
               : "border-t-transparent border-t border-b border-b-appLayoutBorder hover:bg-appLayoutInverseHover "
           }
         `}
@@ -418,5 +444,84 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
         <span className="icon-[iwwa--delete] w-full h-full"></span>
       </button>
     </div>
+  );
+};
+
+const UnusedSpace = () => {
+  const dndRef = useRef();
+
+  /**
+   * @type {Array<MainPanelState>}
+   */
+  const tabs = mainPanelStore((state) => state.tabs);
+
+  const setTabs = mainPanelStore((state) => state.setTabs);
+
+  const [isHovering, setIsHovering] = useState(false);
+
+  const [{ isOverCurrent }, drop] = useDrop({
+    accept: "ITEM",
+    hover: (draggedItem, monitor) => {
+      if (!dndRef.current) return;
+
+      if (!draggedItem.tabProps) return;
+
+      console.log("EQUALITY DEEP: ", draggedItem.tabProps, tabs[tabs.length - 1])
+
+      if (equalityDeep(draggedItem.tabProps, tabs[tabs.length - 1])) {
+        setIsHovering(false);
+        return;
+      }
+
+      setIsHovering(true);
+    },
+    drop: (draggedItem, monitor) => {
+      // If a nested drop already handled this event, do nothing.
+      if (monitor.didDrop()) return;
+
+      if (!dndRef.current) return;
+
+      if (!draggedItem.tabProps) return;
+
+      if (equalityDeep(draggedItem.tabProps, tabs[tabs.length - 1])) {
+        setIsHovering(false);
+        return;
+      }
+
+      const tabDraggedIndex = tabs.findIndex((x) =>
+        equalityDeep(x, draggedItem.tabProps)
+      );
+
+      if (tabDraggedIndex !== -1) {
+        const newTabs = JSON.parse(JSON.stringify(tabs));
+
+        let element = newTabs[tabDraggedIndex];
+        newTabs.splice(tabDraggedIndex, 1);
+        newTabs.push(element);
+
+        setTabs(newTabs);
+      } else {
+        const newTabs = JSON.parse(JSON.stringify(tabs));
+
+        newTabs.push(draggedItem.tabProps);
+
+        setTabs(newTabs);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
+    }),
+  });
+
+  drop(dndRef);
+
+  return (
+    <div
+      ref={dndRef}
+      className={`grow basis-b border-b border-b-appLayoutBorder h-[2.5rem] 
+        ${isOverCurrent && isHovering && `border-l border-l-appLayoutHighlight`}
+        `}
+    ></div>
   );
 };
