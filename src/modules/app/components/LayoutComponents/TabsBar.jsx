@@ -42,12 +42,12 @@ export const TabsBar = () => {
       scrollbars="x"
       type="hover"
       classNames={{
-        root: `w-full h-fit p-0 border-b border-appLayoutBorder`,
+        root: `w-full h-fit p-0`,
         scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
         thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
       }}
     >
-      <div className="w-fit h-fit flex items-center">
+      <div className="w-fit min-w-full h-fit flex items-center">
         <AnimatePresence>
           {tabs?.map((tab) => {
             const { panelType, mode, breadcrumbs } = tab;
@@ -76,6 +76,7 @@ export const TabsBar = () => {
             );
           })}
         </AnimatePresence>
+        <div className="grow basis-b border-b border-appLayoutBorder h-[2.5rem]"></div>
       </div>
     </ScrollArea>
   );
@@ -350,7 +351,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
   return (
     <div
       ref={dndRef}
-      className={`h-full w-full flex items-center justify-start hover:bg-appLayoutInverseHover 
+      className={`h-full w-full flex items-center justify-start
           transition-colors duration-200
 
           ${isDragging && "opacity-30"} 
@@ -378,8 +379,8 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
               mode,
               breadcrumbs,
             })
-              ? "border-b-appLayoutHighlight border-b"
-              : "border-b-transparent border-b"
+              ? "border-t-appLayoutHighlight border-t"
+              : "border-t-transparent border-t border-b border-b-appLayoutBorder hover:bg-appLayoutInverseHover "
           }
         `}
     >

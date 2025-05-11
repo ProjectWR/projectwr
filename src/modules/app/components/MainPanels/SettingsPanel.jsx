@@ -112,12 +112,6 @@ const SettingsPanel = () => {
 
   return (
     <DetailsPanel>
-      <DetailsPanelHeader>
-        <DetailsPanelNameLabel>Settings</DetailsPanelNameLabel>
-      </DetailsPanelHeader>
-
-      <DetailsPanelDivider />
-
       <DetailsPanelBody>
         <Modal
           opened={isLoginOpen}
