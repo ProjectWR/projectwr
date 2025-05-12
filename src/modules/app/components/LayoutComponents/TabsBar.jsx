@@ -67,6 +67,10 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
 
   const setFocusedItem = appStore((state) => state.setFocusedItem);
 
+  const setActivity = appStore((state) => state.setActivity);
+  const setLibraryId = appStore((state) => state.setLibraryId);
+  const setTemplateId = appStore((state) => state.setTemplateId);
+
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
 
   /**
@@ -86,13 +90,29 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
   const action = useCallback(() => {
     activatePanel(panelType, mode, breadcrumbs);
     if (panelType === "libraries") {
+      setActivity("libraries");
+      setLibraryId(breadcrumbs[0]);
       setFocusedItem({
         type: "libraries",
         libraryId: breadcrumbs[0],
         itemId: breadcrumbs[1] ? breadcrumbs[1] : null,
       });
     }
-  }, [panelType, mode, breadcrumbs, activatePanel, setFocusedItem]);
+
+    if (panelType === "templates") {
+      setActivity("templates");
+      setTemplateId(breadcrumbs[0]);
+    }
+  }, [
+    panelType,
+    mode,
+    breadcrumbs,
+    activatePanel,
+    setFocusedItem,
+    setActivity,
+    setLibraryId,
+    setTemplateId,
+  ]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
@@ -414,7 +434,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
       <button
         autoFocus
         onClick={action}
-        className={`grow basis-0 min-w-0 h-full flex items-center justify-start`}
+        className={`grow basis-0 min-w-0 h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted`}
       >
         <span className="w-tabsIconSize h-tabsIconSize p-1 mb-[3px]">
           {icon}

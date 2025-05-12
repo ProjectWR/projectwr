@@ -21,8 +21,6 @@ const useMainPanel = () => {
 
   const setTabs = mainPanelStore((state) => state.setTabs);
 
-  const arr = [];
-
   const {
     saveStateInHistory,
     canGoBack,

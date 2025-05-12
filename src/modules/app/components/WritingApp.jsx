@@ -47,6 +47,8 @@ import { useDebouncedCallback } from "@mantine/hooks";
 import templateManager from "../lib/templates";
 import useMainPanel from "../hooks/useMainPanel";
 import imageManager from "../lib/image";
+import { mainPanelStore } from "../stores/mainPanelStore";
+import { equalityDeep } from "lib0/function";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -58,6 +60,9 @@ const WritingApp = () => {
   // FOR DEV ONLY
 
   const [wasLocalSetup, setWasLocalSetup] = useState(false);
+
+  const tabs = mainPanelStore((state) => state.tabs);
+  const setTabs = mainPanelStore((state) => state.setTabs);
 
   const loading = appStore((state) => state.loading);
   const setLoading = appStore((state) => state.setLoading);
@@ -141,6 +146,20 @@ const WritingApp = () => {
       setLoadingStage("Loading App");
 
       try {
+        setLoadingStage("Loading previous session");
+
+        // if (
+        //   tabs.findIndex((a) =>
+        //     equalityDeep(a, { panelType: "home", mode: null, breadcrumbs: [] })
+        //   ) === -1
+        // ) {
+        //   const newTabs = JSON.parse(JSON.stringify(tabs));
+
+        //   newTabs.push({ panelType: "home", mode: null, breadcrumbs: [] });
+
+        //   setTabs(newTabs);
+        // }
+
         setLoadingStage("Loading settings");
 
         // Load settings
