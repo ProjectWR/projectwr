@@ -10,6 +10,7 @@
 - ~~make local state self correcting~~
 - ~~templates should be stored as files~~
 - Add context menus where it is appropriate
+- ~~Add tabs~~
 - Settings page needs to be finished
   - theme selector (currently dark or light mode)
   - ~~fonts~~
