@@ -300,6 +300,7 @@ const DirectoryItemNode = ({
             console.log("edit section details button");
             if (!(appStoreItemId === itemId && itemMode === "details")) {
               setItemId(itemId);
+              setFocusedItemId(itemId);
               setItemMode("details");
 
               if (deviceType === "mobile") {
@@ -376,6 +377,7 @@ const DirectoryItemNode = ({
               )
             ) {
               setItemId(itemId);
+              setFocusedItemId(itemId);
               setItemMode("details");
               if (deviceType === "mobile") {
                 setPanelOpened(false);
@@ -395,6 +397,7 @@ const DirectoryItemNode = ({
             console.log("edit paper editor button");
             if (!(appStoreItemId === itemId && itemMode === "settings")) {
               setItemId(itemId);
+              setFocusedItemId(itemId);
               setItemMode("settings");
               if (deviceType === "mobile") {
                 setPanelOpened(false);
