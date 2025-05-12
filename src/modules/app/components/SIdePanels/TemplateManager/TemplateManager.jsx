@@ -13,6 +13,7 @@ import { equalityDeep } from "lib0/function";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { motion } from "motion/react";
+import { useDrag } from "react-dnd";
 
 const TemplateManager = () => {
   console.log("Template Manager was rendered");
@@ -111,6 +112,8 @@ export default TemplateManager;
 const TemplateManagerNode = ({ templateId }) => {
   const { deviceType } = useDeviceType();
 
+  const dndRef = useRef();
+
   const {
     saveStateInHistory,
     canGoBack,
@@ -129,8 +132,31 @@ const TemplateManagerNode = ({ templateId }) => {
 
   const { activatePanel } = useMainPanel();
 
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "ITEM",
+    item: {
+      appItemType: "templates",
+      id: templateId,
+      tabProps: {
+        panelType: "templates",
+        mode: "details",
+        breadcrumbs: [templateId],
+      },
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  drag(dndRef);
+
   return (
-    <div className="w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg">
+    <div
+      ref={dndRef}
+      className={`w-full h-full flex flex-row items-center justify-between hover:bg-appLayoutHover transition-colors duration-0 rounded-lg
+          ${isDragging && "opacity-30"}
+        `}
+    >
       <button
         className={`grow h-full flex justify-start items-center pl-4 text-libraryManagerNodeText hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0 rounded-l-lg`}
         onClick={() => {
