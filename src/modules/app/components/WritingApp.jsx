@@ -53,6 +53,7 @@ import { equalityDeep } from "lib0/function";
 const WritingApp = () => {
   console.log("rendering writing app");
 
+  const zoom = appStore((state) => state.zoom);
   const setZoom = appStore((state) => state.setZoom);
 
   const [isMaximized, setIsMaximized] = useState(false);
@@ -72,6 +73,8 @@ const WritingApp = () => {
 
   const { activatePanel } = useMainPanel();
 
+  const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
+
   const activity = appStore((state) => state.activity);
 
   const panelOpened = appStore((state) => state.panelOpened);
@@ -83,8 +86,6 @@ const WritingApp = () => {
   const setIsMd = appStore((state) => state.setIsMd);
 
   const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer();
-
-  const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
 
   const sidePanelWidth = appStore((state) => state.sidePanelWidth);
   const setSidePanelWidth = appStore((state) => state.setSidePanelWidth);
@@ -121,7 +122,7 @@ const WritingApp = () => {
     }
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
-  const mWidth = useMotionValue(computedPanelWidth);
+  const mWidth = useMotionValue(sidePanelWidth);
 
   const handleDrag = (event, info) => {
     const rect = document
@@ -138,6 +139,24 @@ const WritingApp = () => {
     mWidth.set(newWidth);
     setSidePanelWidth(mWidth.get());
   };
+
+  useEffect(() => {
+    const rect = document
+      .getElementById("SidePanelMotionContainer")
+      ?.getBoundingClientRect();
+
+    if (!rect) return;
+
+    let newWidth = rect.right - rect.left;
+
+    const MIN_WIDTH = 0.77 * computedPanelWidth;
+    const MAX_WIDTH = 2 * computedPanelWidth;
+
+    newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+
+    mWidth.set(newWidth);
+    setSidePanelWidth(mWidth.get());
+  }, [computedPanelWidth, setSidePanelWidth]);
 
   useEffect(() => {
     const initializeWritingApp = async () => {
@@ -301,8 +320,6 @@ const WritingApp = () => {
   ]);
 
   useEffect(() => {
-    setSidePanelWidth(computedPanelWidth);
-
     const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
       const x = await getCurrentWindow().isMaximized();
 
@@ -325,13 +342,24 @@ const WritingApp = () => {
     return async () => {
       (await unlisten)();
     };
-  }, [setIsMd, setSidePanelWidth, computedPanelWidth, refreshPanel]);
+  }, [setIsMd, refreshPanel]);
 
   const debouncedRefreshPanel = useDebouncedCallback(() => {
     if (deviceType === "desktop") {
       refreshPanel();
     }
   }, 1000);
+
+  console.log(
+    "CHECKING SIDE PANEL STATE: ",
+    panelOpened,
+    sideBarOpened,
+    isMd,
+    isPanelAwake,
+    panelOpened && sideBarOpened && (isMd || isPanelAwake),
+    sidePanelWidth,
+    mWidth
+  );
 
   // Render loading screen if loading is true
   return (
@@ -481,18 +509,7 @@ const WritingApp = () => {
                                 width: `${sidePanelWidth}px`,
                               }}
                               exit={{ opacity: 0, width: 0, minWidth: 0 }}
-                              transition={{ duration: 0.1 }}
-                              style={{
-                                width: mWidth,
-                                // boxShadow:
-                                //   deviceType === "desktop"
-                                //     ? "0px 0px 6px -1px hsl(var(--appLayoutShadow))"
-                                //     : "", // right shadow
-                                // clipPath:
-                                //   deviceType === "desktop"
-                                //     ? "inset(0 -10px 0 0)"
-                                //     : "", // Clip the shadow except at right
-                              }}
+                              transition={{ duration: 0.05 }}
                             >
                               <div
                                 id="SidePanelWrapper"

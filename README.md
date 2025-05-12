@@ -27,9 +27,14 @@
 - Grammarly/language tool/etc. integration
 - google drive and one drive sync
 - Completion Status for each item
-- change internal structure of yjs ordered tree
+- IMPORTANT: change internal structure of yjs ordered tree
+- disappearing toolbar / top bar
+- dictionary
+- number untitled 
+- tooltips
+- subtitle rotation
+
 - FUTURE:
-- Tabs like vs code (half done)
 - Notes
 - Timelines
 - Mind maps (importable from xMind and Freemind and scrapple)

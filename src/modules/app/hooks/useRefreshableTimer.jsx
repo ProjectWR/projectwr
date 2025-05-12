@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const useRefreshableTimer = ({ time = 250 } = {}) => {
   // timerState increments every time the timer expires
-  const [timerState, setTimerState] = useState(false);
+  const [timerState, setTimerState] = useState(true);
   const timerRef = useRef(null);
 
   const keepAwake = useCallback(() => {
@@ -11,7 +11,7 @@ const useRefreshableTimer = ({ time = 250 } = {}) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-  });
+  }, []);
 
   const refreshTimer = useCallback(() => {
     setTimerState(true);
@@ -30,13 +30,14 @@ const useRefreshableTimer = ({ time = 250 } = {}) => {
 
   // Start the timer on mount and whenever 'time' changes
   useEffect(() => {
+    keepAwake();
     // Cleanup on unmount
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
-  }, [time, refreshTimer]);
+  }, [keepAwake]);
 
   return [timerState, refreshTimer, keepAwake];
 };

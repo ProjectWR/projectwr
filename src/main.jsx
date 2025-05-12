@@ -16,9 +16,9 @@ const theme = createTheme({
 });
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <>
     <MantineProvider cssVariablesSelector={`:root${":not(#\\#)".repeat(3)}`} theme={theme}>
       <App />
     </MantineProvider>
-  </StrictMode>
+  </>
 );
