@@ -25,6 +25,7 @@ const useComputedCssVar = (varName) => {
     window.addEventListener("resize", updateValue);
 
     return () => {
+      updateValue();
       window.removeEventListener("resize", updateValue);
       document.body.removeChild(testEl);
     };

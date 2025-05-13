@@ -53,7 +53,6 @@ import { equalityDeep } from "lib0/function";
 const WritingApp = () => {
   console.log("rendering writing app");
 
-  const zoom = appStore((state) => state.zoom);
   const setZoom = appStore((state) => state.setZoom);
 
   const [isMaximized, setIsMaximized] = useState(false);
@@ -62,20 +61,13 @@ const WritingApp = () => {
 
   const [wasLocalSetup, setWasLocalSetup] = useState(false);
 
-  const tabs = mainPanelStore((state) => state.tabs);
-  const setTabs = mainPanelStore((state) => state.setTabs);
-
   const loading = appStore((state) => state.loading);
   const setLoading = appStore((state) => state.setLoading);
   const [loadingStage, setLoadingStage] = useState("Loading App");
 
   const { deviceType } = useDeviceType();
 
-  const { activatePanel } = useMainPanel();
-
-  const computedPanelWidth = useComputedCssVar("--sidePanelWidth");
-
-  const activity = appStore((state) => state.activity);
+  const zoom = appStore((state) => state.zoom);
 
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
@@ -92,7 +84,6 @@ const WritingApp = () => {
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
-  const settings = settingsStore((state) => state.settings);
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
@@ -122,23 +113,27 @@ const WritingApp = () => {
     }
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
-  const mWidth = useMotionValue(sidePanelWidth);
+  const handleDrag = useCallback(
+    (event, info) => {
+      const rect = document
+        .getElementById("SidePanelMotionContainer")
+        ?.getBoundingClientRect();
 
-  const handleDrag = (event, info) => {
-    const rect = document
-      .getElementById("SidePanelMotionContainer")
-      .getBoundingClientRect();
+      if (!rect) return;
 
-    let newWidth = info.point.x - rect.left;
+      let newWidth = info.point.x - rect.left;
 
-    const MIN_WIDTH = 0.77 * computedPanelWidth;
-    const MAX_WIDTH = 2 * computedPanelWidth;
+      const MIN_WIDTH = 0.77 * zoom * 360;
+      const MAX_WIDTH = 2 * zoom * 360;
 
-    newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+      console.log("MIN AND MAX WIDTH: ", MIN_WIDTH, MAX_WIDTH);
 
-    mWidth.set(newWidth);
-    setSidePanelWidth(mWidth.get());
-  };
+      newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+
+      setSidePanelWidth(newWidth);
+    },
+    [setSidePanelWidth, zoom]
+  );
 
   useEffect(() => {
     const rect = document
@@ -149,14 +144,13 @@ const WritingApp = () => {
 
     let newWidth = rect.right - rect.left;
 
-    const MIN_WIDTH = 0.77 * computedPanelWidth;
-    const MAX_WIDTH = 2 * computedPanelWidth;
+    const MIN_WIDTH = 0.77 * zoom * 360;
+    const MAX_WIDTH = 2 * zoom * 360;
 
     newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
-    mWidth.set(newWidth);
-    setSidePanelWidth(mWidth.get());
-  }, [computedPanelWidth, setSidePanelWidth]);
+    setSidePanelWidth(newWidth);
+  }, [setSidePanelWidth, zoom]);
 
   useEffect(() => {
     const initializeWritingApp = async () => {
@@ -357,8 +351,7 @@ const WritingApp = () => {
     isMd,
     isPanelAwake,
     panelOpened && sideBarOpened && (isMd || isPanelAwake),
-    sidePanelWidth,
-    mWidth
+    sidePanelWidth
   );
 
   // Render loading screen if loading is true
