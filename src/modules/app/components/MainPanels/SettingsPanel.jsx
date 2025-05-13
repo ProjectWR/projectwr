@@ -46,6 +46,7 @@ import { round } from "lib0/math";
 import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 import { useImages } from "../../hooks/useImages";
 import imageManager from "../../lib/image";
+import { GrainyElementButton } from "../LayoutComponents/GrainyHoverButton";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -144,7 +145,7 @@ const SettingsPanel = () => {
               classNames={{
                 legend:
                   "text-3xl pb-1 px-2 mx-auto font-light text-appLayoutText",
-                root: "md:border border border-appLayoutBorder rounded-xl overflow-hidden mx-auto xl:mx-auto w-full md:w-[35rem] md:bg-appBackgroundAccent border-appLayoutBorder font-serif w-full pt-2 pb-4 md:pb-6 px-4 md:px-10 flex flex-col gap-4 md:gap-6 md:shadow-2xl shadow-appLayoutDarkHover",
+                root: "md:border border border-appLayoutBorder rounded-xl overflow-hidden mx-auto xl:mx-auto w-full md:w-[35rem] md:bg-appBackgroundAccent/85 border-appLayoutBorder font-serif w-full pt-2 pb-4 md:pb-6 px-4 md:px-10 flex flex-col gap-4 md:gap-6 md:shadow-2xl shadow-appLayoutDarkHover",
               }}
               radius="lg"
               pos="relative"
@@ -230,7 +231,7 @@ const SettingsPanel = () => {
                 <div className="grow basis-0 h-full">
                   <AnimatePresence mode="wait">
                     <button
-                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md shadow-sm shadow-appLayoutGentleShadow
+                      className={`w-full h-full rounded-md border border-appLayoutBorder overflow-hidden transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg active:translate-y-px active:shadow-md shadow-md shadow-appLayoutGentleShadow
                           `}
                       type="button"
                       onClick={() => {
@@ -364,8 +365,9 @@ const SettingsPanel = () => {
 
                     <div className={`w-1/2 h-userPlanDisplayHeight`}>
                       <AnimatePresence mode="wait">
-                        <GrainyButton
-                          className={`w-full h-full border border-appLayoutBorder rounded-md overflow-hidden text-detailsPanelPropsFontSize 
+                        <GrainyElementButton
+                          gradientSize={50}
+                          className={`w-full h-full border border-appLayoutInverseHover rounded-md overflow-hidden text-detailsPanelPropsFontSize 
                         
                           ${isLogoutLoading ? "text-appLayoutTextMuted" : ""}
 
@@ -464,7 +466,7 @@ const SettingsPanel = () => {
                               )}
                             </motion.span>
                           )}
-                        </GrainyButton>
+                        </GrainyElementButton>
                       </AnimatePresence>
                     </div>
                   </div>

@@ -17,6 +17,7 @@ export const GrainyElementButton = ({
   restingPosX = 50,
   restingPosY = -200,
   gradientSize = 10,
+  gradientSizeY = 10,
 }) => {
   const grainyDivRef = useRef(null);
 
@@ -46,7 +47,7 @@ export const GrainyElementButton = ({
     mouseY.set(restingPosY);
   }
 
-  const spotlightBackground = useMotionTemplate`radial-gradient(${gradientSize}rem ${gradientSize}rem at ${mouseXSpring}% ${mouseYSpring}%, hsl(var(--appLayoutInverseHover)) 0%, hsl(var(--appBackgroundAccent)))`;
+  const spotlightBackground = useMotionTemplate`radial-gradient(${gradientSize}rem ${gradientSizeY}rem at ${mouseXSpring}% ${mouseYSpring}%, hsl(var(--appLayoutInverseHover)) 0%, hsl(var(--appBackgroundAccent)))`;
 
   console.log(spotlightBackground);
   return (
@@ -58,7 +59,7 @@ export const GrainyElementButton = ({
         handleMouseMove({ clientX, clientY, currentTarget });
       }}
       onMouseLeave={handleMouseLeave}
-      className={`transition-all ease-out relative duration-200 hover:-translate-y-1 hover:shadow-lg shadow-appLayoutGentleShadow ${
+      className={`transition-all ease-out relative duration-200 hover:-translate-y-1 hover:shadow-lg shadow-md shadow-appLayoutGentleShadow ${
         active && "bg-appLayoutInverseHover"
       } ${className}`}
       style={{

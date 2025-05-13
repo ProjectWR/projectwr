@@ -507,6 +507,7 @@ const WritingApp = () => {
                               animate={{
                                 opacity: 1,
                                 width: `${sidePanelWidth}px`,
+                                minWidth: `${sidePanelWidth}px`,
                               }}
                               exit={{ opacity: 0, width: 0, minWidth: 0 }}
                               transition={{ duration: 0.05 }}
