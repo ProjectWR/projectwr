@@ -434,7 +434,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis"
                     ref={textRef}
                   >
-                    {libraryPropsMapState.library_name}
+                    {libraryPropsMapState.item_properties.item_title}
                   </p>
                 </div>
               </button>

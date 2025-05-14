@@ -348,13 +348,26 @@ const SearchBar = () => {
                 }
               })
               .map((result) => {
+                const item_properties =
+                  result.id === result.libraryId
+                    ? dataManagerSubdocs
+                        .getLibrary(result.libraryId)
+                        .getMap("library_props")
+                        .get("item_properties")
+                    : dataManagerSubdocs
+                        .getLibrary(result.libraryId)
+                        .getMap("library_directory")
+                        .get(result.id)
+                        .get("value")
+                        .get("item_properties");
+
                 return (
                   <HoverListButton
                     key={result.id}
                     onClick={() => {
                       console.log("ONCLICK RESULT", result);
 
-                      if (result.library_name) {
+                      if (item_properties.item_title) {
                         setLibraryId(result.libraryId);
                         setItemId("unselected");
                         if (deviceType === "mobile") {
@@ -391,10 +404,13 @@ const SearchBar = () => {
                       }
                       setActivity("libraries");
 
-                      activatePanel("libraries", "details", [result.libraryId, result.id]);
+                      activatePanel("libraries", "details", [
+                        result.libraryId,
+                        result.id,
+                      ]);
                     }}
                   >
-                    <span> {result.library_name || result.item_title}</span>
+                    <span> {item_properties.item_title}</span>
                     <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
                       {new Date(
                         itemLocalStateManager.getLastOpened(result.id)

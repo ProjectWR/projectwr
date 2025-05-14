@@ -563,7 +563,7 @@ const DirectoryItemNode = ({
 
                   <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
                     <span className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis">
-                      {itemMapState.item_title}
+                      {itemMapState.item_properties.item_title}
                     </span>
                   </div>
                 </button>
@@ -601,7 +601,7 @@ const DirectoryItemNode = ({
 
                 <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
                   <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
-                    {itemMapState.item_title}
+                    {itemMapState.item_properties.item_title}
                   </span>
                 </div>
               </button>

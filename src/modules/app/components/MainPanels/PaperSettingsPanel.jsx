@@ -63,7 +63,7 @@ const PaperSettingsPanel = ({ libraryId, ytree, paperId }) => {
         )}
 
         <DetailsPanelNameLabel>
-          {paperMapState.item_title}
+          {paperMapState.item_properties.item_title}
         </DetailsPanelNameLabel>
       </DetailsPanelHeader>
 

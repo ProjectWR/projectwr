@@ -26,7 +26,7 @@ export const DetailsPanelButton = ({ onClick, loading, icon, text }) => {
   return (
     <GrainyElementButton
       gradientSize={100}
-      gradientSizeY={8}
+      gradientSizeY={10}
       onClick={onClick}
       disabled={loading}
       className={`h-[3rem] border border-appLayoutBorder rounded-lg overflow-hidden`}

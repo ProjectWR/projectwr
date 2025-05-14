@@ -142,7 +142,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 }}
                 className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis"
               >
-                {libraryPropsMapState.library_name}
+                {libraryPropsMapState.item_properties.item_title}
               </motion.p>
             </h1>
           </div>

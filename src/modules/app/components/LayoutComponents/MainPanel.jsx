@@ -109,7 +109,7 @@ const MainPanel = ({}) => {
           label: dataManagerSubdocs
             .getLibrary(rootId)
             .getMap("library_props")
-            .get("library_name"),
+            .get("item_properties")["item_title"],
           action: () => {
             activatePanel("libraries", "details", [rootId]);
           },
@@ -153,11 +153,11 @@ const MainPanel = ({}) => {
         const breadcrumbItemMap = libraryYTree.getNodeValueFromKey(breadcrumb);
 
         breadcrumbValues.push({
-          label: breadcrumbItemMap.get("item_title"),
+          label: breadcrumbItemMap.get("item_properties")["item_title"],
           action: () => {
             console.log(
               "ACTIVATING PANEL",
-              breadcrumbItemMap.get("item_title", [rootId, breadcrumb])
+              breadcrumbItemMap.get("item_properties")["item_title"]
             );
             activatePanel("libraries", "details", [rootId, breadcrumb]);
           },

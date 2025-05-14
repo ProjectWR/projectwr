@@ -317,7 +317,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
             dataManagerSubdocs
               .getLibrary(rootId)
               .getMap("library_props")
-              .get("library_name")
+              .get("item_properties")["item_title"]
           );
         };
 
@@ -352,7 +352,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
       const itemMap = ytree.getNodeValueFromKey(youngestId);
 
       const callback = () => {
-        setLabel(itemMap.get("item_title"));
+        setLabel(itemMap.get("item_properties")["item_title"]);
       };
 
       itemMap.observe(callback);

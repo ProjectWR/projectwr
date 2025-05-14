@@ -32,24 +32,24 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
   console.log("Library Props Map STATE: ", sectionMapState);
 
   const initialSectionProperties = useRef({
-    item_title: sectionMapState.item_title,
-    section_description: sectionMapState.section_description,
+    item_title: sectionMapState.item_properties.item_title,
+    section_description: sectionMapState.item_properties.item_description,
   });
 
   const [sectionProperties, setSectionProperties] = useState({
-    item_title: sectionMapState.item_title,
-    section_description: sectionMapState.section_description,
+    item_title: sectionMapState.item_properties.item_title,
+    section_description: sectionMapState.item_properties.item_description,
   });
 
   useEffect(() => {
     setSectionProperties({
-      item_title: sectionMapState.item_title,
-      section_description: sectionMapState.section_description,
+      item_title: sectionMapState.item_properties.item_title,
+      section_description: sectionMapState.item_properties.item_description,
     });
 
     initialSectionProperties.current = {
-      item_title: sectionMapState.item_title,
-      section_description: sectionMapState.section_description,
+      item_title: sectionMapState.item_properties.item_title,
+      section_description: sectionMapState.item_properties.item_description,
     };
   }, [sectionId, sectionMapState]);
 
@@ -69,11 +69,10 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
   const handleSave = (e) => {
     const sectionMap = ytree.getNodeValueFromKey(sectionId);
 
-    sectionMap.set("item_title", sectionProperties.item_title);
-    sectionMap.set(
-      "section_description",
-      sectionProperties.section_description
-    );
+    sectionMap.set("item_properties", {
+      item_title: sectionProperties.item_title,
+      item_description: sectionProperties.item_description,
+    });
 
     setPanelOpened(true);
   };

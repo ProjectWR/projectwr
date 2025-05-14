@@ -187,7 +187,7 @@ const HomePanel = () => {
 
                         name = ytree
                           .getNodeValueFromKey(itemId)
-                          .get("item_title");
+                          .get("item_properties")["item_title"];
                       } else {
                         if (!dataManagerSubdocs.getLibrary(props.libraryId)) {
                           return null;
@@ -195,7 +195,7 @@ const HomePanel = () => {
                         name = dataManagerSubdocs
                           .getLibrary(props.libraryId)
                           .getMap("library_props")
-                          .get("library_name");
+                          .get("item_properties")["item_title"];
                       }
 
                       return (
@@ -244,11 +244,10 @@ const HomePanel = () => {
                                 }
                                 setPanelOpened(true);
 
-                                activatePanel(
-                                  "libraries",
-                                  "details",
-                                  [props.libraryId, itemId]
-                                );
+                                activatePanel("libraries", "details", [
+                                  props.libraryId,
+                                  itemId,
+                                ]);
                               }
 
                               setActivity("libraries");

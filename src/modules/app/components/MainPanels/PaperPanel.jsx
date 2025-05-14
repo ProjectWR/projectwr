@@ -107,16 +107,16 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const paperMapState = useYMap(ytree.getNodeValueFromKey(paperId));
 
   const initialPaperProperties = useRef({
-    item_title: paperMapState.item_title,
+    item_title: paperMapState.item_properties.item_title,
   });
 
   useEffect(() => {
     setPaperProperties({
-      item_title: paperMapState.item_title,
+      item_title: paperMapState.item_properties.item_title,
     });
 
     initialPaperProperties.current = {
-      item_title: paperMapState.item_title,
+      item_title: paperMapState.item_properties.item_title,
     };
   }, [paperId, paperMapState]);
 
@@ -135,7 +135,9 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const handleSave = () => {
     const paperMap = ytree.getNodeValueFromKey(paperId);
 
-    paperMap.set("item_title", paperProperties.item_title);
+    paperMap.set("item_properties", {
+      "item_title": paperProperties.item_title
+    });
   };
 
   console.log("PREFERENCES ", preferences);

@@ -2,8 +2,16 @@ import dataManagerSubdocs from './dataSubDoc';
 import MiniSearch from 'minisearch'
 
 let miniSearch = new MiniSearch({
-  fields: ['library_name', "library_description", "item_title", "section_description", "book_description", "paper_xml"],
-  storeFields: ["library_name", "item_title", "libraryId", "id", "type", "paper_xml"],
+  fields: ['library_name', "library_description", "item_properties", "item_title", "item_descrition", "section_description", "book_description", "paper_xml"],
+  storeFields: ["library_name", "item_title", "libraryId", "item_properties", "item_description", "id", "type", "paper_xml"],
+  extractField: (document, fieldName) => {
+    if (fieldName === "item_properties") {
+      return Object.values(document[fieldName]).join(' ');
+    }
+    else {
+      return document[fieldName];
+    }
+  },
   tokenize: (string) => {
     const tokens = []
     // Match XML/HTML tags OR non-tag text
@@ -36,7 +44,7 @@ export async function setupSearchForLibrary(libraryId) {
 
   miniSearch.add(document);
 
-  
+
 
   const callback = () => {
     const libraryDocument = ydoc.getMap("library_props").toJSON();
@@ -75,7 +83,7 @@ export async function setupSearchForLibrary(libraryId) {
       else if (change.action === 'add') {
         const itemDocument = value.get("value").toJSON();
         miniSearch.add({ id: key, libraryId: libraryId, ...itemDocument });
-        
+
         const itemCallback = () => {
           console.log("itemCallback: item ${key} changed");
           const itemDocument = value.get("value").toJSON();

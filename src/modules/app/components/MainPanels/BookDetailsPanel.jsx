@@ -32,31 +32,32 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
 
   console.log("Library Props Map STATE: ", bookMapState);
 
-  const initialBookProperties = useRef({
-    item_title: bookMapState.item_title,
-    book_description: bookMapState.book_description,
+  const [initialBookProperties, setInitialBookProperties] = useState({
+    item_title: bookMapState.item_properties.item_title,
+    book_description: bookMapState.item_properties.item_description,
   });
 
   const [bookProperties, setBookProperties] = useState({
-    item_title: bookMapState.item_title,
-    book_description: bookMapState.book_description,
+    item_title: bookMapState.item_properties.item_title,
+    book_description: bookMapState.item_properties.item_description,
   });
 
   useEffect(() => {
     setBookProperties({
-      item_title: bookMapState.item_title,
-      book_description: bookMapState.book_description,
+      item_title: bookMapState.item_properties.item_title,
+      book_description: bookMapState.item_properties.item_description,
     });
 
-    initialBookProperties.current = {
-      item_title: bookMapState.item_title,
-      book_description: bookMapState.book_description,
-    };
+    setInitialBookProperties({
+      item_title: bookMapState.item_properties.item_title,
+      book_description: bookMapState.item_properties.item_description,
+    });
   }, [bookId, bookMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    return !equalityDeep(bookProperties, initialBookProperties.current);
-  }, [bookProperties]);
+    console.log("CURRENTA ND INITIAL: ", bookProperties, initialBookProperties);
+    return !equalityDeep(bookProperties, initialBookProperties);
+  }, [bookProperties, initialBookProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,8 +71,10 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
   const handleSave = (e) => {
     const bookMap = ytree.getNodeValueFromKey(bookId);
 
-    bookMap.set("item_title", bookProperties.item_title);
-    bookMap.set("book_description", bookProperties.book_description);
+    bookMap.set("item_properties", {
+      item_title: bookProperties.item_title,
+      item_description: bookProperties.book_description,
+    });
 
     setPanelOpened(true);
   };

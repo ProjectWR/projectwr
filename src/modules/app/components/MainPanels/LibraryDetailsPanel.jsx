@@ -45,24 +45,26 @@ const LibraryDetailsPanel = ({ libraryId }) => {
   console.log("Library Props Map STATE: ", libraryPropsMapState);
 
   const initialLibraryProperties = useRef({
-    library_name: libraryPropsMapState.library_name,
-    library_description: libraryPropsMapState.library_description,
+    library_name: libraryPropsMapState.item_properties.item_title,
+    library_description: libraryPropsMapState.item_properties.item_description,
   });
 
   const [libraryProperties, setLibraryProperties] = useState({
-    library_name: libraryPropsMapState.library_name,
-    library_description: libraryPropsMapState.library_description,
+    library_name: libraryPropsMapState.item_properties.item_title,
+    library_description: libraryPropsMapState.item_properties.item_description,
   });
 
   useEffect(() => {
     setLibraryProperties({
-      library_name: libraryPropsMapState.library_name,
-      library_description: libraryPropsMapState.library_description,
+      library_name: libraryPropsMapState.item_properties.item_title,
+      library_description:
+        libraryPropsMapState.item_properties.item_description,
     });
 
     initialLibraryProperties.current = {
-      library_name: libraryPropsMapState.library_name,
-      library_description: libraryPropsMapState.library_description,
+      library_name: libraryPropsMapState.item_properties.item_title,
+      library_description:
+        libraryPropsMapState.item_properties.item_description,
     };
   }, [libraryId, libraryPropsMapState]);
 
@@ -83,21 +85,16 @@ const LibraryDetailsPanel = ({ libraryId }) => {
     dataManagerSubdocs
       .getLibrary(libraryId)
       .getMap("library_props")
-      .set("library_name", libraryProperties.library_name);
-    dataManagerSubdocs
-      .getLibrary(libraryId)
-      .getMap("library_props")
-      .set("library_description", libraryProperties.library_description);
+      .set("item_properties", {
+        item_title: libraryProperties.library_name,
+        item_description: libraryProperties.library_description,
+      });
 
     setPanelOpened(true);
   };
 
   return (
     <DetailsPanel
-      breadcrumbs={[
-        { label: "Your Libraries", action: () => {} },
-        { label: libraryProperties.library_name, action: () => {} },
-      ]}
     >
       <form
         onSubmit={(e) => {
