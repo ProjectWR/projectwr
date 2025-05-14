@@ -26,10 +26,10 @@ export const DetailsPanelButton = ({ onClick, loading, icon, text }) => {
   return (
     <GrainyElementButton
       gradientSize={100}
-      gradientSizeY={12}
+      gradientSizeY={8}
       onClick={onClick}
       disabled={loading}
-      className={`h-[3.5rem] border border-appLayoutBorder rounded-lg overflow-hidden`}
+      className={`h-[3rem] border border-appLayoutBorder rounded-lg overflow-hidden`}
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -38,7 +38,7 @@ export const DetailsPanelButton = ({ onClick, loading, icon, text }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.1 }}
-          className="w-full h-full flex items-center justify-center px-6 lg:px-4 gap-6 lg:gap-3"
+          className="w-full h-full flex items-center justify-center px-6 lg:px-3 gap-6 lg:gap-3"
         >
           {loading && (
             <div className={`relative w-full h-full`}>
@@ -113,8 +113,11 @@ export const DetailsPanelButton = ({ onClick, loading, icon, text }) => {
 
           {!loading && (
             <>
-              <span className="w-[2.5rem] h-[2.5rem]">{icon}</span>
-              <span className="grow basis-0 flex items-center justify-center text-2xl md:text-xl lg:text-lg xl:text-[1rem]">
+              <span className="w-[2.2rem] h-[2.2rem]">{icon}</span>
+              <span className="verticalDivider h-full min-w-px py-1">
+                <div className="h-full w-full bg-appLayoutInverseHover"></div>
+              </span>
+              <span className="grow basis-0 flex items-center justify-start text-2xl md:text-xl lg:text-lg xl:text-[1rem]">
                 {text}
               </span>
             </>

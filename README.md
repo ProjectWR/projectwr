@@ -3,7 +3,7 @@
 - ~~Replace all text boxes with a mini editor, or atleast make them fit to content when its typed~~
 - ~~Remove history buttons in app shell~~
 - ~~breadcrumbs~~
-- details panel buttons should be restyled and modularized
+- ~~details panel buttons should be restyled and modularized~~
 - ~~toolbar buttons active state~~
 - ~~breadcrumbs~~
 - ~~upgraded to tailwind v4~~
