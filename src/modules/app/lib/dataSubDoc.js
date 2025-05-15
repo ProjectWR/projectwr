@@ -128,7 +128,7 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: uuid });
 
     const libraryPropertiesYMap = ydoc.getMap("library_props");
-    libraryPropertiesYMap.set("item_properties", { "item_title": `Untitled Library ${this.libraryYDocMap.size}`, "item_description": "Library Description in Properties" })
+    libraryPropertiesYMap.set("item_properties", { "item_title": `Untitled Library #${this.libraryYDocMap.size}`, "item_description": "Library Description in Properties" })
 
     libraryPropertiesYMap.set(
       "order_index",
@@ -161,7 +161,8 @@ class DataManagerSubdocs {
     const bookMap = new Y.Map();
     bookMap.set("type", "book");
     bookMap.set("item_id", uuid);
-    bookMap.set("item_properties", { "item_title": "Untitled Book in Properties", "item_description": "Book Description in Properties" })
+
+    bookMap.set("item_properties", { "item_title": `Untitled Book #${ytree.getNodeChildrenFromKey("root")?.length}`, "item_description": "Book Description in Properties" })
 
     ytree.createNode("root", uuid, bookMap);
 
@@ -183,7 +184,7 @@ class DataManagerSubdocs {
     const sectionMap = new Y.Map();
     sectionMap.set("type", "section");
     sectionMap.set("item_id", uuid);
-    sectionMap.set("item_properties", { "item_title": "Untitled Section in Properties", "item_description": "Section Description in Properties" })
+    sectionMap.set("item_properties", { "item_title": `Untitled Section #${ytree.getNodeChildrenFromKey(bookId)?.length}`, "item_description": "Section Description in Properties" })
     ytree.createNode(bookId, uuid, sectionMap);
 
     itemLocalStateManager.createItemLocalState(uuid, {
@@ -203,7 +204,7 @@ class DataManagerSubdocs {
     const paperMap = new Y.Map();
     paperMap.set("type", "paper");
     paperMap.set("item_id", uuid);
-    paperMap.set("item_properties", { "item_title": "Untitled Paper in Properties", "item_description": "Paper Description in Properties" })
+    paperMap.set("item_properties", { "item_title": `Untitled Paper #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": "Paper Description in Properties" })
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
 
