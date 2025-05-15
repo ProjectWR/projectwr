@@ -19,6 +19,7 @@ import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPan
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 import useMainPanel from "../../hooks/useMainPanel";
+import { DetailsPanelButtonOnClick } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
 
 /**
  * TemplateDetailsPanel component for viewing and editing templates.
@@ -132,93 +133,21 @@ const TemplateDetailsPanel = ({ templateId }) => {
           </button>
         )}
 
+        <DetailsPanelButtonOnClick
+          exist={wasTemplateNameChanged}
+          onClick={handleNameSave}
+        />
+
         <DetailsPanelNameInput
           name="template_name"
           onChange={handleNameChange}
           value={templateName}
         />
 
-        <AnimatePresence>
-          {templateValid && wasTemplateChanged && (
-            <motion.button
-              type="button"
-              onClick={handleSave}
-              initial={{
-                width: 0,
-                opacity: 0,
-                marginLeft: 0,
-                marginBottom: 0,
-                padding: 0,
-              }}
-              animate={{
-                width: "var(--libraryManagerAddButtonSize) ",
-                opacity: 1,
-                marginLeft: `0.5rem`,
-                marginBottom: 0,
-                padding: `0.25rem`,
-              }}
-              exit={{
-                width: 0,
-                opacity: 0,
-                marginLeft: 0,
-                marginBottom: 0,
-                padding: 0,
-              }}
-              className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
-                hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                flex items-center justify-center order-3 mx-2
-                `}
-            >
-              <motion.span
-                animate={{
-                  opacity: 1,
-                }}
-                className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-              ></motion.span>
-            </motion.button>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {wasTemplateNameChanged && (
-            <motion.button
-              type="button"
-              onClick={handleNameSave}
-              initial={{
-                width: 0,
-                opacity: 0,
-                marginLeft: 0,
-                marginBottom: 0,
-                padding: 0,
-              }}
-              animate={{
-                width: "var(--libraryManagerAddButtonSize) ",
-                opacity: 1,
-                marginLeft: `0.5rem`,
-                marginBottom: 0,
-                padding: `0.25rem`,
-              }}
-              exit={{
-                width: 0,
-                opacity: 0,
-                marginLeft: 0,
-                marginBottom: 0,
-                padding: 0,
-              }}
-              className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
-                hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                flex items-center justify-center order-0 mx-2
-                `}
-            >
-              <motion.span
-                animate={{
-                  opacity: 1,
-                }}
-                className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-              ></motion.span>
-            </motion.button>
-          )}
-        </AnimatePresence>
+        <DetailsPanelButtonOnClick
+          exist={templateValid && wasTemplateChanged}
+          onClick={handleSave}
+        />
       </DetailsPanelHeader>
 
       <DetailsPanelDivider />
