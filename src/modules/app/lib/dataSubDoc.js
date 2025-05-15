@@ -128,7 +128,7 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: uuid });
 
     const libraryPropertiesYMap = ydoc.getMap("library_props");
-    libraryPropertiesYMap.set("item_properties", { "item_title": "Untitled Library in Properties", "item_description": "Library Description in Properties" })
+    libraryPropertiesYMap.set("item_properties", { "item_title": `Untitled Library ${this.libraryYDocMap.size}`, "item_description": "Library Description in Properties" })
 
     libraryPropertiesYMap.set(
       "order_index",
@@ -231,14 +231,14 @@ class DataManagerSubdocs {
       const nodeMap = ytree.getNodeValueFromKey(nodeId);
       if (nodeMap.get("type") === 'paper') {
         const html = this.getHtmlFromPaper(ytree, nodeId);
-        finalHTML += `<h${level}> ${nodeMap.get("item_title")} </h${level}>`
+        finalHTML += `< h${level} > ${nodeMap.get("item_title")} </h${level} > `
         finalHTML += html;
       }
       else if (nodeMap.get("type") === 'section') {
-        finalHTML += `<h${level}> ${nodeMap.get("item_title")} </h${level}>`
+        finalHTML += `< h${level} > ${nodeMap.get("item_title")} </h${level} > `
       }
       else if (nodeMap.get("type") === 'book') {
-        finalHTML += `<h1> ${nodeMap.get("item_title")} </h1>`
+        finalHTML += `< h1 > ${nodeMap.get("item_title")} </ > `
       }
     }
 
