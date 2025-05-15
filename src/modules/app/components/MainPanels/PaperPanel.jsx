@@ -19,6 +19,7 @@ import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPan
 import templateManager from "../../lib/templates";
 import useMainPanel from "../../hooks/useMainPanel";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
+import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -136,7 +137,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     const paperMap = ytree.getNodeValueFromKey(paperId);
 
     paperMap.set("item_properties", {
-      "item_title": paperProperties.item_title
+      item_title: paperProperties.item_title,
     });
   };
 
@@ -201,7 +202,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
           <motion.button
             type="button"
             onClick={() => {
-              console.log("edit paper editor button");
+              console.log("edit paper settings button");
               if (!(appStoreItemId === paperId && itemMode === "settings")) {
                 setItemId(paperId);
                 setItemMode("settings");
@@ -235,7 +236,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             }}
             className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-none
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-4
+                    flex items-center justify-center order-4 rounded-t-md
                     `}
           >
             <motion.span
@@ -246,55 +247,13 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             ></motion.span>
           </motion.button>
 
-          <AnimatePresence>
-            {unsavedChangesExist && (
-              <motion.button
-                type="submit"
-                initial={{
-                  width: 0,
-                  opacity: 0,
-                  marginRight: 0,
-                  marginLeft: 0,
-                  marginBottom: 0,
-                  padding: 0,
-                }}
-                animate={{
-                  width: "var(--libraryManagerAddButtonSize) ",
-                  opacity: 1,
-                  marginRight: `0.5rem`,
-                  marginLeft: `0.5rem`,
-                  marginBottom: 0,
-                  padding: `0.25rem`,
-                }}
-                exit={{
-                  width: 0,
-                  opacity: 0,
-                  marginRight: 0,
-                  marginLeft: 0,
-
-                  marginBottom: 0,
-                  padding: 0,
-                }}
-                className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
-                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-3
-                    `}
-              >
-                <motion.span
-                  animate={{
-                    opacity: 1,
-                  }}
-                  className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-                ></motion.span>
-              </motion.button>
-            )}
-          </AnimatePresence>
-
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
             value={paperProperties.item_title}
           />
+
+          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
         </DetailsPanelHeader>
 
         <DetailsPanelDivider />

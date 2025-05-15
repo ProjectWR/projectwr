@@ -203,6 +203,9 @@
     --detailsPanelSaveButtonFontSize: calc(var(--uiScale) * 1.2rem);
     --detailsPanelDescriptionInputHeight: calc(var(--uiScale) * 15rem);
     --detailsPanelWidth: calc(var(--uiScale) * 60rem);
+    --detailsPanelButtonHeight: calc(var(--uiScale) * 3rem);
+    --detailsPanelButtonIconHeight: calc(var(--uiScale) * 2.2rem);
+    --detailsPanelSubmitButtonWidth: calc(var(--uiScale) * 4rem);
 
     --paperPanelHeaderHeight: calc(var(--uiScale) * 2.25rem);
     --paperPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
@@ -476,6 +479,9 @@
   --spacing-tabsHeight: var(--tabsHeight);
   --spacing-tabsIconSize: var(--tabsIconSize);
   --spacing-tabWidth: var(--tabWidth);
+  --spacing-detailsPanelButtonIconHeight: var(--detailsPanelButtonIconHeight);
+  --spacing-detailsPanelButtonHeight: var(--detailsPanelButtonHeight);
+  --spacing-detailsPanelSubmitButtonWidth: var(--detailsPanelSubmitButtonWidth);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);

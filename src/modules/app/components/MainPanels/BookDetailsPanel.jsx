@@ -14,6 +14,7 @@ import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPane
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
 
 /**
  *
@@ -110,6 +111,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
             onChange={handleChange}
             value={bookProperties.item_title}
           />
+          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
         </DetailsPanelHeader>
         <DetailsPanelDivider />
         <DetailsPanelBody>
@@ -138,46 +140,6 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
               Book Description
             </label>
           </div>
-
-          <AnimatePresence>
-            {unsavedChangesExist && (
-              <motion.button
-                type="submit"
-                initial={{
-                  height: 0,
-                  opacity: 0,
-                  marginTop: 0,
-                  marginBottom: 0,
-                  padding: 0,
-                }}
-                animate={{
-                  height: "var(--libraryManagerAddButtonSize) ",
-                  opacity: 1,
-                  marginTop: `0.25rem`,
-                  marginBottom: 0,
-                  padding: `0.25rem`,
-                }}
-                exit={{
-                  height: 0,
-                  opacity: 0,
-                  marginTop: 0,
-                  marginBottom: 0,
-                  padding: 0,
-                }}
-                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
-                            hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                            flex items-center justify-center
-                        `}
-              >
-                <motion.span
-                  animate={{
-                    opacity: 1,
-                  }}
-                  className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-                ></motion.span>
-              </motion.button>
-            )}
-          </AnimatePresence>
         </DetailsPanelBody>
       </form>
     </DetailsPanel>
