@@ -15,6 +15,7 @@ import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPan
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
+import { DetailsPanelStatusProp } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
 
 /**
  *
@@ -29,42 +30,46 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
 
-  const bookMapState = useYMap(ytree.getNodeValueFromKey(bookId));
+  const itemMapState = useYMap(ytree.getNodeValueFromKey(bookId));
 
-  console.log("Library Props Map STATE: ", bookMapState);
+  console.log("Library Props Map STATE: ", itemMapState);
 
-  const [initialBookProperties, setInitialBookProperties] = useState({
-    item_title: bookMapState.item_properties.item_title,
-    book_description: bookMapState.item_properties.item_description,
+  const [initialItemProperties, setInitialItemProperties] = useState({
+    item_title: itemMapState.item_properties.item_title,
+    item_description: itemMapState.item_properties.item_description,
+    item_progress: itemMapState.item_properties.item_progress,
   });
 
-  const [bookProperties, setBookProperties] = useState({
-    item_title: bookMapState.item_properties.item_title,
-    book_description: bookMapState.item_properties.item_description,
+  const [itemProperties, setItemProperties] = useState({
+    item_title: itemMapState.item_properties.item_title,
+    item_description: itemMapState.item_properties.item_description,
+    item_progress: itemMapState.item_properties.item_progress,
   });
 
   useEffect(() => {
-    setBookProperties({
-      item_title: bookMapState.item_properties.item_title,
-      book_description: bookMapState.item_properties.item_description,
+    setItemProperties({
+      item_title: itemMapState.item_properties.item_title,
+      item_description: itemMapState.item_properties.item_description,
+      item_progress: itemMapState.item_properties.item_progress,
     });
 
-    setInitialBookProperties({
-      item_title: bookMapState.item_properties.item_title,
-      book_description: bookMapState.item_properties.item_description,
+    setInitialItemProperties({
+      item_title: itemMapState.item_properties.item_title,
+      item_description: itemMapState.item_properties.item_description,
+      item_progress: itemMapState.item_properties.item_progress,
     });
-  }, [bookId, bookMapState]);
+  }, [bookId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    console.log("CURRENTA ND INITIAL: ", bookProperties, initialBookProperties);
-    return !equalityDeep(bookProperties, initialBookProperties);
-  }, [bookProperties, initialBookProperties]);
+    console.log("CURRENTA ND INITIAL: ", itemProperties, initialItemProperties);
+    return !equalityDeep(itemProperties, initialItemProperties);
+  }, [itemProperties, initialItemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
-    setBookProperties({
-      ...bookProperties,
+    setItemProperties({
+      ...itemProperties,
       [name]: value,
     });
   };
@@ -73,8 +78,9 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
     const bookMap = ytree.getNodeValueFromKey(bookId);
 
     bookMap.set("item_properties", {
-      item_title: bookProperties.item_title,
-      item_description: bookProperties.book_description,
+      item_title: itemProperties.item_title,
+      item_description: itemProperties.item_description,
+      item_progress: itemProperties.item_progress,
     });
 
     setPanelOpened(true);
@@ -109,36 +115,36 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
-            value={bookProperties.item_title}
+            value={itemProperties.item_title}
           />
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
         </DetailsPanelHeader>
         <DetailsPanelDivider />
         <DetailsPanelBody>
+          <DetailsPanelStatusProp
+            itemProperties={itemProperties}
+            setItemProperties={setItemProperties}
+          />
           <div className="prop w-full h-fit relative">
+            <h2 className="w-full h-fit pt-2 px-3 border-t border-x border-appLayoutBorder rounded-t-md flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+              Book Description
+            </h2>
             <Textarea
               maxRows={10}
               id="bookDescription"
               classNames={{
-                root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
+                root: "bg-appBackground h-fit  border-b border-x border-appLayoutBorder rounded-b-md overflow-hidden ",
                 wrapper:
                   "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
                 input:
                   "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
               }}
               autosize
-              name="book_description"
+              name="item_description"
               placeholder="Enter Description"
               onChange={handleChange}
-              value={bookProperties.book_description}
+              value={itemProperties.item_description}
             />
-
-            <label
-              htmlFor="libraryDescription"
-              className="absolute top-2 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
-            >
-              Book Description
-            </label>
           </div>
         </DetailsPanelBody>
       </form>
