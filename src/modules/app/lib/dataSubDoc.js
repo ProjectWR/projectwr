@@ -216,6 +216,26 @@ class DataManagerSubdocs {
   }
 
   /**
+   * 
+   * @param {YTree} ytree 
+   * @param {string} parentId 
+   */
+  createEmptyNote(ytree, parentId) {
+    const uuid = generateUUID();
+    const noteMap = new Y.Map();
+    noteMap.set("type", "note");
+    noteMap.set("item_id", uuid);
+    noteMap.set("item_properties", { "item_title": `Untitled Note #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": null, })
+    ytree.createNode(parentId, uuid, noteMap);
+
+    itemLocalStateManager.createItemLocalState(uuid, {
+      type: "note",
+      libraryId: ytree._ydoc.guid,
+    });
+    return uuid;
+  }
+
+  /**
   * 
   * @param {YTree} ytree 
   * @param {string} parentId 
