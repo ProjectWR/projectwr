@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
 
 const progress_values = [
-  { value: 0, weight: 2, color: "darkgray", label: "Drafting" },
-  { value: 1, weight: 1, color: "orange", label: "Editing" },
-  { value: 2, weight: 1, color: "green", label: "Done" },
+  { value: 0, weight: 2, color: "lightgray", label: "Drafting" },
+  { value: 1, weight: 1, color: "peach", label: "Editing" },
+  { value: 2, weight: 1, color: "lightgreen", label: "Done" },
 ];
 
 export const DetailsPanelStatusProp = ({
@@ -27,12 +27,13 @@ export const DetailsPanelStatusProp = ({
           const selected = progress.value === item_progress;
           return (
             <motion.button
+              type="button"
               key={progress.value}
               style={{
                 flexGrow: progress.weight,
               }}
-              className={`basis-0 h-full text-detailsPanelPropsFontSize text-appLayoutText relative rounded-md bg-appBackground transition-colors duration-300 ${
-                !selected && "hover:bg-appLayoutInverseHover"
+              className={`basis-0 h-full text-detailsPanelPropsFontSize text-appBackground relative rounded-md bg-appBackground transition-colors duration-500 ${
+                !selected && "hover:bg-appLayoutInverseHover text-appLayoutText"
               }
               ${selected && ""}
           
@@ -46,7 +47,7 @@ export const DetailsPanelStatusProp = ({
               </span>
               {selected && (
                 <motion.div
-                  className="absolute h-full w-full top-0 left-0 z-[1] border-2 border-appLayoutBorder rounded-md shadow-md shadow-appLayoutShadow"
+                  className="absolute h-full w-full top-0 left-0 z-[1] border border-appLayoutText bg-appLayoutHighlight rounded-md shadow-none shadow-appLayoutShadow"
                   layoutId="statusBackground"
                   id="statusBackground"
                 ></motion.div>
