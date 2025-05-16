@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import { YTree } from "yjs-orderedtree";
@@ -15,7 +15,29 @@ import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPan
 import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
-import { DetailsPanelStatusProp } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
+import {
+  DetailsPanelStatusProp,
+  DetailsPanelWordCountProp,
+} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
+import Tokenizr from "tokenizr";
+
+let lexer = new Tokenizr();
+
+lexer.rule(/[a-zA-Z0-9_-][a-zA-Z0-9_-]*/, (ctx, match) => {
+  ctx.accept("id");
+});
+lexer.rule(/"((?:\\"|[^\r\n])*)"/, (ctx, match) => {
+  ctx.accept("string", match[1].replace(/\\"/g, '"'));
+});
+lexer.rule(/\/\/[^\r\n]*\r?\n/, (ctx, match) => {
+  ctx.ignore();
+});
+lexer.rule(/[ \t\r\n]+/, (ctx, match) => {
+  ctx.ignore();
+});
+lexer.rule(/./, (ctx, match) => {
+  ctx.accept("char");
+});
 
 /**
  *
@@ -38,12 +60,14 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
     item_progress: itemMapState.item_properties.item_progress,
+    item_goal: itemMapState.item_properties.item_goal,
   });
 
   const [itemProperties, setItemProperties] = useState({
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
     item_progress: itemMapState.item_properties.item_progress,
+    item_goal: itemMapState.item_properties.item_goal,
   });
 
   useEffect(() => {
@@ -51,12 +75,14 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
       item_title: itemMapState.item_properties.item_title,
       item_description: itemMapState.item_properties.item_description,
       item_progress: itemMapState.item_properties.item_progress,
+      item_goal: itemMapState.item_properties.item_goal,
     });
 
     setInitialItemProperties({
       item_title: itemMapState.item_properties.item_title,
       item_description: itemMapState.item_properties.item_description,
       item_progress: itemMapState.item_properties.item_progress,
+      item_goal: itemMapState.item_properties.item_goal,
     });
   }, [bookId, itemMapState]);
 
@@ -81,10 +107,42 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
       item_title: itemProperties.item_title,
       item_description: itemProperties.item_description,
       item_progress: itemProperties.item_progress,
+      item_goal: itemProperties.item_goal
     });
 
     setPanelOpened(true);
   };
+
+  const getWordCount = useCallback(() => {
+    const allDescendantIds = [];
+    ytree.getAllDescendants(bookId, allDescendantIds);
+
+    let wordCount = 0;
+    let charCount = 0;
+
+    for (const id of allDescendantIds) {
+      const item = ytree.getNodeValueFromKey(id);
+      if (item?.get("type") === "paper") {
+        const paperXmlDom = item.get("paper_xml").toDOM();
+        const textNodes = [...paperXmlDom.childNodes];
+        textNodes.forEach((node) => {
+          lexer.input(node.textContent);
+
+          wordCount += lexer
+            .tokens()
+            .filter((token) => token.text.length > 0).length;
+
+          charCount += node.textContent.length;
+        });
+      }
+    }
+
+    return wordCount;
+
+    console.log("WORD AND CHAR COUNT: ", wordCount, charCount);
+  }, [bookId, ytree]);
+
+  const wordCount = getWordCount();
 
   return (
     <DetailsPanel>
@@ -121,6 +179,11 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
         </DetailsPanelHeader>
         <DetailsPanelDivider />
         <DetailsPanelBody>
+          <DetailsPanelWordCountProp
+            currentWordCount={wordCount}
+            itemProperties={itemProperties}
+            onChange={handleChange}
+          />
           <DetailsPanelStatusProp
             itemProperties={itemProperties}
             setItemProperties={setItemProperties}

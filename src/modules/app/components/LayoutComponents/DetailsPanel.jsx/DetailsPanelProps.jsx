@@ -59,3 +59,31 @@ export const DetailsPanelStatusProp = ({
     </div>
   );
 };
+
+export const DetailsPanelWordCountProp = ({
+  currentWordCount,
+  itemProperties,
+  onChange,
+}) => {
+  return (
+    <div className="w-full h-fit">
+      <div className="w-full h-[3rem] px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
+        <h2 className="w-fit h-fit px-2 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+          Word Count
+        </h2>
+        <span className="grow basis-0 h-fit px-2 flex justify-center items-center text-detailsPanelPropLabelFontSize text-appLayoutText">
+          {currentWordCount}
+        </span>
+        <span className="w-fit h-fit px-2 flex justify-center items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+          /
+        </span>
+        <input
+          value={itemProperties.item_goal}
+          name={"item_goal"}
+          onChange={onChange}
+          className="grow basis-0 h-fit px-2 text-center focus:outline-none rounded-md text-detailsPanelPropLabelFontSize text-appLayoutTextMuted focus:text-appLayoutText focus:bg-appLayoutInputBackground transition-colors duration-200"
+        />
+      </div>
+    </div>
+  );
+};
