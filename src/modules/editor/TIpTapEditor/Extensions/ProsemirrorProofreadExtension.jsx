@@ -14,11 +14,11 @@ import dictionaryManager from "../../../app/lib/dictionary";
 
 let lexer = new Tokenizr();
 
-lexer.rule(/[a-zA-Z0-9_-][a-zA-Z0-9_-]*/, (ctx, match) => {
+lexer.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx, match) => {
   ctx.accept("id");
 });
-lexer.rule(/"((?:\\"|[^\r\n])*)"/, (ctx, match) => {
-  ctx.accept("string", match[1].replace(/\\"/g, '"'));
+lexer.rule(/[+-]?[0-9]+/, (ctx, match) => {
+  ctx.accept("number", parseInt(match[0]));
 });
 lexer.rule(/\/\/[^\r\n]*\r?\n/, (ctx, match) => {
   ctx.ignore();
@@ -37,10 +37,13 @@ const spellCheckStore = createSpellCheckEnabledStore(() => {
 const generateProofreadErrors = async (input) => {
   const response = { matches: [] };
   lexer.input(input);
+  console.log("INPUT ", input);
   lexer.tokens().forEach((token) => {
     if (token.value.length < 2) return;
 
-    const result = dictionaryManager.userSpellchecker.correct(token.value);
+    console.log("token", token, token.pos, token.text.length);
+
+    const result = dictionaryManager.userSpellchecker.correct(token.text);
 
     // const replacements = nspellchecker.suggest(token.value);
 

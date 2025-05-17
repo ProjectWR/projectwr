@@ -222,14 +222,18 @@ export const DetailsPanelDescriptionProp = ({
 
   return (
     <div className="w-full h-fit">
-      <ContextMenuWrapper options={options} triggerClassname="w-full h-fit">
-        <RichTextEditor
-          editor={editor}
-          variant="subtle"
-          classNames={{ content: "text-detailsPanelPropsFontSize" }}
-        >
-          <style>
-            {`
+      <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-2 border border-appLayoutBorder rounded-md">
+        <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+          Synopsis
+        </h2>
+        <ContextMenuWrapper options={options} triggerClassname="w-full h-fit">
+          <RichTextEditor
+            editor={editor}
+            variant="subtle"
+            classNames={{ content: "text-detailsPanelPropsFontSize" }}
+          >
+            <style>
+              {`
 
           .tiptap.ProseMirror {
             padding: 0 0 0 0;
@@ -243,21 +247,22 @@ export const DetailsPanelDescriptionProp = ({
           }
 
           `}
-          </style>
-          <RichTextEditor.Toolbar sticky stickyOffset="1rem">
-            <RichTextEditor.ControlsGroup>
-              <RichTextEditor.Bold />
-              <RichTextEditor.Italic />
-              <RichTextEditor.Underline />
-              <RichTextEditor.Strikethrough />
-              <RichTextEditor.ClearFormatting />
-              <RichTextEditor.Highlight />
-            </RichTextEditor.ControlsGroup>
-          </RichTextEditor.Toolbar>
+            </style>
+            <RichTextEditor.Toolbar sticky stickyOffset="1rem">
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Bold />
+                <RichTextEditor.Italic />
+                <RichTextEditor.Underline />
+                <RichTextEditor.Strikethrough />
+                <RichTextEditor.ClearFormatting />
+                <RichTextEditor.Highlight />
+              </RichTextEditor.ControlsGroup>
+            </RichTextEditor.Toolbar>
 
-          <RichTextEditor.Content spellCheck={false} />
-        </RichTextEditor>
-      </ContextMenuWrapper>
+            <RichTextEditor.Content spellCheck={false} />
+          </RichTextEditor>
+        </ContextMenuWrapper>
+      </div>
     </div>
   );
 };
