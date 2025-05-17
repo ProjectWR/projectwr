@@ -247,18 +247,24 @@ export const DetailsPanelDescriptionProp = ({
           }
 
           .tiptap.ProseMirror > h1 {
-            font-size: 2rem;
-            line-height: 2rem;
-            margin-bottom: 1rem;
+            font-size: calc(var(--uiScale) * 2rem);
+            line-height: calc(var(--uiScale) * 2rem);
+            margin-bottom: calc(var(--uiScale) * 1rem);
             font-family: serif;
           }
 
-        
           .tiptap.ProseMirror > h2 {
-            font-size: 1.5rem;
-            line-height: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: calc(var(--uiScale) * 1.5rem);
+            line-height: calc(var(--uiScale) * 1.5rem);
+            margin-bottom: calc(var(--uiScale) * 0.5rem);
             font-family: serif;
+          }
+
+          .tiptap.ProseMirror > ul {
+            list-style: circle;
+            padding-left: calc(2rem * var(--uiScale));
+            margin: calc(0.5rem * var(--uiScale)) 1rem calc(0.5rem * var(--uiScale)) 0.4rem;
+        
           }
 
           `}
@@ -299,6 +305,11 @@ export const DetailsPanelDescriptionProp = ({
                     <RichTextEditor.H1 />
                     <RichTextEditor.H2 />
                     <RichTextEditor.BulletList />
+                    <RichTextEditor.Bold />
+                    <RichTextEditor.Italic />
+                    <RichTextEditor.Underline />
+                    <RichTextEditor.Strikethrough />
+                    <RichTextEditor.Highlight />
                   </RichTextEditor.ControlsGroup>
                 </FloatingMenu>
               </>
