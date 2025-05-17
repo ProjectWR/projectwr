@@ -130,6 +130,28 @@ class ItemLocalStateManager {
       console.warn(`Item with ID ${itemId} does not exist.`);
     }
   }
+  
+  // Set the `isOpened` state of an item
+  setNoteScope(itemId, noteScopeItemId, libraryId) {
+    const items = this._getItems();
+    if (items[itemId]?.props.libraryId === libraryId) {
+      items[itemId].props.noteScopeItemId = noteScopeItemId;
+
+      this._saveItems(items);
+      this._trigger(itemId, isOpened, items[itemId]); // Trigger callbacks for the specific itemId
+
+    } else {
+      console.warn(`Item with ID ${itemId} does not exist.`);
+      this.setItemAndParentsOpened(libraryId, itemId);
+
+      if (items[itemId]) {
+        items[itemId].props.noteScopeItemId = noteScopeItemId;
+        this._saveItems(items);
+      } else {
+        console.warn(`Item with ID ${itemId} does not exist.`);
+      }
+    }
+  }
 
   // Fetch the latest opened n items
   fetchLatestOpenedItems(n) {
