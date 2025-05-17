@@ -5,7 +5,7 @@ export const DetailsPanelBody = ({ children, className }) => {
   const { deviceType } = useDeviceType();
 
   return (
-    <div className="grow w-full min-h-0 basis-0 flex flex-row relative">{children}</div>
+    <div id="DetailsPanelBody" className="grow w-full min-h-0 basis-0 flex flex-row relative">{children}</div>
   );
 };
 
@@ -13,15 +13,15 @@ export const DetailsPanelProperties = ({ children, className }) => {
   const { deviceType } = useDeviceType();
 
   return (
-    <div className="h-full grow flex flex-col items-center">
+    <div className="h-full min-w-0 grow flex flex-col items-center">
       <section
-        id="DetailsPanelBody"
+        id="DetailsPanelPropertiesBody"
         className={`h-full overflow-y-hidden py-4 px-6 gap-4 relative ${className}`}
         style={
           deviceType === "desktop" && {
             width: `var(--detailsPanelWidth)`,
             maxWidth: `100%`,
-            minWidth: `calc(var(--detailsPanelWidth) * 0.25)`,
+            minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
           }
         }
       >

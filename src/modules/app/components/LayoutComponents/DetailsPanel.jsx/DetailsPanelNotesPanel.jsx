@@ -23,12 +23,16 @@ export const DetailsPanelNotesPanel = ({
         .getElementById("NotesPanelMotionContainer")
         ?.getBoundingClientRect();
 
-      if (!rect) return;
+      const rectBody = document
+        .getElementById("DetailsPanelBody")
+        ?.getBoundingClientRect();
+
+      if (!rect || !rectBody) return;
 
       let newWidth = info.point.x - rect.left;
 
       const MIN_WIDTH = 0.77 * zoom * 360;
-      const MAX_WIDTH = 2 * zoom * 360;
+      const MAX_WIDTH = 0.45 * rectBody.width;
 
       console.log("MIN AND MAX WIDTH: ", MIN_WIDTH, MAX_WIDTH);
 
