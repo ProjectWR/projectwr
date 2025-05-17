@@ -9,6 +9,7 @@
 - ~~upgraded to tailwind v4~~
 - ~~make local state self correcting~~
 - ~~templates should be stored as files~~
+- fix item local state to have library Id and item Id in key name
 - Add context menus where it is appropriate
 - ~~Add tabs~~
 - Settings page needs to be finished
@@ -24,7 +25,7 @@
 - ~~make side panel transient when small screen~~
 - Add linking
 - ~~Tabbed Writing Format~~
-- Grammarly/language tool/etc. integration
+- ~~Grammarly/language tool/etc. integration~~
 - google drive and one drive sync
 - Completion Status for each item
 - IMPORTANT: change internal structure of yjs ordered tree
