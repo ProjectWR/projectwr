@@ -4,6 +4,12 @@ import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { RichTextEditor } from "@mantine/tiptap";
+import ProsemirrorProofreadExtension from "../../../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
+import { appStore } from "../../../stores/appStore";
+import { useMemo, useState } from "react";
+import dictionaryManager from "../../../lib/dictionary";
+import { wait } from "lib0/promise";
+import ContextMenuWrapper from "../ContextMenuWrapper";
 
 const progress_values = [
   { value: 0, weight: 2, color: "lightgray", label: "Drafting" },
@@ -111,8 +117,16 @@ export const DetailsPanelDescriptionProp = ({
   itemProperties,
   setItemProperties,
 }) => {
+  const setSearchQuery = appStore((state) => state.setSearchQuery);
+  const [selectingError, setSelectingError] = useState("");
+
   const editor = useEditor({
-    extensions: [StarterKit, Underline, Highlight],
+    extensions: [
+      StarterKit,
+      Underline,
+      Highlight,
+      ProsemirrorProofreadExtension,
+    ],
     content: itemProperties.item_description,
     onUpdate: ({ editor }) => {
       setItemProperties({
@@ -120,33 +134,130 @@ export const DetailsPanelDescriptionProp = ({
         item_description: editor.getJSON(),
       });
     },
+    onSelectionUpdate({ editor }) {
+      const domSelection = window.getSelection();
+      let errorText = "";
+      if (domSelection?.anchorNode) {
+        let node = domSelection.anchorNode.parentElement;
+        while (node) {
+          if (
+            node.tagName.toLowerCase() === "span" &&
+            node.classList.contains("spelling-error")
+          ) {
+            errorText = node.textContent;
+            break;
+          }
+          node = node.parentElement;
+        }
+      }
+      console.log("Selecting Error Text:", errorText);
+      setSelectingError(errorText);
+    },
   });
+
+  const options = useMemo(() => {
+    const options = [];
+
+    if (selectingError.trim().length > 0) {
+      options.push({
+        label: "Add word to dictionary",
+        icon: (
+          <span className="icon-[material-symbols-light--add-2-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          dictionaryManager.addOrUpdateWord(selectingError, "", "");
+          await wait(1000);
+          editor.commands.forceSpellcheck();
+        },
+      });
+    }
+
+    options.push(
+      ...[
+        {
+          label: "Search in your library",
+          icon: (
+            <span className="icon-[material-symbols-light--search] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            const textSelection = window.getSelection()?.toString().trim();
+            setSearchQuery(textSelection);
+            console.log(document.getElementById("searchInput"));
+            setTimeout(() => {
+              document.getElementById("searchInput").focus();
+            }, 100);
+          },
+        },
+
+        {
+          label: "Use Ctrl+C to Copy",
+          icon: (
+            <span className="icon-[material-symbols-light--content-copy-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          disabled: true,
+        },
+
+        {
+          label: "Use Ctrl+V to Paste",
+          icon: (
+            <span className="icon-[material-symbols-light--content-paste] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          disabled: true,
+        },
+
+        {
+          label: "Use Ctrl+X to Cut",
+          icon: (
+            <span className="icon-[material-symbols-light--content-cut] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          disabled: true,
+        },
+      ]
+    );
+
+    console.log("OPTIONS: ", options);
+
+    return options;
+  }, [editor, selectingError, setSearchQuery]);
 
   return (
     <div className="w-full h-fit">
-      <RichTextEditor editor={editor} variant="subtle">
-        <style>
-          {`
+      <ContextMenuWrapper options={options} triggerClassname="w-full h-fit">
+        <RichTextEditor
+          editor={editor}
+          variant="subtle"
+          classNames={{ content: "text-detailsPanelPropsFontSize" }}
+        >
+          <style>
+            {`
 
           .tiptap.ProseMirror {
             padding: 0 0 0 0;
           }
-          
-          `}
-        </style>
-        <RichTextEditor.Toolbar sticky stickyOffset="1rem">
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Bold />
-            <RichTextEditor.Italic />
-            <RichTextEditor.Underline />
-            <RichTextEditor.Strikethrough />
-            <RichTextEditor.ClearFormatting />
-            <RichTextEditor.Highlight />
-          </RichTextEditor.ControlsGroup>
-        </RichTextEditor.Toolbar>
 
-        <RichTextEditor.Content />
-      </RichTextEditor>
+          .spelling-error {
+            background-color: #ff00001a;
+            border-top-left-radius: calc(3px * var(--uiScale));
+            border-top-right-radius: calc(3px * var(--uiScale));
+            border-bottom: 1px solid #ff0000e6;
+          }
+
+          `}
+          </style>
+          <RichTextEditor.Toolbar sticky stickyOffset="1rem">
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold />
+              <RichTextEditor.Italic />
+              <RichTextEditor.Underline />
+              <RichTextEditor.Strikethrough />
+              <RichTextEditor.ClearFormatting />
+              <RichTextEditor.Highlight />
+            </RichTextEditor.ControlsGroup>
+          </RichTextEditor.Toolbar>
+
+          <RichTextEditor.Content spellCheck={false} />
+        </RichTextEditor>
+      </ContextMenuWrapper>
     </div>
   );
 };
