@@ -249,15 +249,21 @@ export const DetailsPanelDescriptionProp = ({
           .tiptap.ProseMirror > h1 {
             font-size: calc(var(--uiScale) * 2rem);
             line-height: calc(var(--uiScale) * 2rem);
+            padding-bottom: calc(var(--uiScale) * 0.5rem);
             margin-bottom: calc(var(--uiScale) * 1rem);
             font-family: serif;
+            border-bottom: 1px solid hsl(var(--appLayoutBorder));
+
           }
 
           .tiptap.ProseMirror > h2 {
             font-size: calc(var(--uiScale) * 1.5rem);
             line-height: calc(var(--uiScale) * 1.5rem);
+            padding-bottom: calc(var(--uiScale) * 0.25rem);
             margin-bottom: calc(var(--uiScale) * 0.5rem);
             font-family: serif;
+            border-bottom: 1px solid hsl(var(--appLayoutBorder));
+
           }
 
           .tiptap.ProseMirror > ul {
