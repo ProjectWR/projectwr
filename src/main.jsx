@@ -20,8 +20,9 @@ const theme = createTheme({
         root: "bg-appBackground border border-appLayoutBorder rounded-lg px-1",
         toolbar: "bg-appBackground border-b border-appLayoutBorder",
         content: "bg-appBackground text-appLayoutText",
-        controlsGroup: "bg-appBackground",
-        control: "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden"
+        controlsGroup: "bg-appBackground gap-1",
+        control:
+          "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
       }),
     }),
   },
