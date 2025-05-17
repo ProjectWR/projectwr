@@ -116,6 +116,7 @@ export const DetailsPanelWordCountProp = ({
 export const DetailsPanelDescriptionProp = ({
   itemProperties,
   setItemProperties,
+  label = "Synopsis"
 }) => {
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
@@ -224,7 +225,7 @@ export const DetailsPanelDescriptionProp = ({
     <div className="w-full h-fit">
       <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-2 border border-appLayoutBorder rounded-md overflow-hidden">
         <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
-          Synopsis
+          {label}
         </h2>
         <ContextMenuWrapper options={options} triggerClassname="w-full h-fit">
           <RichTextEditor

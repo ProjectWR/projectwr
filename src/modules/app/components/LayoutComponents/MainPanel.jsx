@@ -21,6 +21,7 @@ import { Breadcrumbs } from "./Breadcrumbs";
 import templateManager from "../../lib/templates";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
 import { TabsBar } from "./TabsBar";
+import NoteDetailsPanel from "../MainPanels/NoteDetailsPanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -213,6 +214,21 @@ const MainPanel = ({}) => {
                   ytree={libraryYTree}
                   paperId={youngestId}
                   key={youngestId}
+                />
+              </PrependBreadcrumbs>
+            );
+          }
+        }
+
+        if (itemMap.get("type") === "note") {
+          if (mode === "details") {
+            return (
+              <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+                <NoteDetailsPanel
+                  ytree={libraryYTree}
+                  noteId={youngestId}
+                  key={youngestId}
+                  libraryId={rootId}
                 />
               </PrependBreadcrumbs>
             );

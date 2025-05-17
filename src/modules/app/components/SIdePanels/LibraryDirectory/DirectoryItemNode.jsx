@@ -136,6 +136,14 @@ const DirectoryItemNode = ({
     itemLocalStateManager.setItemOpened(newId, true, libraryId);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
+  const onCreateNoteClick = useCallback(() => {
+    const newId = dataManagerSubdocs.createEmptyNote(ytree, itemId);
+    setIsOpened(true);
+    setFocusedItemId(newId);
+    activatePanel("libraries", "details", [libraryId, newId]);
+    itemLocalStateManager.setItemOpened(newId, true, libraryId);
+  }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
     item: {
@@ -208,7 +216,12 @@ const DirectoryItemNode = ({
       } else if (hoverClientY > hoverBoundingRect.height - buffer) {
         setAreaSelected("bottom");
       } else {
-        if (type === "book" || currentItemType === "paper") return;
+        if (
+          type === "book" ||
+          currentItemType === "paper" ||
+          currentItemType === "note"
+        )
+          return;
 
         setAreaSelected("middle");
       }
@@ -271,7 +284,12 @@ const DirectoryItemNode = ({
         }
       } else {
         console.log("dropped middle");
-        if (type === "book" || currentItemType === "paper") return;
+        if (
+          type === "book" ||
+          currentItemType === "paper" ||
+          currentItemType === "note"
+        )
+          return;
 
         if (ytree.getNodeChildrenFromKey(itemId).includes(draggedItem.id)) {
           ytree.setNodeOrderToEnd(draggedItem.id, itemId);
@@ -336,6 +354,17 @@ const DirectoryItemNode = ({
           action: () => {
             console.log("create paper button");
             onCreatePaperClick();
+          },
+        },
+
+        {
+          label: "Create Note",
+          icon: (
+            <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("create note button");
+            onCreateNoteClick();
           },
         },
 
@@ -446,6 +475,36 @@ const DirectoryItemNode = ({
         },
       ];
     }
+
+    if (itemMapRef.current.get("type") === "note") {
+      return [
+        {
+          label: "Open",
+          icon: (
+            <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("edit note button");
+            if (
+              !(
+                appStoreItemId === itemId &&
+                itemMode === "details" &&
+                panelOpened
+              )
+            ) {
+              setItemId(itemId);
+              setFocusedItemId(itemId);
+              setItemMode("details");
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              activatePanel("libraries", "details", [libraryId, itemId]);
+            }
+          },
+        },
+      ];
+    }
   }, [
     appStoreItemId,
     deviceType,
@@ -455,7 +514,9 @@ const DirectoryItemNode = ({
     onCreateSectionClick,
     panelOpened,
     setItemId,
+    setFocusedItemId,
     setItemMode,
+    onCreateNoteClick,
     setPanelOpened,
     ytree,
     activatePanel,
@@ -510,6 +571,7 @@ const DirectoryItemNode = ({
           ${(() => {
             const type = itemMapRef.current.get("type");
             if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+            if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
             if (type === "section")
               return "h-libraryDirectorySectionNodeHeight ";
             if (type === "book") return "h-libraryDirectoryBookNodeHeight";
@@ -563,6 +625,54 @@ const DirectoryItemNode = ({
                       animate={{ rotate: 0 }}
                       transition={{ duration: 0.2 }}
                       className={`icon-[fluent--document-one-page-24-regular] h-full w-full`}
+                    ></motion.span>
+                  </div>
+
+                  <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
+                    <span className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis">
+                      {itemMapState.item_properties.item_title}
+                    </span>
+                  </div>
+                </button>
+              </>
+            )}
+
+            {itemMapRef.current.get("type") == "note" && (
+              <>
+                <></>
+                <button
+                  className="grow min-w-0 flex items-center justify-start h-full"
+                  onClick={() => {
+                    console.log("edit note button");
+                    setFocusedItemId(itemId);
+
+                    if (
+                      !(
+                        appStoreItemId === itemId &&
+                        itemMode === "details" &&
+                        panelOpened
+                      )
+                    ) {
+                      setItemId(itemId);
+                      setItemMode("details");
+                      if (deviceType === "mobile") {
+                        setPanelOpened(false);
+                      }
+
+                      activatePanel("libraries", "details", [
+                        libraryId,
+                        itemId,
+                      ]);
+
+                      setPanelOpened(true);
+                    }
+                  }}
+                >
+                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
+                    <motion.span
+                      animate={{ rotate: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`icon-[fluent--square-20-regular] h-full w-full`}
                     ></motion.span>
                   </div>
 

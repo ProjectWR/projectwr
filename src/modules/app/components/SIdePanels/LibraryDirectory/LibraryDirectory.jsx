@@ -399,6 +399,55 @@ const LibraryDirectory = ({ libraryId }) => {
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
           </button>
+
+          <button
+            className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-[6px]  rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-6
+                          `}
+            onClick={() => {
+              console.log("create note button");
+              const focusedItemType = libraryYTreeRef.current
+                ?.getNodeValueFromKey(focusedItemId)
+                ?.get("type");
+
+              let noteId;
+
+              if (focusedItemType === "book" || focusedItemType === "section") {
+                noteId = dataManagerSubdocs.createEmptyNote(
+                  libraryYTreeRef.current,
+                  focusedItemId || "root"
+                );
+              }
+
+              if (focusedItemType === "paper" || focusedItemType === "note") {
+                noteId = dataManagerSubdocs.createEmptyNote(
+                  libraryYTreeRef.current,
+                  libraryYTreeRef.current?.getNodeParentFromKey(
+                    focusedItemId
+                  ) || "root"
+                );
+              }
+
+              setItemId(noteId);
+              setFocusedItemId(noteId);
+              activatePanel("libraries", "details", [libraryId, noteId]);
+
+              if (deviceType === "mobile") {
+                setPanelOpened(false);
+              }
+
+              setPanelOpened(true);
+              if (focusedItemId)
+                itemLocalStateManager.setItemOpened(
+                  focusedItemId,
+                  true,
+                  libraryId
+                );
+              itemLocalStateManager.setItemOpened(noteId, true, libraryId);
+            }}
+          >
+            <span className="icon-[fluent--square-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+          </button>
         </div>
       </div>
       <div id="libraryDirectoryBodyContainer" className={`grow min-h-0 w-full`}>
