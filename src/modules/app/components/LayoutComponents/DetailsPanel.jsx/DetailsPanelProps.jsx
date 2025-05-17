@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import Highlight from "@tiptap/extension-highlight";
 import Underline from "@tiptap/extension-underline";
-import { useEditor } from "@tiptap/react";
+import { BubbleMenu, FloatingMenu, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { RichTextEditor } from "@mantine/tiptap";
 import ProsemirrorProofreadExtension from "../../../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
@@ -222,7 +222,7 @@ export const DetailsPanelDescriptionProp = ({
 
   return (
     <div className="w-full h-fit">
-      <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-2 border border-appLayoutBorder rounded-md">
+      <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-2 border border-appLayoutBorder rounded-md overflow-hidden">
         <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
           Synopsis
         </h2>
@@ -246,9 +246,24 @@ export const DetailsPanelDescriptionProp = ({
             border-bottom: 1px solid #ff0000e6;
           }
 
+          .tiptap.ProseMirror > h1 {
+            font-size: 2rem;
+            line-height: 2rem;
+            margin-bottom: 1rem;
+            font-family: serif;
+          }
+
+        
+          .tiptap.ProseMirror > h2 {
+            font-size: 1.5rem;
+            line-height: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-family: serif;
+          }
+
           `}
             </style>
-            <RichTextEditor.Toolbar sticky stickyOffset="1rem">
+            {/* <RichTextEditor.Toolbar sticky stickyOffset="1rem">
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
                 <RichTextEditor.Italic />
@@ -257,7 +272,37 @@ export const DetailsPanelDescriptionProp = ({
                 <RichTextEditor.ClearFormatting />
                 <RichTextEditor.Highlight />
               </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
+            </RichTextEditor.Toolbar> */}
+
+            {editor && (
+              <>
+                <BubbleMenu editor={editor}>
+                  <RichTextEditor.ControlsGroup
+                    classNames={{
+                      controlsGroup:
+                        "border border-appLayoutBorder shadow-xl shadow-appLayoutGentleShadow rounded-lg overflow-hidden",
+                    }}
+                  >
+                    <RichTextEditor.Bold />
+                    <RichTextEditor.Italic />
+                    <RichTextEditor.Underline />
+                    <RichTextEditor.Strikethrough />
+                    <RichTextEditor.ClearFormatting />
+                    <RichTextEditor.Highlight />
+                    <RichTextEditor.H1 />
+                    <RichTextEditor.H2 />
+                    <RichTextEditor.BulletList />
+                  </RichTextEditor.ControlsGroup>
+                </BubbleMenu>
+                <FloatingMenu editor={editor}>
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.H1 />
+                    <RichTextEditor.H2 />
+                    <RichTextEditor.BulletList />
+                  </RichTextEditor.ControlsGroup>
+                </FloatingMenu>
+              </>
+            )}
 
             <RichTextEditor.Content spellCheck={false} />
           </RichTextEditor>
