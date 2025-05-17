@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../../stores/appStore";
+import { useCallback, useState } from "react";
+import { max, min } from "lib0/math";
 
 export const DetailsPanelNotesPanel = ({
   libraryId,
@@ -11,8 +13,31 @@ export const DetailsPanelNotesPanel = ({
   keepNotesPanelAwake,
 }) => {
   const isMd = appStore((state) => state.isMd);
+  const zoom = appStore((state) => state.zoom);
 
-  console.log("NOTE PANEL STATES: ", notesPanelOpened, isNotesPanelAwake);
+  const [notesPanelWidth, setNotesPanelWidth] = useState(360);
+
+  const handleDrag = useCallback(
+    (event, info) => {
+      const rect = document
+        .getElementById("NotesPanelMotionContainer")
+        ?.getBoundingClientRect();
+
+      if (!rect) return;
+
+      let newWidth = info.point.x - rect.left;
+
+      const MIN_WIDTH = 0.77 * zoom * 360;
+      const MAX_WIDTH = 2 * zoom * 360;
+
+      console.log("MIN AND MAX WIDTH: ", MIN_WIDTH, MAX_WIDTH);
+
+      newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+
+      setNotesPanelWidth(newWidth);
+    },
+    [setNotesPanelWidth, zoom]
+  );
 
   return (
     <AnimatePresence mode="wait">
@@ -27,8 +52,8 @@ export const DetailsPanelNotesPanel = ({
           initial={{ opacity: 0, width: 0, minWidth: 0 }}
           animate={{
             opacity: 1,
-            width: `${360}px`,
-            minWidth: `${360}px`,
+            width: `${notesPanelWidth}px`,
+            minWidth: `${notesPanelWidth}px`,
           }}
           exit={{ opacity: 0, width: 0, minWidth: 0 }}
           transition={{ duration: 0.05 }}
@@ -39,7 +64,22 @@ export const DetailsPanelNotesPanel = ({
             refreshNotesPanel();
           }}
         >
-          <div className="w-full h-full">NOTES PANEL</div>
+          <div className="w-full h-full relative">
+            NOTES PANEL
+            <motion.div
+              className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
+              drag="x"
+              dragConstraints={{
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+              dragElastic={0}
+              dragMomentum={false}
+              onDrag={handleDrag}
+            ></motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
