@@ -12,15 +12,25 @@ import DetailsPanel, {
 } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import {
+  DetailsPanelBody,
+  DetailsPanelProperties,
+} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
+import {
+  DetailsPanelButtonOnClick,
+  DetailsPanelButtonPlaceHolder,
+  DetailsPanelSubmitButton,
+} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
 import {
   DetailsPanelDescriptionProp,
   DetailsPanelStatusProp,
   DetailsPanelWordCountProp,
 } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
 import Tokenizr from "tokenizr";
+import useRefreshableTimer from "../../hooks/useRefreshableTimer";
+import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNotesPanel";
+import { DetailsPanelButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelButton";
 
 let lexer = new Tokenizr();
 
@@ -50,13 +60,18 @@ lexer.rule(/./, (ctx, match) => {
  * @param {{ytree: YTree, bookId: string}} param0
  * @returns
  */
-const BookDetailsPanel = ({ ytree, bookId }) => {
+const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
   console.log("library details panel rendering: ", bookId);
 
   const { deviceType } = useDeviceType();
+  const isMd = appStore((state) => state.isMd);
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
+
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+  const [notesPanelOpened, setNotesPanelOpened] = useState(true);
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(bookId));
 
@@ -175,30 +190,62 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
               <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
             </button>
           )}
-
+          <DetailsPanelButtonOnClick
+            onClick={() => {
+              if (isMd) {
+                setNotesPanelOpened(!notesPanelOpened);
+              } else {
+                if (!(notesPanelOpened && isNotesPanelAwake)) {
+                  setNotesPanelOpened(true);
+                  refreshNotesPanel();
+                }
+              }
+            }}
+            exist={true}
+            icon={
+              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
+              ) : (
+                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
+              )
+            }
+          />
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
             value={itemProperties.item_title}
           />
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
+
+          <DetailsPanelButtonPlaceHolder exist={!unsavedChangesExist} />
         </DetailsPanelHeader>
         <DetailsPanelDivider />
+
         <DetailsPanelBody>
-          <DetailsPanelWordCountProp
-            currentWordCount={wordCount}
-            itemProperties={itemProperties}
-            onChange={handleChange}
+          <DetailsPanelNotesPanel
+            libraryId={libraryId}
+            itemId={bookId}
+            ytree={ytree}
+            notesPanelOpened={notesPanelOpened}
+            isNotesPanelAwake={isNotesPanelAwake}
+            refreshNotesPanel={refreshNotesPanel}
+            keepNotesPanelAwake={keepNotesPanelAwake}
           />
-          <DetailsPanelStatusProp
-            itemProperties={itemProperties}
-            setItemProperties={setItemProperties}
-          />
-          <DetailsPanelDescriptionProp
-            itemProperties={itemProperties}
-            setItemProperties={setItemProperties}
-          />
-          {/* <div className="prop w-full h-fit relative">
+          <DetailsPanelProperties>
+            <DetailsPanelWordCountProp
+              currentWordCount={wordCount}
+              itemProperties={itemProperties}
+              onChange={handleChange}
+            />
+            <DetailsPanelStatusProp
+              itemProperties={itemProperties}
+              setItemProperties={setItemProperties}
+            />
+            <DetailsPanelDescriptionProp
+              itemProperties={itemProperties}
+              setItemProperties={setItemProperties}
+            />
+            {/* <div className="prop w-full h-fit relative">
             <h2 className="w-full h-fit pt-2 px-3 border-t border-x border-appLayoutBorder rounded-t-md flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
               Book Description
             </h2>
@@ -219,6 +266,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
               value={itemProperties.item_description}
             />
           </div> */}
+          </DetailsPanelProperties>
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

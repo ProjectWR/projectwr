@@ -32,7 +32,7 @@ import { GrainyElement } from "../../../design-system/GrainyElement";
 import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import {
   HoverListBody,
   HoverListDivider,

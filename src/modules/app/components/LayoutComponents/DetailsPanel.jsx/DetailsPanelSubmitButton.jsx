@@ -25,9 +25,10 @@ export const DetailsPanelSubmitButton = ({ unsavedChangesExist }) => {
 
             padding: 0,
           }}
+          transition={{ type: "linear" }}
           className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-t-md
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-3
+                    flex items-center justify-center
                     `}
         >
           <motion.span
@@ -42,12 +43,25 @@ export const DetailsPanelSubmitButton = ({ unsavedChangesExist }) => {
   );
 };
 
-export const DetailsPanelButtonOnClick = ({ exist, onClick }) => {
+export const DetailsPanelButtonOnClick = ({
+  exist,
+  onClick,
+  key,
+  icon = (
+    <motion.span
+      animate={{
+        opacity: 1,
+      }}
+      className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
+    ></motion.span>
+  ),
+}) => {
   return (
     <AnimatePresence>
       {exist && (
         <motion.button
-          type="submit"
+          type="button"
+          key={key}
           initial={{
             width: 0,
             opacity: 0,
@@ -70,16 +84,46 @@ export const DetailsPanelButtonOnClick = ({ exist, onClick }) => {
           onClick={onClick}
           className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-t-md
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-3
+                    flex items-center justify-center
                     `}
         >
-          <motion.span
-            animate={{
-              opacity: 1,
-            }}
-            className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
-          ></motion.span>
+          {icon}
         </motion.button>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export const DetailsPanelButtonPlaceHolder = ({ exist = true }) => {
+  return (
+    <AnimatePresence>
+      {exist && (
+        <motion.div
+          initial={{
+            width: 0,
+            opacity: 0,
+            paddingRight: 0,
+            paddingLeft: 0,
+            padding: 0,
+          }}
+          animate={{
+            width: "var(--detailsPanelSubmitButtonWidth)",
+            opacity: 1,
+          }}
+          exit={{
+            width: 0,
+            opacity: 0,
+            paddingRight: 0,
+            paddingLeft: 0,
+
+            padding: 0,
+          }}
+          transition={{ type: "linear" }}
+          className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-t-md
+                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                    flex items-center justify-center
+                    `}
+        ></motion.div>
       )}
     </AnimatePresence>
   );

@@ -16,7 +16,7 @@ import TemplateContentEditor from "./TemplateContentEditor";
 import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 import useMainPanel from "../../hooks/useMainPanel";
 import { DetailsPanelButtonOnClick } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
