@@ -162,7 +162,7 @@ class DataManagerSubdocs {
     bookMap.set("type", "book");
     bookMap.set("item_id", uuid);
 
-    bookMap.set("item_properties", { "item_title": `Untitled Book #${ytree.getNodeChildrenFromKey("root")?.length}`, "item_description": "Book Description in Properties", "item_progress": 0, "item_goal": 60000 })
+    bookMap.set("item_properties", { "item_title": `Untitled Book #${ytree.getNodeChildrenFromKey("root")?.length}`, "item_description": {}, "item_progress": 0, "item_goal": 60000 })
 
     ytree.createNode("root", uuid, bookMap);
 

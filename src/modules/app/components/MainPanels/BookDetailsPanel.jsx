@@ -16,6 +16,7 @@ import DetailsPanelBody from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelB
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
 import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
 import {
+  DetailsPanelDescriptionProp,
   DetailsPanelStatusProp,
   DetailsPanelWordCountProp,
 } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
@@ -107,7 +108,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
       item_title: itemProperties.item_title,
       item_description: itemProperties.item_description,
       item_progress: itemProperties.item_progress,
-      item_goal: itemProperties.item_goal
+      item_goal: itemProperties.item_goal,
     });
 
     setPanelOpened(true);
@@ -188,7 +189,11 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
             itemProperties={itemProperties}
             setItemProperties={setItemProperties}
           />
-          <div className="prop w-full h-fit relative">
+          <DetailsPanelDescriptionProp
+            itemProperties={itemProperties}
+            setItemProperties={setItemProperties}
+          />
+          {/* <div className="prop w-full h-fit relative">
             <h2 className="w-full h-fit pt-2 px-3 border-t border-x border-appLayoutBorder rounded-t-md flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
               Book Description
             </h2>
@@ -208,7 +213,7 @@ const BookDetailsPanel = ({ ytree, bookId }) => {
               onChange={handleChange}
               value={itemProperties.item_description}
             />
-          </div>
+          </div> */}
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

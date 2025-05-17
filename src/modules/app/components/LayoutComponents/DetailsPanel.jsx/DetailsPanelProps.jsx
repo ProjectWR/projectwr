@@ -1,4 +1,9 @@
 import { motion } from "motion/react";
+import Highlight from "@tiptap/extension-highlight";
+import Underline from "@tiptap/extension-underline";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { RichTextEditor } from "@mantine/tiptap";
 
 const progress_values = [
   { value: 0, weight: 2, color: "lightgray", label: "Drafting" },
@@ -84,6 +89,55 @@ export const DetailsPanelWordCountProp = ({
           className="grow basis-0 h-fit px-2 text-center focus:outline-none rounded-md text-detailsPanelPropLabelFontSize text-appLayoutTextMuted focus:text-appLayoutText focus:bg-appLayoutInputBackground transition-colors duration-200"
         />
       </div>
+    </div>
+  );
+};
+
+// const useStyles = createStyles((theme) => ({
+//   RichTextEditor: {
+//     root: {
+//       backgroundColor: "hsl(var(--appBackground))",
+//     },
+//     content: {
+//       backgroundColor: "hsl(var(--appBackground))",
+//     },
+//     toolbar: {
+//       backgroundColor: "hsl(var(--appBackground))",
+//     },
+//   },
+// }));
+
+export const DetailsPanelDescriptionProp = ({
+  itemProperties,
+  setItemProperties,
+}) => {
+  const editor = useEditor({
+    extensions: [StarterKit, Underline, Highlight],
+    content: itemProperties.item_description,
+    onUpdate: ({ editor }) => {
+      setItemProperties({
+        ...itemProperties,
+        item_description: editor.getJSON(),
+      });
+    },
+  });
+
+  return (
+    <div className="w-full h-fit">
+      <RichTextEditor editor={editor} variant="subtle">
+        <RichTextEditor.Toolbar sticky stickyOffset="1rem">
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Bold />
+            <RichTextEditor.Italic />
+            <RichTextEditor.Underline />
+            <RichTextEditor.Strikethrough />
+            <RichTextEditor.ClearFormatting />
+            <RichTextEditor.Highlight />
+          </RichTextEditor.ControlsGroup>
+        </RichTextEditor.Toolbar>
+
+        <RichTextEditor.Content />
+      </RichTextEditor>
     </div>
   );
 };

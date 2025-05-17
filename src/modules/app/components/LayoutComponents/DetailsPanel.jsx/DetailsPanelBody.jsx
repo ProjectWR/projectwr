@@ -1,3 +1,4 @@
+import { ScrollArea } from "@mantine/core";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 
 const DetailsPanelBody = ({ children, className }) => {
@@ -6,7 +7,7 @@ const DetailsPanelBody = ({ children, className }) => {
   return (
     <section
       id="DetailsPanelBody"
-      className={`grow min-h-0 w-full flex flex-col items-center justify-start py-4 px-6 gap-4 ${className}`}
+      className={`grow min-h-0 w-full overflow-y-hidden  py-4 px-6 gap-4 ${className}`}
       style={
         deviceType === "desktop" && {
           width: `var(--detailsPanelWidth)`,
@@ -15,7 +16,19 @@ const DetailsPanelBody = ({ children, className }) => {
         }
       }
     >
-      {children}
+      <ScrollArea
+        overscrollBehavior="none"
+        scrollbars="y"
+        type="hover"
+        classNames={{
+          root: `w-full h-full p-0`,
+          scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidth z-[5] opacity-70`,
+          thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
+          content: "h-fit w-full flex flex-col items-center justify-start gap-4"
+        }}
+      >
+        {children}
+      </ScrollArea>
     </section>
   );
 };

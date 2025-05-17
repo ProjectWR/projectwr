@@ -154,7 +154,7 @@ const SettingsPanel = () => {
                 size="lg"
                 classNames={{
                   input:
-                    "focus:bg-appLayoutInputBackground font-serif h-fit w-full px-2 py-0 text-appLayoutText border bg-appBackgroundAccent md:bg-appBackground focus:border-appLayoutTextMuted border-appLayoutBorder transition-colors duration-100",
+                    "focus:bg-appLayoutInputBackground font-serif h-fit w-full px-2 py-0 text-appLayoutText border bg-appBackgroundAccent md:bg-appBackground focus:border-appLayoutTextMuted border-appLayoutBorder transition-colors duration-100 rounded-lg",
                   label: "text-lg mb-2 pl-1 text-appLayoutTextMuted",
                 }}
                 key={loginForm.key("email")}
@@ -185,7 +185,7 @@ const SettingsPanel = () => {
                 <Button
                   radius="md"
                   classNames={{
-                    root: "w-1/3 md:w-fit md:px-4 mt-3 md:mt-9 font-normal border border-appLayoutText text-appBackground bg-appLayoutText hover:bg-appLayoutTextMuted hover:text-appBackgroundAccent hover:border-appLayoutTextMuted transition-colors duration-100",
+                    root: "w-1/3 md:w-fit md:px-4 mt-3 md:mt-9 font-normal border border-appLayoutText text-appBackground bg-appLayoutText hover:bg-appLayoutTextMuted hover:text-appBackgroundAccent hover:border-appLayoutTextMuted transition-colors duration-100 rounded-lg",
                   }}
                   size="lg"
                   variant="outline"
