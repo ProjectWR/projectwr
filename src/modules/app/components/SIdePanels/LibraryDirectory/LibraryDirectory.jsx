@@ -286,7 +286,10 @@ const LibraryDirectory = ({ libraryId }) => {
               const bookId = dataManagerSubdocs.createEmptyBook(
                 libraryYTreeRef.current
               );
+
               setItemId(bookId);
+              setFocusedItemId(bookId);
+              activatePanel("libraries", "details", [libraryId]);
               if (deviceType === "mobile") {
                 setPanelOpened(false);
               }
@@ -304,13 +307,32 @@ const LibraryDirectory = ({ libraryId }) => {
                         `}
             onClick={() => {
               console.log("create section button");
-              console.log("testing ||", focusedItemId);
-              const sectionId = dataManagerSubdocs.createEmptySection(
-                libraryYTreeRef.current,
-                focusedItemId || "root"
-              );
+
+              const focusedItemType = libraryYTreeRef.current
+                ?.getNodeValueFromKey(focusedItemId)
+                ?.get("type");
+
+              let sectionId;
+
+              if (focusedItemType === "book" || focusedItemType === "section") {
+                sectionId = dataManagerSubdocs.createEmptySection(
+                  libraryYTreeRef.current,
+                  focusedItemId || "root"
+                );
+              }
+
+              if (focusedItemType === "paper" || focusedItemType === "note") {
+                sectionId = dataManagerSubdocs.createEmptySection(
+                  libraryYTreeRef.current,
+                  libraryYTreeRef.current?.getNodeParentFromKey(
+                    focusedItemId
+                  ) || "root"
+                );
+              }
 
               setItemId(sectionId);
+              setFocusedItemId(sectionId);
+              activatePanel("libraries", "details", [libraryId, sectionId]);
               if (deviceType === "mobile") {
                 setPanelOpened(false);
               }
@@ -335,12 +357,32 @@ const LibraryDirectory = ({ libraryId }) => {
                           `}
             onClick={() => {
               console.log("create paper button");
-              const paperId = dataManagerSubdocs.createEmptyPaper(
-                libraryYTreeRef.current,
-                focusedItemId || "root"
-              );
+              const focusedItemType = libraryYTreeRef.current
+                ?.getNodeValueFromKey(focusedItemId)
+                ?.get("type");
+
+              let paperId;
+
+              if (focusedItemType === "book" || focusedItemType === "section") {
+                paperId = dataManagerSubdocs.createEmptyPaper(
+                  libraryYTreeRef.current,
+                  focusedItemId || "root"
+                );
+              }
+
+              if (focusedItemType === "paper" || focusedItemType === "note") {
+                paperId = dataManagerSubdocs.createEmptyPaper(
+                  libraryYTreeRef.current,
+                  libraryYTreeRef.current?.getNodeParentFromKey(
+                    focusedItemId
+                  ) || "root"
+                );
+              }
 
               setItemId(paperId);
+              setFocusedItemId(paperId);
+              activatePanel("libraries", "details", [libraryId, paperId]);
+
               if (deviceType === "mobile") {
                 setPanelOpened(false);
               }

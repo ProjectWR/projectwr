@@ -123,16 +123,18 @@ const DirectoryItemNode = ({
   const onCreateSectionClick = useCallback(() => {
     const newId = dataManagerSubdocs.createEmptySection(ytree, itemId);
     setIsOpened(true);
-    itemLocalStateManager.setItemOpened(itemId, true, libraryId);
+    setFocusedItemId(newId);
+    activatePanel("libraries", "details", [libraryId, newId]);
     itemLocalStateManager.setItemOpened(newId, true, libraryId);
-  }, [ytree, itemId, libraryId]);
+  }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const onCreatePaperClick = useCallback(() => {
     const newId = dataManagerSubdocs.createEmptyPaper(ytree, itemId);
     setIsOpened(true);
-    itemLocalStateManager.setItemOpened(itemId, true, libraryId);
+    setFocusedItemId(newId);
+    activatePanel("libraries", "details", [libraryId, newId]);
     itemLocalStateManager.setItemOpened(newId, true, libraryId);
-  }, [ytree, itemId, libraryId]);
+  }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
@@ -161,6 +163,7 @@ const DirectoryItemNode = ({
     accept: "ITEM",
     hover: (draggedItem, monitor) => {
       if (!dndRef.current) return;
+      const currentItemType = itemMapRef.current.get("type");
 
       console.log(
         "APP ITEM TYPE",
@@ -205,6 +208,8 @@ const DirectoryItemNode = ({
       } else if (hoverClientY > hoverBoundingRect.height - buffer) {
         setAreaSelected("bottom");
       } else {
+        if (type === "book" || currentItemType === "paper") return;
+
         setAreaSelected("middle");
       }
     },
