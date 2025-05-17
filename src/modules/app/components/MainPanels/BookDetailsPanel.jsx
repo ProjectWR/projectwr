@@ -24,21 +24,27 @@ import Tokenizr from "tokenizr";
 
 let lexer = new Tokenizr();
 
-lexer.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx, match) => {
-  ctx.accept("id");
+lexer.rule(/[a-zA-Z](?:[a-zA-Z0-9]|'(?=[a-zA-Z]))*/, (ctx, match) => {
+  // Handles contractions like don't, couldn't, etc.
+  ctx.accept("word", match[0]);
 });
+
 lexer.rule(/[+-]?[0-9]+/, (ctx, match) => {
   ctx.accept("number", parseInt(match[0]));
 });
+
 lexer.rule(/\/\/[^\r\n]*\r?\n/, (ctx, match) => {
-  ctx.ignore();
+  ctx.ignore(); // Comments
 });
+
 lexer.rule(/[ \t\r\n]+/, (ctx, match) => {
-  ctx.ignore();
+  ctx.ignore(); // Whitespace
 });
+
 lexer.rule(/./, (ctx, match) => {
-  ctx.accept("char");
+  ctx.accept("char"); // Catch-all for punctuation
 });
+
 /**
  *
  * @param {{ytree: YTree, bookId: string}} param0
