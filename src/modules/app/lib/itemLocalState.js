@@ -190,6 +190,7 @@ class ItemLocalStateManager {
         EditorType: props.EditorType || null,
         isOpened: props.isOpened || false,
         lastOpened: props.lastOpened || Date.now(), // Initialize lastOpened
+        noteScopeItemId: props.noteScopeItemId || null,
       },
     };
     this._saveItems(items);
@@ -202,7 +203,7 @@ class ItemLocalStateManager {
       if (!itemLocalStateManager.hasItemLocalState(parentKey)) {
         itemLocalStateManager.createItemLocalState(parentKey, {
           type: libraryYTree.getNodeValueFromKey(parentKey).get("type"),
-          props: { libraryId: libraryId },
+          props: { libraryId: libraryId, noteScopeItemId: libraryYTree.getNodeParentFromKey(parentKey) },
         });
       }
       this.setItemOpened(parentKey, true, libraryId);
