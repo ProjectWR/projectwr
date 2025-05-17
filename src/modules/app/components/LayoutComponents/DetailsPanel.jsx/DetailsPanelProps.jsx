@@ -125,6 +125,15 @@ export const DetailsPanelDescriptionProp = ({
   return (
     <div className="w-full h-fit">
       <RichTextEditor editor={editor} variant="subtle">
+        <style>
+          {`
+
+          .tiptap.ProseMirror {
+            padding: 0 0 0 0;
+          }
+          
+          `}
+        </style>
         <RichTextEditor.Toolbar sticky stickyOffset="1rem">
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Bold />
