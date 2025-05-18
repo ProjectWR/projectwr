@@ -28,7 +28,7 @@
 - ~~Grammarly/language tool/etc. integration~~
 - google drive and one drive sync
 - Completion Status for each item
-- IMPORTANT: change internal structure of yjs ordered tree
+- ~~IMPORTANT: change internal structure of yjs ordered tree~~
 - disappearing toolbar / top bar
 - dictionary
 - number untitled 
