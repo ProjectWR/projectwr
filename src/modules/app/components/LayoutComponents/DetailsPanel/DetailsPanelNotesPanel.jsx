@@ -145,28 +145,31 @@ export const DetailsPanelNotesPanel = ({
           }}
         >
           <div className="w-full h-full @container flex flex-col relative">
-            <div className="relative w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-1 py-1">
-              <input
-                onFocus={() => {
-                  setHeaderFocused(true);
-                }}
-                onBlur={() => {
-                  setHeaderFocused(false);
-                }}
-                className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:outline-0 flex items-center justify-start px-2 py-1"
-                value={headerText}
-                onChange={(e) => {
-                  setHeaderText(e.target.value);
-                }}
-              />
-              <SearchResults
-                input={headerText}
-                libraryId={libraryId}
-                visible={headerFocused}
-                onClick={(result) => {
-                  setScopedItemId(result.id);
-                }}
-              />
+            <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
+              <div className="w-full relative h-fit flex items-center">
+                <input
+                  onFocus={() => {
+                    setHeaderFocused(true);
+                  }}
+                  onBlur={() => {
+                    setHeaderFocused(false);
+                  }}
+                  className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:text-appLayoutText focus:outline-0 flex items-center justify-start px-2 rounded-md"
+                  value={headerText}
+                  onChange={(e) => {
+                    setHeaderText(e.target.value);
+                  }}
+                />
+                <SearchResults
+                  input={headerText}
+                  libraryId={libraryId}
+                  visible={headerFocused}
+                  onClick={(result, itemTitle) => {
+                    setScopedItemId(result.id);
+                    setHeaderText(itemTitle);
+                  }}
+                />
+              </div>
             </div>
             <div className="divider w-full px-2">
               <div className="w-full h-px bg-appLayoutBorder"></div>
@@ -230,7 +233,7 @@ const SearchResults = ({
     } else {
       setSearchResults([]);
     }
-  }, [input]);
+  }, [input, libraryId]);
 
   console.log("SEARCH RESULTS: ", searchResults);
 
@@ -240,10 +243,7 @@ const SearchResults = ({
         <span>
           {" "}
           {searchResults.length}{" "}
-          {searchResults.length === 1 ? "result" : "results"} in your libraries
-        </span>
-        <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
-          Last opened at
+          {searchResults.length === 1 ? "result" : "results"} in your library
         </span>
       </HoverListHeader>
       <HoverListDivider />
@@ -268,7 +268,7 @@ const SearchResults = ({
                 key={result.id}
                 onClick={() => {
                   console.log("ONCLICK RESULT", result);
-                  onClick(result);
+                  onClick(result, item_properties.item_title);
                 }}
               >
                 <span> {item_properties.item_title}</span>

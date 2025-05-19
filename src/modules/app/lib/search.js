@@ -124,5 +124,5 @@ export async function destroySearchForLibrary(libraryId) {
 }
 
 export function queryData(query) {
-  return miniSearch.search(query);
+  return miniSearch.search(query, { fuzzy: 0.1 });
 }
