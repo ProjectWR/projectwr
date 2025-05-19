@@ -48,10 +48,6 @@ export async function setupEnDictionary() {
                 searchWords: [...storeFields['searchWords'], key.substring(key.indexOf('.') + 1)]
             }
 
-            if (key.substring(key.indexOf('.') + 1) === 'be') {
-                console.log("be: ", newDocument);
-            }
-
             map.set(id, newDocument);
         }
     });

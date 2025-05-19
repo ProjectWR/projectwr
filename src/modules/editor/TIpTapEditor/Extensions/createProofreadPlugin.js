@@ -132,11 +132,9 @@ export function createProofreadPlugin(
         key: spellcheckkey,
         view(view) {
             editorview = view;
-            console.log(getSpellCheckEnabled.get());
             setTimeout(() => {
                 const tr = view.state.tr;
                 tr.setMeta('forceProofread', true);
-                console.log("forcing proofread");
                 view.dispatch(tr);
             }, 100);
 
@@ -199,7 +197,6 @@ export function createProofreadPlugin(
                 });
                 const newDeco = old.decor.map(tr.mapping, tr.doc);
 
-                console.log("Spellchecker is checking!");
                 debouncedCheck(
                     newState.doc,
                     {

@@ -28,7 +28,6 @@ const GrainyDiv = ({ children, className, size = 30, disabled }) => {
     )
   );
 
-  console.log(primaryColor, hoverColor);
 
   const handleMouseMove = ({ clientX, clientY, currentTarget }) => {
     const { left, top, width, height } = currentTarget.getBoundingClientRect();

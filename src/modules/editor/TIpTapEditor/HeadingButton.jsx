@@ -242,7 +242,6 @@ export default TextFormatButton;
 const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
   switch (format) {
     case "h1":
-      console.log("Inside plain element renderer: ", format);
       return (
         <p
           className="min-w-fit w-fit"

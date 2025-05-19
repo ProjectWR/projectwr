@@ -24,7 +24,6 @@ const useRefreshableTimer = ({ time = 250 } = {}) => {
     // Start a new timer
     timerRef.current = setTimeout(() => {
       setTimerState(false);
-      console.log("TIMER STATE SET TO FALSE");
     }, time);
   }, [time]);
 

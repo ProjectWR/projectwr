@@ -46,12 +46,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
     pressedColor,
   } = toolbarPreferences;
 
-  console.log("toolbar preferences: ", toolbarPreferences);
-
-  console.log("Pressed Color: ", pressedColor);
-
-  console.log("Is Italic Active: ", editor.isActive("italic"));
-
   return (
     <div
       style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}

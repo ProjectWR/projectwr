@@ -22,6 +22,7 @@ import templateManager from "../../lib/templates";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
 import { TabsBar } from "./TabsBar";
 import NoteDetailsPanel from "../MainPanels/NoteDetailsPanel";
+import { ErrorBoundary } from "react-error-boundary";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -87,10 +88,7 @@ const MainPanel = ({}) => {
   }, [libraryId, activity, itemId, itemMode, templateId, templateMode]);
 
   const renderMainPanel = useCallback(() => {
-    console.log("MAIN PANEL STATE", mainPanelState);
     const { panelType, mode, breadcrumbs } = mainPanelState;
-
-    console.log(panelType, mode, breadcrumbs);
 
     const isAtRoot = breadcrumbs.length === 1;
 
@@ -98,7 +96,7 @@ const MainPanel = ({}) => {
     const youngestId = breadcrumbs[breadcrumbs.length - 1];
 
     if (panelType === "libraries") {
-      setActivity("libraries");
+      // setActivity("libraries");
       setLibraryId(rootId);
       setFocusedItem({
         type: "libraries",
@@ -151,11 +149,8 @@ const MainPanel = ({}) => {
 
       const ancestorIds = getAncestorsForBreadcrumbs(rootId, youngestId);
 
-      console.log("ANCESTOR IDS", ancestorIds);
-
       const itemMap = libraryYTree.getNodeValueFromKey(youngestId);
 
-      console.log("ITEM MAP", itemMap);
 
       for (let i = 1; i < ancestorIds.length; i++) {
         const breadcrumb = ancestorIds[i];
@@ -165,16 +160,10 @@ const MainPanel = ({}) => {
         breadcrumbValues.push({
           label: breadcrumbItemMap.get("item_properties")["item_title"],
           action: () => {
-            console.log(
-              "ACTIVATING PANEL",
-              breadcrumbItemMap.get("item_properties")["item_title"]
-            );
             activatePanel("libraries", "details", [rootId, breadcrumb]);
           },
         });
       }
-
-      console.log("breadcrumb values: ", breadcrumbValues);
 
       if (itemMap) {
         if (itemMap.get("type") === "book") {
@@ -247,7 +236,7 @@ const MainPanel = ({}) => {
         }
       }
     } else if (panelType === "templates") {
-      setActivity("templates");
+      // setActivity("templates");
       setTemplateId(rootId);
       key.current = "templateDetails-" + rootId + "-" + mode;
 
@@ -307,6 +296,7 @@ const MainPanel = ({}) => {
     setPanelOpened,
     setLibraryId,
     setFocusedItem,
+    setTemplateId,
   ]);
 
   const renderMainPanelOld = useCallback(() => {
@@ -467,7 +457,15 @@ const MainPanel = ({}) => {
           transition={{ duration: 0.1 }}
           className="w-full grow basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
         >
-          {renderMainPanel()}
+          <ErrorBoundary
+            fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                Something went wrong
+              </div>
+            }
+          >
+            {renderMainPanel()}
+          </ErrorBoundary>
         </motion.div>
       </AnimatePresence>
     </motion.div>

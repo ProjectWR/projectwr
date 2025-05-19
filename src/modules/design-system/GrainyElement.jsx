@@ -64,7 +64,6 @@ export function GrainyElement(props) {
 
   const spotlightBackground = useMotionTemplate`radial-gradient(${gradientSize}rem ${gradientSize}rem at ${mouseXSpring}% ${mouseYSpring}%, hsl(var(--appLayoutInverseHover)) 0%, hsl(var(--appBackgroundAccent)))`;
 
-  console.log(spotlightBackground);
   return (
     <motion.div
       ref={grainyDivRef}

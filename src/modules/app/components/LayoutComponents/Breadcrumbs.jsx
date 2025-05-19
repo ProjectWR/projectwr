@@ -27,14 +27,6 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
     );
     const breadcrumbsRight = breadcrumbs.slice(-1 * rightLimbSize + 1);
 
-    console.log(
-      "Breadcrumbs: ",
-      breadcrumbs,
-      breadcrumbsLeft,
-      breadcrumbsMiddle,
-      breadcrumbsRight
-    );
-
     return (
       <section className="w-full h-breadcrumbHeight overflow-hidden gap-1 flex flex-row flex-nowrap justify-center items-center">
         {breadcrumbsLeft.map(({ label, action }, index) => {

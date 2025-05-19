@@ -49,7 +49,6 @@ const ActionBar = () => {
   useEffect(() => {
     const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
       const x = await getCurrentWindow().isMaximized();
-      console.log("fullscreen??", x);
 
       setIsMaximized(x);
     });
@@ -365,7 +364,6 @@ const SearchBar = () => {
                   <HoverListButton
                     key={result.id}
                     onClick={() => {
-                      console.log("ONCLICK RESULT", result);
 
                       if (item_properties.item_title) {
                         setLibraryId(result.libraryId);
@@ -389,11 +387,7 @@ const SearchBar = () => {
                           result.libraryId,
                           result.id
                         );
-                        console.log(
-                          "Opening from search: ",
-                          result.libraryId,
-                          result.id
-                        );
+          
                         setLibraryId(result.libraryId);
                         setItemId(result.id);
                         setItemMode("details");

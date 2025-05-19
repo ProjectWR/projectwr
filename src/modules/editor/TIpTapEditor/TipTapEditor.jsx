@@ -226,8 +226,7 @@ const TiptapEditor = ({
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
     onUpdate({ editor }) {
-      console.log("UPDATE!");
-      console.log("Editor Updated");
+
       const selection = editor.state.selection;
       const coords = editor.view.coordsAtPos(selection.from);
       const container = document.getElementById("EditableContainer");
@@ -247,7 +246,6 @@ const TiptapEditor = ({
       }
 
       if (scrollAdjustment !== 0) {
-        console.log("Scroll adjustment: ", scrollAdjustment);
 
         setTimeout(() => {
           container.scrollBy({
@@ -273,7 +271,6 @@ const TiptapEditor = ({
           node = node.parentElement;
         }
       }
-      console.log("Selecting Error Text:", errorText);
       setSelectingError(errorText);
     },
   });
@@ -327,7 +324,6 @@ const TiptapEditor = ({
           action: () => {
             const textSelection = window.getSelection()?.toString().trim();
             setSearchQuery(textSelection);
-            console.log(document.getElementById("searchInput"));
             setTimeout(() => {
               document.getElementById("searchInput").focus();
             }, 100);
@@ -359,8 +355,6 @@ const TiptapEditor = ({
         },
       ]
     );
-
-    console.log("OPTIONS: ", options);
 
     return options;
   }, [editor, selectingError, setSearchQuery]);

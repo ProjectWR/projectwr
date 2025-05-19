@@ -58,7 +58,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
   );
 
-  console.log("Library Props Map STATE: ", itemMapState);
 
   const initialItemProperties = useRef({
     item_title: itemMapState.item_properties.item_title,
@@ -88,7 +87,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setItemProperties({
       ...itemProperties,
       [name]: value,

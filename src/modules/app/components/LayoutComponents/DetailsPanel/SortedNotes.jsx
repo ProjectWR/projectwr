@@ -60,13 +60,11 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
   }, [noteId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    console.log("CURRENTA ND INITIAL: ", itemProperties, initialItemProperties);
     return !equalityDeep(itemProperties, initialItemProperties);
   }, [itemProperties, initialItemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setItemProperties({
       ...itemProperties,
       [name]: value,
@@ -114,7 +112,6 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
           </AnimatePresence>
           <button
             onClick={() => {
-              console.log("LIBRARY ID AND NOTE ID", libraryId, noteId);
               activatePanel("libraries", "details", [libraryId, noteId]);
             }}
             className="w-fit px-1 h-full p-1 text-appLayoutText hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
@@ -174,7 +171,6 @@ const NoteCardEditor = ({
           node = node.parentElement;
         }
       }
-      console.log("Selecting Error Text:", errorText);
       setSelectingError(errorText);
     },
   });

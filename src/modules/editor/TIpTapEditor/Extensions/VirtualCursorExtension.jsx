@@ -33,8 +33,6 @@ const VirtualCursor = Extension.create({
             if (action && action.type === "addVirtualCursor") {
               const pos = action.position;
 
-              console.log("updating cursor with: ", pos);
-
               if (
                 virtualCursorElement &&
                 document.querySelector(".virtual-cursor")

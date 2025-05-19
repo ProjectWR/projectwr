@@ -75,8 +75,6 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(bookId));
 
-  console.log("Library Props Map STATE: ", itemMapState);
-
   const [initialItemProperties, setInitialItemProperties] = useState({
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
@@ -113,7 +111,6 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setItemProperties({
       ...itemProperties,
       [name]: value,
@@ -158,8 +155,6 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
     }
 
     return wordCount;
-
-    console.log("WORD AND CHAR COUNT: ", wordCount, charCount);
   }, [bookId, ytree]);
 
   const wordCount = getWordCount();

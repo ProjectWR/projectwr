@@ -96,7 +96,6 @@ export const DetailsPanelNotesPanel = ({
       const MIN_WIDTH = 0.77 * zoom * 360;
       const MAX_WIDTH = 0.45 * rectBody.width;
 
-      console.log("MIN AND MAX WIDTH: ", MIN_WIDTH, MAX_WIDTH);
 
       newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
@@ -269,7 +268,6 @@ const SearchResults = ({
     debouncedSearch();
   }, [input, libraryId, debouncedSearch]);
 
-  console.log("SEARCH RESULTS: ", searchResults);
 
   return (
     <HoverListShell className={"min-w-0"} condition={visible}>
@@ -301,7 +299,6 @@ const SearchResults = ({
               <HoverListButton
                 key={result.id}
                 onClick={() => {
-                  console.log("ONCLICK RESULT", result);
                   onClick(result, item_properties.item_title);
                 }}
               >

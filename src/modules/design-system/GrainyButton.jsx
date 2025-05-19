@@ -34,7 +34,6 @@ const GrainyButton = ({
     )
   );
 
-  console.log(primaryColor, hoverColor);
 
   const handleMouseMove = ({ clientX, clientY, currentTarget }) => {
     const { left, top, width, height } = currentTarget.getBoundingClientRect();

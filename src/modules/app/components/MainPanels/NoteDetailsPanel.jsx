@@ -35,8 +35,6 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(noteId));
 
-  console.log("Library Props Map STATE: ", itemMapState);
-
   const [initialItemProperties, setInitialItemProperties] = useState({
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
@@ -60,13 +58,11 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
   }, [noteId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    console.log("CURRENTA ND INITIAL: ", itemProperties, initialItemProperties);
     return !equalityDeep(itemProperties, initialItemProperties);
   }, [itemProperties, initialItemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setItemProperties({
       ...itemProperties,
       [name]: value,

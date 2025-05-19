@@ -43,7 +43,6 @@ const useMainPanel = () => {
 
       setMainPanelState(newState);
 
-      console.log("MAIN PANEL STATE BEING SAVED: ", mainPanelState);
     },
     [setMainPanelState, clearFuture, saveStateInHistory, mainPanelState]
   );

@@ -1,6 +1,5 @@
 const dynamicSizeInputElement = ({ steps, className, name, onChange, value }) => {
   const length = value.length;
-  console.log(steps);
   let finalFontSize = steps[0][1];
 
   for (const [step, fontSize] of steps) {

@@ -126,7 +126,6 @@ const WritingApp = () => {
       const MIN_WIDTH = 0.77 * zoom * 360;
       const MAX_WIDTH = 2 * zoom * 360;
 
-      console.log("MIN AND MAX WIDTH: ", MIN_WIDTH, MAX_WIDTH);
 
       newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
@@ -185,7 +184,6 @@ const WritingApp = () => {
         setDefaultSettings(defaultSettings);
 
         const settings = await loadSettings();
-        console.log("SETTINGS: ", settings["ui_scale"]);
         setZoom(settings["ui_scale"]);
 
         setLoadingStage("Loading dictionaries and spellchecker");
@@ -321,7 +319,6 @@ const WritingApp = () => {
     });
 
     const checkScreenSize = () => {
-      console.log("WINDOW INNER WIDTH: ", window.innerWidth);
       if (window.innerWidth >= 1280) {
         setIsMd(true);
       } else {
@@ -343,16 +340,6 @@ const WritingApp = () => {
       refreshPanel();
     }
   }, 1000);
-
-  console.log(
-    "CHECKING SIDE PANEL STATE: ",
-    panelOpened,
-    sideBarOpened,
-    isMd,
-    isPanelAwake,
-    panelOpened && sideBarOpened && (isMd || isPanelAwake),
-    sidePanelWidth
-  );
 
   // Render loading screen if loading is true
   return (
@@ -550,8 +537,6 @@ const WritingApp = () => {
                           clipPath: "inset(0 -15px 0 0)", // Clip the shadow on the bottom
                         }}
                         onDragEnd={(event, info) => {
-                          console.log("X: ", info.point.x);
-
                           // Use a threshold. In this example, if the final x is greater than -250 (closer to 0),
                           // we consider that an “open” gesture.
                           if (info.point.x > 200) {

@@ -56,13 +56,6 @@ const LibraryDirectory = ({ libraryId }) => {
   const libraryPropsMapRef = useRef(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
   );
-
-  console.log(
-    "library Directory rendered: ",
-    libraryId,
-    libraryPropsMapRef.current
-  );
-
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
   /** @type {{current: YTree}} */
@@ -634,17 +627,11 @@ const OptionsButton = ({
         const dropdownRect = dropdownRef.current.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
 
-        console.log("all rects: ", buttonRect, dropdownRect, containerRect);
-
-        console.log("button rect something: ", buttonRect.top + window.scrollY);
-
         const bottomLimit = containerRect.bottom;
         const bottomOfDropdown =
           buttonRect.top + window.scrollY + dropdownRect.height * 2 + 3;
 
         const distanceOverflowed = bottomOfDropdown - bottomLimit;
-
-        console.log("values: ", bottomLimit, bottomOfDropdown);
 
         if (distanceOverflowed > 0) {
           setShouldDropdownGoUp(true);

@@ -42,11 +42,9 @@ const spellCheckStore = createSpellCheckEnabledStore(() => {
 const generateProofreadErrors = async (input) => {
   const response = { matches: [] };
   lexer.input(input);
-  console.log("INPUT ", input);
   lexer.tokens().forEach((token) => {
     if (token.value.length < 2) return;
 
-    console.log("token", token, token.pos, token.text.length);
 
     let result = dictionaryManager.userSpellchecker.correct(token.text);
     if (token.text.indexOf("'") != -1) {
@@ -67,10 +65,8 @@ const generateProofreadErrors = async (input) => {
       });
     }
 
-    // console.log("token: ", token.toString());
   });
 
-  // console.log("Generated Errors: ", response);
   return response;
   // try {
 

@@ -74,11 +74,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
         const templateJSON = await templateManager.getTemplate(
           itemLocalStateManager.getPaperEditorTemplate(paperId)
         );
-        console.log(
-          "TEMPLATE JSON: ",
-          itemLocalStateManager.getPaperEditorTemplate(paperId),
-          templateJSON
-        );
         setTemplateFromFile(templateJSON);
       } catch (e) {
         console.error(

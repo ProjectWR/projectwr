@@ -231,11 +231,7 @@ const HomePanel = () => {
                                   props.libraryId,
                                   itemId
                                 );
-                                console.log(
-                                  "Opening from Recently Opened: ",
-                                  props.libraryId,
-                                  itemId
-                                );
+                              
                                 setLibraryId(props.libraryId);
                                 setItemId(itemId);
                                 setItemMode("details");

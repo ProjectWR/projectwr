@@ -47,9 +47,6 @@ export const TabsBar = () => {
                   panelType={panelType}
                   mode={mode}
                   breadcrumbs={breadcrumbs}
-                  onClick={() => {
-                    console.log("CLICKED");
-                  }}
                 />
               </motion.div>
             );
@@ -62,7 +59,7 @@ export const TabsBar = () => {
   );
 };
 
-const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
+const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
   const dndRef = useRef(null);
 
   const setFocusedItem = appStore((state) => state.setFocusedItem);
@@ -422,7 +419,6 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
       </button>
       <button
         onClick={() => {
-          console.log("DELETING TAB");
           const newTabs = JSON.parse(JSON.stringify(tabs));
           const tabIndex = tabs.findIndex((x) =>
             equalityDeep(x, { panelType, mode, breadcrumbs })

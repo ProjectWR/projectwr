@@ -151,7 +151,6 @@ export const DetailsPanelDescriptionProp = ({
           node = node.parentElement;
         }
       }
-      console.log("Selecting Error Text:", errorText);
       setSelectingError(errorText);
     },
   });
@@ -183,7 +182,6 @@ export const DetailsPanelDescriptionProp = ({
           action: () => {
             const textSelection = window.getSelection()?.toString().trim();
             setSearchQuery(textSelection);
-            console.log(document.getElementById("searchInput"));
             setTimeout(() => {
               document.getElementById("searchInput").focus();
             }, 100);
@@ -215,8 +213,6 @@ export const DetailsPanelDescriptionProp = ({
         },
       ]
     );
-
-    console.log("OPTIONS: ", options);
 
     return options;
   }, [editor, selectingError, setSearchQuery]);
