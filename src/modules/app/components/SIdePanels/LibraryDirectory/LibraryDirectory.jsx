@@ -307,26 +307,36 @@ const LibraryDirectory = ({ libraryId }) => {
                         `}
             onClick={() => {
               console.log("create section button");
-
-              const focusedItemType = libraryYTreeRef.current
-                ?.getNodeValueFromKey(focusedItemId)
-                ?.get("type");
-
               let sectionId;
 
-              if (focusedItemType === "book" || focusedItemType === "section") {
-                sectionId = dataManagerSubdocs.createEmptySection(
-                  libraryYTreeRef.current,
-                  focusedItemId || "root"
-                );
-              }
+              if (focusedItemId) {
+                const focusedItemType = libraryYTreeRef.current
+                  ?.getNodeValueFromKey(focusedItemId)
+                  ?.get("type");
 
-              if (focusedItemType === "paper" || focusedItemType === "note") {
+                if (
+                  focusedItemType === "book" ||
+                  focusedItemType === "section"
+                ) {
+                  sectionId = dataManagerSubdocs.createEmptySection(
+                    libraryYTreeRef.current,
+                    focusedItemId || "root"
+                  );
+                } else if (
+                  focusedItemType === "paper" ||
+                  focusedItemType === "note"
+                ) {
+                  sectionId = dataManagerSubdocs.createEmptySection(
+                    libraryYTreeRef.current,
+                    libraryYTreeRef.current?.getNodeParentFromKey(
+                      focusedItemId
+                    ) || "root"
+                  );
+                }
+              } else {
                 sectionId = dataManagerSubdocs.createEmptySection(
                   libraryYTreeRef.current,
-                  libraryYTreeRef.current?.getNodeParentFromKey(
-                    focusedItemId
-                  ) || "root"
+                  "root"
                 );
               }
 
@@ -357,25 +367,36 @@ const LibraryDirectory = ({ libraryId }) => {
                           `}
             onClick={() => {
               console.log("create paper button");
-              const focusedItemType = libraryYTreeRef.current
-                ?.getNodeValueFromKey(focusedItemId)
-                ?.get("type");
-
               let paperId;
 
-              if (focusedItemType === "book" || focusedItemType === "section") {
-                paperId = dataManagerSubdocs.createEmptyPaper(
-                  libraryYTreeRef.current,
-                  focusedItemId || "root"
-                );
-              }
+              if (focusedItemId) {
+                const focusedItemType = libraryYTreeRef.current
+                  ?.getNodeValueFromKey(focusedItemId)
+                  ?.get("type");
 
-              if (focusedItemType === "paper" || focusedItemType === "note") {
+                if (
+                  focusedItemType === "book" ||
+                  focusedItemType === "section"
+                ) {
+                  paperId = dataManagerSubdocs.createEmptyPaper(
+                    libraryYTreeRef.current,
+                    focusedItemId || "root"
+                  );
+                } else if (
+                  focusedItemType === "paper" ||
+                  focusedItemType === "note"
+                ) {
+                  paperId = dataManagerSubdocs.createEmptyPaper(
+                    libraryYTreeRef.current,
+                    libraryYTreeRef.current?.getNodeParentFromKey(
+                      focusedItemId
+                    ) || "root"
+                  );
+                }
+              } else {
                 paperId = dataManagerSubdocs.createEmptyPaper(
                   libraryYTreeRef.current,
-                  libraryYTreeRef.current?.getNodeParentFromKey(
-                    focusedItemId
-                  ) || "root"
+                  "root"
                 );
               }
 
@@ -406,25 +427,36 @@ const LibraryDirectory = ({ libraryId }) => {
                           `}
             onClick={() => {
               console.log("create note button");
-              const focusedItemType = libraryYTreeRef.current
-                ?.getNodeValueFromKey(focusedItemId)
-                ?.get("type");
-
               let noteId;
 
-              if (focusedItemType === "book" || focusedItemType === "section") {
-                noteId = dataManagerSubdocs.createEmptyNote(
-                  libraryYTreeRef.current,
-                  focusedItemId || "root"
-                );
-              }
+              if (focusedItemId) {
+                const focusedItemType = libraryYTreeRef.current
+                  ?.getNodeValueFromKey(focusedItemId)
+                  ?.get("type");
 
-              if (focusedItemType === "paper" || focusedItemType === "note") {
+                if (
+                  focusedItemType === "book" ||
+                  focusedItemType === "section"
+                ) {
+                  noteId = dataManagerSubdocs.createEmptyNote(
+                    libraryYTreeRef.current,
+                    focusedItemId || "root"
+                  );
+                } else if (
+                  focusedItemType === "paper" ||
+                  focusedItemType === "note"
+                ) {
+                  noteId = dataManagerSubdocs.createEmptyNote(
+                    libraryYTreeRef.current,
+                    libraryYTreeRef.current?.getNodeParentFromKey(
+                      focusedItemId
+                    ) || "root"
+                  );
+                }
+              } else {
                 noteId = dataManagerSubdocs.createEmptyNote(
                   libraryYTreeRef.current,
-                  libraryYTreeRef.current?.getNodeParentFromKey(
-                    focusedItemId
-                  ) || "root"
+                  "root"
                 );
               }
 

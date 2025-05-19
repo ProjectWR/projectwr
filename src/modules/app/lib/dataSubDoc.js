@@ -128,7 +128,7 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: uuid });
 
     const libraryPropertiesYMap = ydoc.getMap("library_props");
-    libraryPropertiesYMap.set("item_properties", { "item_title": `Untitled Library #${this.libraryYDocMap.size}`, "item_description": "Library Description in Properties" })
+    libraryPropertiesYMap.set("item_properties", { "item_title": `Untitled Library #${this.libraryYDocMap.size}`, "item_description": {} })
 
     libraryPropertiesYMap.set(
       "order_index",
@@ -184,7 +184,7 @@ class DataManagerSubdocs {
     const sectionMap = new Y.Map();
     sectionMap.set("type", "section");
     sectionMap.set("item_id", uuid);
-    sectionMap.set("item_properties", { "item_title": `Untitled Section #${ytree.getNodeChildrenFromKey(bookId)?.length}`, "item_description": "Section Description in Properties" })
+    sectionMap.set("item_properties", { "item_title": `Untitled Section #${ytree.getNodeChildrenFromKey(bookId)?.length}`, "item_description": {}, "item_progress": 0, "item_goal": 10000 })
     ytree.createNode(bookId, uuid, sectionMap);
 
     itemLocalStateManager.createItemLocalState(uuid, {
@@ -204,7 +204,7 @@ class DataManagerSubdocs {
     const paperMap = new Y.Map();
     paperMap.set("type", "paper");
     paperMap.set("item_id", uuid);
-    paperMap.set("item_properties", { "item_title": `Untitled Paper #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": "Paper Description in Properties" })
+    paperMap.set("item_properties", { "item_title": `Untitled Paper #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": {}, "item_progress": 0, "item_goal": 1000 })
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
 
@@ -225,7 +225,7 @@ class DataManagerSubdocs {
     const noteMap = new Y.Map();
     noteMap.set("type", "note");
     noteMap.set("item_id", uuid);
-    noteMap.set("item_properties", { "item_title": `Untitled Note #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": null, })
+    noteMap.set("item_properties", { "item_title": `Untitled Note #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": {}, })
     ytree.createNode(parentId, uuid, noteMap);
 
     itemLocalStateManager.createItemLocalState(uuid, {

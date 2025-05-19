@@ -16,19 +16,34 @@ import DetailsPanel, {
 } from "../LayoutComponents/DetailsPanel/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import {
+  DetailsPanelBody,
+  DetailsPanelProperties,
+} from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import {
   DetailsPanelButton,
   DetailsPanelButtonsShell,
 } from "../LayoutComponents/DetailsPanel/DetailsPanelButton";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import {
+  DetailsPanelButtonOnClick,
+  DetailsPanelSubmitButton,
+} from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
+import useRefreshableTimer from "../../hooks/useRefreshableTimer";
+import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 
-const LibraryDetailsPanel = ({ libraryId }) => {
+const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   const { deviceType } = useDeviceType();
+  const isMd = appStore((state) => state.isMd);
 
   console.log("library details panel rendering: ", libraryId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
+
   const setLibraryId = appStore((state) => state.setLibraryId);
   const [isDoorOpen, setIsDoorOpen] = useState(false);
 
@@ -39,45 +54,43 @@ const LibraryDetailsPanel = ({ libraryId }) => {
 
   const isSynced = syncManager.fireProviderMap.has(libraryId);
 
-  const libraryPropsMapState = useYMap(
+  const itemMapState = useYMap(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
   );
 
-  console.log("Library Props Map STATE: ", libraryPropsMapState);
+  console.log("Library Props Map STATE: ", itemMapState);
 
-  const initialLibraryProperties = useRef({
-    library_name: libraryPropsMapState.item_properties.item_title,
-    library_description: libraryPropsMapState.item_properties.item_description,
+  const initialItemProperties = useRef({
+    item_title: itemMapState.item_properties.item_title,
+    item_description: itemMapState.item_properties.item_description,
   });
 
-  const [libraryProperties, setLibraryProperties] = useState({
-    library_name: libraryPropsMapState.item_properties.item_title,
-    library_description: libraryPropsMapState.item_properties.item_description,
+  const [itemProperties, setItemProperties] = useState({
+    item_title: itemMapState.item_properties.item_title,
+    item_description: itemMapState.item_properties.item_description,
   });
 
   useEffect(() => {
-    setLibraryProperties({
-      library_name: libraryPropsMapState.item_properties.item_title,
-      library_description:
-        libraryPropsMapState.item_properties.item_description,
+    setItemProperties({
+      item_title: itemMapState.item_properties.item_title,
+      item_description: itemMapState.item_properties.item_description,
     });
 
-    initialLibraryProperties.current = {
-      library_name: libraryPropsMapState.item_properties.item_title,
-      library_description:
-        libraryPropsMapState.item_properties.item_description,
+    initialItemProperties.current = {
+      item_title: itemMapState.item_properties.item_title,
+      item_description: itemMapState.item_properties.item_description,
     };
-  }, [libraryId, libraryPropsMapState]);
+  }, [libraryId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    return !equalityDeep(libraryProperties, initialLibraryProperties.current);
-  }, [libraryProperties]);
+    return !equalityDeep(itemProperties, initialItemProperties.current);
+  }, [itemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
-    setLibraryProperties({
-      ...libraryProperties,
+    setItemProperties({
+      ...itemProperties,
       [name]: value,
     });
   };
@@ -87,8 +100,8 @@ const LibraryDetailsPanel = ({ libraryId }) => {
       .getLibrary(libraryId)
       .getMap("library_props")
       .set("item_properties", {
-        item_title: libraryProperties.library_name,
-        item_description: libraryProperties.library_description,
+        item_title: itemProperties.item_title,
+        item_description: itemProperties.item_description,
       });
 
     setPanelOpened(true);
@@ -162,10 +175,31 @@ const LibraryDetailsPanel = ({ libraryId }) => {
             </>
           )}
 
+          <DetailsPanelButtonOnClick
+            onClick={() => {
+              if (isMd) {
+                setNotesPanelOpened(!notesPanelOpened);
+              } else {
+                if (!(notesPanelOpened && isNotesPanelAwake)) {
+                  setNotesPanelOpened(true);
+                  refreshNotesPanel();
+                }
+              }
+            }}
+            exist={true}
+            icon={
+              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
+              ) : (
+                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
+              )
+            }
+          />
+
           <DetailsPanelNameInput
-            name="library_name"
+            name="item_title"
             onChange={handleChange}
-            value={libraryProperties.library_name}
+            value={itemProperties.item_title}
           />
 
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
@@ -173,101 +207,90 @@ const LibraryDetailsPanel = ({ libraryId }) => {
 
         <DetailsPanelDivider />
 
-        <DetailsPanelButtonsShell>
-          <DetailsPanelButton
-            onClick={async () => {
-              setSyncLoading(true);
-
-              await syncManager.initFireSync(
-                dataManagerSubdocs.getLibrary(libraryId)
-              );
-
-              await wait(2000);
-
-              setSyncLoading(false);
-            }}
-            icon={
-              isSynced ? (
-                <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
-              ) : (
-                <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
-              )
-            }
-            text={"Synchronize"}
-            loading={syncLoading}
-          />
-          <DetailsPanelButton
-            onClick={async () => {
-              setSaveLoading(true);
-              console.log("Saving Archive");
-              await persistenceManagerForSubdocs.saveArchive(
-                dataManagerSubdocs.getLibrary(libraryId)
-              );
-
-              setSaveLoading(false);
-            }}
-            icon={
-              <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-200"></span>
-            }
-            text={"Save as archive"}
-            loading={saveLoading}
-          />
-          <DetailsPanelButton
-            onClick={async () => {
-              setLoadLoading(true);
-              console.log("Loading Archive");
-              await persistenceManagerForSubdocs.loadArchive(
-                dataManagerSubdocs.getLibrary(libraryId)
-              );
-              setLoadLoading(false);
-            }}
-            icon={
-              <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-200"></span>
-            }
-            text={"Load from archive"}
-            loading={loadLoading}
-          />
-          <DetailsPanelButton
-            onClick={async () => {
-              setDeleteLoading(true);
-              console.log("Deleting Library");
-              await wait(1000);
-              setDeleteLoading(false);
-            }}
-            icon={
-              <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-200"></span>
-            }
-            text={"Delete from device"}
-            loading={deleteLoading}
-          />
-        </DetailsPanelButtonsShell>
-
         <DetailsPanelBody>
-          <div className="prop w-full h-fit relative">
-            <Textarea
-              maxRows={10}
-              id="libraryDescription"
-              classNames={{
-                root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
-                wrapper:
-                  "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
-                input:
-                  "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
-              }}
-              autosize
-              name="library_description"
-              placeholder="Enter Description"
-              onChange={handleChange}
-              value={libraryProperties.library_description}
-            />
+          <DetailsPanelNotesPanel
+            libraryId={libraryId}
+            itemId={libraryId}
+            ytree={ytree}
+            notesPanelOpened={notesPanelOpened}
+            isNotesPanelAwake={isNotesPanelAwake}
+            refreshNotesPanel={refreshNotesPanel}
+            keepNotesPanelAwake={keepNotesPanelAwake}
+          />
+          <DetailsPanelProperties>
+            <DetailsPanelButtonsShell>
+              <DetailsPanelButton
+                onClick={async () => {
+                  setSyncLoading(true);
 
-            <label
-              htmlFor="libraryDescription"
-              className="absolute top-2 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
-            >
-              Library Description
-            </label>
-          </div>
+                  await syncManager.initFireSync(
+                    dataManagerSubdocs.getLibrary(libraryId)
+                  );
+
+                  await wait(2000);
+
+                  setSyncLoading(false);
+                }}
+                icon={
+                  isSynced ? (
+                    <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
+                  ) : (
+                    <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
+                  )
+                }
+                text={"Synchronize"}
+                loading={syncLoading}
+              />
+              <DetailsPanelButton
+                onClick={async () => {
+                  setSaveLoading(true);
+                  console.log("Saving Archive");
+                  await persistenceManagerForSubdocs.saveArchive(
+                    dataManagerSubdocs.getLibrary(libraryId)
+                  );
+
+                  setSaveLoading(false);
+                }}
+                icon={
+                  <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-200"></span>
+                }
+                text={"Save as archive"}
+                loading={saveLoading}
+              />
+              <DetailsPanelButton
+                onClick={async () => {
+                  setLoadLoading(true);
+                  console.log("Loading Archive");
+                  await persistenceManagerForSubdocs.loadArchive(
+                    dataManagerSubdocs.getLibrary(libraryId)
+                  );
+                  setLoadLoading(false);
+                }}
+                icon={
+                  <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-200"></span>
+                }
+                text={"Load from archive"}
+                loading={loadLoading}
+              />
+              <DetailsPanelButton
+                onClick={async () => {
+                  setDeleteLoading(true);
+                  console.log("Deleting Library");
+                  await wait(1000);
+                  setDeleteLoading(false);
+                }}
+                icon={
+                  <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-200"></span>
+                }
+                text={"Delete from device"}
+                loading={deleteLoading}
+              />
+            </DetailsPanelButtonsShell>
+            <DetailsPanelDescriptionProp
+              itemProperties={itemProperties}
+              setItemProperties={setItemProperties}
+            />
+          </DetailsPanelProperties>
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

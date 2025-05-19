@@ -49,7 +49,6 @@ export const GrainyElementButton = ({
 
   const spotlightBackground = useMotionTemplate`radial-gradient(${gradientSize}rem ${gradientSizeY}rem at ${mouseXSpring}% ${mouseYSpring}%, hsl(var(--appLayoutInverseHover)) 0%, hsl(var(--appBackgroundAccent)))`;
 
-  console.log(spotlightBackground);
   return (
     <motion.button
       onClick={onClick}

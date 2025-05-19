@@ -63,9 +63,15 @@ export const DetailsPanelNotesPanel = ({
 
   const [sortedNoteIds, setSortedNoteIds] = useState([]);
 
-  const [scopedItemId, setScopedItemId] = useState(itemId);
+  const [scopedItemId, setScopedItemId] = useState(
+    libraryId === itemId ? "root" : itemId
+  );
 
-  const itemMapState = useYMap(ytree.getNodeValueFromKey(scopedItemId));
+  const itemMapState = useYMap(
+    libraryId === itemId
+      ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+      : ytree.getNodeValueFromKey(scopedItemId)
+  );
 
   const [headerText, setHeaderText] = useState(
     itemMapState.item_properties.item_title

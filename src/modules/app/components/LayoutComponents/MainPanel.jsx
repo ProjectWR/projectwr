@@ -126,17 +126,6 @@ const MainPanel = ({}) => {
         },
       ];
 
-      if (isAtRoot) {
-        key.current = "libraryDetails-" + rootId;
-        return (
-          <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
-            <LibraryDetailsPanel libraryId={rootId} />{" "}
-          </PrependBreadcrumbs>
-        );
-      }
-
-      key.current = "itemDetails-" + youngestId + "-" + mode;
-
       if (
         !checkForYTree(
           dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
@@ -148,6 +137,17 @@ const MainPanel = ({}) => {
       const libraryYTree = new YTree(
         dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
       );
+
+      if (isAtRoot) {
+        key.current = "libraryDetails-" + rootId;
+        return (
+          <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+            <LibraryDetailsPanel libraryId={rootId} ytree={libraryYTree} />{" "}
+          </PrependBreadcrumbs>
+        );
+      }
+
+      key.current = "itemDetails-" + youngestId + "-" + mode;
 
       const ancestorIds = getAncestorsForBreadcrumbs(rootId, youngestId);
 
