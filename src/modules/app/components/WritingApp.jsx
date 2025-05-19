@@ -192,7 +192,7 @@ const WritingApp = () => {
 
         await dictionaryManager.init();
 
-        await setupEnDictionary();
+        // await setupEnDictionary();
 
         setLoadingStage("Loading fonts");
 

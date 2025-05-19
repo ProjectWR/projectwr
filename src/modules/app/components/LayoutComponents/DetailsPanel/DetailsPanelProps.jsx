@@ -235,7 +235,7 @@ export const DetailsPanelDescriptionProp = ({
               root: "bg-appBackground border border-appLayoutBorder rounded-lg px-1",
               toolbar: "bg-appBackground border-b border-appLayoutBorder",
               content:
-                "bg-appBackground text-appLayoutText  max-h-[30rem] min-h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize",
+                "bg-appBackground text-appLayoutText  max-h-[30rem] min-h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize DetailsPanelDescriptionProp",
               controlsGroup: "bg-appBackground gap-1",
               control:
                 "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
@@ -244,18 +244,18 @@ export const DetailsPanelDescriptionProp = ({
             <style>
               {`
 
-          .tiptap.ProseMirror {
+          .DetailsPanelDescriptionProp > .tiptap.ProseMirror {
             padding: 0 0 0 0;
           }
 
-          .spelling-error {
+          .DetailsPanelDescriptionProp > .spelling-error {
             background-color: #ff00001a;
             border-top-left-radius: calc(3px * var(--uiScale));
             border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #ff0000e6;
           }
 
-          .tiptap.ProseMirror > h1 {
+          .DetailsPanelDescriptionProp > .tiptap.ProseMirror > h1 {
             font-size: calc(var(--uiScale) * 2rem);
             line-height: calc(var(--uiScale) * 2rem);
             padding-bottom: calc(var(--uiScale) * 0.5rem);
@@ -265,7 +265,7 @@ export const DetailsPanelDescriptionProp = ({
 
           }
 
-          .tiptap.ProseMirror > h2 {
+          .DetailsPanelDescriptionProp > .tiptap.ProseMirror > h2 {
             font-size: calc(var(--uiScale) * 1.5rem);
             line-height: calc(var(--uiScale) * 1.5rem);
             padding-bottom: calc(var(--uiScale) * 0.25rem);
@@ -275,7 +275,7 @@ export const DetailsPanelDescriptionProp = ({
 
           }
 
-          .tiptap.ProseMirror > ul {
+          .DetailsPanelDescriptionProp > .tiptap.ProseMirror > ul {
             list-style: circle;
             padding-left: calc(2rem * var(--uiScale));
             margin: calc(0.5rem * var(--uiScale)) 1rem calc(0.5rem * var(--uiScale)) 0.4rem;

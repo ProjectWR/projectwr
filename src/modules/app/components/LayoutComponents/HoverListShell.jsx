@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 
-export const HoverListShell = ({ children, condition }) => {
+export const HoverListShell = ({ children, condition, className }) => {
   return (
     <AnimatePresence mode="sync">
       {condition && (
@@ -10,8 +10,8 @@ export const HoverListShell = ({ children, condition }) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={`
-            absolute top-[100%] left-1/2 -translate-x-1/2 w-full h-fit min-w-actionBarSearchWidth shadow-2xl shadow-appLayoutGentleShadow z-1000 pt-1 px-1 border border-appLayoutInverseHover
-           bg-appBackgroundAccent/95 backdrop-blur-[1px] rounded-md  overflow-hidden flex items-center flex-col`}
+            absolute top-[100%] left-1/2 -translate-x-1/2 w-full h-fit shadow-2xl shadow-appLayoutGentleShadow z-1000 pt-1 px-1 border border-appLayoutInverseHover
+           bg-appBackgroundAccent/95 backdrop-blur-[1px] rounded-md  overflow-hidden flex items-center flex-col ${className}`}
         >
           {children}
         </motion.div>

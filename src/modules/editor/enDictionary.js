@@ -75,7 +75,6 @@ export async function setupEnDictionary() {
 
     EnDictionary = new Fuse(array, fuseOptions, Fuse.createIndex(fuseOptions.keys, array));
 
-    console.log("Test Query for Fuse: ", exceptionMap.get("is"), getExactMatch("is"));
 }
 
 export function getExactMatch(word) {
@@ -92,7 +91,6 @@ export function getExactMatch(word) {
         }
     })
 
-    console.log("checking new result logic: ", result);
 
     return result;
 }

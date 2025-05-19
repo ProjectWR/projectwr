@@ -83,48 +83,55 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
   };
 
   return (
-    <div className="h-fit bg-transparent shadow-lg shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutBorder rounded-lg overflow-hidden">
-      <div className="h-noteCardHeaderHeight w-full flex pl-2">
-        <input
-          className={`bg-transparent  grow basis-0 min-w-0 h-full text-noteCardFontSizeThree  text-start
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="h-fit bg-transparent shadow-lg shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutBorder rounded-lg overflow-hidden"
+      >
+        <div className="h-noteCardHeaderHeight w-full flex pl-2">
+          <input
+            className={`bg-transparent  grow basis-0 min-w-0 h-full text-noteCardFontSizeThree  text-start
                     focus:bg-appLayoutInputBackground focus:outline-none text-appLayoutTextMuted focus:text-appLayoutText
                      px-1 py-px transition-colors duration-200`}
-          name={"item_title"}
-          onChange={handleChange}
-          value={itemProperties.item_title}
-        />
-        <AnimatePresence>
-          {unsavedChangesExist && (
-            <motion.button
-              onClick={handleSave}
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: `var(--noteCardHeaderHeight)` }}
-              exit={{ opacity: 0, width: 0 }}
-              className="h-full p-px text-appLayoutText hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
-            >
-              <span className="icon-[material-symbols-light--check-rounded] w-full h-full"></span>
-            </motion.button>
-          )}
-        </AnimatePresence>
-        <button
-          onClick={() => {
-            console.log("LIBRARY ID AND NOTE ID", libraryId, noteId);
-            activatePanel("libraries", "details", [libraryId, noteId]);
-          }}
-          className="w-fit px-1 h-full p-1 text-appLayoutText hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
-        >
-          <span className="icon-[ion--enter-outline] w-noteCardHeaderHeight h-full"></span>
-        </button>
-      </div>
+            name={"item_title"}
+            onChange={handleChange}
+            value={itemProperties.item_title}
+          />
+          <AnimatePresence>
+            {unsavedChangesExist && (
+              <motion.button
+                onClick={handleSave}
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: `var(--noteCardHeaderHeight)` }}
+                exit={{ opacity: 0, width: 0 }}
+                className="h-full p-px text-appLayoutText hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
+              >
+                <span className="icon-[material-symbols-light--check-rounded] w-full h-full"></span>
+              </motion.button>
+            )}
+          </AnimatePresence>
+          <button
+            onClick={() => {
+              console.log("LIBRARY ID AND NOTE ID", libraryId, noteId);
+              activatePanel("libraries", "details", [libraryId, noteId]);
+            }}
+            className="w-fit px-1 h-full p-1 text-appLayoutText hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
+          >
+            <span className="icon-[ion--enter-outline] w-noteCardHeaderHeight h-full"></span>
+          </button>
+        </div>
 
-      <div className="divider w-full px-2">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
-      <NoteCardEditor
-        itemProperties={itemProperties}
-        setItemProperties={setItemProperties}
-      />
-    </div>
+        <div className="divider w-full px-2">
+          <div className="w-full h-px bg-appLayoutBorder"></div>
+        </div>
+        <NoteCardEditor
+          itemProperties={itemProperties}
+          setItemProperties={setItemProperties}
+        />
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
@@ -185,7 +192,7 @@ const NoteCardEditor = ({
           ${sizeMode === 1 && "text-noteCardFontSizeOne"} 
           ${sizeMode === 2 && "text-noteCardFontSizeTwo"} 
           ${sizeMode === 3 && "text-noteCardFontSizeThree"} 
-          overflow-y-scroll px-3 py-3 `,
+          overflow-y-scroll p-2 NoteCardEditor`,
           controlsGroup: "bg-appBackground gap-1 rounded-lg",
           control:
             "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
@@ -194,28 +201,28 @@ const NoteCardEditor = ({
         <style>
           {`
 
-          .tiptap.ProseMirror {
+          .NoteCardEditor > .tiptap.ProseMirror {
             padding: 0 0 0 0;
           }
 
-          .spelling-error {
+          .NoteCardEditor > .spelling-error {
             background-color: #ff00001a;
             border-top-left-radius: calc(3px * var(--uiScale));
             border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #ff0000e6;
           }
 
-          .tiptap.ProseMirror > h1 {
+          .NoteCardEditor > .tiptap.ProseMirror > h1 {
             font-size: calc(var(--uiScale) * 1.5rem);
             line-height: calc(var(--uiScale) * 1.5rem);
             padding-bottom: calc(var(--uiScale) * 0.25rem);
-            margin-bottom: calc(var(--uiScale) * .5rem);
+            margin-bottom: calc(var(--uiScale) * 0.5rem);
             font-family: serif;
             border-bottom: 1px solid hsl(var(--appLayoutBorder));
 
           }
 
-          .tiptap.ProseMirror > h2 {
+          .NoteCardEditor > .tiptap.ProseMirror > h2 {
             font-size: calc(var(--uiScale) * 1.2rem);
             line-height: calc(var(--uiScale) * 1.2rem);
             padding-bottom: calc(var(--uiScale) * 0.1rem);
@@ -225,10 +232,10 @@ const NoteCardEditor = ({
 
           }
 
-          .tiptap.ProseMirror > ul {
+          .NoteCardEditor > .tiptap.ProseMirror > ul {
             list-style: circle;
-            padding-left: calc(0.5rem * var(--uiScale));
-            margin: calc(0.25rem * var(--uiScale)) 0.5rem calc(0.25rem * var(--uiScale)) 0.2rem;
+            padding-left: calc(1rem * var(--uiScale));
+            margin: calc(0rem * var(--uiScale)) 1rem calc(0rem * var(--uiScale)) 0.4rem;
           }
 
           `}

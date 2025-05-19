@@ -21,6 +21,17 @@ import { RichTextEditor } from "@mantine/tiptap";
 import ProsemirrorProofreadExtension from "../../../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
 import ContextMenuWrapper from "../ContextMenuWrapper";
 import { ScrollArea } from "@mantine/core";
+import { queryData } from "../../../lib/search";
+import {
+  HoverListBody,
+  HoverListButton,
+  HoverListDivider,
+  HoverListFooter,
+  HoverListHeader,
+  HoverListItem,
+  HoverListShell,
+} from "../HoverListShell";
+import dataManagerSubdocs from "../../../lib/dataSubDoc";
 
 // import SortedNotes from "./SortedNotes";
 
@@ -45,7 +56,17 @@ export const DetailsPanelNotesPanel = ({
 
   const [notesPanelWidth, setNotesPanelWidth] = useState(360);
 
-  const [sortedNoteIds, setSortedNoteIds] = useState();
+  const [sortedNoteIds, setSortedNoteIds] = useState([]);
+
+  const [scopedItemId, setScopedItemId] = useState(itemId);
+
+  const itemMapState = useYMap(ytree.getNodeValueFromKey(scopedItemId));
+
+  const [headerText, setHeaderText] = useState(
+    itemMapState.item_properties.item_title
+  );
+
+  const [headerFocused, setHeaderFocused] = useState(false);
 
   const handleDrag = useCallback(
     (event, info) => {
@@ -79,8 +100,8 @@ export const DetailsPanelNotesPanel = ({
 
       try {
         sortedChildren = ytree.sortChildrenByOrder(
-          ytree.getNodeChildrenFromKey(itemId),
-          itemId
+          ytree.getNodeChildrenFromKey(scopedItemId),
+          scopedItemId
         );
       } catch (e) {
         console.error("Error fetching Note IDs in Notes Panel: ", e);
@@ -96,13 +117,13 @@ export const DetailsPanelNotesPanel = ({
     return () => {
       ytree.unobserve(updateSortedNoteIds);
     };
-  }, [libraryId, itemId, ytree]);
+  }, [libraryId, scopedItemId, ytree]);
 
   return (
     <AnimatePresence mode="wait">
       {notesPanelOpened && (isMd || isNotesPanelAwake) && (
         <motion.div
-          key="NotesPanelMotionContainer"
+          key={`NotesPanelMotionContainer-${itemId}`}
           id="NotesPanelMotionContainer"
           className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
             !isMd &&
@@ -115,7 +136,7 @@ export const DetailsPanelNotesPanel = ({
             minWidth: `${notesPanelWidth}px`,
           }}
           exit={{ opacity: 0, width: 0, minWidth: 0 }}
-          transition={{ duration: 0.05 }}
+          transition={{ duration: 0.1 }}
           onHoverStart={() => {
             keepNotesPanelAwake();
           }}
@@ -124,14 +145,32 @@ export const DetailsPanelNotesPanel = ({
           }}
         >
           <div className="w-full h-full @container flex flex-col relative">
-            <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-3 py-1">
-              Notes
+            <div className="relative w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-1 py-1">
+              <input
+                onFocus={() => {
+                  setHeaderFocused(true);
+                }}
+                onBlur={() => {
+                  setHeaderFocused(false);
+                }}
+                className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:outline-0 flex items-center justify-start px-2 py-1"
+                value={headerText}
+                onChange={(e) => {
+                  setHeaderText(e.target.value);
+                }}
+              />
+              <SearchResults
+                input={headerText}
+                libraryId={libraryId}
+                visible={headerFocused}
+                onClick={(result) => {
+                  setScopedItemId(result.id);
+                }}
+              />
             </div>
-
             <div className="divider w-full px-2">
               <div className="w-full h-px bg-appLayoutBorder"></div>
             </div>
-
             <ScrollArea
               overscrollBehavior="none"
               scrollbars="y"
@@ -151,7 +190,6 @@ export const DetailsPanelNotesPanel = ({
                 />
               </Suspense>
             </ScrollArea>
-
             <motion.div
               className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
               drag="x"
@@ -172,3 +210,82 @@ export const DetailsPanelNotesPanel = ({
   );
 };
 
+const SearchResults = ({
+  libraryId,
+  input = "",
+  onClick = () => {},
+  visible = false,
+}) => {
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    if (input.length > 0) {
+      setSearchResults(
+        queryData(input).filter(
+          (result) =>
+            result.libraryId === libraryId &&
+            (result.type === "book" || result.type === "section")
+        )
+      );
+    } else {
+      setSearchResults([]);
+    }
+  }, [input]);
+
+  console.log("SEARCH RESULTS: ", searchResults);
+
+  return (
+    <HoverListShell className={"min-w-0"} condition={visible}>
+      <HoverListHeader>
+        <span>
+          {" "}
+          {searchResults.length}{" "}
+          {searchResults.length === 1 ? "result" : "results"} in your libraries
+        </span>
+        <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
+          Last opened at
+        </span>
+      </HoverListHeader>
+      <HoverListDivider />
+      <HoverListBody>
+        {searchResults.length > 0 &&
+          searchResults.map((result) => {
+            const item_properties =
+              result.id === result.libraryId
+                ? dataManagerSubdocs
+                    .getLibrary(result.libraryId)
+                    .getMap("library_props")
+                    .get("item_properties")
+                : dataManagerSubdocs
+                    .getLibrary(result.libraryId)
+                    .getMap("library_directory")
+                    .get(result.id)
+                    .get("value")
+                    .get("item_properties");
+
+            return (
+              <HoverListButton
+                key={result.id}
+                onClick={() => {
+                  console.log("ONCLICK RESULT", result);
+                  onClick(result);
+                }}
+              >
+                <span> {item_properties.item_title}</span>
+              </HoverListButton>
+            );
+          })}
+
+        {searchResults.length === 0 && (
+          <HoverListItem disabled={true}>
+            <div className="w-full h-full flex items-center">
+              No results found
+            </div>
+          </HoverListItem>
+        )}
+      </HoverListBody>
+      <HoverListDivider />
+      <HoverListFooter />
+    </HoverListShell>
+  );
+};
