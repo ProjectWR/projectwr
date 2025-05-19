@@ -19,7 +19,14 @@ import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDi
 import templateManager from "../../lib/templates";
 import useMainPanel from "../../hooks/useMainPanel";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import {
+  DetailsPanelButtonOnClick,
+  DetailsPanelButtonPlaceHolder,
+  DetailsPanelSubmitButton,
+} from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
+import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -31,6 +38,8 @@ const { desktopDefaultPreferences, mobileDefaultPreferences } =
  */
 const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const { deviceType } = useDeviceType();
+  const isMd = appStore((state) => state.isMd);
+
   const isMobile = deviceType === "mobile";
 
   console.log("paper panel rendering: ", paperId);
@@ -101,34 +110,38 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     };
   }, [setShowActivityBar, deviceType]);
 
-  const [paperProperties, setPaperProperties] = useState({
-    item_title: "",
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
+
+  const itemMapState = useYMap(ytree.getNodeValueFromKey(paperId));
+
+  const initialItemProperties = useRef({
+    item_title: itemMapState.item_properties.item_title,
   });
 
-  const paperMapState = useYMap(ytree.getNodeValueFromKey(paperId));
-
-  const initialPaperProperties = useRef({
-    item_title: paperMapState.item_properties.item_title,
+  const [itemProperties, setItemProperties] = useState({
+    item_title: itemMapState.item_properties.item_title,
   });
 
   useEffect(() => {
-    setPaperProperties({
-      item_title: paperMapState.item_properties.item_title,
+    setItemProperties({
+      item_title: itemMapState.item_properties.item_title,
     });
 
-    initialPaperProperties.current = {
-      item_title: paperMapState.item_properties.item_title,
+    initialItemProperties.current = {
+      item_title: itemMapState.item_properties.item_title,
     };
-  }, [paperId, paperMapState]);
+  }, [paperId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    return !equalityDeep(paperProperties, initialPaperProperties.current);
-  }, [paperProperties]);
+    return !equalityDeep(itemProperties, initialItemProperties.current);
+  }, [itemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPaperProperties({
-      ...paperProperties,
+    setItemProperties({
+      ...itemProperties,
       [name]: value,
     });
   };
@@ -137,7 +150,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     const paperMap = ytree.getNodeValueFromKey(paperId);
 
     paperMap.set("item_properties", {
-      item_title: paperProperties.item_title,
+      item_title: itemProperties.item_title,
     });
   };
 
@@ -168,39 +181,29 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
             </button>
           )}
-          <motion.div
-            initial={{
-              width: "var(--libraryManagerAddButtonSize) ",
-              opacity: 1,
-              marginRight: `0.5rem`,
-              marginLeft: `0.5rem`,
-              marginBottom: 0,
-              padding: `0.25rem`,
-            }}
-            animate={{
-              width: "var(--libraryManagerAddButtonSize) ",
-              opacity: 1,
-              marginRight: `0.5rem`,
-              marginLeft: `0.5rem`,
-              marginBottom: 0,
-              padding: `0.25rem`,
-            }}
-            exit={{
-              width: "var(--libraryManagerAddButtonSize) ",
-              opacity: 1,
-              marginRight: `0.5rem`,
-              marginLeft: `0.5rem`,
-              marginBottom: 0,
-              padding: `0.25rem`,
-            }}
-            className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-full 
-                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-0
-                    `}
-          ></motion.div>
 
-          <motion.button
-            type="button"
+          <DetailsPanelButtonOnClick
+            onClick={() => {
+              if (isMd) {
+                setNotesPanelOpened(!notesPanelOpened);
+              } else {
+                if (!(notesPanelOpened && isNotesPanelAwake)) {
+                  setNotesPanelOpened(true);
+                  refreshNotesPanel();
+                }
+              }
+            }}
+            exist={true}
+            icon={
+              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
+              ) : (
+                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
+              )
+            }
+          />
+
+          <DetailsPanelButtonOnClick
             onClick={() => {
               console.log("edit paper settings button");
               if (!(appStoreItemId === paperId && itemMode === "settings")) {
@@ -213,62 +216,45 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
                 activatePanel("libraries", "settings", [libraryId, paperId]);
               }
             }}
-            initial={{
-              width: "calc(1rem + var(--libraryManagerAddButtonSize))",
-              opacity: 1,
-              paddingRight: `0.75rem`,
-              paddingLeft: `0.75rem`,
-              marginBottom: 0,
-            }}
-            animate={{
-              width: "calc(1rem + var(--libraryManagerAddButtonSize))",
-              opacity: 1,
-              paddingRight: `0.75rem`,
-              paddingLeft: `0.75rem`,
-              marginBottom: 0,
-            }}
-            exit={{
-              width: "calc(1rem + var(--libraryManagerAddButtonSize))",
-              opacity: 1,
-              paddingRight: `0.75rem`,
-              paddingLeft: `0.75rem`,
-              marginBottom: 0,
-            }}
-            className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-none
-                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center order-4 rounded-t-md
-                    `}
-          >
-            <motion.span
-              animate={{
-                opacity: 1,
-              }}
-              className={`icon-[bi--sliders2] ${"hover:text-appLayoutHighlight"} rounded-full w-[75%] h-[75%]`}
-            ></motion.span>
-          </motion.button>
+            exist={true}
+            icon={<span className="icon-[bi--sliders2] w-[75%] h-[75%]"></span>}
+          />
 
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
-            value={paperProperties.item_title}
+            value={itemProperties.item_title}
           />
 
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
+
+          <DetailsPanelButtonPlaceHolder />
+          <DetailsPanelButtonPlaceHolder />
         </DetailsPanelHeader>
 
         <DetailsPanelDivider />
-
-        <motion.div
-          id="PaperBody"
-          className="w-full grow min-h-0 min-w-0 basis-0"
-        >
-          <TipTapEditor
-            key={paperId}
-            yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
-            setHeaderOpened={setHeaderOpened}
-            preferences={preferences}
+        <DetailsPanelBody>
+          <DetailsPanelNotesPanel
+            libraryId={libraryId}
+            itemId={ytree.getNodeParentFromKey(paperId)}
+            ytree={ytree}
+            notesPanelOpened={notesPanelOpened}
+            isNotesPanelAwake={isNotesPanelAwake}
+            refreshNotesPanel={refreshNotesPanel}
+            keepNotesPanelAwake={keepNotesPanelAwake}
           />
-        </motion.div>
+          <motion.div
+            id="PaperBody"
+            className="grow h-full  min-w-0 minbasis-0"
+          >
+            <TipTapEditor
+              key={paperId}
+              yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
+              setHeaderOpened={setHeaderOpened}
+              preferences={preferences}
+            />
+          </motion.div>
+        </DetailsPanelBody>
       </form>
     </DetailsPanel>
   );

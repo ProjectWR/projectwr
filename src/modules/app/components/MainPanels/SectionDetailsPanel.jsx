@@ -12,57 +12,71 @@ import DetailsPanel, {
 } from "../LayoutComponents/DetailsPanel/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import {
+  DetailsPanelBody,
+  DetailsPanelProperties,
+} from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import {
+  DetailsPanelButtonOnClick,
+  DetailsPanelSubmitButton,
+} from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import useRefreshableTimer from "../../hooks/useRefreshableTimer";
+import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
+import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 
 /**
  *
  * @param {{ytree: YTree, sectionId: string}} param0
  * @returns
  */
-const SectionDetailsPanel = ({ ytree, sectionId }) => {
+const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
   const { deviceType } = useDeviceType();
+  const isMd = appStore((state) => state.isMd);
 
   console.log("library details panel rendering: ", sectionId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
 
-  const sectionMapState = useYMap(ytree.getNodeValueFromKey(sectionId));
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
 
-  console.log("Library Props Map STATE: ", sectionMapState);
+  const itemMapState = useYMap(ytree.getNodeValueFromKey(sectionId));
 
-  const initialSectionProperties = useRef({
-    item_title: sectionMapState.item_properties.item_title,
-    section_description: sectionMapState.item_properties.item_description,
+  console.log("Library Props Map STATE: ", itemMapState);
+
+  const initialItemProperties = useRef({
+    item_title: itemMapState.item_properties.item_title,
+    item_description: itemMapState.item_properties.item_description,
   });
 
-  const [sectionProperties, setSectionProperties] = useState({
-    item_title: sectionMapState.item_properties.item_title,
-    section_description: sectionMapState.item_properties.item_description,
+  const [itemProperties, setItemProperties] = useState({
+    item_title: itemMapState.item_properties.item_title,
+    item_description: itemMapState.item_properties.item_description,
   });
 
   useEffect(() => {
-    setSectionProperties({
-      item_title: sectionMapState.item_properties.item_title,
-      section_description: sectionMapState.item_properties.item_description,
+    setItemProperties({
+      item_title: itemMapState.item_properties.item_title,
+      item_description: itemMapState.item_properties.item_description,
     });
 
-    initialSectionProperties.current = {
-      item_title: sectionMapState.item_properties.item_title,
-      section_description: sectionMapState.item_properties.item_description,
+    initialItemProperties.current = {
+      item_title: itemMapState.item_properties.item_title,
+      item_description: itemMapState.item_properties.item_description,
     };
-  }, [sectionId, sectionMapState]);
+  }, [sectionId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    return !equalityDeep(sectionProperties, initialSectionProperties.current);
-  }, [sectionProperties]);
+    return !equalityDeep(itemProperties, initialItemProperties.current);
+  }, [itemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
-    setSectionProperties({
-      ...sectionProperties,
+    setItemProperties({
+      ...itemProperties,
       [name]: value,
     });
   };
@@ -71,8 +85,8 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
     const sectionMap = ytree.getNodeValueFromKey(sectionId);
 
     sectionMap.set("item_properties", {
-      item_title: sectionProperties.item_title,
-      item_description: sectionProperties.item_description,
+      item_title: itemProperties.item_title,
+      item_description: itemProperties.item_description,
     });
 
     setPanelOpened(true);
@@ -104,40 +118,51 @@ const SectionDetailsPanel = ({ ytree, sectionId }) => {
             </button>
           )}
 
+          <DetailsPanelButtonOnClick
+            onClick={() => {
+              if (isMd) {
+                setNotesPanelOpened(!notesPanelOpened);
+              } else {
+                if (!(notesPanelOpened && isNotesPanelAwake)) {
+                  setNotesPanelOpened(true);
+                  refreshNotesPanel();
+                }
+              }
+            }}
+            exist={true}
+            icon={
+              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
+              ) : (
+                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
+              )
+            }
+          />
+
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
-            value={sectionProperties.item_title}
+            value={itemProperties.item_title}
           />
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
         </DetailsPanelHeader>
         <DetailsPanelDivider />
         <DetailsPanelBody>
-          <div className="prop w-full h-fit relative">
-            <Textarea
-              maxRows={10}
-              id="sectionDescription"
-              classNames={{
-                root: "bg-appBackground pt-detailsPanelPropLabelHeight h-fit  border border-appLayoutBorder rounded-md overflow-hidden ",
-                wrapper:
-                  "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
-                input:
-                  "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
-              }}
-              autosize
-              name="section_description"
-              placeholder="Enter Description"
-              onChange={handleChange}
-              value={sectionProperties.section_description}
+          <DetailsPanelNotesPanel
+            libraryId={libraryId}
+            itemId={sectionId}
+            ytree={ytree}
+            notesPanelOpened={notesPanelOpened}
+            isNotesPanelAwake={isNotesPanelAwake}
+            refreshNotesPanel={refreshNotesPanel}
+            keepNotesPanelAwake={keepNotesPanelAwake}
+          />
+          <DetailsPanelProperties>
+            <DetailsPanelDescriptionProp
+              itemProperties={itemProperties}
+              setItemProperties={setItemProperties}
             />
-
-            <label
-              htmlFor="libraryDescription"
-              className="absolute top-2 left-3 text-detailsPanelPropLabelFontSize text-appLayoutTextMuted h-fit pointer-events-none" // Smaller size and lighter color
-            >
-              Section Description
-            </label>
-          </div>
+          </DetailsPanelProperties>
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

@@ -373,7 +373,7 @@ const TiptapEditor = ({
       >
         <style>
           {`
-          .tiptap {
+          #EditorContainer .tiptap {
             min-height: calc(20rem * var(--uiScale));
             padding: calc(${paddingTop}rem * var(--uiScale))
                      calc(${paddingRight}rem * var(--uiScale))
@@ -519,6 +519,7 @@ const TiptapEditor = ({
           <EditorContent
             spellCheck={false}
             editor={editor}
+            id="PaperEditorContent"
             className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200
                   `}
             style={{

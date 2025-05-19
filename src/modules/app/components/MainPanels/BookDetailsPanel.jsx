@@ -108,7 +108,6 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
   }, [bookId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    console.log("CURRENTA ND INITIAL: ", itemProperties, initialItemProperties);
     return !equalityDeep(itemProperties, initialItemProperties);
   }, [itemProperties, initialItemProperties]);
 
