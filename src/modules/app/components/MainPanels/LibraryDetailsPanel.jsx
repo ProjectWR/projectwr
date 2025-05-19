@@ -13,16 +13,16 @@ import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
 import { Textarea } from "@mantine/core";
 import DetailsPanel, {
   formClassName,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
-import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+} from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import {
   DetailsPanelButton,
   DetailsPanelButtonsShell,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelButton";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
+} from "../LayoutComponents/DetailsPanel/DetailsPanelButton";
+import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 
 const LibraryDetailsPanel = ({ libraryId }) => {
   const { deviceType } = useDeviceType();

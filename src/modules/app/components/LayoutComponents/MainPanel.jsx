@@ -41,6 +41,7 @@ const MainPanel = ({}) => {
   const setActivity = appStore((state) => state.setActivity);
 
   const setLibraryId = appStore((state) => state.setLibraryId);
+  const setFocusedItem = appStore((state) => state.setFocusedItem);
 
   const itemId = appStore((state) => state.itemId);
   const itemMode = appStore((state) => state.itemMode);
@@ -97,6 +98,14 @@ const MainPanel = ({}) => {
     const youngestId = breadcrumbs[breadcrumbs.length - 1];
 
     if (panelType === "libraries") {
+      setActivity("libraries");
+      setLibraryId(rootId);
+      setFocusedItem({
+        type: "libraries",
+        libraryId: rootId,
+        itemId: isAtRoot ? null : youngestId,
+      });
+
       const breadcrumbValues = [
         {
           label: "Your Libraries",
@@ -175,6 +184,7 @@ const MainPanel = ({}) => {
                 ytree={libraryYTree}
                 bookId={youngestId}
                 key={youngestId}
+                libraryId={rootId}
               />
             </PrependBreadcrumbs>
           );
@@ -187,6 +197,7 @@ const MainPanel = ({}) => {
                 ytree={libraryYTree}
                 sectionId={youngestId}
                 key={youngestId}
+                libraryId={rootId}
               />
             </PrependBreadcrumbs>
           );
@@ -236,6 +247,8 @@ const MainPanel = ({}) => {
         }
       }
     } else if (panelType === "templates") {
+      setActivity("templates");
+      setTemplateId(rootId);
       key.current = "templateDetails-" + rootId + "-" + mode;
 
       const breadcrumbValues = [
@@ -293,6 +306,7 @@ const MainPanel = ({}) => {
     setActivity,
     setPanelOpened,
     setLibraryId,
+    setFocusedItem,
   ]);
 
   const renderMainPanelOld = useCallback(() => {

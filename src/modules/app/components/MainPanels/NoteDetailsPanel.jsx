@@ -9,13 +9,16 @@ import { AnimatePresence, motion } from "motion/react";
 import { Textarea } from "@mantine/core";
 import DetailsPanel, {
   formClassName,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
-import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
-import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
+} from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
+import {
+  DetailsPanelBody,
+  DetailsPanelProperties,
+} from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
+import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
+import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
 
 /**
  *
@@ -116,11 +119,13 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
         </DetailsPanelHeader>
         <DetailsPanelDivider />
         <DetailsPanelBody>
-          <DetailsPanelDescriptionProp
-            itemProperties={itemProperties}
-            setItemProperties={setItemProperties}
-            label={"Note"}
-          />
+          <DetailsPanelProperties>
+            <DetailsPanelDescriptionProp
+              itemProperties={itemProperties}
+              setItemProperties={setItemProperties}
+              label={"Note"}
+            />
+          </DetailsPanelProperties>
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

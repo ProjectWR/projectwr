@@ -14,19 +14,6 @@ import { RichTextEditor } from "@mantine/tiptap";
 
 const theme = createTheme({
   activeClassName: "",
-  components: {
-    RichTextEditor: RichTextEditor.extend({
-      classNames: (_theme, props) => ({
-        root: "bg-appBackground border border-appLayoutBorder rounded-lg px-1",
-        toolbar: "bg-appBackground border-b border-appLayoutBorder",
-        content: "bg-appBackground text-appLayoutText  max-h-[30rem] min-h-[10rem] overflow-y-scroll px-3 py-3",
-        controlsGroup: "bg-appBackground gap-1",
-        control:
-          "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
-        
-      }),
-    }),
-  },
 });
 
 createRoot(document.getElementById("root")).render(

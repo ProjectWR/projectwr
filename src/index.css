@@ -169,6 +169,8 @@
         )
     );
 
+    --scrollbarWidthThin: calc(var(--uiScale) * 0.5rem);
+
     --footerHeight: calc(var(--uiScale) * 1.3rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
     --ZoomIconSize: calc(var(--uiScale) * 1.2rem);
@@ -268,6 +270,16 @@
     --tabsIconSize: calc(var(--uiScale) * 1.8rem);
     --tabsFontSize: calc(var(--uiScale) * 1rem);
     --tabWidth: calc(var(--uiScale) * 12rem);
+
+    --notesPanelWidth: calc(var(--uiScale) * 25rem);
+    --notesPanelHeaderFontSize: calc(var(--uiScale) * 1.2rem);
+
+    --noteCardFontSizeOne: calc(var(--uiScale) * 1.25rem);
+    --noteCardFontSizeTwo: calc(var(--uiScale) * 1.1rem);
+    --noteCardFontSizeThree: calc(var(--uiScale) * 0.9rem);
+
+    --noteCardHeight: calc(var(--uiScale) * 20rem);
+    --noteCardHeaderHeight: calc(var(--uiScale) * 1.5rem);
   }
   .mobile {
     --libraryManagerNodeHeight: 7rem;
@@ -482,6 +494,10 @@
   --spacing-detailsPanelButtonIconHeight: var(--detailsPanelButtonIconHeight);
   --spacing-detailsPanelButtonHeight: var(--detailsPanelButtonHeight);
   --spacing-detailsPanelSubmitButtonWidth: var(--detailsPanelSubmitButtonWidth);
+  --spacing-notesPanelWidth: var(--notesPanelWidth);
+  --spacing-noteCardHeight: var(--noteCardHeight);
+  --spacing-scrollbarWidthThin: var(--scrollbarWidthThin);
+  --spacing-noteCardHeaderHeight: var(--noteCardHeaderHeight);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
@@ -523,6 +539,10 @@
   --text-preferencesItemFontSize: var(--preferencesItemFontSize);
   --text-paperPanelNameFontSize: var(--paperPanelNameFontSize);
   --text-tabsFontSize: var(--tabsFontSize);
+  --text-notesPanelHeaderFontSize: var(--notesPanelHeaderFontSize);
+  --text-noteCardFontSizeOne: var(--noteCardFontSizeOne);
+  --text-noteCardFontSizeTwo: var(--noteCardFontSizeTwo);
+  --text-noteCardFontSizeThree: var(--noteCardFontSizeThree);
 }
 
 :root {

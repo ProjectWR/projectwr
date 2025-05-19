@@ -13,13 +13,13 @@ import templateManager from "../../lib/templates";
 import { equalityDeep, equalityFlat } from "lib0/function";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TemplateContentEditor from "./TemplateContentEditor";
-import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
-import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import DetailsPanel from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import useMainPanel from "../../hooks/useMainPanel";
-import { DetailsPanelButtonOnClick } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
+import { DetailsPanelButtonOnClick } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 
 /**
  * TemplateDetailsPanel component for viewing and editing templates.

@@ -10,16 +10,16 @@ import { equalityDeep } from "lib0/function";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import useTemplates from "../../hooks/useTemplates";
 import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
-import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import DetailsPanel, {
   formClassName,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+} from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
 import templateManager from "../../lib/templates";
 import useMainPanel from "../../hooks/useMainPanel";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
-import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
+import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;

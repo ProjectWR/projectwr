@@ -13,10 +13,10 @@ import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/Tip
 import templateManager from "../../lib/templates";
 import itemLocalStateManager from "../../lib/itemLocalState";
 import { YTree } from "yjs-orderedtree";
-import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import DetailsPanel from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import {
   HoverListBody,
   HoverListButton,
@@ -26,7 +26,7 @@ import {
   HoverListItem,
   HoverListShell,
 } from "../LayoutComponents/HoverListShell";
-import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 
 /**
  *

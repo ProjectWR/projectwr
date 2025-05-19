@@ -116,7 +116,7 @@ export const DetailsPanelWordCountProp = ({
 export const DetailsPanelDescriptionProp = ({
   itemProperties,
   setItemProperties,
-  label = "Synopsis"
+  label = "Synopsis",
 }) => {
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
@@ -231,7 +231,15 @@ export const DetailsPanelDescriptionProp = ({
           <RichTextEditor
             editor={editor}
             variant="subtle"
-            classNames={{ content: "text-detailsPanelPropsFontSize" }}
+            classNames={{
+              root: "bg-appBackground border border-appLayoutBorder rounded-lg px-1",
+              toolbar: "bg-appBackground border-b border-appLayoutBorder",
+              content:
+                "bg-appBackground text-appLayoutText  max-h-[30rem] min-h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize",
+              controlsGroup: "bg-appBackground gap-1",
+              control:
+                "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
+            }}
           >
             <style>
               {`
@@ -289,7 +297,21 @@ export const DetailsPanelDescriptionProp = ({
 
             {editor && (
               <>
-                <BubbleMenu editor={editor}>
+                <RichTextEditor.Toolbar sticky stickyOffset="1rem">
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.Bold />
+                    <RichTextEditor.Italic />
+                    <RichTextEditor.Underline />
+                    <RichTextEditor.Strikethrough />
+                    <RichTextEditor.ClearFormatting />
+                    <RichTextEditor.Highlight />
+                    <RichTextEditor.H1 />
+                    <RichTextEditor.H2 />
+                    <RichTextEditor.BulletList />
+                  </RichTextEditor.ControlsGroup>
+                </RichTextEditor.Toolbar>
+
+                {/* <BubbleMenu editor={editor}>
                   <RichTextEditor.ControlsGroup
                     classNames={{
                       controlsGroup:
@@ -318,7 +340,7 @@ export const DetailsPanelDescriptionProp = ({
                     <RichTextEditor.Strikethrough />
                     <RichTextEditor.Highlight />
                   </RichTextEditor.ControlsGroup>
-                </FloatingMenu>
+                </FloatingMenu> */}
               </>
             )}
 

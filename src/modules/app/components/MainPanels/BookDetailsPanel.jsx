@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import { YTree } from "yjs-orderedtree";
@@ -9,28 +9,28 @@ import { AnimatePresence, motion } from "motion/react";
 import { Textarea } from "@mantine/core";
 import DetailsPanel, {
   formClassName,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
+} from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
 import {
   DetailsPanelBody,
   DetailsPanelProperties,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
-import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+} from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import {
   DetailsPanelButtonOnClick,
   DetailsPanelButtonPlaceHolder,
   DetailsPanelSubmitButton,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelSubmitButton";
+} from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 import {
   DetailsPanelDescriptionProp,
   DetailsPanelStatusProp,
   DetailsPanelWordCountProp,
-} from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelProps";
+} from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
 import Tokenizr from "tokenizr";
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
-import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNotesPanel";
-import { DetailsPanelButton } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelButton";
+import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
+import { DetailsPanelButton } from "../LayoutComponents/DetailsPanel/DetailsPanelButton";
 
 let lexer = new Tokenizr();
 
@@ -71,7 +71,7 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
 
   const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
     useRefreshableTimer({ time: 1000 });
-  const [notesPanelOpened, setNotesPanelOpened] = useState(true);
+  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(bookId));
 

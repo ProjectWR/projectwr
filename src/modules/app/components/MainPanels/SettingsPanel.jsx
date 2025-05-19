@@ -29,10 +29,10 @@ import {
 import { useForm } from "@mantine/form";
 import { useLoadingCallback } from "react-loading-hook";
 import { GrainyElement } from "../../../design-system/GrainyElement";
-import DetailsPanel from "../LayoutComponents/DetailsPanel.jsx/DetailsPanel";
-import DetailsPanelHeader from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelHeader";
-import DetailsPanelDivider from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelBody";
+import DetailsPanel from "../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
+import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import {
   HoverListBody,
   HoverListDivider,
@@ -43,7 +43,7 @@ import {
 } from "../LayoutComponents/HoverListShell";
 import useZoom from "../../hooks/useZoom";
 import { round } from "lib0/math";
-import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel.jsx/DetailsPanelNameInput";
+import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import { useImages } from "../../hooks/useImages";
 import imageManager from "../../lib/image";
 import { GrainyElementButton } from "../LayoutComponents/GrainyHoverButton";

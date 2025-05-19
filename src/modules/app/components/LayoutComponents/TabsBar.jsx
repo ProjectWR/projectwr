@@ -89,30 +89,7 @@ const TabButton = ({ onClick, panelType, mode, breadcrumbs, key }) => {
 
   const action = useCallback(() => {
     activatePanel(panelType, mode, breadcrumbs);
-    if (panelType === "libraries") {
-      setActivity("libraries");
-      setLibraryId(breadcrumbs[0]);
-      setFocusedItem({
-        type: "libraries",
-        libraryId: breadcrumbs[0],
-        itemId: breadcrumbs[1] ? breadcrumbs[1] : null,
-      });
-    }
-
-    if (panelType === "templates") {
-      setActivity("templates");
-      setTemplateId(breadcrumbs[0]);
-    }
-  }, [
-    panelType,
-    mode,
-    breadcrumbs,
-    activatePanel,
-    setFocusedItem,
-    setActivity,
-    setLibraryId,
-    setTemplateId,
-  ]);
+  }, [panelType, mode, breadcrumbs, activatePanel]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
