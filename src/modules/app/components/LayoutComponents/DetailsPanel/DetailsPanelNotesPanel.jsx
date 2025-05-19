@@ -7,6 +7,7 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { max, min } from "lib0/math";
@@ -55,6 +56,8 @@ export const DetailsPanelNotesPanel = ({
 }) => {
   const isMd = appStore((state) => state.isMd);
   const zoom = appStore((state) => state.zoom);
+
+  const headerInputRef = useRef();
 
   const [notesPanelWidth, setNotesPanelWidth] = useState(360);
 
@@ -121,6 +124,23 @@ export const DetailsPanelNotesPanel = ({
     };
   }, [libraryId, scopedItemId, ytree]);
 
+  // useEffect(() => {
+  //   const input = headerInputRef.current;
+  //   if (input) {
+  //     const handleKeyDown = (e) => {
+  //       if (e.key === "Enter") {
+  //         input.blur();
+  //       }
+  //     };
+
+  //     input.addEventListener("keydown", handleKeyDown);
+
+  //     return () => {
+  //       input.removeEventListener("keydown", handleKeyDown);
+  //     };
+  //   }
+  // }, [headerFocused]);
+
   return (
     <AnimatePresence mode="wait">
       {notesPanelOpened && (isMd || isNotesPanelAwake) && (
@@ -150,6 +170,7 @@ export const DetailsPanelNotesPanel = ({
             <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
               <div className="w-full relative h-fit flex items-center">
                 <input
+                  ref={headerInputRef}
                   onFocus={() => {
                     setHeaderFocused(true);
                   }}

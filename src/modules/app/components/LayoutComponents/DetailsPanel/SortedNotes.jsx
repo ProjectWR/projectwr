@@ -88,7 +88,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="h-fit bg-transparent shadow-lg shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutBorder rounded-lg overflow-hidden"
+        className="h-fit bg-transparent shadow-md shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutInverseHover rounded-lg overflow-hidden"
       >
         <div className="h-noteCardHeaderHeight w-full flex pl-2">
           <input
