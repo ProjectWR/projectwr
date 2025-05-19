@@ -4,6 +4,7 @@ import {
   lazy,
   Suspense,
   useCallback,
+  useDeferredValue,
   useEffect,
   useMemo,
   useState,
@@ -32,6 +33,7 @@ import {
   HoverListShell,
 } from "../HoverListShell";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
+import { useDebouncedCallback } from "use-debounce";
 
 // import SortedNotes from "./SortedNotes";
 
@@ -161,6 +163,7 @@ export const DetailsPanelNotesPanel = ({
                   }}
                 />
                 <SearchResults
+                  key={"NoteScopeInputResults"}
                   input={headerText}
                   libraryId={libraryId}
                   visible={headerFocused}
@@ -221,7 +224,7 @@ const SearchResults = ({
 }) => {
   const [searchResults, setSearchResults] = useState([]);
 
-  useEffect(() => {
+  const debouncedSearch = useDebouncedCallback(() => {
     if (input.length > 0) {
       setSearchResults(
         queryData(input).filter(
@@ -233,7 +236,11 @@ const SearchResults = ({
     } else {
       setSearchResults([]);
     }
-  }, [input, libraryId]);
+  }, 500);
+
+  useEffect(() => {
+    debouncedSearch();
+  }, [input, libraryId, debouncedSearch]);
 
   console.log("SEARCH RESULTS: ", searchResults);
 

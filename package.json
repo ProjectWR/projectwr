@@ -89,6 +89,7 @@
     "scheduler": "^0.26.0-canary-fc8a898d-20241226",
     "tailwindcss-animate": "^1.0.7",
     "tokenizr": "^1.7.0",
+    "use-debounce": "^10.0.4",
     "uuid": "^11.0.5",
     "y-fire": "^2.1.1",
     "y-indexeddb": "^9.0.12",
