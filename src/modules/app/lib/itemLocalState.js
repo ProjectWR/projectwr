@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "./dataSubDoc";
 
@@ -9,31 +10,27 @@ class ItemLocalStateManager {
       throw new Error("ItemLocalStateManager is a singleton class. Use getInstance() instead.");
     }
 
-    this.storageKey = 'items'; // Key for localStorage
-    this.callbacks = new Map(); // Use a Map to store callbacks for specific itemIds
+    this.storageKey = 'items';
+    this.callbacks = new Map();
     this.callbacksForAll = new Set();
     instance = this;
   }
 
-  // Register a callback for a specific itemId's isOpened state
   on(itemId, callback) {
     if (!this.callbacks.has(itemId)) {
-      this.callbacks.set(itemId, new Set()); // Initialize a Set for the itemId if it doesn't exist
+      this.callbacks.set(itemId, new Set());
     }
-    this.callbacks.get(itemId).add(callback); // Add the callback to the Set
+    this.callbacks.get(itemId).add(callback);
   }
 
   onAll(callback) {
-    this.callbacksForAll.add(callback); // Initialize a Set for the itemId if it doesn't exist
+    this.callbacksForAll.add(callback);
   }
 
-  // Remove a callback for a specific itemId
   off(itemId, callback) {
     if (this.callbacks.has(itemId)) {
       const callbacksForItem = this.callbacks.get(itemId);
-      callbacksForItem.delete(callback); // Remove the callback from the Set
-
-      // Clean up the Set if it's empty
+      callbacksForItem.delete(callback);
       if (callbacksForItem.size === 0) {
         this.callbacks.delete(itemId);
       }
@@ -41,200 +38,195 @@ class ItemLocalStateManager {
   }
 
   offAll(callback) {
-    this.callbacksForAll.delete(callback); // Initialize a Set for the itemId if it doesn't exist
+    this.callbacksForAll.delete(callback);
   }
 
-  // Trigger all callbacks for a specific itemId
   _trigger(itemId, ...args) {
     if (this.callbacks.has(itemId)) {
-      this.callbacks.get(itemId).forEach((callback) => callback(...args));
+      this.callbacks.get(itemId).forEach(callback => callback(...args));
     }
-    this.callbacksForAll.forEach((callback) => callback(...args));
+    this.callbacksForAll.forEach(callback => callback(...args));
   }
 
-  // Get the entire items dictionary from localStorage
   _getItems() {
     const itemsJSON = localStorage.getItem(this.storageKey);
     return itemsJSON ? JSON.parse(itemsJSON) : {};
   }
 
-  // Save the entire items dictionary to localStorage
   _saveItems(items) {
     localStorage.setItem(this.storageKey, JSON.stringify(items));
   }
 
-  // Get the paper editor template for a specific item
+  _updateItems(producer) {
+    const prevItems = this._getItems();
+    const nextItems = produce(prevItems, producer);
+    if (prevItems !== nextItems) {
+      this._saveItems(nextItems);
+    }
+    return nextItems;
+  }
+
   getPaperEditorTemplate(itemId) {
     const items = this._getItems();
     return items[itemId]?.props?.EditorTemplate || null;
   }
 
-  // Get the paper editor template for a specific item
   setPaperEditorTemplate(itemId, templateId, libraryId) {
-    const items = this._getItems();
-    if (items[itemId]) {
-      items[itemId].props.EditorTemplate = templateId;
-      this._saveItems(items);
-      this._trigger(itemId, templateId, items[itemId]); // Trigger callbacks for the specific itemId
+    const nextItems = this._updateItems(draft => {
+      if (draft[itemId]) {
+        draft[itemId].props.EditorTemplate = templateId;
+      }
+    });
+
+    if (nextItems[itemId]?.props?.EditorTemplate === templateId) {
+      this._trigger(itemId, templateId, nextItems[itemId]);
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
       this.setItemAndParentsOpened(libraryId, itemId);
     }
   }
 
-  // Get the paper editor type for a specific item
   getPaperEditorType(itemId) {
     const items = this._getItems();
     return items[itemId]?.props?.EditorType || null;
   }
 
-  // Check if an item is opened
   isItemOpened(itemId) {
     const items = this._getItems();
     return items[itemId]?.props?.isOpened || false;
   }
 
-  // Set the `isOpened` state of an item
   setItemOpened(itemId, isOpened, libraryId) {
-    const items = this._getItems();
-    if (items[itemId]?.props.libraryId === libraryId) {
-      items[itemId].props.isOpened = isOpened;
-
-      // Update lastOpened timestamp if the item is being opened
-      if (isOpened) {
-        items[itemId].props.lastOpened = Date.now();
+    const nextItems = this._updateItems(draft => {
+      const item = draft[itemId];
+      if (item?.props?.libraryId === libraryId) {
+        item.props.isOpened = isOpened;
+        if (isOpened) {
+          item.props.lastOpened = Date.now();
+        }
       }
+    });
 
-      this._saveItems(items);
-      this._trigger(itemId, isOpened, items[itemId]); // Trigger callbacks for the specific itemId
-
+    const item = nextItems[itemId];
+    if (item?.props?.libraryId === libraryId) {
+      this._trigger(itemId, isOpened, item);
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
       this.setItemAndParentsOpened(libraryId, itemId);
     }
   }
 
-  // Get the lastOpened timestamp for a specific item
   getLastOpened(itemId) {
     const items = this._getItems();
     return items[itemId]?.props?.lastOpened || null;
   }
 
-  // Set the lastOpened timestamp for a specific item
   setLastOpened(itemId, timestamp) {
-    const items = this._getItems();
-    if (items[itemId]) {
-      items[itemId].props.lastOpened = timestamp;
-      this._saveItems(items);
-    } else {
-      console.warn(`Item with ID ${itemId} does not exist.`);
-    }
+    this._updateItems(draft => {
+      if (draft[itemId]) {
+        draft[itemId].props.lastOpened = timestamp;
+      }
+    });
   }
-  
-  // Set the `isOpened` state of an item
+
   setNoteScope(itemId, noteScopeItemId, libraryId) {
-    const items = this._getItems();
-    if (items[itemId]?.props.libraryId === libraryId) {
-      items[itemId].props.noteScopeItemId = noteScopeItemId;
+    let wasUpdated = false;
 
-      this._saveItems(items);
-      this._trigger(itemId, isOpened, items[itemId]); // Trigger callbacks for the specific itemId
+    const nextItems = this._updateItems(draft => {
+      const item = draft[itemId];
+      if (item?.props?.libraryId === libraryId) {
+        item.props.noteScopeItemId = noteScopeItemId;
+        wasUpdated = true;
+      }
+    });
 
+    if (wasUpdated) {
+      this._trigger(itemId, nextItems[itemId].props.noteScopeItemId, nextItems[itemId]);
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
       this.setItemAndParentsOpened(libraryId, itemId);
 
-      if (items[itemId]) {
-        items[itemId].props.noteScopeItemId = noteScopeItemId;
-        this._saveItems(items);
-      } else {
-        console.warn(`Item with ID ${itemId} does not exist.`);
-      }
+      this._updateItems(draft => {
+        if (draft[itemId]) {
+          draft[itemId].props.noteScopeItemId = noteScopeItemId;
+        }
+      });
     }
   }
 
-  // Fetch the latest opened n items
   fetchLatestOpenedItems(n) {
     const items = this._getItems();
-
-    // Filter items that have a lastOpened timestamp
     const itemsWithLastOpened = Object.entries(items).filter(
       ([_, item]) => item.props.lastOpened
     );
-
-    // Sort items by lastOpened timestamp in descending order
     const sortedItems = itemsWithLastOpened.toSorted(
       (a, b) => b[1].props.lastOpened - a[1].props.lastOpened
     );
-
-    // Return the top n items
     return sortedItems.slice(0, n).map(([itemId, item]) => ({
       itemId,
       ...item,
     }));
   }
 
-  // Get the local state of an item
   getItemLocalState(itemId) {
     const items = this._getItems();
     return items[itemId] || null;
   }
 
-  // Delete the local state of an item
   deleteItemLocalState(itemId) {
-    const items = this._getItems();
-    if (items[itemId]) {
-      delete items[itemId];
-      this._saveItems(items);
+    const prevItems = this._getItems();
+    const nextItems = this._updateItems(draft => {
+      delete draft[itemId];
+    });
 
-      // Clean up callbacks for the deleted itemId
+    if (prevItems[itemId] && !nextItems[itemId]) {
       if (this.callbacks.has(itemId)) {
         this.callbacks.delete(itemId);
       }
     }
   }
 
-  // Check if an item has local state
   hasItemLocalState(itemId) {
     const items = this._getItems();
     return !!items[itemId];
   }
 
-  // Create or update the local state of an item
   createItemLocalState(itemId, props) {
-    const items = this._getItems();
-    console.log("creating localItem State with: ", props);
-    items[itemId] = {
-      type: props.type || 'default',
-      props: {
-        libraryId: props.libraryId || null,
-        EditorTemplate: props.EditorTemplate || null,
-        EditorType: props.EditorType || null,
-        isOpened: props.isOpened || false,
-        lastOpened: props.lastOpened || Date.now(), // Initialize lastOpened
-        noteScopeItemId: props.noteScopeItemId || null,
-      },
-    };
-    this._saveItems(items);
+    this._updateItems(draft => {
+      draft[itemId] = {
+        type: props.type || 'default',
+        props: {
+          libraryId: props.libraryId || null,
+          EditorTemplate: props.EditorTemplate || null,
+          EditorType: props.EditorType || null,
+          isOpened: props.isOpened || false,
+          lastOpened: props.lastOpened || Date.now(),
+          noteScopeItemId: props.noteScopeItemId || null,
+        },
+      };
+    });
   }
 
   setItemAndParentsOpened(libraryId, itemId) {
     const libraryYTree = new YTree(dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory"));
     let parentKey = itemId;
-    while (parentKey != "root" && parentKey !== null && parentKey !== undefined) {
-      if (!itemLocalStateManager.hasItemLocalState(parentKey)) {
-        itemLocalStateManager.createItemLocalState(parentKey, {
-          type: libraryYTree.getNodeValueFromKey(parentKey).get("type"),
-          props: { libraryId: libraryId, noteScopeItemId: libraryYTree.getNodeParentFromKey(parentKey) },
+
+    while (parentKey && parentKey !== "root") {
+      if (!this.hasItemLocalState(parentKey)) {
+        const node = libraryYTree.getNodeValueFromKey(parentKey);
+        this.createItemLocalState(parentKey, {
+          type: node?.get("type"),
+          props: {
+            libraryId,
+            noteScopeItemId: libraryYTree.getNodeParentFromKey(parentKey)
+          }
         });
       }
       this.setItemOpened(parentKey, true, libraryId);
       parentKey = libraryYTree.getNodeParentFromKey(parentKey);
     }
   }
-
 }
 
 const itemLocalStateManager = Object.freeze(new ItemLocalStateManager());
-
 export default itemLocalStateManager;

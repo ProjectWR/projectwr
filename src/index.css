@@ -182,11 +182,11 @@
 
     --libraryDirectoryHeaderHeight: calc(var(--uiScale) * 4.5rem);
 
-    --activityBarWidth: calc(var(--uiScale) * 4rem);
+    --activityBarWidth: calc(var(--uiScale) * 2.8rem);
     --activityBarHeight: calc(var(--uiScale) * 3.3rem);
-    --activityButtonHeight: calc(var(--uiScale) * 4rem);
+    --activityButtonHeight: calc(var(--uiScale) * 2.8rem);
     --sidePanelWidth: calc(var(--uiScale) * 360px);
-    --activityBarIconSize: calc(var(--uiScale) * 1.9rem);
+    --activityBarIconSize: calc(var(--uiScale) * 1.5rem);
     --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
 
     --libraryManagerHeaderText: calc(var(--uiScale) * 1.2rem);
@@ -207,7 +207,7 @@
     --detailsPanelWidth: calc(var(--uiScale) * 60rem);
     --detailsPanelButtonHeight: calc(var(--uiScale) * 3rem);
     --detailsPanelButtonIconHeight: calc(var(--uiScale) * 2.2rem);
-    --detailsPanelSubmitButtonWidth: calc(var(--uiScale) * 4rem);
+    --detailsPanelSubmitButtonWidth: calc(var(--uiScale) * 2.5rem);
 
     --paperPanelHeaderHeight: calc(var(--uiScale) * 2.25rem);
     --paperPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
@@ -222,16 +222,16 @@
     --libraryManagerAddButtonSize: calc(var(--uiScale) * 2.15rem);
     --libraryManagerNodeEditButtonWidth: calc(var(--uiScale) * 2rem);
 
-    --libraryDirectoryBookNodeHeight: calc(var(--uiScale) * 2.2rem);
-    --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 2.2rem);
-    --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 2.2rem);
+    --libraryDirectoryBookNodeHeight: calc(var(--uiScale) * 1.8rem);
+    --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 1.8rem);
+    --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 1.8rem);
 
-    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 1rem);
-    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 1rem);
-    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 1rem);
+    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 0.9rem);
+    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 0.9rem);
+    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 0.9 rem);
 
     --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.1rem);
-    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 1.1rem);
+    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 0.9rem);
     --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 1.1rem);
 
     --templateDetailsPanelDeviceHeaderHeight: calc(var(--uiScale) * 4rem);

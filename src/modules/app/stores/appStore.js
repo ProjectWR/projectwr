@@ -93,7 +93,7 @@ export const appStore = create((set) => ({
     return set({ isMd: isMd });
   },
 
-  sidePanelWidth: 360,
+  sidePanelWidth: 240,
   setSidePanelWidth: (sidePanelWidth) => {
     return set({ sidePanelWidth: sidePanelWidth })
   },

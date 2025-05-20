@@ -44,7 +44,7 @@ const useMainPanel = () => {
       setMainPanelState(newState);
 
     },
-    [setMainPanelState, clearFuture, saveStateInHistory, mainPanelState]
+    [setMainPanelState, clearFuture, saveStateInHistory]
   );
 
   useEffect(() => {

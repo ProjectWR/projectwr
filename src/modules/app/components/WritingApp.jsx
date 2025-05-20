@@ -123,9 +123,8 @@ const WritingApp = () => {
 
       let newWidth = info.point.x - rect.left;
 
-      const MIN_WIDTH = 0.77 * zoom * 360;
+      const MIN_WIDTH = 240 * zoom;
       const MAX_WIDTH = 2 * zoom * 360;
-
 
       newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
@@ -143,7 +142,7 @@ const WritingApp = () => {
 
     let newWidth = rect.right - rect.left;
 
-    const MIN_WIDTH = 0.77 * zoom * 360;
+    const MIN_WIDTH = 240 * zoom;
     const MAX_WIDTH = 2 * zoom * 360;
 
     newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));

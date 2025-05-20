@@ -26,6 +26,7 @@
 - Add linking
 - ~~Tabbed Writing Format~~
 - ~~Grammarly/language tool/etc. integration~~
+- import export to formats, from file directory to zip file
 - google drive and one drive sync
 - Completion Status for each item
 - ~~IMPORTANT: change internal structure of yjs ordered tree~~

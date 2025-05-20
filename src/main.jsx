@@ -4,13 +4,12 @@ import { createRoot } from "react-dom/client";
 import { MantineProvider, createTheme } from "@mantine/core";
 
 /* 2. Import Mantine styles defined in `mantine` layer */
-import "@mantine/core/styles.layer.css";
+import "@mantine/core/styles.css";
 import "@mantine/tiptap/styles.css";
 
 import "./index.css";
 
 import App from "./App.jsx";
-import { RichTextEditor } from "@mantine/tiptap";
 
 const theme = createTheme({
   activeClassName: "",

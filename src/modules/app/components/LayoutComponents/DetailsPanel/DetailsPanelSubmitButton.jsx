@@ -1,3 +1,4 @@
+import { Popover } from "@mantine/core";
 import { AnimatePresence, motion } from "motion/react";
 
 export const DetailsPanelSubmitButton = ({ unsavedChangesExist }) => {
@@ -65,32 +66,42 @@ export const DetailsPanelButtonOnClick = ({
           initial={{
             width: 0,
             opacity: 0,
-            paddingRight: 0,
-            paddingLeft: 0,
             padding: 0,
           }}
           animate={{
             width: "var(--detailsPanelSubmitButtonWidth)",
+            padding: "0.15rem",
             opacity: 1,
           }}
           exit={{
             width: 0,
             opacity: 0,
-            paddingRight: 0,
-            paddingLeft: 0,
-
             padding: 0,
           }}
           onClick={onClick}
           className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-t-md
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
-                    flex items-center justify-center
+                    flex items-center justify-center relative
                     `}
         >
           {icon}
         </motion.button>
       )}
     </AnimatePresence>
+  );
+};
+
+export const PopOverTargetButton = ({ children }) => {
+  return (
+    <Popover.Target>
+      <button
+        className="h-libraryManagerAddButtonSize w-detailsPanelSubmitButtonWidth transition-colors duration-100 rounded-t-md
+                       hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                       flex items-center justify-center relative"
+      >
+        {children}
+      </button>
+    </Popover.Target>
   );
 };
 
@@ -120,7 +131,7 @@ export const DetailsPanelButtonPlaceHolder = ({ exist = true }) => {
           }}
           transition={{ type: "linear" }}
           className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-t-md
-                    hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
+                  
                     flex items-center justify-center
                     `}
         ></motion.div>

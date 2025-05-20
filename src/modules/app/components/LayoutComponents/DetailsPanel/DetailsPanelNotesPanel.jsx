@@ -50,6 +50,8 @@ export const DetailsPanelNotesPanel = ({
   itemId,
   ytree,
   notesPanelOpened,
+  notesPanelWidth,
+  setNotesPanelWidth,
   isNotesPanelAwake,
   refreshNotesPanel,
   keepNotesPanelAwake,
@@ -58,8 +60,6 @@ export const DetailsPanelNotesPanel = ({
   const zoom = appStore((state) => state.zoom);
 
   const headerInputRef = useRef();
-
-  const [notesPanelWidth, setNotesPanelWidth] = useState(360);
 
   const [sortedNoteIds, setSortedNoteIds] = useState([]);
 
@@ -91,7 +91,7 @@ export const DetailsPanelNotesPanel = ({
 
       if (!rect || !rectBody) return;
 
-      let newWidth = info.point.x - rect.left;
+      let newWidth = rect.right - info.point.x;
 
       const MIN_WIDTH = 0.77 * zoom * 360;
       const MAX_WIDTH = 0.45 * rectBody.width;
@@ -152,7 +152,7 @@ export const DetailsPanelNotesPanel = ({
         <motion.div
           key={`NotesPanelMotionContainer-${itemId}`}
           id="NotesPanelMotionContainer"
-          className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
+          className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${
             !isMd &&
             "absolute top-0 left-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
           } `}
@@ -223,7 +223,7 @@ export const DetailsPanelNotesPanel = ({
               </Suspense>
             </ScrollArea>
             <motion.div
-              className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
+              className="absolute h-full w-[6px] top-0 left-0 z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
               drag="x"
               dragConstraints={{
                 top: 0,

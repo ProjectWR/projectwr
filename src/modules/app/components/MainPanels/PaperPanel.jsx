@@ -23,10 +23,12 @@ import {
   DetailsPanelButtonOnClick,
   DetailsPanelButtonPlaceHolder,
   DetailsPanelSubmitButton,
+  PopOverTargetButton,
 } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
+import { Popover, PopoverDropdown, Text } from "@mantine/core";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -107,6 +109,8 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 
   const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
     useRefreshableTimer({ time: 1000 });
+  const [notesPanelWidth, setNotesPanelWidth] = useState(284.8);
+
   const [notesPanelOpened, setNotesPanelOpened] = useState(false);
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(paperId));
@@ -177,6 +181,41 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             </button>
           )}
 
+          <Popover
+            classNames={{ dropdown: "w-[30rem] h-[30rem]" }}
+            position="bottom-start"
+            shadow="md"
+          >
+            {" "}
+            <PopOverTargetButton>
+              <span className="icon-[bi--sliders2] w-[75%] h-[75%]"></span>
+            </PopOverTargetButton>
+            <PopoverDropdown>
+              <Text size="xs">
+                This is uncontrolled popover, it is opened when button is
+                clicked
+              </Text>
+            </PopoverDropdown>
+          </Popover>
+
+          <DetailsPanelNameInput
+            name="item_title"
+            onChange={handleChange}
+            value={itemProperties.item_title}
+          />
+
+          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
+
+          {/* <motion.div
+            animate={{
+              width:
+                notesPanelOpened && (isMd || isNotesPanelAwake)
+                  ? `${notesPanelWidth}px`
+                  : 0,
+            }}
+            transition={{ ease: "linear", duration: 0.1 }}
+          ></motion.div> */}
+
           <DetailsPanelButtonOnClick
             onClick={() => {
               if (isMd) {
@@ -191,53 +230,16 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             exist={true}
             icon={
               notesPanelOpened && (isMd || isNotesPanelAwake) ? (
-                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
+                <span className="icon-[bi--collection-fill] w-9/12 h-9/12"></span>
               ) : (
-                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
+                <span className="icon-[bi--collection] w-9/12 h-9/12"></span>
               )
             }
           />
-
-          <DetailsPanelButtonOnClick
-            onClick={() => {
-              console.log("edit paper settings button");
-              if (!(appStoreItemId === paperId && itemMode === "settings")) {
-                setItemId(paperId);
-                setItemMode("settings");
-                if (deviceType === "mobile") {
-                  setPanelOpened(false);
-                }
-
-                activatePanel("libraries", "settings", [libraryId, paperId]);
-              }
-            }}
-            exist={true}
-            icon={<span className="icon-[bi--sliders2] w-[75%] h-[75%]"></span>}
-          />
-
-          <DetailsPanelNameInput
-            name="item_title"
-            onChange={handleChange}
-            value={itemProperties.item_title}
-          />
-
-          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-
-          <DetailsPanelButtonPlaceHolder />
-          <DetailsPanelButtonPlaceHolder />
         </DetailsPanelHeader>
 
         <DetailsPanelDivider />
         <DetailsPanelBody>
-          <DetailsPanelNotesPanel
-            libraryId={libraryId}
-            itemId={ytree.getNodeParentFromKey(paperId)}
-            ytree={ytree}
-            notesPanelOpened={notesPanelOpened}
-            isNotesPanelAwake={isNotesPanelAwake}
-            refreshNotesPanel={refreshNotesPanel}
-            keepNotesPanelAwake={keepNotesPanelAwake}
-          />
           <motion.div
             id="PaperBody"
             className="grow h-full  min-w-0 minbasis-0"
@@ -249,6 +251,17 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               preferences={preferences}
             />
           </motion.div>
+          <DetailsPanelNotesPanel
+            libraryId={libraryId}
+            itemId={ytree.getNodeParentFromKey(paperId)}
+            ytree={ytree}
+            notesPanelWidth={notesPanelWidth}
+            setNotesPanelWidth={setNotesPanelWidth}
+            notesPanelOpened={notesPanelOpened}
+            isNotesPanelAwake={isNotesPanelAwake}
+            refreshNotesPanel={refreshNotesPanel}
+            keepNotesPanelAwake={keepNotesPanelAwake}
+          />
         </DetailsPanelBody>
       </form>
     </DetailsPanel>
