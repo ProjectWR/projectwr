@@ -56,6 +56,7 @@ export const DetailsPanelButtonOnClick = ({
       className={`icon-[material-symbols-light--check-rounded] ${"hover:text-appLayoutHighlight"} rounded-full w-full h-full`}
     ></motion.span>
   ),
+  className
 }) => {
   return (
     <AnimatePresence>
@@ -82,6 +83,7 @@ export const DetailsPanelButtonOnClick = ({
           className={`h-libraryManagerAddButtonSize min-h-libraryManagerAddButtonSize transition-colors duration-100 rounded-t-md
                     hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight 
                     flex items-center justify-center relative
+                    ${className}
                     `}
         >
           {icon}

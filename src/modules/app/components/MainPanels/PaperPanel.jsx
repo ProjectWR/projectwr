@@ -29,6 +29,7 @@ import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelB
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { Popover, PopoverDropdown, Text } from "@mantine/core";
+import { EditorStylePickerButton } from "../LayoutComponents/DetailsPanel/EditorStylePickerButton";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -48,6 +49,8 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
 
@@ -106,12 +109,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
       setShowActivityBar(true);
     };
   }, [setShowActivityBar, deviceType]);
-
-  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
-    useRefreshableTimer({ time: 1000 });
-  const [notesPanelWidth, setNotesPanelWidth] = useState(284.8);
-
-  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(paperId));
 
@@ -182,19 +179,24 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
           )}
 
           <Popover
-            classNames={{ dropdown: "w-[30rem] h-[30rem]" }}
+            offset={{ mainAxis: 6, crossAxis: 5 }}
+            classNames={{
+              dropdown:
+                "w-[30rem] min-w-[30rem] h-[30rem] shadow-md shadow-appLayoutGentleShadow bg-appBackgroundAccent/90 border border-appLayoutBorder text-appLayoutText backdrop-blur-sm",
+              arrow: "border border-appLayoutBorder",
+            }}
             position="bottom-start"
-            shadow="md"
           >
             {" "}
             <PopOverTargetButton>
-              <span className="icon-[bi--sliders2] w-[75%] h-[75%]"></span>
+              <span className="icon-[bi--sliders2] w-[70%] h-[70%]"></span>
             </PopOverTargetButton>
             <PopoverDropdown>
-              <Text size="xs">
-                This is uncontrolled popover, it is opened when button is
-                clicked
-              </Text>
+              <EditorStylePickerButton
+                ytree={ytree}
+                paperId={paperId}
+                libraryId={libraryId}
+              />
             </PopoverDropdown>
           </Popover>
 
@@ -206,6 +208,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
 
+          <DetailsPanelButtonPlaceHolder />
           {/* <motion.div
             animate={{
               width:
@@ -215,7 +218,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             }}
             transition={{ ease: "linear", duration: 0.1 }}
           ></motion.div> */}
-
+          {/* 
           <DetailsPanelButtonOnClick
             onClick={() => {
               if (isMd) {
@@ -235,7 +238,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
                 <span className="icon-[bi--collection] w-9/12 h-9/12"></span>
               )
             }
-          />
+          /> */}
         </DetailsPanelHeader>
 
         <DetailsPanelDivider />
@@ -251,7 +254,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               preferences={preferences}
             />
           </motion.div>
-          <DetailsPanelNotesPanel
+          {/* <DetailsPanelNotesPanel
             libraryId={libraryId}
             itemId={ytree.getNodeParentFromKey(paperId)}
             ytree={ytree}
@@ -261,7 +264,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             isNotesPanelAwake={isNotesPanelAwake}
             refreshNotesPanel={refreshNotesPanel}
             keepNotesPanelAwake={keepNotesPanelAwake}
-          />
+          /> */}
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

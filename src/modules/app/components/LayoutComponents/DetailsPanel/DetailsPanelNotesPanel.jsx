@@ -11,7 +11,7 @@ import {
   useState,
 } from "react";
 import { max, min } from "lib0/math";
-import { YTree } from "yjs-orderedtree";
+import { checkForYTree, YTree } from "yjs-orderedtree";
 import useYMap from "../../../hooks/useYMap";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import { equalityDeep } from "lib0/function";
@@ -35,10 +35,14 @@ import {
 } from "../HoverListShell";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { useDebouncedCallback } from "use-debounce";
+import { mainPanelStore } from "../../../stores/mainPanelStore";
 
-// import SortedNotes from "./SortedNotes";
+const lazyWithPrefetch = (factory) => {
+  factory();
+  return lazy(factory);
+};
 
-const SortedNotes = lazy(() => import("./SortedNotes"));
+const NoteCard = lazyWithPrefetch(() => import("./NoteCard"));
 
 /**
  *
@@ -46,9 +50,6 @@ const SortedNotes = lazy(() => import("./SortedNotes"));
  * @returns
  */
 export const DetailsPanelNotesPanel = ({
-  libraryId,
-  itemId,
-  ytree,
   notesPanelOpened,
   notesPanelWidth,
   setNotesPanelWidth,
@@ -59,25 +60,46 @@ export const DetailsPanelNotesPanel = ({
   const isMd = appStore((state) => state.isMd);
   const zoom = appStore((state) => state.zoom);
 
-  const headerInputRef = useRef();
+  const notesPanelState = appStore((state) => state.notesPanelState);
 
-  const [sortedNoteIds, setSortedNoteIds] = useState([]);
+  const { libraryId, itemId } = notesPanelState;
 
-  const [scopedItemId, setScopedItemId] = useState(
-    libraryId === itemId ? "root" : itemId
-  );
+  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
 
-  const itemMapState = useYMap(
-    libraryId === itemId
-      ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-      : ytree.getNodeValueFromKey(scopedItemId)
-  );
+  const { panelType } = mainPanelState;
 
-  const [headerText, setHeaderText] = useState(
-    itemMapState.item_properties.item_title
-  );
+  const [error, setError] = useState(null);
 
-  const [headerFocused, setHeaderFocused] = useState(false);
+
+  const [ytree, setYtree] = useState(null);
+
+  useEffect(() => {
+    try {
+      if (libraryId && dataManagerSubdocs.getLibrary(libraryId)) {
+        if (
+          !checkForYTree(
+            dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+          )
+        ) {
+          throw new Error("ytree doesn't already exist");
+        }
+
+        setYtree(
+          new YTree(
+            dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+          )
+        );
+
+        setError(null);
+        return () => {};
+      } else {
+        throw new Error("library not found locally");
+      }
+    } catch (e) {
+      setError("Something went wrong");
+      return () => {};
+    }
+  }, [libraryId]);
 
   const handleDrag = useCallback(
     (event, info) => {
@@ -93,9 +115,8 @@ export const DetailsPanelNotesPanel = ({
 
       let newWidth = rect.right - info.point.x;
 
-      const MIN_WIDTH = 0.77 * zoom * 360;
-      const MAX_WIDTH = 0.45 * rectBody.width;
-
+      const MIN_WIDTH = zoom * 284.8;
+      const MAX_WIDTH = 2 * zoom * 360 + zoom * 44.8;
 
       newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
@@ -104,14 +125,92 @@ export const DetailsPanelNotesPanel = ({
     [setNotesPanelWidth, zoom]
   );
 
+  return (
+    <AnimatePresence mode="wait">
+      {panelType === "libraries" &&
+        notesPanelOpened &&
+        (isMd || isNotesPanelAwake) && (
+          <motion.div
+            key={`NotesPanelMotionContainer-${libraryId}`}
+            id="NotesPanelMotionContainer"
+            className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${
+              !isMd &&
+              "absolute top-0 right-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
+            } `}
+            initial={{ opacity: 0, width: 0, minWidth: 0 }}
+            animate={{
+              opacity: 1,
+              width: `${notesPanelWidth}px`,
+              minWidth: `${notesPanelWidth}px`,
+            }}
+            exit={{ opacity: 0, width: 0, minWidth: 0 }}
+            transition={{ duration: 0.1 }}
+            onHoverStart={() => {
+              keepNotesPanelAwake();
+            }}
+            onHoverEnd={() => {
+              refreshNotesPanel();
+            }}
+          >
+            <div className="w-full h-full @container flex flex-col relative">
+              {error}
+
+              {!error && libraryId && itemId && ytree ? (
+                <NotesContent
+                  libraryId={libraryId}
+                  itemId={itemId}
+                  ytree={ytree}
+                />
+              ) : (
+                <div className="w-full h-full"> No Library item opened </div>
+              )}
+
+              <motion.div
+                className="absolute h-full w-[6px] top-0 left-0 z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
+                drag="x"
+                dragConstraints={{
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+                dragElastic={0}
+                dragMomentum={false}
+                onDrag={handleDrag}
+              ></motion.div>
+            </div>
+          </motion.div>
+        )}
+    </AnimatePresence>
+  );
+};
+
+const NotesContent = ({ libraryId, itemId, ytree }) => {
+  const headerInputRef = useRef();
+
+  const [sortedNoteIds, setSortedNoteIds] = useState([]);
+
+  const setNotesPanelState = appStore((state) => state.setNotesPanelState);
+
+  const itemMapState = useYMap(
+    itemId === "root"
+      ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+      : ytree.getNodeValueFromKey(itemId)
+  );
+
+  const [headerText, setHeaderText] = useState(
+    itemMapState.item_properties.item_title
+  );
+
+  const [headerFocused, setHeaderFocused] = useState(false);
   useEffect(() => {
     const updateSortedNoteIds = () => {
       let sortedChildren = [];
 
       try {
         sortedChildren = ytree.sortChildrenByOrder(
-          ytree.getNodeChildrenFromKey(scopedItemId),
-          scopedItemId
+          ytree.getNodeChildrenFromKey(itemId),
+          itemId
         );
       } catch (e) {
         console.error("Error fetching Note IDs in Notes Panel: ", e);
@@ -127,118 +226,89 @@ export const DetailsPanelNotesPanel = ({
     return () => {
       ytree.unobserve(updateSortedNoteIds);
     };
-  }, [libraryId, scopedItemId, ytree]);
-
-  // useEffect(() => {
-  //   const input = headerInputRef.current;
-  //   if (input) {
-  //     const handleKeyDown = (e) => {
-  //       if (e.key === "Enter") {
-  //         input.blur();
-  //       }
-  //     };
-
-  //     input.addEventListener("keydown", handleKeyDown);
-
-  //     return () => {
-  //       input.removeEventListener("keydown", handleKeyDown);
-  //     };
-  //   }
-  // }, [headerFocused]);
+  }, [libraryId, itemId, ytree]);
 
   return (
-    <AnimatePresence mode="wait">
-      {notesPanelOpened && (isMd || isNotesPanelAwake) && (
-        <motion.div
-          key={`NotesPanelMotionContainer-${itemId}`}
-          id="NotesPanelMotionContainer"
-          className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${
-            !isMd &&
-            "absolute top-0 left-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
-          } `}
-          initial={{ opacity: 0, width: 0, minWidth: 0 }}
-          animate={{
-            opacity: 1,
-            width: `${notesPanelWidth}px`,
-            minWidth: `${notesPanelWidth}px`,
-          }}
-          exit={{ opacity: 0, width: 0, minWidth: 0 }}
-          transition={{ duration: 0.1 }}
-          onHoverStart={() => {
-            keepNotesPanelAwake();
-          }}
-          onHoverEnd={() => {
-            refreshNotesPanel();
-          }}
-        >
-          <div className="w-full h-full @container flex flex-col relative">
-            <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
-              <div className="w-full relative h-fit flex items-center">
-                <input
-                  ref={headerInputRef}
-                  onFocus={() => {
-                    setHeaderFocused(true);
-                  }}
-                  onBlur={() => {
-                    setHeaderFocused(false);
-                  }}
-                  className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:text-appLayoutText focus:outline-0 flex items-center justify-start px-2 rounded-md"
-                  value={headerText}
-                  onChange={(e) => {
-                    setHeaderText(e.target.value);
-                  }}
-                />
-                <SearchResults
-                  key={"NoteScopeInputResults"}
-                  input={headerText}
-                  libraryId={libraryId}
-                  visible={headerFocused}
-                  onClick={(result, itemTitle) => {
-                    setScopedItemId(result.id);
-                    setHeaderText(itemTitle);
-                  }}
-                />
-              </div>
-            </div>
-            <div className="divider w-full px-2">
-              <div className="w-full h-px bg-appLayoutBorder"></div>
-            </div>
-            <ScrollArea
-              overscrollBehavior="none"
-              scrollbars="y"
-              type="hover"
-              classNames={{
-                root: `grow p-3 basis-0 w-full`,
-                scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5] opacity-70`,
-                thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
-                content: "h-fit w-full grid grid-cols-1 auto-rows-max gap-3 ",
-              }}
-            >
-              <Suspense fallback={<div>Loading</div>}>
-                <SortedNotes
-                  sortedNoteIds={sortedNoteIds}
-                  ytree={ytree}
-                  libraryId={libraryId}
-                />
-              </Suspense>
-            </ScrollArea>
-            <motion.div
-              className="absolute h-full w-[6px] top-0 left-0 z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
-              drag="x"
-              dragConstraints={{
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}
-              dragElastic={0}
-              dragMomentum={false}
-              onDrag={handleDrag}
-            ></motion.div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <>
+      <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
+        <div className="w-full relative h-fit flex items-center">
+          <input
+            ref={headerInputRef}
+            onFocus={() => {
+              setHeaderFocused(true);
+            }}
+            onBlur={() => {
+              setHeaderFocused(false);
+            }}
+            className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:text-appLayoutText focus:outline-0 flex items-center justify-start px-2 rounded-md"
+            value={headerText}
+            onChange={(e) => {
+              setHeaderText(e.target.value);
+            }}
+          />
+          <SearchResults
+            key={"NoteScopeInputResults"}
+            input={headerText}
+            libraryId={libraryId}
+            visible={headerFocused}
+            onClick={(result, itemTitle) => {
+              console.log("RESULT: ", result);
+              if (result.id === result.libraryId) {
+                setNotesPanelState({
+                  libraryId: result.libraryId,
+                  itemId: "root",
+                });
+              } else {
+                setNotesPanelState({
+                  libraryId: result.libraryId,
+                  itemId: result.id,
+                });
+              }
+
+              setHeaderText(itemTitle);
+            }}
+          />
+        </div>
+      </div>
+      <div className="divider w-full px-2">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
+      <ScrollArea
+        overscrollBehavior="none"
+        scrollbars="y"
+        type="hover"
+        classNames={{
+          root: `grow p-3 basis-0 w-full`,
+          scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5] opacity-70`,
+          thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
+          content: "h-fit w-full grid grid-cols-1 auto-rows-max gap-3 ",
+        }}
+      >
+        <Suspense fallback={<div>Loading</div>}>
+          <SortedNotes
+            sortedNoteIds={sortedNoteIds}
+            ytree={ytree}
+            libraryId={libraryId}
+          />
+        </Suspense>
+      </ScrollArea>
+    </>
+  );
+};
+
+const SortedNotes = ({ sortedNoteIds, libraryId, ytree }) => {
+  return (
+    <>
+      {sortedNoteIds &&
+        sortedNoteIds.map((noteId) => (
+          <NoteCard
+            key={noteId}
+            noteId={noteId}
+            libraryId={libraryId}
+            ytree={ytree}
+          />
+        ))}
+    </>
   );
 };
 
@@ -255,8 +325,9 @@ const SearchResults = ({
       setSearchResults(
         queryData(input).filter(
           (result) =>
-            result.libraryId === libraryId &&
-            (result.type === "book" || result.type === "section")
+            result.type === "book" ||
+            result.type === "section" ||
+            result.id === result.libraryId
         )
       );
     } else {
@@ -268,14 +339,13 @@ const SearchResults = ({
     debouncedSearch();
   }, [input, libraryId, debouncedSearch]);
 
-
   return (
     <HoverListShell className={"min-w-0"} condition={visible}>
       <HoverListHeader>
         <span>
           {" "}
           {searchResults.length}{" "}
-          {searchResults.length === 1 ? "result" : "results"} in your library
+          {searchResults.length === 1 ? "result" : "results"} in your libraries
         </span>
       </HoverListHeader>
       <HoverListDivider />

@@ -12,23 +12,6 @@ import { equalityDeep } from "lib0/function";
 import { AnimatePresence, motion } from "motion/react";
 import useMainPanel from "../../../hooks/useMainPanel";
 
-const SortedNotes = ({ sortedNoteIds, libraryId, ytree }) => {
-  return (
-    <>
-      {sortedNoteIds &&
-        sortedNoteIds.map((noteId) => (
-          <NoteCard
-            key={noteId}
-            noteId={noteId}
-            libraryId={libraryId}
-            ytree={ytree}
-          />
-        ))}
-    </>
-  );
-};
-
-export default SortedNotes;
 
 const NoteCard = ({ noteId, libraryId, ytree }) => {
   const { deviceType } = useDeviceType();
@@ -131,6 +114,8 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
     </AnimatePresence>
   );
 };
+
+export default NoteCard;
 
 const NoteCardEditor = ({
   itemProperties,

@@ -11,9 +11,38 @@ import { appStore } from "../../stores/appStore";
 
 export const TabsBar = () => {
   /**
+   * @type {MainPanelState}
+   * @typedef {Object} MainPanelState
+   * @property {string} panelType - The current panel type (e.g., "home").
+   * @property {*} mode - The current mode of the panel (can be null or specific mode).
+   * @property {Array} breadcrumbs - An array of breadcrumb strings representing the navigation path.
+   */
+  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
+  /**
    * @type {Array<MainPanelState>}
    */
   const tabs = mainPanelStore((state) => state.tabs);
+
+  const setTabs = mainPanelStore((state) => state.setTabs);
+
+  useEffect(() => {
+    const newState = JSON.parse(JSON.stringify(mainPanelState));
+
+    if (
+      !tabs?.find((value) => {
+        return equalityDeep(value, newState);
+      })
+    ) {
+      const newTabs = JSON.parse(JSON.stringify(tabs));
+
+      newTabs.push(newState);
+      if (newTabs.length > 10) {
+        newTabs.shift();
+      }
+
+      setTabs(newTabs);
+    }
+  }, [mainPanelState, setTabs]);
 
   return (
     <ScrollArea
@@ -21,12 +50,14 @@ export const TabsBar = () => {
       scrollbars="x"
       type="hover"
       classNames={{
-        root: `w-full h-fit p-0`,
+        root: `grow basis-0 min-w-0 h-tabsHeight p-0`,
         scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
         thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
+        viewport: `h-full w-full`,
+        content: `h-full w-full`,
       }}
     >
-      <div className="w-fit min-w-full h-fit flex items-center">
+      <div className="w-fit min-w-full h-full flex items-center">
         <AnimatePresence>
           {tabs?.map((tab) => {
             const { panelType, mode, breadcrumbs } = tab;
@@ -41,7 +72,7 @@ export const TabsBar = () => {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `var(--tabWidth)` }}
                 exit={{ opacity: 0, width: 0 }}
-                className="h-tabsHeight"
+                className="h-full"
               >
                 <TabButton
                   panelType={panelType}
@@ -401,7 +432,7 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
               breadcrumbs,
             })
               ? "border-t-appLayoutHighlight border-t border-b border-b-transparent"
-              : "border-t-transparent border-t border-b border-b-appLayoutBorder hover:bg-appLayoutInverseHover "
+              : "border-t-transparent border-t border-b border-b-appLayoutBorder hover:bg-appLayoutInverseHover hover:border-t-appLayoutInverseHover "
           }
         `}
     >
@@ -514,8 +545,15 @@ const UnusedSpace = () => {
   return (
     <div
       ref={dndRef}
-      className={`grow basis-b border-b border-b-appLayoutBorder h-tabsHeight
-        ${isOverCurrent && isHovering && `border-l border-l-appLayoutHighlight`}
+      style={{
+        height: "100%",
+      }}
+      className={`grow basis-0 border-b border-b-appLayoutBorder h-[4rem]
+        ${
+          isOverCurrent && isHovering
+            ? ` border-l border-l-appLayoutHighlight`
+            : ""
+        }
         `}
     ></div>
   );

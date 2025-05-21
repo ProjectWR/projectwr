@@ -98,5 +98,18 @@ export const appStore = create((set) => ({
     return set({ sidePanelWidth: sidePanelWidth })
   },
 
+  notesPanelWidth: 284.8,
+  setNotesPanelWidth: (notesPanelWidth) => {
+    return set({ notesPanelWidth: notesPanelWidth })
+  },
 
+  notesPanelOpened: true,
+  setNotesPanelOpened: (notesPanelOpened) => {
+    return set({ notesPanelOpened: notesPanelOpened });
+  },
+
+  notesPanelState: { libraryId: null, itemId: null },
+  setNotesPanelState: (notesPanelState) => {
+    return set({ notesPanelState: notesPanelState });
+  },
 }));

@@ -1,7 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import useStoreHistory from "./useStoreHistory";
 import { equalityDeep } from "lib0/function";
+import { appStore } from "../stores/appStore";
 
 const useMainPanel = () => {
   /**
@@ -42,29 +43,9 @@ const useMainPanel = () => {
       };
 
       setMainPanelState(newState);
-
     },
     [setMainPanelState, clearFuture, saveStateInHistory]
   );
-
-  useEffect(() => {
-    const newState = JSON.parse(JSON.stringify(mainPanelState));
-
-    if (
-      !tabs?.find((value) => {
-        return equalityDeep(value, newState);
-      })
-    ) {
-      const newTabs = JSON.parse(JSON.stringify(tabs));
-
-      newTabs.push(newState);
-      if (newTabs.length > 10) {
-        newTabs.shift();
-      }
-
-      setTabs(newTabs);
-    }
-  }, [mainPanelState, setTabs]);
 
   return { mainPanelState, activatePanel };
 };

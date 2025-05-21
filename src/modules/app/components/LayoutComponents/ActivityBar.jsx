@@ -63,6 +63,8 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               setPanelOpened(true);
 
               if (activity === "libraries" && libraryId !== "unselected") {
+                console.log("ACTIVITY AND LIBRARYID INSIDE", activity, libraryId);
+
                 setLibraryId("unselected");
               }
             }}

@@ -23,8 +23,11 @@ import { getAncestorsForBreadcrumbs } from "../../lib/util";
 import { TabsBar } from "./TabsBar";
 import NoteDetailsPanel from "../MainPanels/NoteDetailsPanel";
 import { ErrorBoundary } from "react-error-boundary";
+import { DetailsPanelButtonOnClick } from "./DetailsPanel/DetailsPanelSubmitButton";
+import { mainPanelStore } from "../../stores/mainPanelStore";
+import { equalityDeep } from "lib0/function";
 
-const MainPanel = ({}) => {
+const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   const { deviceType } = useDeviceType();
 
   const {
@@ -61,7 +64,26 @@ const MainPanel = ({}) => {
 
   const activity = appStore((state) => state.activity);
 
+  const setNotesPanelState = appStore((state) => state.setNotesPanelState);
+
+  const notesScopeLibraryIdRef = useRef(null);
+
   const { mainPanelState, activatePanel } = useMainPanel();
+
+  useEffect(() => {
+    const { panelType, mode, breadcrumbs } = mainPanelState;
+    if (panelType === "libraries") {
+      const libraryId = breadcrumbs[0];
+
+      if (
+        notesScopeLibraryIdRef.current === null ||
+        notesScopeLibraryIdRef.current !== libraryId
+      ) {
+        notesScopeLibraryIdRef.current = libraryId;
+        setNotesPanelState({ libraryId: libraryId, itemId: "root" });
+      }
+    }
+  }, [mainPanelState, setNotesPanelState]);
 
   const key = useRef("empty");
 
@@ -96,8 +118,6 @@ const MainPanel = ({}) => {
     const youngestId = breadcrumbs[breadcrumbs.length - 1];
 
     if (panelType === "libraries") {
-      // setActivity("libraries");
-      setLibraryId(rootId);
       setFocusedItem({
         type: "libraries",
         libraryId: rootId,
@@ -150,7 +170,6 @@ const MainPanel = ({}) => {
       const ancestorIds = getAncestorsForBreadcrumbs(rootId, youngestId);
 
       const itemMap = libraryYTree.getNodeValueFromKey(youngestId);
-
 
       for (let i = 1; i < ancestorIds.length; i++) {
         const breadcrumb = ancestorIds[i];
@@ -446,8 +465,13 @@ const MainPanel = ({}) => {
 
   return (
     <motion.div className="w-full h-full overflow-hidden z-3 flex flex-col items-center justify-center">
-      <TabsBar />
-
+      <section className="w-full h-tabsHeight flex">
+        <TabsBar />
+        <NotesPanelOpenButton
+          isNotesPanelAwake={isNotesPanelAwake}
+          refreshNotesPanel={refreshNotesPanel}
+        />
+      </section>
       <AnimatePresence mode="wait">
         <motion.div
           key={key.current}
@@ -484,5 +508,44 @@ const PrependBreadcrumbs = ({ breadcrumbValues, children }) => {
         {children}
       </section>
     </>
+  );
+};
+
+const NotesPanelOpenButton = ({ isNotesPanelAwake, refreshNotesPanel }) => {
+  const setNotesPanelOpened = appStore((state) => state.setNotesPanelOpened);
+  const notesPanelOpened = appStore((state) => state.notesPanelOpened);
+  const isMd = appStore((state) => state.isMd);
+
+  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
+
+  const { panelType } = mainPanelState;
+
+  return (
+    <AnimatePresence>
+      {panelType === "libraries" && (
+        <motion.button
+          initial={{ width: 0 }}
+          animate={{ width: "var(--tabsHeight)" }}
+          exit={{ width: 0 }}
+          onClick={() => {
+            if (isMd) {
+              setNotesPanelOpened(!notesPanelOpened);
+            } else {
+              if (!(notesPanelOpened && isNotesPanelAwake)) {
+                setNotesPanelOpened(true);
+                refreshNotesPanel();
+              }
+            }
+          }}
+          className={`h-full rounded-none hover:bg-appLayoutHover hover:text-appLayoutHighlight border-b border-appLayoutBorder flex items-center justify-center`}
+        >
+          {notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+            <span className="icon-[solar--telescope-bold] w-[75%] h-[75%]"></span>
+          ) : (
+            <span className="icon-[solar--telescope-bold-duotone] w-[75%] h-[75%]"></span>
+          )}
+        </motion.button>
+      )}
+    </AnimatePresence>
   );
 };

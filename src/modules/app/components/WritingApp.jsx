@@ -49,6 +49,7 @@ import useMainPanel from "../hooks/useMainPanel";
 import imageManager from "../lib/image";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
+import { DetailsPanelNotesPanel } from "./LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -78,6 +79,15 @@ const WritingApp = () => {
   const setIsMd = appStore((state) => state.setIsMd);
 
   const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer();
+
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+
+  const notesPanelWidth = appStore((state) => state.notesPanelWidth);
+  const setNotesPanelWidth = appStore((state) => state.setNotesPanelWidth);
+
+  const notesPanelOpened = appStore((state) => state.notesPanelOpened);
+  const setNotesPanelOpened = appStore((state) => state.setNotesPanelOpened);
 
   const sidePanelWidth = appStore((state) => state.sidePanelWidth);
   const setSidePanelWidth = appStore((state) => state.setSidePanelWidth);
@@ -447,7 +457,7 @@ const WritingApp = () => {
 
               <div
                 id="AppBodyContainer"
-                className={`w-full grow min-h-0 basis-0 flex 
+                className={`w-full grow min-h-0 basis-0 flex relative
               ${deviceType === "desktop" && "flex-row"}
               ${deviceType === "mobile" && "flex-col"}
               `}
@@ -515,7 +525,22 @@ const WritingApp = () => {
                       </AnimatePresence>
                     </motion.div>
 
-                    <MainPanel />
+                    <MainPanel
+                      isNotesPanelAwake={isNotesPanelAwake}
+                      refreshNotesPanel={refreshNotesPanel}
+                    />
+
+                    <DetailsPanelNotesPanel
+                      libraryId={null}
+                      itemId={null}
+                      ytree={null}
+                      notesPanelOpened={notesPanelOpened}
+                      notesPanelWidth={notesPanelWidth}
+                      setNotesPanelWidth={setNotesPanelWidth}
+                      isNotesPanelAwake={isNotesPanelAwake}
+                      refreshNotesPanel={refreshNotesPanel}
+                      keepNotesPanelAwake={keepNotesPanelAwake}
+                    />
                   </>
                 )}
 
