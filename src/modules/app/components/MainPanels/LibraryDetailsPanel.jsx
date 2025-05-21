@@ -40,10 +40,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   console.log("library details panel rendering: ", libraryId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
-    useRefreshableTimer({ time: 1000 });
-  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
-
   const setLibraryId = appStore((state) => state.setLibraryId);
   const [isDoorOpen, setIsDoorOpen] = useState(false);
 
@@ -173,26 +169,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
             </>
           )}
 
-          <DetailsPanelButtonOnClick
-            onClick={() => {
-              if (isMd) {
-                setNotesPanelOpened(!notesPanelOpened);
-              } else {
-                if (!(notesPanelOpened && isNotesPanelAwake)) {
-                  setNotesPanelOpened(true);
-                  refreshNotesPanel();
-                }
-              }
-            }}
-            exist={true}
-            icon={
-              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
-                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
-              ) : (
-                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
-              )
-            }
-          />
 
           <DetailsPanelNameInput
             name="item_title"
@@ -206,15 +182,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
         <DetailsPanelDivider />
 
         <DetailsPanelBody>
-          <DetailsPanelNotesPanel
-            libraryId={libraryId}
-            itemId={libraryId}
-            ytree={ytree}
-            notesPanelOpened={notesPanelOpened}
-            isNotesPanelAwake={isNotesPanelAwake}
-            refreshNotesPanel={refreshNotesPanel}
-            keepNotesPanelAwake={keepNotesPanelAwake}
-          />
           <DetailsPanelProperties>
             <DetailsPanelButtonsShell>
               <DetailsPanelButton

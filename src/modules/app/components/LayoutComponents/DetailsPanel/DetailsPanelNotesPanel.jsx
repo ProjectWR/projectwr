@@ -36,6 +36,7 @@ import {
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { useDebouncedCallback } from "use-debounce";
 import { mainPanelStore } from "../../../stores/mainPanelStore";
+import useOuterClick from "../../../../design-system/useOuterClick";
 
 const lazyWithPrefetch = (factory) => {
   factory();
@@ -69,7 +70,6 @@ export const DetailsPanelNotesPanel = ({
   const { panelType } = mainPanelState;
 
   const [error, setError] = useState(null);
-
 
   const [ytree, setYtree] = useState(null);
 
@@ -186,7 +186,11 @@ export const DetailsPanelNotesPanel = ({
 };
 
 const NotesContent = ({ libraryId, itemId, ytree }) => {
-  const headerInputRef = useRef();
+  const [searchOpened, setSearchOpened] = useState(false);
+
+  const searchRef = useOuterClick(() => {
+    setSearchOpened(false);
+  });
 
   const [sortedNoteIds, setSortedNoteIds] = useState([]);
 
@@ -202,7 +206,6 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
     itemMapState.item_properties.item_title
   );
 
-  const [headerFocused, setHeaderFocused] = useState(false);
   useEffect(() => {
     const updateSortedNoteIds = () => {
       let sortedChildren = [];
@@ -231,14 +234,13 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
   return (
     <>
       <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
-        <div className="w-full relative h-fit flex items-center">
+        <div
+          ref={searchRef}
+          className="w-full relative h-fit flex items-center"
+        >
           <input
-            ref={headerInputRef}
             onFocus={() => {
-              setHeaderFocused(true);
-            }}
-            onBlur={() => {
-              setHeaderFocused(false);
+              setSearchOpened(true);
             }}
             className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:text-appLayoutText focus:outline-0 flex items-center justify-start px-2 rounded-md"
             value={headerText}
@@ -250,7 +252,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
             key={"NoteScopeInputResults"}
             input={headerText}
             libraryId={libraryId}
-            visible={headerFocused}
+            visible={searchOpened}
             onClick={(result, itemTitle) => {
               console.log("RESULT: ", result);
               if (result.id === result.libraryId) {
@@ -264,6 +266,8 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
                   itemId: result.id,
                 });
               }
+
+              setSearchOpened(false);
 
               setHeaderText(itemTitle);
             }}
@@ -325,9 +329,10 @@ const SearchResults = ({
       setSearchResults(
         queryData(input).filter(
           (result) =>
-            result.type === "book" ||
-            result.type === "section" ||
-            result.id === result.libraryId
+            (result.type === "book" ||
+              result.type === "section" ||
+              result.id === result.libraryId) &&
+            result.libraryId === libraryId
         )
       );
     } else {
@@ -345,7 +350,7 @@ const SearchResults = ({
         <span>
           {" "}
           {searchResults.length}{" "}
-          {searchResults.length === 1 ? "result" : "results"} in your libraries
+          {searchResults.length === 1 ? "result" : "results"} in your library
         </span>
       </HoverListHeader>
       <HoverListDivider />
