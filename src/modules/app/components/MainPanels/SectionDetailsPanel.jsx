@@ -38,10 +38,6 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
 
-  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
-    useRefreshableTimer({ time: 1000 });
-  const [notesPanelOpened, setNotesPanelOpened] = useState(false);
-
   const itemMapState = useYMap(ytree.getNodeValueFromKey(sectionId));
 
   console.log("Library Props Map STATE: ", itemMapState);
@@ -117,28 +113,6 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
               <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
             </button>
           )}
-
-          <DetailsPanelButtonOnClick
-            onClick={() => {
-              if (isMd) {
-                setNotesPanelOpened(!notesPanelOpened);
-              } else {
-                if (!(notesPanelOpened && isNotesPanelAwake)) {
-                  setNotesPanelOpened(true);
-                  refreshNotesPanel();
-                }
-              }
-            }}
-            exist={true}
-            icon={
-              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
-                <span className="icon-[fluent--squares-nested-20-filled] w-full h-full"></span>
-              ) : (
-                <span className="icon-[fluent--squares-nested-20-regular] w-full h-full"></span>
-              )
-            }
-          />
-
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
@@ -148,15 +122,6 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
         </DetailsPanelHeader>
         <DetailsPanelDivider />
         <DetailsPanelBody>
-          <DetailsPanelNotesPanel
-            libraryId={libraryId}
-            itemId={sectionId}
-            ytree={ytree}
-            notesPanelOpened={notesPanelOpened}
-            isNotesPanelAwake={isNotesPanelAwake}
-            refreshNotesPanel={refreshNotesPanel}
-            keepNotesPanelAwake={keepNotesPanelAwake}
-          />
           <DetailsPanelProperties>
             <DetailsPanelDescriptionProp
               itemProperties={itemProperties}
