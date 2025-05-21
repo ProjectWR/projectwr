@@ -179,6 +179,9 @@ const LibraryDirectory = ({ libraryId }) => {
                     libraryYTreeRef.current
                   );
                   setItemId(bookId);
+
+                  activatePanel("libraries", "details", [libraryId, bookId]);
+
                   if (deviceType === "mobile") {
                     setPanelOpened(false);
                   }
@@ -197,6 +200,8 @@ const LibraryDirectory = ({ libraryId }) => {
                     libraryYTreeRef.current,
                     "root"
                   );
+
+                  activatePanel("libraries", "details", [libraryId, sectionId]);
 
                   setItemId(sectionId);
                   if (deviceType === "mobile") {
@@ -217,6 +222,8 @@ const LibraryDirectory = ({ libraryId }) => {
                     libraryYTreeRef.current,
                     "root"
                   );
+
+                  activatePanel("libraries", "details", [libraryId, paperId]);
 
                   setItemId(paperId);
                   if (deviceType === "mobile") {
@@ -282,7 +289,7 @@ const LibraryDirectory = ({ libraryId }) => {
 
               setItemId(bookId);
               setFocusedItemId(bookId);
-              activatePanel("libraries", "details", [libraryId]);
+              activatePanel("libraries", "details", [libraryId, bookId]);
               if (deviceType === "mobile") {
                 setPanelOpened(false);
               }
