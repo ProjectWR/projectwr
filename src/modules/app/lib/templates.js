@@ -55,7 +55,7 @@ class TemplateManager {
         return templateData;
 
       } catch (e) {
-        console.error(`Error reading template ${entry.name}:`, e);
+        console.error(`Error reading templates:`, e);
       }
 
 

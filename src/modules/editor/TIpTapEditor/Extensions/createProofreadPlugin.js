@@ -37,11 +37,64 @@ export const spellcheckkey = new PluginKey('proofreadPlugin');
 export function createProofreadPlugin(
     debounceTimeMS,
     generateProofreadErrors,
+    createSuggestionBox,
     getSpellCheckEnabled,
     getCustomText
 ) {
     const debouncedCheck = debounce(check, debounceTimeMS);
     let editorview;
+
+    function showSuggestionBox(
+        event,
+        errorDetails,
+        view,
+        decor
+    ) {
+        const errorKey = generateErrorKey(errorDetails);
+
+        const rect = (event.target).getBoundingClientRect();
+
+        const app = createSuggestionBox({
+            error: errorDetails,
+            position: { x: rect.left, y: rect.bottom },
+            onReplace: (value) => {
+                const { from, to } = decor;
+                const tr = view.state.tr;
+                tr.replaceWith(from, to, view.state.schema.text(value));
+
+                const newSelection = TextSelection.create(tr.doc, from, from + value.length);
+                const pluginState = spellcheckkey.getState(view.state);
+
+                pluginState.decor = pluginState.decor.remove(
+                    pluginState.decor
+                        .find(from, to)
+                        .filter((decoration) => decoration.spec.key === errorKey)
+                );
+                tr.setSelection(newSelection);
+                view.dispatch(tr);
+                app.destroy();
+            },
+            onIgnore: () => {
+                const pluginState = spellcheckkey.getState(view.state);
+                const { from, to } = decor;
+                pluginState.decor = pluginState.decor.remove(
+                    pluginState.decor
+                        .find(from, to)
+                        .filter((decoration) => decoration.spec.key === errorKey)
+                );
+                pluginState.ignoredErrors.set(errorKey, true);
+                const tr = view.state.tr;
+                tr.setMeta('proofread', pluginState);
+                view.dispatch(tr);
+                app.destroy();
+            },
+            onClose: () => {
+                app.destroy();
+            }
+        });
+
+        return app;
+    }
 
     function containsOnlyTextNodes(node) {
         let onlyText = true;
@@ -218,6 +271,25 @@ export function createProofreadPlugin(
         props: {
             decorations(state) {
                 return this.getState(state)?.decor;
+            },
+            handleClick(view, pos, event) {
+                const decorationSet = spellcheckkey.getState(view.state).decor;
+                const decorationsAtPos = decorationSet.find(pos, pos);
+
+                if (decorationsAtPos && decorationsAtPos.length >= 1) {
+                    showSuggestionBox(event, decorationsAtPos[0].spec.error, view, decorationsAtPos[0]);
+                } else {
+                    const existingBox = document.querySelector('.proofread-suggestion');
+                    if (existingBox) {
+                        existingBox.remove();
+                    }
+                }
+            },
+            handleKeyDown() {
+                const existingBox = document.querySelector('.proofread-suggestion');
+                if (existingBox) {
+                    existingBox.remove();
+                }
             }
         }
     });

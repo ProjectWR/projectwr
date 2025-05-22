@@ -226,7 +226,6 @@ const TiptapEditor = ({
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
     onUpdate({ editor }) {
-
       const selection = editor.state.selection;
       const coords = editor.view.coordsAtPos(selection.from);
       const container = document.getElementById("EditableContainer");
@@ -246,7 +245,6 @@ const TiptapEditor = ({
       }
 
       if (scrollAdjustment !== 0) {
-
         setTimeout(() => {
           container.scrollBy({
             top: scrollAdjustment,
@@ -450,6 +448,13 @@ const TiptapEditor = ({
             border-top-left-radius: calc(3px * var(--uiScale));
             border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #ff0000e6;
+          }
+
+          .spelling-warning {
+            background-color: #00FFFF1a;
+            border-top-left-radius: calc(3px * var(--uiScale));
+            border-top-right-radius: calc(3px * var(--uiScale));
+            border-bottom: 1px solid #00FFFFe6;
           }
 
           [data-indent='1'] {
