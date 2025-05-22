@@ -302,6 +302,23 @@ const TiptapEditor = ({
   const options = useMemo(() => {
     const options = [];
 
+    for (const contextItem of proofreadContextItems) {
+      if (contextItem && contextItem.label) {
+        if (contextItem.action) {
+          options.push({
+            label: contextItem.label,
+            disabled: false,
+            action: contextItem.action,
+          });
+        } else {
+          options.push({
+            label: contextItem.label,
+            disabled: true,
+          });
+        }
+      }
+    }
+
     if (selectingError.trim().length > 0) {
       options.push({
         label: "Add word to dictionary",
@@ -357,25 +374,6 @@ const TiptapEditor = ({
         },
       ]
     );
-
-    for (const contextItem of proofreadContextItems) {
-      if (contextItem && contextItem.label) {
-        if (contextItem.action) {
-          options.push({
-            label: contextItem.label,
-            disabled: false,
-            action: contextItem.action,
-          });
-        } else {
-          options.push({
-            label: contextItem.label,
-            disabled: true,
-          });
-        }
-      }
-    }
-
-    console.log("CONTEXT OPTIONS: ", options);
 
     return options;
   }, [editor, selectingError, setSearchQuery, proofreadContextItems]);
