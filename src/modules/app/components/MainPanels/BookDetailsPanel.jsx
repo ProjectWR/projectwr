@@ -180,14 +180,14 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
               <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
             </button>
           )}
+          <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
+
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
             value={itemProperties.item_title}
           />
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-
-          <DetailsPanelButtonPlaceHolder exist={!unsavedChangesExist} />
         </DetailsPanelHeader>
         <DetailsPanelDivider />
 
