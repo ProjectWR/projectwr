@@ -620,7 +620,7 @@ const DirectoryItemNode = ({
                     }
                   }}
                 >
-                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
+                  <div className="h-libraryDirectoryPaperNodeIconSize flex items-center w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
                     <motion.span
                       animate={{ rotate: 0 }}
                       transition={{ duration: 0.2 }}
@@ -629,7 +629,7 @@ const DirectoryItemNode = ({
                   </div>
 
                   <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                    <span className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis">
+                    <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
                       {itemMapState.item_properties.item_title}
                     </span>
                   </div>
@@ -677,7 +677,7 @@ const DirectoryItemNode = ({
                   </div>
 
                   <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                    <span className="w-fit max-w-full pt-[3px] overflow-hidden text-nowrap text-ellipsis">
+                    <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
                       {itemMapState.item_properties.item_title}
                     </span>
                   </div>
