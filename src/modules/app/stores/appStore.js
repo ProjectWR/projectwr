@@ -112,4 +112,9 @@ export const appStore = create((set) => ({
   setNotesPanelState: (notesPanelState) => {
     return set({ notesPanelState: notesPanelState });
   },
+
+  proofreadContextItems: [],
+  setProofreadContextItems: (proofreadContextItems) => {
+    return (set({ proofreadContextItems: proofreadContextItems }));
+  }
 }));

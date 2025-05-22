@@ -76,6 +76,10 @@ const TiptapEditor = ({
     ...preferences?.toolbarPreferences,
   };
 
+  const proofreadContextItems = appStore(
+    (state) => state.proofreadContextItems
+  );
+
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
 
@@ -354,8 +358,27 @@ const TiptapEditor = ({
       ]
     );
 
+    for (const contextItem of proofreadContextItems) {
+      if (contextItem && contextItem.label) {
+        if (contextItem.action) {
+          options.push({
+            label: contextItem.label,
+            disabled: false,
+            action: contextItem.action,
+          });
+        } else {
+          options.push({
+            label: contextItem.label,
+            disabled: true,
+          });
+        }
+      }
+    }
+
+    console.log("CONTEXT OPTIONS: ", options);
+
     return options;
-  }, [editor, selectingError, setSearchQuery]);
+  }, [editor, selectingError, setSearchQuery, proofreadContextItems]);
 
   return (
     <ContextMenuWrapper options={options}>

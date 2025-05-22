@@ -16,6 +16,7 @@ import {
   WorkerLinter,
 } from "harper.js";
 import { message } from "@tauri-apps/plugin-dialog";
+import { appStore } from "../../../app/stores/appStore";
 
 let lexer = new Tokenizr();
 
@@ -159,6 +160,8 @@ function createSuggestionBox({
   onIgnore,
   onClose,
 }) {
+  const contextItems = [];
+
   const existingBox = document.querySelector(".proofread-suggestion");
   if (existingBox) {
     existingBox.remove();
@@ -171,11 +174,11 @@ function createSuggestionBox({
 
   container.style.zIndex = "50";
   container.style.backgroundColor = "white";
-  container.style.border = "1px solid #D1D5DB";
+  container.style.border = "1px solid hsl(var(--appLayoutBorder))";
   container.style.padding = "1rem";
   container.style.boxShadow =
     "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)";
-  container.style.borderRadius = "0.375rem";
+  container.style.borderRadius = "0.2rem";
   container.style.maxWidth = "20rem";
   container.style.left = `${position.x}px`;
   container.style.top = `${position.y}px`;
@@ -219,7 +222,7 @@ function createSuggestionBox({
   closeButton.addEventListener("click", () => {
     container.style.opacity = "0";
     container.style.transform = "translateY(-10px)";
-    setTimeout(() => container.remove(), 300);
+    setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);
     if (onClose) onClose();
   });
 
@@ -235,6 +238,20 @@ function createSuggestionBox({
   if (error.replacements && error.replacements.length > 0) {
     error.replacements.slice(0, 3).forEach((replacement) => {
       console.log("REPLACEMENT: ", replacement);
+
+      contextItems.push({
+        label: replacement,
+        action: () => {
+          if (onReplace) onReplace(replacement);
+          container.style.opacity = "0";
+          container.style.transform = "translateY(-10px)";
+          setTimeout(
+            () => appStore.setState({ proofreadContextItems: [] }),
+            300
+          );
+        },
+      });
+
       const replaceButton = document.createElement("button");
       replaceButton.style.backgroundColor = "#3B82F6";
       replaceButton.style.color = "white";
@@ -251,7 +268,7 @@ function createSuggestionBox({
         if (onReplace) onReplace(replacement);
         container.style.opacity = "0";
         container.style.transform = "translateY(-10px)";
-        setTimeout(() => container.remove(), 300);
+        setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);
       });
 
       replaceButton.addEventListener("mouseenter", () => {
@@ -264,6 +281,10 @@ function createSuggestionBox({
       buttonsContainer.appendChild(replaceButton);
     });
   } else {
+    contextItems.push({
+      label: "No replacements available",
+      action: null,
+    });
     const noReplacement = document.createElement("p");
     noReplacement.style.color = "#9CA3AF";
     noReplacement.style.margin = "0";
@@ -271,6 +292,16 @@ function createSuggestionBox({
     noReplacement.textContent = "No replacements available";
     buttonsContainer.appendChild(noReplacement);
   }
+
+  contextItems.push({
+    label: "Ignore",
+    action: () => {
+      if (onIgnore) onIgnore();
+      container.style.opacity = "0";
+      container.style.transform = "translateY(-10px)";
+      setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);
+    },
+  });
 
   const ignoreButton = document.createElement("button");
   ignoreButton.style.backgroundColor = "#6B7280";
@@ -288,7 +319,7 @@ function createSuggestionBox({
     if (onIgnore) onIgnore();
     container.style.opacity = "0";
     container.style.transform = "translateY(-10px)";
-    setTimeout(() => container.remove(), 300);
+    setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);
   });
 
   ignoreButton.addEventListener("mouseenter", () => {
@@ -301,14 +332,18 @@ function createSuggestionBox({
   buttonsContainer.appendChild(ignoreButton);
   container.appendChild(buttonsContainer);
 
-  document.body.appendChild(container);
+  // document.body.appendChild(container);
+
+  // setProofreadContextItems(contextItems);
+
+  appStore.setState({ proofreadContextItems: contextItems });
 
   console.log("SUGGESTIONG BOX CREATED");
 
   const handleScroll = () => {
     container.style.opacity = "0";
     container.style.transform = "translateY(-10px)";
-    setTimeout(() => container.remove(), 300);
+    setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);
     window.removeEventListener("scroll", handleScroll);
   };
 
@@ -317,7 +352,7 @@ function createSuggestionBox({
   return {
     destroy: () => {
       window.removeEventListener("scroll", handleScroll);
-      container.remove();
+      appStore.setState({ proofreadContextItems: [] });
     },
   };
 }
