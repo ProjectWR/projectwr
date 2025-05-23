@@ -266,9 +266,9 @@
     --templateContentEditorHeaderGroupHeight: calc(var(--uiScale) * 3rem);
 
     --scrollbarSize: calc(var(--uiScale) * 0.25rem);
-    --tabsHeight: calc(var(--uiScale) * 2.5rem);
+    --tabsHeight: calc(var(--uiScale) * 2.2rem);
     --tabsIconSize: calc(var(--uiScale) * 1.8rem);
-    --tabsFontSize: calc(var(--uiScale) * 1rem);
+    --tabsFontSize: calc(var(--uiScale) * 0.9rem);
     --tabWidth: calc(var(--uiScale) * 12rem);
 
     --notesPanelWidth: calc(var(--uiScale) * 25rem);
@@ -610,7 +610,7 @@ input[type="number"] {
 @layer components {
   .contextMenuContent,
   .contextMenuSubContent {
-    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/80 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
+    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/90 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
   }
 
   .contextMenuItem,

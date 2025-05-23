@@ -23,6 +23,7 @@ import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
 
 import * as Y from "yjs";
+import { YKeyValue } from 'y-utility/y-keyvalue'
 import { generateUUID } from "../utils/uuidUtil";
 import { getHighestOrderIndex, insertBetween } from "../utils/orderUtil";
 import { YTree } from "yjs-orderedtree";
@@ -137,6 +138,8 @@ class DataManagerSubdocs {
         ""
       )
     );
+
+    ydoc.getArray("daily_word_counts");
 
     new YTree(ydoc.getMap("library_directory"));
 

@@ -319,6 +319,13 @@ const TiptapEditor = ({
       }
     }
 
+    if (proofreadContextItems.length > 0) {
+      options.push({
+        label: "proofreadContextMenuDivider",
+        isDivider: true,
+      });
+    }
+
     if (selectingError.trim().length > 0) {
       options.push({
         label: "Add word to dictionary",
