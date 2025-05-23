@@ -617,7 +617,7 @@ input[type="number"] {
   .contextMenuCheckboxItem,
   .contextMenuRadioItem,
   .contextMenuSubTrigger {
-    @apply text-optionsDropdownOptionFont text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+    @apply text-optionsDropdownOptionFont w-full text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
   }
 
   .contextMenuItem[data-disabled],

@@ -24,6 +24,7 @@ import Image from "@tiptap/extension-image";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
+import Mention from "@tiptap/extension-mention";
 
 import { ContextMenu } from "radix-ui";
 import { writeText, readText } from "@tauri-apps/plugin-clipboard-manager";
@@ -38,6 +39,7 @@ import { wait } from "lib0/promise";
 import { appStore } from "../../app/stores/appStore";
 import ContextMenuWrapper from "../../app/components/LayoutComponents/ContextMenuWrapper";
 import { Indent } from "./Extensions/indent";
+import suggestion from "./Extensions/MentionExtension/suggestion";
 
 const content = "<p>Hello World!</p>";
 
@@ -171,6 +173,12 @@ const TiptapEditor = ({
       types: ["listItem", "paragraph"],
       minLevel: 0,
       maxLevel: 4,
+    }),
+    Mention.configure({
+      HTMLAttributes: {
+        class: "mention",
+      },
+      suggestion,
     }),
   ]);
 
@@ -483,6 +491,14 @@ const TiptapEditor = ({
             border-top-left-radius: calc(3px * var(--uiScale));
             border-top-right-radius: calc(3px * var(--uiScale));
             border-bottom: 1px solid #00FFFFe6;
+          }
+
+          .mention {
+            background-color: #00FF331a;
+            border-radius: 0.4rem;
+            box-decoration-break: clone;
+            color: var(--purple);
+            padding: 0.2rem 0.3rem;
           }
 
           [data-indent='1'] {
