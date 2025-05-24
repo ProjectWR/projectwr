@@ -26,6 +26,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { DetailsPanelButtonOnClick } from "./DetailsPanel/DetailsPanelSubmitButton";
 import { mainPanelStore } from "../../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
+import { getOrInitLibraryYTree } from "../../lib/ytree";
 
 const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   const { deviceType } = useDeviceType();
@@ -143,18 +144,8 @@ const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           },
         },
       ];
-
-      if (
-        !checkForYTree(
-          dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
-        )
-      ) {
-        throw new Error("Tried to access uninitialized directory");
-      }
-
-      const libraryYTree = new YTree(
-        dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
-      );
+      
+      const libraryYTree = getOrInitLibraryYTree(rootId);
 
       if (isAtRoot) {
         key.current = "libraryDetails-" + rootId;

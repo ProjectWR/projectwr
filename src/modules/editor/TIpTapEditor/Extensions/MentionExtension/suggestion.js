@@ -2,41 +2,43 @@ import { ReactRenderer } from '@tiptap/react'
 import tippy from 'tippy.js'
 
 import MentionList from './MentionList.jsx'
+import { appStore } from '../../../../app/stores/appStore.js'
+import { useDebouncedCallback } from 'use-debounce'
+import { useState } from 'react'
+import { queryData } from '../../../../app/lib/search.js'
+import { getOrInitLibraryYTree } from '../../../../app/lib/ytree.js'
 
 export default {
   items: ({ query }) => {
+    const libraryId = appStore.getState().libraryId
 
-    
+    const searchResults = queryData(query).filter(
+      (result) => (result.libraryId === libraryId));
 
-    return [
-      'Lea Thompson',
-      'Cyndi Lauper',
-      'Tom Cruise',
-      'Madonna',
-      'Jerry Hall',
-      'Joan Collins',
-      'Winona Ryder',
-      'Christina Applegate',
-      'Alyssa Milano',
-      'Molly Ringwald',
-      'Ally Sheedy',
-      'Debbie Harry',
-      'Olivia Newton-John',
-      'Elton John',
-      'Michael J. Fox',
-      'Axl Rose',
-      'Emilio Estevez',
-      'Ralph Macchio',
-      'Rob Lowe',
-      'Jennifer Grey',
-      'Mickey Rourke',
-      'John Cusack',
-      'Matthew Broderick',
-      'Justine Bateman',
-      'Lisa Bonet',
-    ]
-      .filter(item => item.toLowerCase().startsWith(query.toLowerCase()))
-      .slice(0, 5)
+    console.log("MENTION RESULTS: ", searchResults);
+
+    const libraryYTree = getOrInitLibraryYTree(libraryId);
+
+    // searchResults.map((result) => {
+    //   if (result.id === result.libraryId) {
+
+    //   }
+    //   else {
+    //     console.log("ITEM STATE: ", libraryYTree.getNodeValueFromKey(result.id))
+    //   }
+    // })
+
+    const resultItems = searchResults.map((result) => {
+      if (result.id === result.libraryId) {
+        return "LIBRARY "
+      }
+      else {
+        console.log("ITEM STATE: ", libraryYTree.getNodeValueFromKey(result.id))
+        return libraryYTree.getNodeValueFromKey(result.id).toJSON().item_properties.item_title;
+      }
+    });
+
+    return resultItems;
   },
 
   render: () => {
