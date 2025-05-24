@@ -5,6 +5,9 @@ import MentionList from './MentionList.jsx'
 
 export default {
   items: ({ query }) => {
+
+    
+
     return [
       'Lea Thompson',
       'Cyndi Lauper',

@@ -610,7 +610,7 @@ input[type="number"] {
 @layer components {
   .contextMenuContent,
   .contextMenuSubContent {
-    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/90 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow;
+    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/90 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-2xl shadow-appLayoutGentleShadow font-serif;
   }
 
   .contextMenuItem,

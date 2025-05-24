@@ -58,7 +58,7 @@ const MentionList = forwardRef((props, ref) => {
       {props.items.length ? (
         props.items.map((item, index) => (
           <button
-            className={`contextMenuItem ${
+            className={`contextMenuItem font-serif ${
               index === selectedIndex ? "bg-appLayoutInverseHover" : ""
             } `}
             key={index}
@@ -68,7 +68,7 @@ const MentionList = forwardRef((props, ref) => {
           </button>
         ))
       ) : (
-        <div className="contextMenuLabel">
+        <div className="contextMenuLabel font-serif">
           <span className="pt-[3px]">No result</span>
         </div>
       )}
