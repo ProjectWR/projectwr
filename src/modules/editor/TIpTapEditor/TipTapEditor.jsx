@@ -564,7 +564,6 @@ const TiptapEditor = ({
             background-color: #00FF331a;
             border-radius: 0.4rem;
             box-decoration-break: clone;
-            color: var(--purple);
             padding: 0 0.25rem;
           }
 
@@ -593,7 +592,40 @@ const TiptapEditor = ({
           }
 
           
-          
+          .ProseMirror-focused {
+            /* Color of the virtual cursor */
+            --prosemirror-virtual-cursor-color: white;
+          }
+
+          .ProseMirror .prosemirror-virtual-cursor {
+            position: absolute;
+            cursor: text;
+            pointer-events: none;
+            transform: translate(-1px);
+            user-select: none;
+            -webkit-user-select: none;
+            border-left: 2px solid var(--prosemirror-virtual-cursor-color);
+          }
+
+          .ProseMirror .prosemirror-virtual-cursor-left {
+            width: 1ch;
+            transform: translate(calc(-1ch + -1px));
+            border-bottom: 2px solid var(--prosemirror-virtual-cursor-color);
+            border-right: 2px solid var(--prosemirror-virtual-cursor-color);
+            border-left: none;
+          }
+
+          .ProseMirror .prosemirror-virtual-cursor-right {
+            width: 1ch;
+            border-bottom: 2px solid var(--prosemirror-virtual-cursor-color);
+            border-left: 2px solid var(--prosemirror-virtual-cursor-color);
+            border-right: none;
+          }
+
+          .ProseMirror-focused .prosemirror-virtual-cursor-animation {
+            animation: prosemirror-virtual-cursor-blink 1s linear infinite;
+            animation-delay: 0.5s;
+          }
           
           
 

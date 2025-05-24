@@ -121,7 +121,7 @@
     --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
     --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
     --appLayoutBorder: 0 0% 16.9%;
-    --appLayoutText: 0 0% 80%;
+    --appLayoutText: 0 0% 70%;
     --appLayoutShadow: 0 0% 0%;
     --appLayoutGentleShadow: 0 0% 3%;
     --appLayoutHover: 0 0% 15%;
@@ -132,7 +132,7 @@
     --appLayoutInputBackground: 0 0% 14.9%;
     --appLayoutPressed: 0 0% 3%;
     --appLayoutDestruct: 0 90% 38%;
-    --appLayoutHighlight: 0 0% 100%;
+    --appLayoutHighlight: 0 0% 80%;
     --activitySelectLine: 0 0% 100%;
     --appLayoutSubmitButton: 0 0% 80%;
   }
