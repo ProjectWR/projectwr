@@ -47,6 +47,7 @@ import { Indent } from "./Extensions/indent";
 import suggestion from "./Extensions/MentionExtension/suggestion";
 import { getOrInitLibraryYTree } from "../../app/lib/ytree";
 import dataManagerSubdocs from "../../app/lib/dataSubDoc";
+import useMainPanel from "../../app/hooks/useMainPanel";
 
 const content = "<p>Hello World!</p>";
 
@@ -64,6 +65,8 @@ const TiptapEditor = ({
 
   const { deviceType } = useDeviceType();
   const isMobile = deviceType === "mobile";
+
+  const { activatePanel } = useMainPanel();
 
   const [editorRef, setEditorFocus] = useFocus();
 
@@ -198,11 +201,7 @@ const TiptapEditor = ({
         const id = node.attrs.id;
 
         if (!id) {
-          return [
-            "span",
-            mergeAttributes(options.HTMLAttributes),
-            `Error`,
-          ];
+          return ["span", mergeAttributes(options.HTMLAttributes), `Error`];
         }
 
         const libraryYTree = getOrInitLibraryYTree(libraryId);
@@ -216,12 +215,19 @@ const TiptapEditor = ({
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
                 ?.item_title;
 
-        const elem = document.createElement("button");
+        const elem = document.createElement("a");
 
         elem.innerText = `${label}`;
 
+        elem.display = `inline`;
+
+        elem.wordBreak = `break-word`;
+
+        elem.whiteSpace = `normal`;
+
         elem.addEventListener("click", () => {
-          console.log("Clicked mention button");
+          console.log("Clicked mention link");
+          activatePanel("libraries", "details", [libraryId, id]);
         });
 
         elem.className = "mention";
@@ -559,7 +565,15 @@ const TiptapEditor = ({
             border-radius: 0.4rem;
             box-decoration-break: clone;
             color: var(--purple);
-            padding: 0.2rem 0.3rem;
+            padding: 0 0.25rem;
+          }
+
+          .mention:hover {
+            background-color: #00FF3346;
+          }
+
+          .mention:active {
+            background-color: #00FF33a6;
           }
 
           [data-indent='1'] {
