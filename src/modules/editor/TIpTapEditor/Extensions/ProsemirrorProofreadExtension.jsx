@@ -25,6 +25,10 @@ let linter = new LocalLinter({
   dialect: Dialect.British,
 });
 
+await linter.setLintConfig({
+  SentenceCapitalization: false,
+});
+
 lexer.rule(/[a-zA-Z](?:[a-zA-Z0-9]|'(?=[a-zA-Z]))*/, (ctx, match) => {
   // Handles contractions like don't, couldn't, etc.
   ctx.accept("word", match[0]);
@@ -54,19 +58,21 @@ const generateProofreadErrors = async (input) => {
   const response = { matches: [] };
   // lexer.input(input);
 
+  console.log("PRROFREADING INPUT: ", `-${input}-`);
+
   const lints = await linter.lint(input);
 
   for (const lint of lints) {
-  //  console.log(lint.to_json());
+    //  console.log(lint.to_json());
 
     const replacements = [];
 
     for (const suggestion of lint.suggestions()) {
-    //  console.log("Suggestions: ", suggestion.to_json());
+      //  console.log("Suggestions: ", suggestion.to_json());
       const innerValue = JSON.parse(suggestion.to_json())["inner"];
-    //  console.log("INNER VALUE: ", innerValue);
+      //  console.log("INNER VALUE: ", innerValue);
       if (innerValue && innerValue["ReplaceWith"]) {
-    //    console.log("Inner value replace with: ", innerValue["ReplaceWith"]);
+        //    console.log("Inner value replace with: ", innerValue["ReplaceWith"]);
         replacements.push(innerValue["ReplaceWith"].join(""));
       }
     }
@@ -79,7 +85,7 @@ const generateProofreadErrors = async (input) => {
         type: { typeName: "UnknownWord" },
         replacements: replacements,
       });
-    } else
+    } else {
       response.matches.push({
         offset: lint.span().start,
         length: lint.span().len(),
@@ -87,6 +93,7 @@ const generateProofreadErrors = async (input) => {
         type: { typeName: "GrammarError" },
         replacements: replacements,
       });
+    }
   }
 
   // lexer.tokens().forEach((token) => {

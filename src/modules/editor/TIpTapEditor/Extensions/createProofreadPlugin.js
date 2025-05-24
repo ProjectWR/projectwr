@@ -108,6 +108,7 @@ export function createProofreadPlugin(
     }
 
     async function proofread(text) {
+        console.log("INSIDE PROOFREAD PLUGIN: ", text);
         const response = await generateProofreadErrors(text);
         const data = response;
         const errors = data.matches;
@@ -153,13 +154,20 @@ export function createProofreadPlugin(
                 return true;
             }
             tasks.push(async () => {
+                console.log("ALL NODES IN TASKS: ", node, pos);
                 if (node.textContent && node.textContent.length > 1) {
                     const nodeKey = generateNodeKey(node);
                     if (!pluginState.cacheMap.has(nodeKey)) {
+                        console.log("CHECKING INPUT TO PROOFREAD: ", "2nd arg: ", getDefaultCustomText(node), "node: ", node);
                         const errors = await proofread(getCustomText ? getCustomText(node) : getDefaultCustomText(node));
                         pluginState.cacheMap.set(nodeKey, { problems: errors, text: node.textContent });
                     }
-                    const offset = pos + 1;
+
+                    let offset = pos;
+                    if (!node.isText) {
+                        offset += 1;
+                    }
+                    
                     processErrors(
                         pluginState.cacheMap.get(nodeKey)?.problems || [],
                         offset,
@@ -321,6 +329,11 @@ function getOldNodes(transactions, prevState) {
 
 function getDefaultCustomText(node) {
     let textContent = '';
+
+    if (node.isText) {
+        textContent += node.text;
+    }
+
     node.content.forEach((child) => {
         if (child.isText) {
             textContent += child.text;
@@ -330,6 +343,8 @@ function getDefaultCustomText(node) {
             textContent += getDefaultCustomText(child);
         }
     });
+
+    console.log("GET DEFAULT CUSTOM TEXT: ", textContent);
     return textContent;
 }
 

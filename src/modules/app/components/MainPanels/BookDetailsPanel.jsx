@@ -126,6 +126,8 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
     setPanelOpened(true);
   };
 
+  const [wordCount, setWordCount] = useState(0);
+
   const getWordCount = useCallback(() => {
     const allDescendantIds = [];
     ytree.getAllDescendants(bookId, allDescendantIds);
@@ -153,7 +155,9 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
     return wordCount;
   }, [bookId, ytree]);
 
-  const wordCount = getWordCount();
+  useEffect(() => {
+    setWordCount(getWordCount());
+  }, [bookId, libraryId, setWordCount, getWordCount]);
 
   return (
     <DetailsPanel>

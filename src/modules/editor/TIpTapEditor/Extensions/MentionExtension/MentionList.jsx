@@ -15,7 +15,7 @@ const MentionList = forwardRef((props, ref) => {
     const item = props.items[index];
 
     if (item) {
-      props.command({ id: item });
+      props.command({ id: item.id, label: item.label });
     }
   };
 
@@ -60,18 +60,7 @@ const MentionList = forwardRef((props, ref) => {
     <div className="contextMenuContent z-[1050]">
       {props.items.length ? (
         props.items.map((item, index) => {
-          const libraryId = appStore.getState().libraryId;
-
-          const libraryYTree = getOrInitLibraryYTree(libraryId);
-
-          const label =
-            libraryId === item
-              ? dataManagerSubdocs
-                  .getLibrary(libraryId)
-                  ?.getMap("library_props")
-                  ?.toJSON().item_properties.item_title
-              : libraryYTree.getNodeValueFromKey(item)?.toJSON()
-                  ?.item_properties?.item_title;
+         
 
           return (
             <button
@@ -81,7 +70,7 @@ const MentionList = forwardRef((props, ref) => {
               key={index}
               onClick={() => selectItem(index)}
             >
-              {label && <span className="pt-[3px]">{label}</span>}
+              {item.label && <span className="pt-[3px]">{item.label}</span>}
             </button>
           );
         })

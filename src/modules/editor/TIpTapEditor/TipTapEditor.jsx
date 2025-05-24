@@ -193,6 +193,42 @@ const TiptapEditor = ({
         class: "mention",
       },
       suggestion,
+      renderText({ options, node }) {
+        console.log("NODE ATTRS: ", node.attrs);
+
+        const libraryId = appStore.getState().libraryId;
+
+        const id = node.attrs.id;
+
+        if (!id) {
+          return "-error-";
+        }
+
+        const libraryYTree = getOrInitLibraryYTree(libraryId);
+
+        const label =
+          libraryId === id
+            ? dataManagerSubdocs
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
+            : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
+                ?.item_title;
+
+
+        return label;
+
+        // return [
+        //   "button",
+        //   mergeAttributes(
+        //     {
+        //       onclick: `console.log("Clicked mention button");`,
+        //     },
+        //     options.HTMLAttributes
+        //   ),
+        //   `${options.suggestion.char}${label}`,
+        // ];
+      },
       renderHTML({ options, node }) {
         console.log("NODE ATTRS: ", node.attrs);
 
@@ -219,8 +255,6 @@ const TiptapEditor = ({
 
         elem.innerText = `${label}`;
 
-        elem.display = `inline`;
-
         elem.wordBreak = `break-word`;
 
         elem.whiteSpace = `normal`;
@@ -231,6 +265,8 @@ const TiptapEditor = ({
         });
 
         elem.className = "mention";
+
+        node.attrs.label = label;
 
         return elem;
 

@@ -7,6 +7,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { useState } from 'react'
 import { queryData } from '../../../../app/lib/search.js'
 import { getOrInitLibraryYTree } from '../../../../app/lib/ytree.js'
+import dataManagerSubdocs from '../../../../app/lib/dataSubDoc.js'
 
 export default {
   items: ({ query }) => {
@@ -15,7 +16,18 @@ export default {
     const searchResults = queryData(query).filter(
       (result) => (result.libraryId === libraryId));
 
-    const resultItems = searchResults.map((result) => result.id);
+    const libraryYTree = getOrInitLibraryYTree(libraryId);
+
+    const resultItems = searchResults.map((result) => ({
+      id: result.id, label:
+        libraryId === result.id
+          ? dataManagerSubdocs
+            .getLibrary(libraryId)
+            ?.getMap("library_props")
+            ?.toJSON().item_properties.item_title
+          : libraryYTree.getNodeValueFromKey(result.id)?.toJSON()
+            ?.item_properties?.item_title
+    }));
 
     return resultItems;
   },
