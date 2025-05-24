@@ -25,9 +25,9 @@ let linter = new LocalLinter({
   dialect: Dialect.British,
 });
 
-await linter.setLintConfig({
-  SentenceCapitalization: false,
-});
+// await linter.setLintConfig({
+//   SentenceCapitalization: false,
+// });
 
 lexer.rule(/[a-zA-Z](?:[a-zA-Z0-9]|'(?=[a-zA-Z]))*/, (ctx, match) => {
   // Handles contractions like don't, couldn't, etc.
@@ -59,6 +59,21 @@ const generateProofreadErrors = async (input) => {
   // lexer.input(input);
 
   console.log("PRROFREADING INPUT: ", `-${input}-`);
+
+  // Trim the input to check for leading spaces
+  const trimmedInput = input.trimStart();
+
+  // Check if the first non-space character is alphabetic
+  if (/[a-zA-Z]/.test(trimmedInput[0])) {
+    // Find the index of the first non-space character
+    const firstNonSpaceIndex = input.length - trimmedInput.length;
+
+    // Capitalize the first alphabetic character
+    input =
+      input.substring(0, firstNonSpaceIndex) +
+      trimmedInput[0].toUpperCase() +
+      input.substring(firstNonSpaceIndex + 1);
+  }
 
   const lints = await linter.lint(input);
 
