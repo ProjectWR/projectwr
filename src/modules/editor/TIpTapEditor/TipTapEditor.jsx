@@ -82,6 +82,10 @@ const TiptapEditor = ({
     (state) => state.proofreadContextItems
   );
 
+  const setProofreadContextItems = appStore(
+    (state) => state.setProofreadContextItems
+  );
+
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
 
@@ -266,6 +270,7 @@ const TiptapEditor = ({
       }
     },
     onSelectionUpdate({ editor }) {
+      setProofreadContextItems([]);
       const domSelection = window.getSelection();
       let errorText = "";
       if (domSelection?.anchorNode) {
