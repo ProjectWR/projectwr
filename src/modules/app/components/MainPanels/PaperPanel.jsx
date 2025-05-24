@@ -150,7 +150,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     });
   };
 
-  console.log("PREFERENCES ", preferences);
 
   return (
     <DetailsPanel>

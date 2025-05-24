@@ -4,6 +4,9 @@ import React, {
   useImperativeHandle,
   useState,
 } from "react";
+import { getOrInitLibraryYTree } from "../../../../app/lib/ytree";
+import { appStore } from "../../../../app/stores/appStore";
+import dataManagerSubdocs from "../../../../app/lib/dataSubDoc";
 
 const MentionList = forwardRef((props, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -56,17 +59,32 @@ const MentionList = forwardRef((props, ref) => {
   return (
     <div className="contextMenuContent z-[1050]">
       {props.items.length ? (
-        props.items.map((item, index) => (
-          <button
-            className={`contextMenuItem font-serif ${
-              index === selectedIndex ? "bg-appLayoutInverseHover" : ""
-            } `}
-            key={index}
-            onClick={() => selectItem(index)}
-          >
-            <span className="pt-[3px]">{item}</span>
-          </button>
-        ))
+        props.items.map((item, index) => {
+          const libraryId = appStore.getState().libraryId;
+
+          const libraryYTree = getOrInitLibraryYTree(libraryId);
+
+          const label =
+            libraryId === item
+              ? dataManagerSubdocs
+                  .getLibrary(libraryId)
+                  ?.getMap("library_props")
+                  ?.toJSON().item_properties.item_title
+              : libraryYTree.getNodeValueFromKey(item)?.toJSON()
+                  ?.item_properties?.item_title;
+
+          return (
+            <button
+              className={`contextMenuItem font-serif ${
+                index === selectedIndex ? "bg-appLayoutInverseHover" : ""
+              } `}
+              key={index}
+              onClick={() => selectItem(index)}
+            >
+              {label && <span className="pt-[3px]">{label}</span>}
+            </button>
+          );
+        })
       ) : (
         <div className="contextMenuLabel font-serif">
           <span className="pt-[3px]">No result</span>

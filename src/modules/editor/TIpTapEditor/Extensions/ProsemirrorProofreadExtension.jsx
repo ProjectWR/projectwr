@@ -54,21 +54,19 @@ const generateProofreadErrors = async (input) => {
   const response = { matches: [] };
   // lexer.input(input);
 
-  console.log("INPUT: ", input);
-
   const lints = await linter.lint(input);
 
   for (const lint of lints) {
-    console.log(lint.to_json());
+  //  console.log(lint.to_json());
 
     const replacements = [];
 
     for (const suggestion of lint.suggestions()) {
-      console.log("Suggestions: ", suggestion.to_json());
+    //  console.log("Suggestions: ", suggestion.to_json());
       const innerValue = JSON.parse(suggestion.to_json())["inner"];
-      console.log("INNER VALUE: ", innerValue);
+    //  console.log("INNER VALUE: ", innerValue);
       if (innerValue && innerValue["ReplaceWith"]) {
-        console.log("Inner value replace with: ", innerValue["ReplaceWith"]);
+    //    console.log("Inner value replace with: ", innerValue["ReplaceWith"]);
         replacements.push(innerValue["ReplaceWith"].join(""));
       }
     }
@@ -114,7 +112,7 @@ const generateProofreadErrors = async (input) => {
   //   }
   // });
 
-  console.log("RESPONSE MATCHES: ", response.matches);
+  // console.log("RESPONSE MATCHES: ", response.matches);
 
   return response;
   // try {
@@ -237,8 +235,6 @@ function createSuggestionBox({
 
   if (error.replacements && error.replacements.length > 0) {
     error.replacements.slice(0, 3).forEach((replacement) => {
-      console.log("REPLACEMENT: ", replacement);
-
       contextItems.push({
         label: replacement,
         action: () => {
@@ -337,8 +333,6 @@ function createSuggestionBox({
   // setProofreadContextItems(contextItems);
 
   appStore.setState({ proofreadContextItems: contextItems });
-
-  console.log("SUGGESTIONG BOX CREATED");
 
   const handleScroll = () => {
     container.style.opacity = "0";

@@ -34,13 +34,13 @@ let miniSearch = new MiniSearch({
 
 export async function setupSearchForLibrary(libraryId) {
   if (miniSearch.getStoredFields(libraryId)) {
-    console.log("Already set up search for library: ", libraryId);
+  //  console.log("Already set up search for library: ", libraryId);
     return;
   }
   const ydoc = dataManagerSubdocs.getLibrary(libraryId);
   const libraryDocument = ydoc.getMap("library_props").toJSON();
   const document = { id: libraryId, libraryId: libraryId, ...libraryDocument };
-  console.log("libdoc for search: ", document);
+//  console.log("libdoc for search: ", document);
 
   miniSearch.add(document);
 
@@ -59,13 +59,13 @@ export async function setupSearchForLibrary(libraryId) {
   for (const [key, value] of ydoc.getMap("library_directory").entries()) {
     if (key === "root") continue
     const itemDocument = value.get("value").toJSON();
-    console.log("setting up itemdoc for search: ", key, " ", itemDocument);
+  //  console.log("setting up itemdoc for search: ", key, " ", itemDocument);
     miniSearch.add({ id: key, libraryId: libraryId, ...itemDocument });
 
     const itemCallback = () => {
-      console.log("itemCallback: item ${key} changed");
+      // console.log("itemCallback: item ${key} changed");
       const itemDocument = value.get("value").toJSON();
-      console.log("itemCallback itemDoc replacement: ", itemDocument);
+      //  console.log("itemCallback itemDoc replacement: ", itemDocument);
       miniSearch.replace({ id: key, libraryId: libraryId, ...itemDocument });
     }
 
@@ -85,7 +85,7 @@ export async function setupSearchForLibrary(libraryId) {
         miniSearch.add({ id: key, libraryId: libraryId, ...itemDocument });
 
         const itemCallback = () => {
-          console.log("itemCallback: item ${key} changed");
+  //        console.log("itemCallback: item ${key} changed");
           const itemDocument = value.get("value").toJSON();
           miniSearch.replace({ id: key, libraryId: libraryId, ...itemDocument });
         }
@@ -110,7 +110,7 @@ export async function setupSearchForLibrary(libraryId) {
 
 export async function destroySearchForLibrary(libraryId) {
   if (miniSearch.getStoredFields(libraryId)) {
-    console.log("Already set up search for library: ", libraryId);
+  //  console.log("Already set up search for library: ", libraryId);
     return;
   }
   const ydoc = dataManagerSubdocs.getLibrary(libraryId);

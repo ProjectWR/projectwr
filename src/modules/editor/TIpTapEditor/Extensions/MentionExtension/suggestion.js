@@ -15,28 +15,7 @@ export default {
     const searchResults = queryData(query).filter(
       (result) => (result.libraryId === libraryId));
 
-    console.log("MENTION RESULTS: ", searchResults);
-
-    const libraryYTree = getOrInitLibraryYTree(libraryId);
-
-    // searchResults.map((result) => {
-    //   if (result.id === result.libraryId) {
-
-    //   }
-    //   else {
-    //     console.log("ITEM STATE: ", libraryYTree.getNodeValueFromKey(result.id))
-    //   }
-    // })
-
-    const resultItems = searchResults.map((result) => {
-      if (result.id === result.libraryId) {
-        return "LIBRARY "
-      }
-      else {
-        console.log("ITEM STATE: ", libraryYTree.getNodeValueFromKey(result.id))
-        return libraryYTree.getNodeValueFromKey(result.id).toJSON().item_properties.item_title;
-      }
-    });
+    const resultItems = searchResults.map((result) => result.id);
 
     return resultItems;
   },

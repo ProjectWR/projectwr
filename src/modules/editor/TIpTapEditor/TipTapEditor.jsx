@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import TipTapToolbar from "./TipTapToolbar";
 
-import { useEditor, useEditorState, EditorContent } from "@tiptap/react";
+import {
+  useEditor,
+  useEditorState,
+  EditorContent,
+  mergeAttributes,
+} from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -40,6 +45,8 @@ import { appStore } from "../../app/stores/appStore";
 import ContextMenuWrapper from "../../app/components/LayoutComponents/ContextMenuWrapper";
 import { Indent } from "./Extensions/indent";
 import suggestion from "./Extensions/MentionExtension/suggestion";
+import { getOrInitLibraryYTree } from "../../app/lib/ytree";
+import dataManagerSubdocs from "../../app/lib/dataSubDoc";
 
 const content = "<p>Hello World!</p>";
 
@@ -183,6 +190,55 @@ const TiptapEditor = ({
         class: "mention",
       },
       suggestion,
+      renderHTML({ options, node }) {
+        console.log("NODE ATTRS: ", node.attrs);
+
+        const libraryId = appStore.getState().libraryId;
+
+        const id = node.attrs.id;
+
+        if (!id) {
+          return [
+            "span",
+            mergeAttributes(options.HTMLAttributes),
+            `Error`,
+          ];
+        }
+
+        const libraryYTree = getOrInitLibraryYTree(libraryId);
+
+        const label =
+          libraryId === id
+            ? dataManagerSubdocs
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
+            : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
+                ?.item_title;
+
+        const elem = document.createElement("button");
+
+        elem.innerText = `${label}`;
+
+        elem.addEventListener("click", () => {
+          console.log("Clicked mention button");
+        });
+
+        elem.className = "mention";
+
+        return elem;
+
+        // return [
+        //   "button",
+        //   mergeAttributes(
+        //     {
+        //       onclick: `console.log("Clicked mention button");`,
+        //     },
+        //     options.HTMLAttributes
+        //   ),
+        //   `${options.suggestion.char}${label}`,
+        // ];
+      },
     }),
   ]);
 
