@@ -116,8 +116,17 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
   );
 
   const action = useCallback(() => {
+    if (panelType === "libraries") {
+      setActivity("libraries");
+      setLibraryId(breadcrumbs[0]);
+    }
+
+    if (panelType === "templates") {
+      setActivity("templates");
+    }
+
     activatePanel(panelType, mode, breadcrumbs);
-  }, [panelType, mode, breadcrumbs, activatePanel]);
+  }, [panelType, mode, breadcrumbs, activatePanel, setActivity, setLibraryId]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
