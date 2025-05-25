@@ -13,6 +13,7 @@ import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
+import { ScrollArea } from "@mantine/core";
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
@@ -483,20 +484,22 @@ const LibraryDirectory = ({ libraryId }) => {
         </div>
       </div>
       <div id="libraryDirectoryBodyContainer" className={`grow min-h-0 w-full`}>
-        <div
-          id="libraryDirectoryBody"
+        <ScrollArea
+          overscrollBehavior="none"
+          scrollbars="y"
+          type="hover"
+          classNames={{
+            root: "w-full h-full",
+            scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
+            thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover opacity-70`,
+            content: `h-fit w-full px-1`,
+          }}
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               setFocusedItemId(null);
             }
           }}
           ref={libraryDirectoryBodyRef}
-          style={{
-            paddingLeft: `var(--scrollbarWidth)`,
-          }}
-          className={`h-full w-full overflow-y-scroll overflow-x-hidden ${
-            deviceType === "mobile" ? "no-scrollbar" : ""
-          }`}
         >
           <div
             id="BookListContainer"
@@ -600,7 +603,7 @@ const LibraryDirectory = ({ libraryId }) => {
               </OptionsButton>
             )}
           </div>
-        </div>
+        </ScrollArea>
       </div>
     </div>
   );

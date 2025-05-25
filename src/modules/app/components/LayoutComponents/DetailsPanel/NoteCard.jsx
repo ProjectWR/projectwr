@@ -12,7 +12,6 @@ import { equalityDeep } from "lib0/function";
 import { AnimatePresence, motion } from "motion/react";
 import useMainPanel from "../../../hooks/useMainPanel";
 
-
 const NoteCard = ({ noteId, libraryId, ytree }) => {
   const { deviceType } = useDeviceType();
 
@@ -107,6 +106,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
           <div className="w-full h-px bg-appLayoutBorder"></div>
         </div>
         <NoteCardEditor
+          initialItemProperties={initialItemProperties}
           itemProperties={itemProperties}
           setItemProperties={setItemProperties}
         />
@@ -118,6 +118,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
 export default NoteCard;
 
 const NoteCardEditor = ({
+  initialItemProperties,
   itemProperties,
   setItemProperties,
   fixedSize = false,
@@ -160,8 +161,12 @@ const NoteCardEditor = ({
     },
   });
 
+  useEffect(() => {
+    editor.commands.setContent(initialItemProperties.item_description);
+  }, [initialItemProperties, editor]);
+
   return (
-    <div className="h-fit w-full">
+    <div className="h-fit w-full px-2">
       <RichTextEditor
         editor={editor}
         variant="subtle"

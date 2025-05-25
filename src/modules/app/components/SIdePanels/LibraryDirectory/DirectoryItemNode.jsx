@@ -668,11 +668,11 @@ const DirectoryItemNode = ({
                     }
                   }}
                 >
-                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
+                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize flex items-center justify-center">
                     <motion.span
                       animate={{ rotate: 0 }}
                       transition={{ duration: 0.2 }}
-                      className={`icon-[fluent--square-20-regular] h-full w-full`}
+                      className={`icon-[fluent--square-20-regular] h-full w-full m-auto`}
                     ></motion.span>
                   </div>
 

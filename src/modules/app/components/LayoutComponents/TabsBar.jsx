@@ -52,7 +52,7 @@ export const TabsBar = () => {
       classNames={{
         root: `grow basis-0 min-w-0 h-tabsHeight p-0`,
         scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
-        thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
+        thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
         viewport: `h-full w-full`,
         content: `h-full w-full`,
       }}
