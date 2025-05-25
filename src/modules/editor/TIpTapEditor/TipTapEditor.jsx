@@ -215,7 +215,6 @@ const TiptapEditor = ({
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
                 ?.item_title;
 
-
         return label;
 
         // return [
@@ -251,7 +250,7 @@ const TiptapEditor = ({
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
                 ?.item_title;
 
-        const elem = document.createElement("a");
+        const elem = document.createElement("span");
 
         elem.innerText = `${label}`;
 
@@ -267,6 +266,10 @@ const TiptapEditor = ({
         elem.className = "mention";
 
         node.attrs.label = label;
+
+        elem.dataset.id = id;
+        elem.dataset.label = label;
+        elem.dataset.type = "mention";
 
         return elem;
 
@@ -602,6 +605,9 @@ const TiptapEditor = ({
             box-decoration-break: clone;
             padding: 0 0.25rem;
           }
+
+          .mention:after{
+            content: "\u200B";} 
 
           .mention:hover {
             background-color: #00FF3346;
