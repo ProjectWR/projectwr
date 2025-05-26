@@ -48,6 +48,8 @@ import suggestion from "./Extensions/MentionExtension/suggestion";
 import { getOrInitLibraryYTree } from "../../app/lib/ytree";
 import dataManagerSubdocs from "../../app/lib/dataSubDoc";
 import useMainPanel from "../../app/hooks/useMainPanel";
+import { TableOfContentsPanel } from "./TableOfContentsPanel";
+import useRefreshableTimer from "../../app/hooks/useRefreshableTimer";
 
 const content = "<p>Hello World!</p>";
 
@@ -98,6 +100,9 @@ const TiptapEditor = ({
 
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
+
+  const [isTOCPanelAwake, refreshTOCPanel, keepTOCPanelAwake] =
+    useRefreshableTimer();
 
   const {
     width,
@@ -503,7 +508,7 @@ const TiptapEditor = ({
     <ContextMenuWrapper options={options}>
       <div
         id="EditorContainer"
-        className="h-full w-full flex flex-col items-center bg-appBackgroundAccent"
+        className="h-full w-full flex flex-col items-center bg-appBackgroundAccent relative"
       >
         <style>
           {`
@@ -674,9 +679,25 @@ const TiptapEditor = ({
         `}
         </style>
 
+        <button
+          onClick={() => {
+            keepTOCPanelAwake();
+          }}
+          className="absolute z-[3] top-1/2 -translate-y-1/2 left-1 p-px w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize text-appLayoutText hover:bg-appLayoutInverseHover rounded-lg **:hover:bg-appLayoutHighlight"
+        >
+          <span className="icon-[carbon--table-of-contents] w-full h-full"></span>
+        </button>
+
+        <TableOfContentsPanel
+          visible={isTOCPanelAwake}
+          refreshTOCPanel={refreshTOCPanel}
+          keepTOCPanelAwake={keepTOCPanelAwake}
+          editor={editor}
+        />
+
         <div
           id="EditableContainer"
-          className={`h-full w-full flex justify-start flex-col items-center relative
+          className={`h-full w-full z-[2] flex justify-start flex-col items-center relative
            overflow-y-scroll min-h-0 text-neutral-200
           `}
           style={{
@@ -708,6 +729,7 @@ const TiptapEditor = ({
               toolbarPreferences={toolbarPreferences}
             />
           </div>
+
           <EditorContent
             spellCheck={false}
             editor={editor}
@@ -740,42 +762,6 @@ const TiptapEditor = ({
 };
 
 export default React.memo(TiptapEditor);
-
-// const updateVirtualCursor = (editor, fontSize) => {
-//   const selection = editor.state.selection;
-//   if (!selection.empty) {
-//     editor.commands.hideVirtualCursor();
-//     return;
-//   }
-
-//   const editable = document.querySelector(".tiptap");
-//   const editableRect = editable.getBoundingClientRect();
-//   const coords = editor.view.coordsAtPos(selection.from);
-
-//   const domSelection = window.getSelection();
-//   const anchorNode = domSelection.anchorNode;
-
-//   const minFontSize = fontSize + 2;
-
-//   if (anchorNode?.parentElement) {
-//     if (anchorNode.parentElement.tagName === "DIV") {
-//       const computedStyle = getComputedStyle(anchorNode);
-//       fontSize = parseFloat(computedStyle.fontSize) || fontSize;
-//     } else {
-//       console.log("HERRE IN UPDATE VIRTUAL CURSOR: ");
-//       const computedStyle = getComputedStyle(anchorNode.parentElement);
-//       fontSize = parseFloat(computedStyle.fontSize) || fontSize;
-//     }
-//   }
-
-//   console.log("Font size in uvc: ", fontSize);
-
-//   editor.commands.addVirtualCursor({
-//     top: coords.top - editableRect.top,
-//     left: coords.left - editableRect.left,
-//     fontSize: max(fontSize, minFontSize),
-//   });
-// };
 
 const useFocus = () => {
   const htmlElRef = useRef(null);

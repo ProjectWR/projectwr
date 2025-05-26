@@ -280,6 +280,8 @@
 
     --noteCardHeight: calc(var(--uiScale) * 20rem);
     --noteCardHeaderHeight: calc(var(--uiScale) * 1.5rem);
+
+    --editorTOCFontSize: calc(var(--uiScale) * 1rem);
   }
   .mobile {
     --libraryManagerNodeHeight: 7rem;
