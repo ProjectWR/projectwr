@@ -50,6 +50,7 @@ import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel/DetailsP
 import { useImages } from "../../hooks/useImages";
 import imageManager from "../../lib/image";
 import { GrainyElementButton } from "../LayoutComponents/GrainyHoverButton";
+import { handleLogin } from "../../lib/auth/auth";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -206,6 +207,16 @@ const SettingsPanel = () => {
                   </span>
                   <span className="bg-appLayoutInverseHover h-px grow-1"></span>
                 </div>
+
+                <button
+                  className="w-[5rem] h-[5rem]"
+                  onClick={async () => {
+                    handleLogin();
+                  }}
+                >
+                  {" "}
+                  Google login{" "}
+                </button>
 
                 <div className="h-[5rem] w-full"></div>
               </Fieldset>

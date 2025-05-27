@@ -23,7 +23,7 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
 log = "0.4"
-tauri = { version = "2.1.0", features = ["devtools"] }
+tauri = { version = "2.0", features = ["devtools"] }
 tauri-plugin-log = "2.0.0-rc"
 serde_derive = "1.0.215"
 tauri-plugin-store = "2.1.0"
@@ -32,3 +32,15 @@ tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2.2.0"
 tauri-plugin-clipboard-manager = "2"
 tauri-plugin-oauth = "2"
+tauri-plugin-opener = "2"
+lazy_static = "1.4.0"
+dotenv = "0.15.0"
+borsh = { version = "1.2.0", features = ["std", "borsh-derive", "derive", "bson", "bytes", "ascii", "de_strict_order", "rc", "unstable__schema"] }
+cocoon = "0.4.1"
+strum = { version = "0.25.0", features = ["strum_macros"] }
+specta = "=2.0.0-rc.22"
+specta-typescript = "0.0.9"
+tauri-specta = { version = "=2.0.0-rc.21", features = ["derive", "javascript", "typescript"] }
+specta-jsdoc = "0.0.9"
+dirs = "6.0.0"
+tauri-plugin-shell = "2"

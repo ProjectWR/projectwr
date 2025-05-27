@@ -24,6 +24,8 @@
     "clipboard-manager:allow-write-html",
     "clipboard-manager:allow-write-image",
     "clipboard-manager:allow-write-text",
+    "oauth:allow-start",
+    "oauth:allow-cancel",
     "fs:allow-read-file",
     "fs:allow-write-file",
     "fs:allow-read-text-file",
@@ -181,6 +183,9 @@
         }
       ]
     },
-    "clipboard-manager:default"
+    "clipboard-manager:default",
+    "opener:default",
+    "shell:default",
+    "opener:default"
   ]
 }
