@@ -1,13 +1,15 @@
-import { BaseDirectory } from  '@tauri-apps/plugin-fs';
+import { BaseDirectory } from '@tauri-apps/plugin-fs';
 
 export default {
     fs: {
-        DEFAULT_DIRECTORY: BaseDirectory.AppLocalData,
-        
+        DEFAULT_DIRECTORY: BaseDirectory.AppData,
+
     },
     auth: {
         GOOGLE_OAUTH_ENDPOINT: "https://accounts.google.com/o/oauth2/v2/auth",
-        SCOPE: "https://www.googleapis.com/auth/drive.file"
+        SCOPE: "https://www.googleapis.com/auth/drive.file "
+            + "https://www.googleapis.com/auth/userinfo.profile "
+            + "https://www.googleapis.com/auth/userinfo.email",
     },
 
     storage: {

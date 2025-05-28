@@ -32,6 +32,12 @@ export async function get_access_token() {
     return await AuthStore.get(storeConstant.access_token) ?? {};
 }
 
+
+export async function delete_access_token() {
+    // return await commands.loadAccessToken();
+    return await AuthStore.delete(storeConstant.access_token) ?? false;
+}
+
 export async function test_command() {
     return await commands.testCommand();
 }

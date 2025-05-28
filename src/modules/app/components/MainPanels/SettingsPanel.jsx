@@ -51,6 +51,7 @@ import { useImages } from "../../hooks/useImages";
 import imageManager from "../../lib/image";
 import { GrainyElementButton } from "../LayoutComponents/GrainyHoverButton";
 import { handleLogin } from "../../lib/auth/auth";
+import { OauthComponent } from "./Settings/OauthComponent";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -490,6 +491,14 @@ const SettingsPanel = () => {
               )}
             </AnimatePresence>
           </motion.div>
+
+          <DetailsPanelDivider />
+
+          <div className="w-full h-fit">
+            <OauthComponent />
+          </div>
+
+          <DetailsPanelDivider />
 
           <div className="flex flex-row grow basis-0 gap-2 w-full box-border">
             <ListShell

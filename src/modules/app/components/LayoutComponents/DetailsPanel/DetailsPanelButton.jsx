@@ -8,7 +8,7 @@ export const DetailsPanelButtonsShell = ({ children }) => {
   return (
     <section
       id="DetailsPanelButtonsShell"
-      className={`w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-6 mt-2`}
+      className={`w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-6`}
       style={
         deviceType === "desktop" && {
           width: `var(--detailsPanelWidth)`,
@@ -22,13 +22,19 @@ export const DetailsPanelButtonsShell = ({ children }) => {
   );
 };
 
-export const DetailsPanelButton = ({ onClick, loading, icon, text }) => {
+export const DetailsPanelButton = ({
+  onClick,
+  loading,
+  icon,
+  text,
+  disabled = false,
+}) => {
   return (
     <GrainyElementButton
       gradientSize={100}
       gradientSizeY={10}
       onClick={onClick}
-      disabled={loading}
+      disabled={loading || disabled}
       className={`h-[3rem] border border-appLayoutBorder rounded-lg overflow-hidden`}
     >
       <AnimatePresence mode="wait">
@@ -113,7 +119,9 @@ export const DetailsPanelButton = ({ onClick, loading, icon, text }) => {
 
           {!loading && (
             <>
-              <span className="w-[2.2rem] h-[2.2rem]">{icon}</span>
+              <span className="w-[2.2rem] h-[2.2rem] flex items-center justify-center">
+                {icon}
+              </span>
               <span className="verticalDivider h-full min-w-px py-1">
                 <div className="h-full w-full bg-appLayoutInverseHover"></div>
               </span>

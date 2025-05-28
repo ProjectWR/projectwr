@@ -1,11 +1,12 @@
 import axios from "axios";
-import { remove } from '@tauri-apps/plugin-fs';
-import { generate_oauth_port, get_access_token, get_auth_code, save_access_token, save_auth_code } from "./invoker";
+import { readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
+import { delete_access_token, generate_oauth_port, get_access_token, get_auth_code, save_access_token, save_auth_code } from "./invoker";
 import settings from "../../../../config/settings";
 import { CLIENT_ID, CLIENT_SECRET } from "../../../../config/credentials";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { AuthStore } from "./DBStores";
 import { wait } from "lib0/promise";
+import { oauthStore } from "../../stores/oauthStore";
 
 
 const DEFAULT_DIRECTORY = settings.fs.DEFAULT_DIRECTORY;
@@ -91,6 +92,24 @@ export async function revokeAccessToken(accessToken) {
 }
 
 
+export async function fetchUserProfile(accessToken) {
+  try {
+    // Fetch user profile information using the access token
+    const response = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(response.data, "response from fetchUserProfile");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    throw new Error("Error fetching user profile");
+  }
+}
+
+
+
 // to handle login to get auth
 export async function openAuthWindow() {
   // create and set a new URL object with the endpoint and query parameters
@@ -142,6 +161,8 @@ export async function getAccessTokenFromStorage() {
   try {
     let accessToken = await get_access_token();
 
+    console.log("ACCESS TOKEN FROM STORAGE: ", accessToken);
+
     if (Object.keys(accessToken).length < 1) {
       throw new Error("No access token found");
     }
@@ -165,12 +186,33 @@ export async function getAccessTokenFromStorage() {
 
 export async function deleteAccessToken() {
   try {
-    return await remove(STORAGE_PATHS.access_token, { dir: DEFAULT_DIRECTORY });
+    return await delete_access_token();
   } catch (error) {
     console.error("Error deleting access token:", error);
     throw new Error("Error deleting access token");
   }
 }
+
+
+export async function saveUserProfile(userProfile) {
+  try {
+    return await writeTextFile(STORAGE_PATHS.user_profile, JSON.stringify(userProfile), { baseDir: DEFAULT_DIRECTORY });
+  } catch (error) {
+    console.error("Error saving user profile:", error);
+    throw new Error("Error saving user profile");
+  }
+}
+
+export async function getUserProfileFromStorage() {
+  try {
+    const userProfile = await readTextFile(STORAGE_PATHS.user_profile, { baseDir: DEFAULT_DIRECTORY });
+    return JSON.parse(userProfile);
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    return null;
+  }
+}
+
 
 export async function handleLogin() {
   try {
@@ -194,6 +236,11 @@ export async function handleLoadFrom(accessTokenBody) {
   try {
     await saveAccessToken(JSON.stringify(accessTokenBody, null, 2))
     //   setAccessToken(accessTokenBody.access_token);
+    oauthStore.setState({ accessTokenState: accessTokenBody.access_token });
+    const userProfile = await fetchUserProfile(accessTokenBody.access_token);
+    await saveUserProfile(userProfile)
+
+    oauthStore.setState({ userProfile: userProfile });
   }
   catch (err) {
     console.log(err);
@@ -202,6 +249,9 @@ export async function handleLoadFrom(accessTokenBody) {
 }
 
 export async function handleLogout() {
+  oauthStore.setState({ accessTokenState: null });
+  oauthStore.setState({ userProfileState: null });
+
   await deleteAccessToken();
 }
 
@@ -210,8 +260,13 @@ export async function handleInitialLogin() {
   // get access token from storage
   const accessToken = await getAccessTokenFromStorage();
   if (!accessToken) throw new Error("Signin required");
+
+  const profile = await fetchUserProfile(accessToken.access_token);
+  if (!profile || !profile?.email) throw new Error("Something went wrong, please try again");
+  oauthStore.setState({ userProfile: profile });
   // setProfile(profile);
   // setAccessToken(accessToken.access_token);
+  oauthStore.setState({ accessTokenState: accessToken.access_token });
 }
 
 
