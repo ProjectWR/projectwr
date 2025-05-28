@@ -4,12 +4,20 @@ import { ThemeProvider } from "./modules/app/ConfigProviders/ThemeProvider";
 import WritingApp from "./modules/app/components/WritingApp";
 import {
   getAccessToken,
+  handleInitialLogin,
   handleLoadFrom,
   saveAuthCode,
 } from "./modules/app/lib/auth/auth";
 import { listen_for_auth_code } from "./modules/app/lib/auth/eventlisteners";
 
 function App() {
+  // check the offline data for access token
+  useEffect(() => {
+    handleInitialLogin().catch((err) => {
+      console.log(err);
+    });
+  }, []);
+
   // to generate a port and listen to it
   useEffect(() => {
     listen_for_auth_code({

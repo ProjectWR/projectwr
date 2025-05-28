@@ -18,9 +18,14 @@ export const TableOfContentsPanel = ({
         headings.map((heading) => {
           return {
             level: heading.attributes.level,
-            content: heading.textContent,
+            content: heading,
             action: () => {
-              editor.chain().focus().setTextSelection({from: 10, to: 12});
+              console.log("HEADING POS", heading.pos);
+              editor
+                .chain()
+                .setTextSelection(heading.pos)
+                .scrollIntoView()
+                .run();
             },
           };
         })
@@ -59,11 +64,28 @@ export const TableOfContentsPanel = ({
       </span>
       <div className="grow w-full basis-0 min-h-0 flex flex-col items-start">
         {headings.map((heading) => {
+          let content = "";
+
+          console.log(
+            "TEXT BETWEEN: ",
+            editor.state.doc.textBetween(heading.range)
+          );
+
+          console.log("HEADING.CONTENT", heading);
+
+          for (const node of heading.content.content.content) {
+            if (node.text) {
+              content = content + node.text;
+            } else {
+              content = content + node.attrs.label;
+            }
+          }
+
           return (
             <TOCHeadingButton
-              key={`${heading.content}`}
+              key={`${content}`}
               level={heading.level}
-              content={heading.content}
+              content={content}
               action={heading.action}
             />
           );

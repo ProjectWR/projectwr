@@ -58,6 +58,7 @@ export async function refreshAccessToken(refreshToken) {
     };
     console.log('attempting to refresh access token', data);
     const response = await axios.post("https://oauth2.googleapis.com/token", data);
+    console.log("RESPONSE: ", response);
     return { ...response.data, refresh_token: refreshToken };
   } catch (error) {
     console.error("Error refreshing access token:", error);
@@ -149,7 +150,8 @@ export async function getAccessTokenFromStorage() {
     // check if the access token is expired
     console.log(accessToken, "accessToken");
     const lastLogin = parseInt(localStorage.getItem("lastLogin") || "0");
-    if ((accessToken.expires_in < Date.now() || Date.now() - lastLogin > 3620) && navigator.onLine) {
+    console.log("(accessToken.expires_in < Date.now() || Date.now() - lastLogin > 3620)", Date.now(), lastLogin)
+    if ((accessToken.expires_in < lastLogin - Date.now()) && navigator.onLine) {
       console.log("Access token expired");
       accessToken = await refreshAndSaveAccessToken(accessToken.refresh_token);
     }

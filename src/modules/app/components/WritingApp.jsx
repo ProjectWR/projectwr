@@ -311,7 +311,7 @@ const WritingApp = () => {
       initializeWritingApp();
       setWasLocalSetup(true);
     }
-  }, [
+   }, [
     setDefaultSettings,
     setSettings,
     setLoading,
