@@ -256,7 +256,7 @@ const WindowButton = ({
 }) => {
   return (
     <button
-      className={`h-full flex items-center justify-center w-fit px-4 text-appLayoutHighlight ${
+      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${
         destructive
           ? "hover:bg-appLayoutDestruct"
           : "hover:bg-appLayoutInverseHover"
