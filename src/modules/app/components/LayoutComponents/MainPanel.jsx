@@ -455,14 +455,14 @@ const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   }, [renderMainPanel]);
 
   return (
-    <motion.div className="w-full h-full overflow-hidden z-3 flex flex-col items-center justify-center">
-      <section className="w-full h-tabsHeight flex">
-        <TabsBar />
+    <div className="grow min-w-0 basis-0 h-full overflow-hidden z-3 flex flex-col items-center justify-center">
+      {/* <section className="w-full h-actionBarHeight min-h-actionBarHeight flex">
+        <TabsBar /> 
         <NotesPanelOpenButton
           isNotesPanelAwake={isNotesPanelAwake}
           refreshNotesPanel={refreshNotesPanel}
         />
-      </section>
+      </section> */}
       <AnimatePresence mode="wait">
         <motion.div
           key={key.current}
@@ -470,7 +470,7 @@ const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 15, opacity: 0 }}
           transition={{ duration: 0.1 }}
-          className="w-full grow basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
+          className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
         >
           <ErrorBoundary
             fallback={
@@ -483,7 +483,7 @@ const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           </ErrorBoundary>
         </motion.div>
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 };
 

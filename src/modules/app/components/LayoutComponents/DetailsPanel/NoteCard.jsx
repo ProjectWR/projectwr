@@ -262,11 +262,6 @@ const NoteCardEditor = ({
                 <RichTextEditor.H1 />
                 <RichTextEditor.H2 />
                 <RichTextEditor.BulletList />
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.Highlight />
               </RichTextEditor.ControlsGroup>
             </FloatingMenu>
           </>

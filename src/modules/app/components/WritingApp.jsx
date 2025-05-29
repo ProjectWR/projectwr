@@ -21,7 +21,6 @@ import Footer from "./LayoutComponents/Footer";
 import MainPanel from "./LayoutComponents/MainPanel";
 import SidePanel from "./LayoutComponents/SidePanel";
 import ActivityBar from "./LayoutComponents/ActivityBar";
-import ActionBar from "./LayoutComponents/ActionBar";
 import {
   AnimatePresence,
   motion,
@@ -50,6 +49,8 @@ import imageManager from "../lib/image";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
 import { DetailsPanelNotesPanel } from "./LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
+import { ActionBarLeftSide, ActionBarRightSide } from "./LayoutComponents/ActionBar";
+import { TabsBar } from "./LayoutComponents/TabsBar";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -311,7 +312,7 @@ const WritingApp = () => {
       initializeWritingApp();
       setWasLocalSetup(true);
     }
-   }, [
+  }, [
     setDefaultSettings,
     setSettings,
     setLoading,
@@ -453,7 +454,12 @@ const WritingApp = () => {
               exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.2 }}
             >
-              {deviceType === "desktop" && <ActionBar />}
+              {/* {deviceType === "desktop" && (<ActionBar />)} */}
+              <div className="w-full h-actionBarHeight min-h-actionBarHeight flex">
+                <ActionBarLeftSide />
+                <TabsBar />
+                <ActionBarRightSide />
+              </div>
 
               <div
                 id="AppBodyContainer"
@@ -492,14 +498,24 @@ const WritingApp = () => {
                                 !isMd &&
                                 "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
                               } `}
-                              initial={{ opacity: 0, width: 0, minWidth: 0 }}
+                              initial={{
+                                opacity: 0,
+                                width: 0,
+                                minWidth: 0,
+                                transition: { duration: 0.05 },
+                              }}
                               animate={{
                                 opacity: 1,
                                 width: `${sidePanelWidth}px`,
                                 minWidth: `${sidePanelWidth}px`,
+                                transition: { duration: 0.05 },
                               }}
-                              exit={{ opacity: 0, width: 0, minWidth: 0 }}
-                              transition={{ duration: 0.05 }}
+                              exit={{
+                                opacity: 0,
+                                width: 0,
+                                minWidth: 0,
+                                transition: { duration: 0.05 },
+                              }}
                             >
                               <div
                                 id="SidePanelWrapper"
@@ -530,17 +546,19 @@ const WritingApp = () => {
                       refreshNotesPanel={refreshNotesPanel}
                     />
 
-                    <DetailsPanelNotesPanel
-                      libraryId={null}
-                      itemId={null}
-                      ytree={null}
-                      notesPanelOpened={notesPanelOpened}
-                      notesPanelWidth={notesPanelWidth}
-                      setNotesPanelWidth={setNotesPanelWidth}
-                      isNotesPanelAwake={isNotesPanelAwake}
-                      refreshNotesPanel={refreshNotesPanel}
-                      keepNotesPanelAwake={keepNotesPanelAwake}
-                    />
+                    <div id="NotesPanelContainer" className="h-full w-fit">
+                      <DetailsPanelNotesPanel
+                        libraryId={null}
+                        itemId={null}
+                        ytree={null}
+                        notesPanelOpened={notesPanelOpened}
+                        notesPanelWidth={notesPanelWidth}
+                        setNotesPanelWidth={setNotesPanelWidth}
+                        isNotesPanelAwake={isNotesPanelAwake}
+                        refreshNotesPanel={refreshNotesPanel}
+                        keepNotesPanelAwake={keepNotesPanelAwake}
+                      />
+                    </div>
                   </>
                 )}
 

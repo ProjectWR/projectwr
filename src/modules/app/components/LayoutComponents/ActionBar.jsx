@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { queryData } from "../../lib/search";
 import { useEffect, useRef, useState } from "react";
 import itemLocalStateManager from "../../lib/itemLocalState";
-import { max } from "lib0/math";
+import { max, min } from "lib0/math";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import {
   HoverListBody,
@@ -230,8 +230,6 @@ const ActionBar = () => {
   );
 };
 
-export default ActionBar;
-
 const ActionButton = ({ onClick, className, children, disabled = false }) => {
   return (
     <div className="h-full py-1 w-fit">
@@ -364,7 +362,6 @@ const SearchBar = () => {
                   <HoverListButton
                     key={result.id}
                     onClick={() => {
-
                       if (item_properties.item_title) {
                         setLibraryId(result.libraryId);
                         setItemId("unselected");
@@ -387,7 +384,7 @@ const SearchBar = () => {
                           result.libraryId,
                           result.id
                         );
-          
+
                         setLibraryId(result.libraryId);
                         setItemId(result.id);
                         setItemMode("details");
@@ -425,6 +422,294 @@ const SearchBar = () => {
         <HoverListDivider />
         <HoverListFooter />
       </HoverListShell>
+    </div>
+  );
+};
+
+export const ActionBarLeftSide = ({}) => {
+  const zoom = appStore((state) => state.zoom);
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
+  const sideBarOpened = appStore((state) => state.sideBarOpened);
+  const setSideBarOpened = appStore((state) => state.setSideBarOpened);
+
+  const { activatePanel } = useMainPanel();
+
+  const [barWidth, setBarWidth] = useState(zoom * 240);
+
+  useEffect(() => {
+    const target = document.getElementById("ActivityBarAndSidePanelContainer");
+
+    const syncWidths = () => {
+      const targetWidth = target.offsetWidth;
+
+      const copierWidth = max(zoom * 240, targetWidth);
+
+      setBarWidth(copierWidth);
+    };
+
+    syncWidths();
+
+    let ro = new ResizeObserver(() => {
+      syncWidths();
+    });
+
+    ro.observe(target);
+
+    return () => {
+      ro.unobserve(target);
+    };
+  }, [zoom]);
+
+  return (
+    <div
+      data-tauri-drag-region
+      id="actionBarContainer"
+      style={{
+        width: `${barWidth}px`,
+      }}
+      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
+    >
+      <div
+        data-tauri-drag-region
+        id="actionBar"
+        className="w-full h-full flex justify-start gap-1 items-center relative pr-1"
+      >
+        <div className="h-full w-fit flex items-center gap-1">
+          <div className="h-full w-activityBarWidth flex items-center justify-center">
+            <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
+              <div className="h-full w-actionBarButtonIconSize relative">
+                <AnimatePresence mode="sync">
+                  {sideBarOpened && (
+                    <motion.span
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.6 }}
+                      transition={{ duration: 0.05 }}
+                      key="sideBarOpened"
+                      className="icon-[tabler--layout-sidebar-left-collapse-filled] w-full h-full top-0 left-0 absolute bg-appLayoutTextMuted"
+                    ></motion.span>
+                  )}
+                  {!sideBarOpened && (
+                    <motion.span
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.6 }}
+                      transition={{ duration: 0.05 }}
+                      key="sideBarClosed"
+                      className="icon-[tabler--layout-sidebar-left-expand] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                    ></motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
+            </ActionButton>
+          </div>
+          <ActionButton
+            onClick={() => {
+              activatePanel("home", null, []);
+            }}
+            className={`${false && "bg-appLayoutPressed"}`}
+          >
+            <div className={`h-full w-actionBarButtonIconSize relative`}>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="homeButton"
+                className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </ActionButton>
+        </div>
+
+        <div className="grow"></div>
+
+        <ActionButton
+          onClick={() => {
+            if (canGoBack) {
+              goBack();
+            }
+          }}
+          disabled={!canGoBack}
+        >
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: canGoBack ? 1 : 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="historyGoBack"
+              className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+            ></motion.span>
+          </div>
+        </ActionButton>
+        <ActionButton
+          onClick={() => {
+            if (canGoForward) {
+              goForward();
+            }
+          }}
+          disabled={!canGoForward}
+        >
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: canGoForward ? 1 : 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="historyGoForward"
+              className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+            ></motion.span>
+          </div>
+        </ActionButton>
+      </div>
+    </div>
+  );
+};
+
+export const ActionBarRightSide = ({}) => {
+  const zoom = appStore((state) => state.zoom);
+  const { deviceType } = useDeviceType();
+  const appWindow = getCurrentWindow();
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
+  const { activatePanel } = useMainPanel();
+
+  const [barWidth, setBarWidth] = useState(zoom * 240);
+
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const target = document.getElementById("NotesPanelContainer");
+
+    const syncWidths = () => {
+      const targetWidth = target.offsetWidth;
+
+      const copierWidth = max(zoom * 240, targetWidth);
+
+      setBarWidth(copierWidth);
+    };
+
+    syncWidths();
+
+    let ro = new ResizeObserver(() => {
+      syncWidths();
+    });
+
+    ro.observe(target);
+
+    return () => {
+      ro.unobserve(target);
+    };
+  }, [zoom]);
+
+  useEffect(() => {
+    const updateMaximized = async () => {
+      const x = await getCurrentWindow().isMaximized();
+
+      setIsMaximized(x);
+    };
+
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      updateMaximized();
+    });
+
+    updateMaximized();
+
+    return () => {
+      unlisten.then((unlistenFn) => unlistenFn());
+    };
+  }, []);
+  return (
+    <div
+      data-tauri-drag-region
+      id="actionBarContainer"
+      style={{
+        width: `${barWidth}px`,
+      }}
+      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans border-r"
+    >
+      <div
+        data-tauri-drag-region
+        id="actionBar"
+        className="w-full h-full flex justify-end gap-1 items-center relative pr-1"
+      >
+        <div className="h-full w-fit flex items-center gap-1">
+          <div className="h-full w-fit pl-1 flex items-center gap-1">
+            <ActionButton
+              onClick={() => {
+                activatePanel("settings", null, []);
+              }}
+              className={`${false && "bg-appLayoutPressed"}`}
+            >
+              <div className={`h-full w-actionBarButtonIconSize relative`}>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="settingsButton"
+                  className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                ></motion.span>
+              </div>
+            </ActionButton>
+          </div>
+
+          {deviceType !== "mobile" && (
+            <>
+              <WindowButton
+                className={``}
+                buttonContent={
+                  <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                }
+                onClick={() => {
+                  appWindow.minimize();
+                }}
+              />
+              <WindowButton
+                className={``}
+                buttonContent={
+                  isMaximized ? (
+                    <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  ) : (
+                    <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  )
+                }
+                onClick={() => {
+                  appWindow.toggleMaximize();
+                }}
+              />
+              <WindowButton
+                destructive={true}
+                className={``}
+                buttonContent={
+                  <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                }
+                onClick={() => {
+                  appWindow.close();
+                }}
+              />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

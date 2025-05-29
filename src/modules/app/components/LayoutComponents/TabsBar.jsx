@@ -50,7 +50,7 @@ export const TabsBar = () => {
       scrollbars="x"
       type="hover"
       classNames={{
-        root: `grow basis-0 min-w-0 h-tabsHeight p-0`,
+        root: `grow basis-0 min-w-0 h-full min-h-full pt-1`,
         scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
         thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
         viewport: `h-full w-full`,
@@ -58,6 +58,8 @@ export const TabsBar = () => {
       }}
     >
       <div className="w-fit min-w-full h-full flex items-center">
+        <UnusedSpace offset={true} />
+
         <AnimatePresence>
           {tabs?.map((tab) => {
             const { panelType, mode, breadcrumbs } = tab;
@@ -414,13 +416,11 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
       ref={dndRef}
       className={`h-full w-full flex items-center justify-start gap-1 pr-1
           transition-colors duration-200
+          
 
           ${isDragging && "opacity-30"} 
 
-          ${
-            (!isOverCurrent || (isOverCurrent && areaSelected === "")) &&
-            "border-l border-l-transparent border-r border-r-appLayoutBorder"
-          }
+          ${(!isOverCurrent || (isOverCurrent && areaSelected === "")) && ""}
           
           ${
             isOverCurrent &&
@@ -440,8 +440,8 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
               mode,
               breadcrumbs,
             })
-              ? "border-t-appLayoutHighlight border-t border-b border-b-transparent"
-              : "border-t-transparent border-t border-b border-b-appLayoutBorder hover:bg-appLayoutInverseHover hover:border-t-appLayoutInverseHover "
+              ? "border-t-appLayoutHighlight border-x border-x-appLayoutBorder   border-t border-b border-b-transparent"
+              : "border-t-transparent border-t border-b border-b-appLayoutBorder border-x border-x-transparent hover:bg-appLayoutInverseHover hover:border-t-appLayoutInverseHover "
           }
         `}
     >
@@ -484,7 +484,7 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
   );
 };
 
-const UnusedSpace = () => {
+const UnusedSpace = ({ offset = false }) => {
   const dndRef = useRef();
 
   /**
@@ -553,16 +553,20 @@ const UnusedSpace = () => {
 
   return (
     <div
+      data-tauri-drag-region
       ref={dndRef}
       style={{
         height: "100%",
       }}
-      className={`grow basis-0 border-b border-b-appLayoutBorder h-[4rem]
+      className={`border-b border-b-appLayoutBorder
         ${
           isOverCurrent && isHovering
             ? ` border-l border-l-appLayoutHighlight`
             : ""
         }
+
+        
+        ${offset ? "w-2" : "grow basis-0"}
         `}
     ></div>
   );
