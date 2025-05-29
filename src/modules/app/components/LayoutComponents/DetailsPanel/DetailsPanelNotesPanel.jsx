@@ -137,13 +137,24 @@ export const DetailsPanelNotesPanel = ({
               !isMd &&
               "absolute top-0 right-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
             } `}
-            initial={{ opacity: 0, width: 0, minWidth: 0 }}
+            initial={{
+              opacity: 0,
+              width: 0,
+              minWidth: 0,
+              transition: { duration: 0.05 },
+            }}
             animate={{
               opacity: 1,
               width: `${notesPanelWidth}px`,
               minWidth: `${notesPanelWidth}px`,
+              transition: { duration: 0.05 },
             }}
-            exit={{ opacity: 0, width: 0, minWidth: 0 }}
+            exit={{
+              opacity: 0,
+              width: 0,
+              minWidth: 0,
+              transition: { duration: 0.05 },
+            }}
             transition={{ duration: 0.1 }}
             onHoverStart={() => {
               keepNotesPanelAwake();

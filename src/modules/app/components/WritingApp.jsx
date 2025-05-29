@@ -49,7 +49,10 @@ import imageManager from "../lib/image";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
 import { DetailsPanelNotesPanel } from "./LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
-import { ActionBarLeftSide, ActionBarRightSide } from "./LayoutComponents/ActionBar";
+import {
+  ActionBarLeftSide,
+  ActionBarRightSide,
+} from "./LayoutComponents/ActionBar";
 import { TabsBar } from "./LayoutComponents/TabsBar";
 
 const WritingApp = () => {
