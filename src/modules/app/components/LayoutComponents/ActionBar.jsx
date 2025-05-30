@@ -230,7 +230,12 @@ const ActionBar = () => {
   );
 };
 
-const ActionButton = ({ onClick, className, children, disabled = false }) => {
+export const ActionButton = ({
+  onClick,
+  className,
+  children,
+  disabled = false,
+}) => {
   return (
     <div className="h-full py-1 w-fit">
       <button
@@ -530,47 +535,6 @@ export const ActionBarLeftSide = ({}) => {
             </div>
           </ActionButton>
         </div>
-
-        <div className="grow"></div>
-
-        <ActionButton
-          onClick={() => {
-            if (canGoBack) {
-              goBack();
-            }
-          }}
-          disabled={!canGoBack}
-        >
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: canGoBack ? 1 : 0.6 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="historyGoBack"
-              className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-            ></motion.span>
-          </div>
-        </ActionButton>
-        <ActionButton
-          onClick={() => {
-            if (canGoForward) {
-              goForward();
-            }
-          }}
-          disabled={!canGoForward}
-        >
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: canGoForward ? 1 : 0.6 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="historyGoForward"
-              className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-            ></motion.span>
-          </div>
-        </ActionButton>
       </div>
     </div>
   );

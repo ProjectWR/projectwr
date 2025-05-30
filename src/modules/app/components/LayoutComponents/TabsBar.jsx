@@ -8,6 +8,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../stores/appStore";
+import useStoreHistory from "../../hooks/useStoreHistory";
+import { ActionButton } from "./ActionBar";
 
 export const TabsBar = () => {
   /**
@@ -24,6 +26,17 @@ export const TabsBar = () => {
   const tabs = mainPanelStore((state) => state.tabs);
 
   const setTabs = mainPanelStore((state) => state.setTabs);
+
+  const {
+    saveStateInHistory,
+    canGoBack,
+    goBack,
+    canGoForward,
+    goForward,
+    clearFuture,
+  } = useStoreHistory();
+
+  const { activatePanel } = useMainPanel();
 
   useEffect(() => {
     const newState = JSON.parse(JSON.stringify(mainPanelState));
@@ -45,50 +58,96 @@ export const TabsBar = () => {
   }, [mainPanelState, setTabs]);
 
   return (
-    <ScrollArea
-      overscrollBehavior="none"
-      scrollbars="x"
-      type="hover"
-      classNames={{
-        root: `grow basis-0 min-w-0 h-full min-h-full pt-1`,
-        scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
-        thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
-        viewport: `h-full w-full`,
-        content: `h-full w-full`,
-      }}
-    >
-      <div className="w-fit min-w-full h-full flex items-center">
-        <UnusedSpace offset={true} />
-
-        <AnimatePresence>
-          {tabs?.map((tab) => {
-            const { panelType, mode, breadcrumbs } = tab;
-
-            return (
-              <motion.div
-                key={
-                  breadcrumbs.length >= 1
-                    ? breadcrumbs[0] + "-" + breadcrumbs[breadcrumbs.length - 1]
-                    : panelType
-                }
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: `var(--tabWidth)` }}
-                exit={{ opacity: 0, width: 0 }}
-                className="h-full"
-              >
-                <TabButton
-                  panelType={panelType}
-                  mode={mode}
-                  breadcrumbs={breadcrumbs}
-                />
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
-
-        <UnusedSpace />
+    <>
+      <div
+        data-tauri-drag-region
+        className="border-b flex w-fit z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
+      >
+        <ActionButton
+          onClick={() => {
+            if (canGoBack) {
+              goBack();
+            }
+          }}
+          disabled={!canGoBack}
+        >
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: canGoBack ? 1 : 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="historyGoBack"
+              className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+            ></motion.span>
+          </div>
+        </ActionButton>
+        <ActionButton
+          onClick={() => {
+            if (canGoForward) {
+              goForward();
+            }
+          }}
+          disabled={!canGoForward}
+        >
+          <div className="h-full w-actionBarButtonIconSize relative">
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: canGoForward ? 1 : 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="historyGoForward"
+              className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+            ></motion.span>
+          </div>
+        </ActionButton>
       </div>
-    </ScrollArea>
+      <ScrollArea
+        overscrollBehavior="none"
+        scrollbars="x"
+        type="hover"
+        classNames={{
+          root: `grow basis-0 min-w-0 h-full min-h-full pt-1`,
+          scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
+          thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
+          viewport: `h-full w-full`,
+          content: `h-full w-full`,
+        }}
+      >
+        <div className="w-fit min-w-full h-full flex items-center">
+
+          <AnimatePresence>
+            {tabs?.map((tab) => {
+              const { panelType, mode, breadcrumbs } = tab;
+
+              return (
+                <motion.div
+                  key={
+                    breadcrumbs.length >= 1
+                      ? breadcrumbs[0] +
+                        "-" +
+                        breadcrumbs[breadcrumbs.length - 1]
+                      : panelType
+                  }
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: `var(--tabWidth)` }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="h-full"
+                >
+                  <TabButton
+                    panelType={panelType}
+                    mode={mode}
+                    breadcrumbs={breadcrumbs}
+                  />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+
+          <UnusedSpace />
+        </div>
+      </ScrollArea>
+    </>
   );
 };
 

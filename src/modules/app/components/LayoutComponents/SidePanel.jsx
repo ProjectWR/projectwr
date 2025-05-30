@@ -49,7 +49,7 @@ const SidePanel = ({}) => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: 10, opacity: 0 }}
         transition={{ duration: 0.1, bounce: 0 }}
-        className="w-full h-full"
+        className="w-full h-full z-[49]"
       >
         {renderSidePanel()}
       </motion.div>

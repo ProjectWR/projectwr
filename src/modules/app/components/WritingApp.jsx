@@ -99,6 +99,9 @@ const WritingApp = () => {
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
 
+  const [sidePanelSliderPos, setSidePanelSliderPos] = useState(sidePanelWidth);
+  const [sidePanelSliderActive, setSidePanelSliderActive] = useState(false);
+
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
   useEffect(() => {
@@ -142,9 +145,32 @@ const WritingApp = () => {
 
       newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
-      setSidePanelWidth(newWidth);
+      setSidePanelSliderPos(newWidth);
+      setSidePanelSliderActive(true);
     },
-    [setSidePanelWidth, zoom]
+    [setSidePanelSliderPos, setSidePanelSliderActive, zoom]
+  );
+
+  const handleDragEnd = useCallback(
+    (event, info) => {
+      const rect = document
+        .getElementById("SidePanelMotionContainer")
+        ?.getBoundingClientRect();
+
+      if (!rect) return;
+
+      let newWidth = info.point.x - rect.left;
+
+      const MIN_WIDTH = 240 * zoom;
+      const MAX_WIDTH = 2 * zoom * 360;
+
+      newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+
+      setSidePanelWidth(newWidth);
+      setSidePanelSliderPos(newWidth);
+      setSidePanelSliderActive(false);
+    },
+    [setSidePanelWidth, setSidePanelSliderActive, zoom]
   );
 
   useEffect(() => {
@@ -526,8 +552,11 @@ const WritingApp = () => {
                               >
                                 <SidePanel />
                                 <motion.div
-                                  className="absolute h-full w-[6px] top-0 -right-[6px] z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
+                                  className={`absolute h-full w-[6px] top-0 z-[50] ${sidePanelSliderActive ? "bg-sidePanelDragHandle" : "bg-transparent"} cursor-w-resize`}
                                   drag="x"
+                                  style={{
+                                    left: `${sidePanelSliderPos}px`,
+                                  }}
                                   dragConstraints={{
                                     top: 0,
                                     left: 0,
@@ -537,6 +566,7 @@ const WritingApp = () => {
                                   dragElastic={0}
                                   dragMomentum={false}
                                   onDrag={handleDrag}
+                                  onDragEnd={handleDragEnd}
                                 ></motion.div>
                               </div>
                             </motion.div>
