@@ -433,6 +433,7 @@ const SearchBar = () => {
 
 export const ActionBarLeftSide = ({}) => {
   const zoom = appStore((state) => state.zoom);
+  const isMd = appStore((state) => state.isMd);
 
   const {
     saveStateInHistory,
@@ -479,10 +480,10 @@ export const ActionBarLeftSide = ({}) => {
       data-tauri-drag-region
       id="actionBarContainer"
       style={{
-        width: `${barWidth}px`,
-        minWidth: `calc(var(--uiScale) * 240px + var(--activityBarWidth))`,
+        width: isMd ? `${barWidth}px` : 0,
+        minWidth: `calc(var(--uiScale) * 120px)`,
       }}
-      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
+      className="border-b z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans"
     >
       <div
         data-tauri-drag-region
@@ -609,12 +610,12 @@ export const ActionBarRightSide = ({}) => {
       style={{
         width: `${barWidth}px`,
       }}
-      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans border-r"
+      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
     >
       <div
         data-tauri-drag-region
         id="actionBar"
-        className="w-full h-full flex justify-end gap-1 items-center relative pr-1"
+        className="w-full h-full flex justify-end gap-1 items-center relative"
       >
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">

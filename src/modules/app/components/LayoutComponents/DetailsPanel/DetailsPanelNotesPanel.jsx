@@ -206,7 +206,6 @@ export const DetailsPanelNotesPanel = ({}) => {
                 minWidth: 0,
                 transition: { duration: 0.05 },
               }}
-              transition={{ duration: 0.1 }}
               onHoverStart={() => {
                 keepNotesPanelAwake();
               }}

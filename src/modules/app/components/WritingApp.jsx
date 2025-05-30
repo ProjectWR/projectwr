@@ -307,7 +307,7 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-screen max-h-screen w-screen max-w-screen bg-appBackground font-serif border-b ${
+          className={`h-full max-h-full w-full max-w-full bg-appBackground font-serif ${
             !isMaximized && "border"
           } border-appLayoutBorder overflow-hidden text-appLayoutText`}
         >
@@ -398,14 +398,14 @@ const WritingApp = () => {
             <motion.div
               key="WritingApp"
               id="AppContainer"
-              className="dark border-appLayoutBorder bg-appBackground h-screen max-h-screen w-screen max-w-screen flex flex-col text-appLayoutText"
+              className="dark border-appLayoutBorder bg-appBackground h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.2 }}
             >
               {/* {deviceType === "desktop" && (<ActionBar />)} */}
-              <div className="w-full h-actionBarHeight min-h-actionBarHeight flex">
+              <div className="w-full h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
                 <ActionBarLeftSide />
                 <TabsBar />
                 <ActionBarRightSide />
@@ -413,9 +413,9 @@ const WritingApp = () => {
 
               <div
                 id="AppBodyContainer"
-                className={`w-full grow min-h-0 basis-0 flex relative
-              ${deviceType === "desktop" && "flex-row"}
-              ${deviceType === "mobile" && "flex-col"}
+                className={`w-full grow min-h-0 overflow-hidden basis-0 flex relative
+                ${deviceType === "desktop" && "flex-row"}
+                ${deviceType === "mobile" && "flex-col"}
               `}
               >
                 {deviceType === "desktop" && (

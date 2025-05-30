@@ -61,7 +61,7 @@ export const TabsBar = () => {
     <>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
+        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans"
       >
         <ActionButton
           onClick={() => {
@@ -107,7 +107,7 @@ export const TabsBar = () => {
         scrollbars="x"
         type="hover"
         classNames={{
-          root: `grow basis-0 min-w-0 h-full min-h-full pt-1`,
+          root: `grow basis-0 min-w-0 h-full min-h-full`,
           scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
           thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
           viewport: `h-full w-full`,
@@ -115,7 +115,6 @@ export const TabsBar = () => {
         }}
       >
         <div className="w-fit min-w-full h-full flex items-center">
-
           <AnimatePresence>
             {tabs?.map((tab) => {
               const { panelType, mode, breadcrumbs } = tab;
@@ -473,8 +472,10 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
   return (
     <div
       ref={dndRef}
-      className={`h-full w-full flex items-center justify-start gap-1 pr-1
+      className={`h-full min-h-full w-full flex items-center justify-start gap-1 pr-1
           transition-colors duration-200
+
+          border
           
 
           ${isDragging && "opacity-30"} 
@@ -484,12 +485,12 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
           ${
             isOverCurrent &&
             areaSelected === "left" &&
-            `border-r border-r-appLayoutBorder border-l border-l-appLayoutHighlight`
+            `border-r-appLayoutBorder border-l-appLayoutHighlight`
           }
           ${
             isOverCurrent &&
             areaSelected === "right" &&
-            `border-l border-l-appLayoutBorder border-r border-r-appLayoutHighlight`
+            `border-l-appLayoutBorder border-r-appLayoutHighlight`
           }
          
 
@@ -499,19 +500,17 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
               mode,
               breadcrumbs,
             })
-              ? "border-t-appLayoutHighlight border-x border-x-appLayoutBorder   border-t border-b border-b-transparent"
-              : "border-t-transparent border-t border-b border-b-appLayoutBorder border-x border-x-transparent hover:bg-appLayoutInverseHover hover:border-t-appLayoutInverseHover "
+              ? "border-t-appLayoutHighlight border-x-appLayoutBorder border-b-transparent"
+              : "border-t-transparent border-b-appLayoutBorder border-x-transparent hover:bg-appLayoutInverseHover "
           }
         `}
     >
       <button
         autoFocus
         onClick={action}
-        className={`grow basis-0 min-w-0 h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted`}
+        className={`grow basis-0 min-w-0 h-full min-h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted`}
       >
-        <span className="w-tabsIconSize h-tabsIconSize p-1 mb-[3px]">
-          {icon}
-        </span>
+        <span className="w-tabsIconSize h-tabsIconSize p-1">{icon}</span>
         <div className="grow pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
           {label}
         </div>
