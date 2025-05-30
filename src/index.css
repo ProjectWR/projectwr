@@ -268,6 +268,7 @@
     --scrollbarSize: calc(var(--uiScale) * 0.25rem);
     --tabsHeight: calc(var(--uiScale) * 2.2rem);
     --tabsIconSize: calc(var(--uiScale) * 1.8rem);
+    --tabsDeleteIconSize: calc(var(--uiScale) * 1.4rem);
     --tabsFontSize: calc(var(--uiScale) * 0.9rem);
     --tabWidth: calc(var(--uiScale) * 12rem);
 
@@ -500,6 +501,7 @@
   --spacing-noteCardHeight: var(--noteCardHeight);
   --spacing-scrollbarWidthThin: var(--scrollbarWidthThin);
   --spacing-noteCardHeaderHeight: var(--noteCardHeaderHeight);
+  --spacing-tabsDeleteIconSize: var(--tabsDeleteIconSize);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);

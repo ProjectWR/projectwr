@@ -534,7 +534,7 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
             );
           }
         }}
-        className="min-w-tabsIconSize w-tabsIconSize h-tabsIconSize p-[3px] rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+        className="min-w-tabsDeleteIconSize w-tabsDeleteIconSize h-tabsDeleteIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
       >
         <span className="icon-[iwwa--delete] w-full h-full"></span>
       </button>
