@@ -54,6 +54,7 @@ import {
   ActionBarRightSide,
 } from "./LayoutComponents/ActionBar";
 import { TabsBar } from "./LayoutComponents/TabsBar";
+import { SidePanelContainer } from "./LayoutComponents/SidePanelContainer";
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -61,6 +62,7 @@ const WritingApp = () => {
   const setZoom = appStore((state) => state.setZoom);
 
   const [isMaximized, setIsMaximized] = useState(false);
+  const panelOpened = appStore((state) => state.panelOpened);
 
   // FOR DEV ONLY
 
@@ -74,15 +76,10 @@ const WritingApp = () => {
 
   const zoom = appStore((state) => state.zoom);
 
-  const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-
-  const sideBarOpened = appStore((state) => state.sideBarOpened);
 
   const isMd = appStore((state) => state.isMd);
   const setIsMd = appStore((state) => state.setIsMd);
-
-  const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer();
 
   const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
     useRefreshableTimer({ time: 1000 });
@@ -93,14 +90,10 @@ const WritingApp = () => {
   const notesPanelOpened = appStore((state) => state.notesPanelOpened);
   const setNotesPanelOpened = appStore((state) => state.setNotesPanelOpened);
 
-  const sidePanelWidth = appStore((state) => state.sidePanelWidth);
-  const setSidePanelWidth = appStore((state) => state.setSidePanelWidth);
-
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
 
-  const [sidePanelSliderPos, setSidePanelSliderPos] = useState(sidePanelWidth);
-  const [sidePanelSliderActive, setSidePanelSliderActive] = useState(false);
+  const [sidePanelScope, sidePanelAnimate] = useAnimate();
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
@@ -115,80 +108,6 @@ const WritingApp = () => {
       }
     });
   }, [setUser]);
-
-  const [sidePanelScope, sidePanelAnimate] = useAnimate();
-
-  useEffect(() => {
-    if (sidePanelScope.current) {
-      console.log("triggering side panel");
-      sidePanelAnimate(
-        sidePanelScope.current,
-        { x: panelOpened ? 0 : -500 },
-        { ease: "circInOut" },
-        { duration: 0.2 }
-      );
-    }
-  }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
-
-  const handleDrag = useCallback(
-    (event, info) => {
-      const rect = document
-        .getElementById("SidePanelMotionContainer")
-        ?.getBoundingClientRect();
-
-      if (!rect) return;
-
-      let newWidth = info.point.x - rect.left;
-
-      const MIN_WIDTH = 240 * zoom;
-      const MAX_WIDTH = 2 * zoom * 360;
-
-      newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
-
-      setSidePanelSliderPos(newWidth);
-      setSidePanelSliderActive(true);
-    },
-    [setSidePanelSliderPos, setSidePanelSliderActive, zoom]
-  );
-
-  const handleDragEnd = useCallback(
-    (event, info) => {
-      const rect = document
-        .getElementById("SidePanelMotionContainer")
-        ?.getBoundingClientRect();
-
-      if (!rect) return;
-
-      let newWidth = info.point.x - rect.left;
-
-      const MIN_WIDTH = 240 * zoom;
-      const MAX_WIDTH = 2 * zoom * 360;
-
-      newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
-
-      setSidePanelWidth(newWidth);
-      setSidePanelSliderPos(newWidth);
-      setSidePanelSliderActive(false);
-    },
-    [setSidePanelWidth, setSidePanelSliderActive, zoom]
-  );
-
-  useEffect(() => {
-    const rect = document
-      .getElementById("SidePanelMotionContainer")
-      ?.getBoundingClientRect();
-
-    if (!rect) return;
-
-    let newWidth = rect.right - rect.left;
-
-    const MIN_WIDTH = 240 * zoom;
-    const MAX_WIDTH = 2 * zoom * 360;
-
-    newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
-
-    setSidePanelWidth(newWidth);
-  }, [setSidePanelWidth, zoom]);
 
   useEffect(() => {
     const initializeWritingApp = async () => {
@@ -351,6 +270,18 @@ const WritingApp = () => {
   ]);
 
   useEffect(() => {
+    if (sidePanelScope.current) {
+      console.log("triggering side panel");
+      sidePanelAnimate(
+        sidePanelScope.current,
+        { x: panelOpened ? 0 : -500 },
+        { ease: "circInOut" },
+        { duration: 0.2 }
+      );
+    }
+  }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
+
+  useEffect(() => {
     const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
       const x = await getCurrentWindow().isMaximized();
 
@@ -362,7 +293,6 @@ const WritingApp = () => {
         setIsMd(true);
       } else {
         setIsMd(false);
-        refreshPanel();
       }
     };
 
@@ -372,13 +302,7 @@ const WritingApp = () => {
     return async () => {
       (await unlisten)();
     };
-  }, [setIsMd, refreshPanel]);
-
-  const debouncedRefreshPanel = useDebouncedCallback(() => {
-    if (deviceType === "desktop") {
-      refreshPanel();
-    }
-  }, 1000);
+  }, [setIsMd]);
 
   // Render loading screen if loading is true
   return (
@@ -499,80 +423,7 @@ const WritingApp = () => {
               >
                 {deviceType === "desktop" && (
                   <>
-                    <motion.div
-                      id="ActivityBarAndSidePanelContainer"
-                      animate={{
-                        width: "fit-content",
-                        minWidth: "fit-content",
-                      }}
-                      className="h-full flex flex-row items-center relative"
-                      onHoverStart={() => {
-                        keepAwake();
-                      }}
-                      onHoverEnd={() => {
-                        refreshPanel();
-                      }}
-                    >
-                      <ActivityBar
-                        isPanelAwakeOrScreenMd={isMd || isPanelAwake}
-                      />
-                      <AnimatePresence mode="wait">
-                        {panelOpened &&
-                          sideBarOpened &&
-                          (isMd || isPanelAwake) && (
-                            <motion.div
-                              key="SidePanelMotionContainer"
-                              id="SidePanelMotionContainer"
-                              className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
-                                !isMd &&
-                                "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
-                              } `}
-                              initial={{
-                                opacity: 0,
-                                width: 0,
-                                minWidth: 0,
-                                transition: { duration: 0.05 },
-                              }}
-                              animate={{
-                                opacity: 1,
-                                width: `${sidePanelWidth}px`,
-                                minWidth: `${sidePanelWidth}px`,
-                                transition: { duration: 0.05 },
-                              }}
-                              exit={{
-                                opacity: 0,
-                                width: 0,
-                                minWidth: 0,
-                                transition: { duration: 0.05 },
-                              }}
-                            >
-                              <div
-                                id="SidePanelWrapper"
-                                className="h-full w-full relative"
-                              >
-                                <SidePanel />
-                                <motion.div
-                                  className={`absolute h-full w-[6px] top-0 z-[50] ${sidePanelSliderActive ? "bg-sidePanelDragHandle" : "bg-transparent"} cursor-w-resize`}
-                                  drag="x"
-                                  style={{
-                                    left: `${sidePanelSliderPos}px`,
-                                  }}
-                                  dragConstraints={{
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                  }}
-                                  dragElastic={0}
-                                  dragMomentum={false}
-                                  onDrag={handleDrag}
-                                  onDragEnd={handleDragEnd}
-                                ></motion.div>
-                              </div>
-                            </motion.div>
-                          )}
-                      </AnimatePresence>
-                    </motion.div>
+                    <SidePanelContainer loading={loading} />
 
                     <MainPanel
                       isNotesPanelAwake={isNotesPanelAwake}

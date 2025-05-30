@@ -480,6 +480,7 @@ export const ActionBarLeftSide = ({}) => {
       id="actionBarContainer"
       style={{
         width: `${barWidth}px`,
+        minWidth: `calc(var(--uiScale) * 240px + var(--activityBarWidth))`,
       }}
       className="border-b z-1000 border-appLayoutBorder h-actionBarHeight min-h-actionBarHeight text-appLayoutText font-sans"
     >
