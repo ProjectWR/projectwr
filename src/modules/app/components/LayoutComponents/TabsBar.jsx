@@ -27,6 +27,8 @@ export const TabsBar = () => {
 
   const setTabs = mainPanelStore((state) => state.setTabs);
 
+  const [overflow, setOverflow] = useState(false);
+
   const {
     saveStateInHistory,
     canGoBack,
@@ -56,6 +58,33 @@ export const TabsBar = () => {
       setTabs(newTabs);
     }
   }, [mainPanelState, setTabs]);
+
+  useEffect(() => {
+    const content = document.getElementById("TabsContent");
+    const scrollArea = document.getElementById("TabsScrollArea");
+
+    if (!content || !scrollArea) return;
+
+    const checkOverflow = () => {
+      if (content.getBoundingClientRect().width > scrollArea.getBoundingClientRect().width) {
+        setOverflow(true);
+      } else setOverflow(false);
+    };
+
+    const ro = new ResizeObserver(() => {
+      checkOverflow();
+    });
+
+    ro.observe(content);
+    ro.observe(scrollArea);
+
+    checkOverflow();
+
+    return () => {
+      ro.unobserve(content);
+      ro.unobserve(scrollArea);
+    };
+  }, []);
 
   return (
     <>
@@ -102,19 +131,26 @@ export const TabsBar = () => {
           </div>
         </ActionButton>
       </div>
+      <style></style>
       <ScrollArea
         overscrollBehavior="none"
         scrollbars="x"
         type="hover"
+        id="TabsScrollArea"
         classNames={{
-          root: `grow basis-0 min-w-0 h-full min-h-full`,
+          root: `grow basis-0 min-w-0 h-full min-h-full ${
+            overflow && "border-x border-appLayoutBorder"
+          }`,
           scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
           thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
           viewport: `h-full w-full`,
           content: `h-full w-full`,
         }}
       >
-        <div className="w-fit min-w-full h-full flex items-center">
+        <div
+          id="TabsContent"
+          className="w-fit min-w-full h-full z-[4] flex items-center"
+        >
           <AnimatePresence>
             {tabs?.map((tab) => {
               const { panelType, mode, breadcrumbs } = tab;
