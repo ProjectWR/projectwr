@@ -60,7 +60,7 @@ export const SidePanelContainer = ({ loading }) => {
       setSidePanelSliderPos(newWidth);
       setSidePanelSliderActive(false);
     },
-    [setSidePanelWidth, setSidePanelSliderActive, zoom]
+    [setSidePanelWidth, setSidePanelSliderPos, setSidePanelSliderActive, zoom]
   );
 
   useEffect(() => {

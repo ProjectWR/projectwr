@@ -28,7 +28,7 @@ import { mainPanelStore } from "../../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
 import { getOrInitLibraryYTree } from "../../lib/ytree";
 
-const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
+const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
 
   const {
@@ -144,7 +144,7 @@ const MainPanel = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           },
         },
       ];
-      
+
       const libraryYTree = getOrInitLibraryYTree(rootId);
 
       if (isAtRoot) {

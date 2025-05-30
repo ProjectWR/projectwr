@@ -37,6 +37,7 @@ import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { useDebouncedCallback } from "use-debounce";
 import { mainPanelStore } from "../../../stores/mainPanelStore";
 import useOuterClick from "../../../../design-system/useOuterClick";
+import useRefreshableTimer from "../../../hooks/useRefreshableTimer";
 
 const lazyWithPrefetch = (factory) => {
   factory();
@@ -50,16 +51,20 @@ const NoteCard = lazyWithPrefetch(() => import("./NoteCard"));
  * @param {{ytree: YTree, itemId: string, libraryId: string, notesPanelOpened: Function, isNotesPanelAwake: boolean, refreshNotesPanel: Function, keepNotesPanelAwake: Function}} param0
  * @returns
  */
-export const DetailsPanelNotesPanel = ({
-  notesPanelOpened,
-  notesPanelWidth,
-  setNotesPanelWidth,
-  isNotesPanelAwake,
-  refreshNotesPanel,
-  keepNotesPanelAwake,
-}) => {
+export const DetailsPanelNotesPanel = ({}) => {
   const isMd = appStore((state) => state.isMd);
   const zoom = appStore((state) => state.zoom);
+
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+
+  const notesPanelOpened = appStore((state) => state.notesPanelOpened);
+  const notesPanelWidth = appStore((state) => state.notesPanelWidth);
+  const setNotesPanelWidth = appStore((state) => state.setNotesPanelWidth);
+
+  const [notesPanelSliderPos, setNotesPanelSliderPos] =
+    useState(notesPanelWidth);
+  const [notesPanelSliderActive, setNotesPanelSliderActive] = useState(false);
 
   const notesPanelState = appStore((state) => state.notesPanelState);
 
@@ -107,11 +112,28 @@ export const DetailsPanelNotesPanel = ({
         .getElementById("NotesPanelMotionContainer")
         ?.getBoundingClientRect();
 
-      const rectBody = document
-        .getElementById("DetailsPanelBody")
+      if (!rect) return;
+
+      let newWidth = rect.right - info.point.x;
+
+      const MIN_WIDTH = zoom * 284.8;
+      const MAX_WIDTH = 2 * zoom * 360 + zoom * 44.8;
+
+      newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+
+      setNotesPanelSliderPos(newWidth);
+      setNotesPanelSliderActive(true);
+    },
+    [setNotesPanelSliderPos, setNotesPanelSliderActive, zoom]
+  );
+
+  const handleDragEnd = useCallback(
+    (event, info) => {
+      const rect = document
+        .getElementById("NotesPanelMotionContainer")
         ?.getBoundingClientRect();
 
-      if (!rect || !rectBody) return;
+      if (!rect) return;
 
       let newWidth = rect.right - info.point.x;
 
@@ -121,78 +143,116 @@ export const DetailsPanelNotesPanel = ({
       newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
       setNotesPanelWidth(newWidth);
+      setNotesPanelSliderPos(newWidth);
+      setNotesPanelSliderActive(false);
     },
-    [setNotesPanelWidth, zoom]
+    [
+      setNotesPanelWidth,
+      setNotesPanelSliderPos,
+      setNotesPanelSliderActive,
+      zoom,
+    ]
   );
 
+  useEffect(() => {
+    const rect = document
+      .getElementById("NotesPanelMotionContainer")
+      ?.getBoundingClientRect();
+
+    if (!rect) return;
+
+    let newWidth = rect.right - rect.left;
+
+    const MIN_WIDTH = zoom * 284.8;
+    const MAX_WIDTH = 2 * zoom * 360 + zoom * 44.8;
+
+    newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
+
+    setNotesPanelWidth(newWidth);
+  }, [setNotesPanelWidth, zoom]);
+
+  useEffect(() => {
+    if (!isMd) refreshNotesPanel();
+  }, [isMd, refreshNotesPanel]);
+
   return (
-    <AnimatePresence mode="wait">
-      {panelType === "libraries" &&
-        notesPanelOpened &&
-        (isMd || isNotesPanelAwake) && (
-          <motion.div
-            key={`NotesPanelMotionContainer-${libraryId}`}
-            id="NotesPanelMotionContainer"
-            className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${
-              !isMd &&
-              "absolute top-0 right-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
-            } `}
-            initial={{
-              opacity: 0,
-              width: 0,
-              minWidth: 0,
-              transition: { duration: 0.05 },
-            }}
-            animate={{
-              opacity: 1,
-              width: `${notesPanelWidth}px`,
-              minWidth: `${notesPanelWidth}px`,
-              transition: { duration: 0.05 },
-            }}
-            exit={{
-              opacity: 0,
-              width: 0,
-              minWidth: 0,
-              transition: { duration: 0.05 },
-            }}
-            transition={{ duration: 0.1 }}
-            onHoverStart={() => {
-              keepNotesPanelAwake();
-            }}
-            onHoverEnd={() => {
-              refreshNotesPanel();
-            }}
-          >
-            <div className="w-full h-full @container flex flex-col relative">
-              {error}
+    <div id="NotesPanelContainer" className="h-full w-fit">
+      <AnimatePresence mode="wait">
+        {panelType === "libraries" &&
+          notesPanelOpened &&
+          (isMd || isNotesPanelAwake) && (
+            <motion.div
+              key={`NotesPanelMotionContainer-${libraryId}`}
+              id="NotesPanelMotionContainer"
+              className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${
+                !isMd &&
+                "absolute top-0 right-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
+              } `}
+              initial={{
+                opacity: 0,
+                width: 0,
+                minWidth: 0,
+                transition: { duration: 0.05 },
+              }}
+              animate={{
+                opacity: 1,
+                width: `${notesPanelWidth}px`,
+                minWidth: `${notesPanelWidth}px`,
+                transition: { duration: 0.05 },
+              }}
+              exit={{
+                opacity: 0,
+                width: 0,
+                minWidth: 0,
+                transition: { duration: 0.05 },
+              }}
+              transition={{ duration: 0.1 }}
+              onHoverStart={() => {
+                keepNotesPanelAwake();
+              }}
+              onHoverEnd={() => {
+                refreshNotesPanel();
+              }}
+            >
+              <div className="w-full h-full @container flex flex-col relative">
+                {error}
 
-              {!error && libraryId && itemId && ytree ? (
-                <NotesContent
-                  libraryId={libraryId}
-                  itemId={itemId}
-                  ytree={ytree}
-                />
-              ) : (
-                <div className="w-full h-full"> No Library item opened </div>
-              )}
+                {!error && libraryId && itemId && ytree ? (
+                  <NotesContent
+                    libraryId={libraryId}
+                    itemId={itemId}
+                    ytree={ytree}
+                  />
+                ) : (
+                  <div className="w-full h-full"> No Library item opened </div>
+                )}
 
-              <motion.div
-                className="absolute h-full w-[6px] top-0 left-0 z-50 hover:bg-sidePanelDragHandle cursor-w-resize"
-                drag="x"
-                dragConstraints={{
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                }}
-                dragElastic={0}
-                dragMomentum={false}
-                onDrag={handleDrag}
-              ></motion.div>
-            </div>
-          </motion.div>
-        )}
-    </AnimatePresence>
+                <motion.div
+                  className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${
+                    notesPanelSliderActive
+                      ? "bg-sidePanelDragHandle"
+                      : "bg-transparent"
+                  } cursor-w-resize`}
+                  drag="x"
+                  style={{
+                    right: `${notesPanelSliderPos}px`,
+                  }}
+                  dragConstraints={{
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                  dragElastic={0}
+                  dragMomentum={false}
+                  onDrag={handleDrag}
+                  onDragEnd={handleDragEnd}
+                ></motion.div>
+              </div>
+            </motion.div>
+          )}
+      </AnimatePresence>
+    </div>
   );
 };
 

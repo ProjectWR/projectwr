@@ -81,9 +81,6 @@ const WritingApp = () => {
   const isMd = appStore((state) => state.isMd);
   const setIsMd = appStore((state) => state.setIsMd);
 
-  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
-    useRefreshableTimer({ time: 1000 });
-
   const notesPanelWidth = appStore((state) => state.notesPanelWidth);
   const setNotesPanelWidth = appStore((state) => state.setNotesPanelWidth);
 
@@ -425,24 +422,9 @@ const WritingApp = () => {
                   <>
                     <SidePanelContainer loading={loading} />
 
-                    <MainPanel
-                      isNotesPanelAwake={isNotesPanelAwake}
-                      refreshNotesPanel={refreshNotesPanel}
-                    />
+                    <MainPanel />
 
-                    <div id="NotesPanelContainer" className="h-full w-fit">
-                      <DetailsPanelNotesPanel
-                        libraryId={null}
-                        itemId={null}
-                        ytree={null}
-                        notesPanelOpened={notesPanelOpened}
-                        notesPanelWidth={notesPanelWidth}
-                        setNotesPanelWidth={setNotesPanelWidth}
-                        isNotesPanelAwake={isNotesPanelAwake}
-                        refreshNotesPanel={refreshNotesPanel}
-                        keepNotesPanelAwake={keepNotesPanelAwake}
-                      />
-                    </div>
+                    <DetailsPanelNotesPanel />
                   </>
                 )}
 
