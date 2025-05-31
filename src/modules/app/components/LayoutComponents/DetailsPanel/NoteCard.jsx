@@ -68,13 +68,13 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="h-fit bg-transparent shadow-md shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutInverseHover rounded-lg overflow-hidden"
+        className="h-fit bg-transparent shadow-md shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutInverseHover rounded-sm"
       >
         <div className="h-noteCardHeaderHeight w-full flex pl-2">
           <input
             className={`bg-transparent  grow basis-0 min-w-0 h-full text-noteCardFontSizeThree  text-start
                     focus:bg-appLayoutInputBackground focus:outline-none text-appLayoutTextMuted focus:text-appLayoutText
-                     px-1 py-px transition-colors duration-200`}
+                     px-px py-px transition-colors duration-200`}
             name={"item_title"}
             onChange={handleChange}
             value={itemProperties.item_title}
@@ -102,7 +102,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
           </button>
         </div>
 
-        <div className="divider w-full px-2">
+        <div className="divider w-full px-1">
           <div className="w-full h-px bg-appLayoutBorder"></div>
         </div>
         <NoteCardEditor
@@ -166,7 +166,7 @@ const NoteCardEditor = ({
   }, [initialItemProperties, editor]);
 
   return (
-    <div className="h-fit w-full px-2">
+    <div className="h-fit w-full px-1">
       <RichTextEditor
         editor={editor}
         variant="subtle"
@@ -178,7 +178,7 @@ const NoteCardEditor = ({
           ${sizeMode === 1 && "text-noteCardFontSizeOne"} 
           ${sizeMode === 2 && "text-noteCardFontSizeTwo"} 
           ${sizeMode === 3 && "text-noteCardFontSizeThree"} 
-          overflow-y-scroll p-2 NoteCardEditor`,
+          overflow-y-scroll p-1 NoteCardEditor`,
           controlsGroup: "bg-appBackground gap-1 rounded-lg",
           control:
             "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
