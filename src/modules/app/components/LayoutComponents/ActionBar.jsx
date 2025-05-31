@@ -490,8 +490,13 @@ export const ActionBarLeftSide = ({}) => {
         id="actionBar"
         className="w-full h-full flex justify-start gap-1 items-center relative pr-1"
       >
-        <div className="h-full w-fit flex items-center gap-1">
-          <div className="h-full w-activityBarWidth flex items-center justify-center">
+        <div className="h-full w-fit flex items-center">
+          <div
+            style={{
+              width: `calc(var(--activityBarWidth) - 1px)`,
+            }}
+            className="h-full flex items-center justify-center"
+          >
             <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
               <div className="h-full w-actionBarButtonIconSize relative">
                 <AnimatePresence mode="sync">
@@ -519,24 +524,28 @@ export const ActionBarLeftSide = ({}) => {
               </div>
             </ActionButton>
           </div>
-          <ActionButton
-            onClick={() => {
-              activatePanel("home", null, []);
-            }}
-            className={`${false && "bg-appLayoutPressed"}`}
-          >
-            <div className={`h-full w-actionBarButtonIconSize relative`}>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="homeButton"
-                className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
-          </ActionButton>
+
+          <div className="w-px h-full py-2">
+            <div className="w-full h-full bg-appLayoutBorder"></div>
+          </div>
         </div>
+        <ActionButton
+          onClick={() => {
+            activatePanel("home", null, []);
+          }}
+          className={`${false && "bg-appLayoutPressed"}`}
+        >
+          <div className={`h-full w-actionBarButtonIconSize relative`}>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="homeButton"
+              className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+            ></motion.span>
+          </div>
+        </ActionButton>
       </div>
     </div>
   );
