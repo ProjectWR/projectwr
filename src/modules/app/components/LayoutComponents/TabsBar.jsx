@@ -66,7 +66,10 @@ export const TabsBar = () => {
     if (!content || !scrollArea) return;
 
     const checkOverflow = () => {
-      if (content.getBoundingClientRect().width > scrollArea.getBoundingClientRect().width) {
+      if (
+        content.getBoundingClientRect().width >
+        scrollArea.getBoundingClientRect().width
+      ) {
         setOverflow(true);
       } else setOverflow(false);
     };
@@ -90,8 +93,26 @@ export const TabsBar = () => {
     <>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans"
+        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans px-1"
       >
+        <ActionButton
+          onClick={() => {
+            activatePanel("home", null, []);
+          }}
+          className={`${false && "bg-appLayoutPressed"}`}
+        >
+          <div className={`h-full w-actionBarButtonIconSize relative`}>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              key="homeButton"
+              className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+            ></motion.span>
+          </div>
+        </ActionButton>
+
         <ActionButton
           onClick={() => {
             if (canGoBack) {
@@ -509,7 +530,7 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
     <div
       ref={dndRef}
       className={`h-full min-h-full w-full flex items-center justify-start gap-1 pr-1
-          transition-colors duration-200
+          transition-colors duration-200 font-sans
 
           border
           

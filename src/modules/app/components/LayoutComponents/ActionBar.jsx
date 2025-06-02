@@ -488,7 +488,7 @@ export const ActionBarLeftSide = ({}) => {
       <div
         data-tauri-drag-region
         id="actionBar"
-        className="w-full h-full flex justify-start gap-1 items-center relative pr-1"
+        className="w-full h-full flex justify-start gap-1 items-center relative"
       >
         <div className="h-full w-fit flex items-center">
           <div
@@ -526,12 +526,11 @@ export const ActionBarLeftSide = ({}) => {
           </div>
 
           <div className="w-px h-full py-2">
-            <div className="w-full h-full bg-appLayoutBorder"></div>
+            <div className={`w-full h-full bg-appLayoutBorder`}></div>
           </div>
         </div>
         <ActionButton
           onClick={() => {
-            activatePanel("home", null, []);
           }}
           className={`${false && "bg-appLayoutPressed"}`}
         >
@@ -541,11 +540,18 @@ export const ActionBarLeftSide = ({}) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              key="homeButton"
-              className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              key="searchButton"
+              className="icon-[material-symbols-light--search] w-full h-full top-0 left-0 absolute bg-appLayoutText"
             ></motion.span>
           </div>
         </ActionButton>
+        <div className="grow basis-0 min-w-0"></div>
+
+        <div className="w-px min-w-px h-full py-2">
+          <div
+            className={`w-full h-full bg-appLayoutBorder`}
+          ></div>
+        </div>
       </div>
     </div>
   );
