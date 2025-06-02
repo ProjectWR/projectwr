@@ -92,6 +92,9 @@ const WritingApp = () => {
 
   const [sidePanelScope, sidePanelAnimate] = useAnimate();
 
+  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
+    useRefreshableTimer({ time: 1000 });
+
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
   useEffect(() => {
@@ -407,7 +410,7 @@ const WritingApp = () => {
               {/* {deviceType === "desktop" && (<ActionBar />)} */}
               <div className="w-full h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
                 <ActionBarLeftSide />
-                <TabsBar />
+                <TabsBar isNotesPanelAwake={isNotesPanelAwake} refreshNotesPanel={refreshNotesPanel} />
                 <ActionBarRightSide />
               </div>
 
@@ -424,7 +427,11 @@ const WritingApp = () => {
 
                     <MainPanel />
 
-                    <DetailsPanelNotesPanel />
+                    <DetailsPanelNotesPanel
+                      isNotesPanelAwake={isNotesPanelAwake}
+                      refreshNotesPanel={refreshNotesPanel}
+                      keepNotesPanelAwake={keepNotesPanelAwake}
+                    />
                   </>
                 )}
 

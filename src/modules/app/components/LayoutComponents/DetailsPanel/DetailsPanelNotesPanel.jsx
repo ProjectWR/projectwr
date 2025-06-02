@@ -51,12 +51,13 @@ const NoteCard = lazyWithPrefetch(() => import("./NoteCard"));
  * @param {{ytree: YTree, itemId: string, libraryId: string, notesPanelOpened: Function, isNotesPanelAwake: boolean, refreshNotesPanel: Function, keepNotesPanelAwake: Function}} param0
  * @returns
  */
-export const DetailsPanelNotesPanel = ({}) => {
+export const DetailsPanelNotesPanel = ({
+  isNotesPanelAwake,
+  refreshNotesPanel,
+  keepNotesPanelAwake,
+}) => {
   const isMd = appStore((state) => state.isMd);
   const zoom = appStore((state) => state.zoom);
-
-  const [isNotesPanelAwake, refreshNotesPanel, keepNotesPanelAwake] =
-    useRefreshableTimer({ time: 1000 });
 
   const notesPanelOpened = appStore((state) => state.notesPanelOpened);
   const notesPanelWidth = appStore((state) => state.notesPanelWidth);

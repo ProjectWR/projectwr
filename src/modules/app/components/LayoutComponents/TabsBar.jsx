@@ -11,7 +11,7 @@ import { appStore } from "../../stores/appStore";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { ActionButton } from "./ActionBar";
 
-export const TabsBar = () => {
+export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   /**
    * @type {MainPanelState}
    * @typedef {Object} MainPanelState
@@ -154,7 +154,6 @@ export const TabsBar = () => {
           </div>
         </ActionButton>
       </div>
-      <style></style>
       <ScrollArea
         overscrollBehavior="none"
         scrollbars="x"
@@ -210,6 +209,15 @@ export const TabsBar = () => {
           <UnusedSpace />
         </div>
       </ScrollArea>
+      <div
+        data-tauri-drag-region
+        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans px-1"
+      >
+        <NotesPanelOpenButton
+          isNotesPanelAwake={isNotesPanelAwake}
+          refreshNotesPanel={refreshNotesPanel}
+        />
+      </div>
     </>
   );
 };
@@ -690,5 +698,59 @@ const UnusedSpace = ({ offset = false }) => {
         ${offset ? "w-2" : "grow basis-0"}
         `}
     ></div>
+  );
+};
+
+const NotesPanelOpenButton = ({ isNotesPanelAwake, refreshNotesPanel }) => {
+  const setNotesPanelOpened = appStore((state) => state.setNotesPanelOpened);
+  const notesPanelOpened = appStore((state) => state.notesPanelOpened);
+  const isMd = appStore((state) => state.isMd);
+
+  const mainPanelState = mainPanelStore((state) => state.mainPanelState);
+
+  const { panelType } = mainPanelState;
+
+  return (
+    <AnimatePresence>
+      {panelType === "libraries" && (
+        <ActionButton
+          onClick={() => {
+            if (isMd) {
+              setNotesPanelOpened(!notesPanelOpened);
+            } else {
+              if (!(notesPanelOpened && isNotesPanelAwake)) {
+                setNotesPanelOpened(true);
+                refreshNotesPanel();
+              }
+            }
+          }}
+          className={`${false && "bg-appLayoutPressed"}`}
+        >
+          <div className={`h-full w-actionBarButtonIconSize relative`}>
+            <AnimatePresence mode="wait">
+              {notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="homeButton"
+                  className="icon-[solar--telescope-bold] w-[100%] h-[100%]"
+                ></motion.span>
+              ) : (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="homeButton"
+                  className="icon-[solar--telescope-bold-duotone] w-[100%] h-[100%]"
+                ></motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+        </ActionButton>
+      )}
+    </AnimatePresence>
   );
 };
