@@ -533,7 +533,6 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
           transition-colors duration-200 font-sans
 
           border
-          
 
           ${isDragging && "opacity-30"} 
 
@@ -544,13 +543,13 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
             areaSelected === "left" &&
             `border-r-appLayoutBorder border-l-appLayoutHighlight`
           }
+          
           ${
             isOverCurrent &&
             areaSelected === "right" &&
             `border-l-appLayoutBorder border-r-appLayoutHighlight`
           }
          
-
           ${
             equalityDeep(mainPanelState, {
               panelType,
