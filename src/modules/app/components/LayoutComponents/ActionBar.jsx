@@ -530,8 +530,7 @@ export const ActionBarLeftSide = ({}) => {
           </div>
         </div>
         <ActionButton
-          onClick={() => {
-          }}
+          onClick={() => {}}
           className={`${false && "bg-appLayoutPressed"}`}
         >
           <div className={`h-full w-actionBarButtonIconSize relative`}>
@@ -548,9 +547,7 @@ export const ActionBarLeftSide = ({}) => {
         <div className="grow basis-0 min-w-0"></div>
 
         <div className="w-px min-w-px h-full py-2">
-          <div
-            className={`w-full h-full bg-appLayoutBorder`}
-          ></div>
+          <div className={`w-full h-full bg-appLayoutBorder`}></div>
         </div>
       </div>
     </div>
@@ -632,6 +629,10 @@ export const ActionBarRightSide = ({}) => {
         id="actionBar"
         className="w-full h-full flex justify-end gap-1 items-center relative"
       >
+        <div className="w-px min-w-px h-full py-2">
+          <div className={`w-full h-full bg-appLayoutBorder`}></div>
+        </div>
+        <div className="grow"></div>
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
             <ActionButton

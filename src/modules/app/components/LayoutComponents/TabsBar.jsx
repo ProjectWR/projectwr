@@ -27,6 +27,8 @@ export const TabsBar = () => {
 
   const setTabs = mainPanelStore((state) => state.setTabs);
 
+  const isMd = appStore((state) => state.isMd);
+
   const [overflow, setOverflow] = useState(false);
 
   const {
@@ -186,9 +188,14 @@ export const TabsBar = () => {
                       : panelType
                   }
                   initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: `var(--tabWidth)` }}
+                  animate={{
+                    opacity: 1,
+                    width: isMd
+                      ? `var(--tabWidth)`
+                      : `calc(var(--tabWidth) * 0.7)`,
+                  }}
                   exit={{ opacity: 0, width: 0 }}
-                  className="h-full"
+                  className="h-full overflow-x-hidden overflow-ellipsis"
                 >
                   <TabButton
                     panelType={panelType}
@@ -564,10 +571,10 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
       <button
         autoFocus
         onClick={action}
-        className={`grow basis-0 min-w-0 h-full min-h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted`}
+        className={`grow basis-0 min-w-0 h-full min-h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted overflow-x-hidden overflow-y-hidden overflow-ellipsis`}
       >
         <span className="w-tabsIconSize h-tabsIconSize p-1">{icon}</span>
-        <div className="grow pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
+        <div className="grow min-w-0 pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
           {label}
         </div>
       </button>
