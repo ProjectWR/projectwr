@@ -200,6 +200,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
                     panelType={panelType}
                     mode={mode}
                     breadcrumbs={breadcrumbs}
+                    isRemoveAvailable={tabs.length > 1}
                   />
                 </motion.div>
               );
@@ -222,7 +223,12 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   );
 };
 
-const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
+const TabButton = ({
+  panelType,
+  mode,
+  breadcrumbs,
+  isRemoveAvailable = true,
+}) => {
   const dndRef = useRef(null);
 
   const setFocusedItem = appStore((state) => state.setFocusedItem);
@@ -586,29 +592,31 @@ const TabButton = ({ panelType, mode, breadcrumbs, key }) => {
           {label}
         </div>
       </button>
-      <button
-        onClick={() => {
-          const newTabs = JSON.parse(JSON.stringify(tabs));
-          const tabIndex = tabs.findIndex((x) =>
-            equalityDeep(x, { panelType, mode, breadcrumbs })
-          );
-
-          newTabs.splice(tabIndex, 1);
-
-          if (newTabs.length > 0) {
-            setTabs(newTabs);
-
-            activatePanel(
-              newTabs[newTabs.length - 1].panelType,
-              newTabs[newTabs.length - 1].mode,
-              newTabs[newTabs.length - 1].breadcrumbs
+      {isRemoveAvailable && (
+        <button
+          onClick={() => {
+            const newTabs = JSON.parse(JSON.stringify(tabs));
+            const tabIndex = tabs.findIndex((x) =>
+              equalityDeep(x, { panelType, mode, breadcrumbs })
             );
-          }
-        }}
-        className="min-w-tabsDeleteIconSize w-tabsDeleteIconSize h-tabsDeleteIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
-      >
-        <span className="icon-[iwwa--delete] w-full h-full"></span>
-      </button>
+
+            newTabs.splice(tabIndex, 1);
+
+            if (newTabs.length > 0) {
+              setTabs(newTabs);
+
+              activatePanel(
+                newTabs[newTabs.length - 1].panelType,
+                newTabs[newTabs.length - 1].mode,
+                newTabs[newTabs.length - 1].breadcrumbs
+              );
+            }
+          }}
+          className="min-w-tabsDeleteIconSize w-tabsDeleteIconSize h-tabsDeleteIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+        >
+          <span className="icon-[iwwa--delete] w-full h-full"></span>
+        </button>
+      )}
     </div>
   );
 };
