@@ -35,6 +35,7 @@
 - number untitled 
 - tooltips
 - subtitle rotation
+- add + button for notes in notes panel
 
 - FUTURE:
 - Notes
