@@ -58,7 +58,7 @@ export const OauthComponent = ({}) => {
           text={
             loggedIn
               ? `Logged in as ${userProfile.email}`
-              : "Log into Google Drive"
+              : "Login to Google Drive"
           }
         />
         <AnimatePresence>

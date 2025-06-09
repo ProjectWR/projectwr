@@ -370,6 +370,9 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
             libraryId={libraryId}
           />
         </Suspense>
+        <button className="w-libraryManagerAddButtonSize mx-auto h-libraryManagerAddButtonSize hover:bg-appLayoutInverseHover rounded-full p-1">
+          <span className="w-full h-full icon-[material-symbols-light--add-2-rounded]"></span>
+        </button>
       </ScrollArea>
     </>
   );
