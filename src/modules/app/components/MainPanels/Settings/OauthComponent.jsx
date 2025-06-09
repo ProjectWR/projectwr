@@ -77,8 +77,10 @@ export const OauthComponent = ({}) => {
                 onClick={() => {
                   handleLogout();
                 }}
-                className={`h-full w-full border border-appLayoutBorder rounded-lg overflow-hidden`}
-              />
+                className={`h-full w-full p-2 text-appLayoutTextMuted border border-appLayoutBorder rounded-lg overflow-hidden`}
+              >
+                <span className="icon-[ion--exit-outline] w-full h-full"></span>
+              </GrainyElementButton>
             </motion.div>
           )}
         </AnimatePresence>
