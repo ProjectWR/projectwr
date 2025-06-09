@@ -7,6 +7,8 @@ import {
   DetailsPanelCenteredButton,
 } from "../../LayoutComponents/DetailsPanel/DetailsPanelButton";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
+import { GrainyElementButton } from "../../LayoutComponents/GrainyHoverButton";
+import { AnimatePresence, motion } from "motion/react";
 
 export const OauthComponent = ({}) => {
   const { deviceType } = useDeviceType();
@@ -29,7 +31,7 @@ export const OauthComponent = ({}) => {
         }
       }
     >
-      <div className="h-fit">
+      <div className="h-fit flex gap-3">
         {" "}
         <DetailsPanelCenteredButton
           onClick={() => {
@@ -59,6 +61,27 @@ export const OauthComponent = ({}) => {
               : "Log into Google Drive"
           }
         />
+        <AnimatePresence>
+          {loggedIn && (
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: `4rem` }}
+              exit={{ opacity: 0, width: 0 }}
+              style={{
+                height: `3rem`,
+              }}
+            >
+              <GrainyElementButton
+                gradientSize={100}
+                gradientSizeY={10}
+                onClick={() => {
+                  handleLogout();
+                }}
+                className={`h-full w-full border border-appLayoutBorder rounded-lg overflow-hidden`}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <DetailsPanelCenteredButton
         onClick={() => {
