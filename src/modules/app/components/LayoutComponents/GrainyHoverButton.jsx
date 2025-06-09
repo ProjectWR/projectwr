@@ -40,7 +40,7 @@ export const GrainyElementButton = ({
   const handleMouseLeave = useCallback(() => {
     mouseX.set(restingPosX);
     mouseY.set(restingPosY);
-  }, []);
+  }, [restingPosX, restingPosY]);
 
   if (disabled) {
     mouseX.set(restingPosX);
@@ -58,16 +58,16 @@ export const GrainyElementButton = ({
         handleMouseMove({ clientX, clientY, currentTarget });
       }}
       onMouseLeave={handleMouseLeave}
-      className={`transition-all ease-out relative duration-200 hover:-translate-y-1 hover:shadow-lg shadow-md shadow-appLayoutGentleShadow ${
+      className={`transition-all ease-out relative duration-200 ${!disabled && "hover:-translate-y-1 shadow-md hover:shadow-lg"} shadow-appLayoutGentleShadow ${
         active && "bg-appLayoutInverseHover"
       } ${className}`}
       style={{
         backgroundBlendMode: "color",
         backgroundSize: "100%",
-        backgroundImage: spotlightBackground,
+        backgroundImage: !disabled ? spotlightBackground : "none",
       }}
     >
-      <div className="absolute w-full h-full bg-repeat top-0 left-0 noiseFine mix-blend-multiply"></div>
+      <div className={`absolute w-full h-full bg-repeat top-0 left-0 ${!disabled && "noiseFine"} mix-blend-multiply`}></div>
       {children}
     </motion.button>
   );
