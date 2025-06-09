@@ -278,6 +278,10 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
   );
 
   useEffect(() => {
+    setHeaderText(itemMapState.item_properties.item_title);
+  }, [itemMapState]);
+
+  useEffect(() => {
     const updateSortedNoteIds = () => {
       let sortedChildren = [];
 

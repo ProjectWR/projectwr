@@ -15,6 +15,8 @@ const useMainPanel = () => {
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
   const setMainPanelState = mainPanelStore((state) => state.setMainPanelState);
 
+  const setNotesPanelState = appStore((state) => state.setNotesPanelState);
+
   /**
    * @type {Array<MainPanelState>}
    */
@@ -43,6 +45,13 @@ const useMainPanel = () => {
       };
 
       setMainPanelState(newState);
+
+      if (panelType === "libraries") {
+        setNotesPanelState({
+          libraryId: breadcrumbs[0],
+          itemId: breadcrumbs[1],
+        });
+      }
     },
     [setMainPanelState, clearFuture, saveStateInHistory]
   );
