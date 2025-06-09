@@ -306,6 +306,10 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
     };
   }, [libraryId, itemId, ytree]);
 
+  const onCreateNoteClick = useCallback(() => {
+    dataManagerSubdocs.createEmptyNote(ytree, itemId);
+  }, [ytree, itemId, libraryId]);
+
   return (
     <>
       <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
@@ -370,7 +374,12 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
             libraryId={libraryId}
           />
         </Suspense>
-        <button className="w-libraryManagerAddButtonSize mx-auto h-libraryManagerAddButtonSize hover:bg-appLayoutInverseHover rounded-full p-1">
+        <button
+          onClick={() => {
+            onCreateNoteClick();
+          }}
+          className="w-libraryManagerAddButtonSize mx-auto h-libraryManagerAddButtonSize hover:bg-appLayoutInverseHover rounded-full p-1"
+        >
           <span className="w-full h-full icon-[material-symbols-light--add-2-rounded]"></span>
         </button>
       </ScrollArea>
