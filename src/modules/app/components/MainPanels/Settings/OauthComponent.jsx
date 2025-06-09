@@ -4,6 +4,7 @@ import { oauthStore } from "../../../stores/oauthStore";
 import {
   DetailsPanelButton,
   DetailsPanelButtonsShell,
+  DetailsPanelCenteredButton,
 } from "../../LayoutComponents/DetailsPanel/DetailsPanelButton";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 
@@ -20,7 +21,7 @@ export const OauthComponent = ({}) => {
   return (
     <section
       id="OauthButtonsContainer"
-      className="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 px-6"
+      className="w-full h-fit grid grid-cols-1 gap-3 px-6"
       style={
         deviceType === "desktop" && {
           maxWidth: `100%`,
@@ -28,27 +29,32 @@ export const OauthComponent = ({}) => {
         }
       }
     >
-      <DetailsPanelButton
+      <DetailsPanelCenteredButton
         onClick={() => {
           if (!loggedIn) {
             handleLogin();
           }
         }}
         loading={false}
+        disabled={loggedIn}
         icon={
           !loggedIn ? (
             <span className="icon-[logos--google-drive] w-[85%] h-[85%]"></span>
           ) : (
             <Avatar
               src={userProfile?.picture ?? ""}
-              size="sm"
+              size="85%"
               name={userProfile?.name ?? "default"}
             />
           )
         }
-        text={`Google Drive`}
+        text={
+          loggedIn
+            ? `Logged in as ${userProfile.email}`
+            : "Log into Google Drive"
+        }
       />
-      <DetailsPanelButton
+      <DetailsPanelCenteredButton
         onClick={() => {
           handleLogout();
         }}
@@ -56,13 +62,13 @@ export const OauthComponent = ({}) => {
         icon={
           <span className="icon-[logos--microsoft-onedrive] w-full h-full"></span>
         }
-        text={`Onedrive`}
+        text={`Login to OneDrive`}
       />{" "}
-      <DetailsPanelButton
+      <DetailsPanelCenteredButton
         onClick={() => {}}
         loading={false}
         icon={<span className="icon-[logos--dropbox] w-[85%] h-[85%]"></span>}
-        text={`Dropbox`}
+        text={`Login to Dropbox`}
       />
     </section>
   );

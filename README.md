@@ -23,7 +23,7 @@
 - add word and character counter
   - readability analysis and all those scores
 - ~~make side panel transient when small screen~~
-- Add linking
+- ~~Add linking~~
 - ~~Tabbed Writing Format~~
 - ~~Grammarly/language tool/etc. integration~~
 - import export to formats, from file directory to zip file
