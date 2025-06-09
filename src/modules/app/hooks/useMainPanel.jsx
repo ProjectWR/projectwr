@@ -3,6 +3,7 @@ import { mainPanelStore } from "../stores/mainPanelStore";
 import useStoreHistory from "./useStoreHistory";
 import { equalityDeep } from "lib0/function";
 import { appStore } from "../stores/appStore";
+import { getOrInitLibraryYTree } from "../lib/ytree";
 
 const useMainPanel = () => {
   /**
@@ -47,6 +48,28 @@ const useMainPanel = () => {
       setMainPanelState(newState);
 
       if (panelType === "libraries") {
+        const ytree = getOrInitLibraryYTree(breadcrumbs[0]);
+
+        if (breadcrumbs[0] === breadcrumbs[1]) {
+          setNotesPanelState({
+            libraryId: breadcrumbs[0],
+            itemId: breadcrumbs[1],
+          });
+          return;
+        }
+
+        const itemType = ytree.getNodeValueFromKey(breadcrumbs[1]).get("type");
+
+        console.log("ITEM TYPE: ", itemType);
+
+        if (itemType !== "book" && itemType !== "section") {
+          setNotesPanelState({
+            libraryId: breadcrumbs[0],
+            itemId: ytree.getNodeParentFromKey(breadcrumbs[1]),
+          });
+          return;
+        }
+
         setNotesPanelState({
           libraryId: breadcrumbs[0],
           itemId: breadcrumbs[1],
