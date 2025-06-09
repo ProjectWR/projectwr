@@ -34,7 +34,7 @@ export const DetailsPanelProperties = ({ children, className }) => {
             scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidth z-[5] opacity-70`,
             thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
             content:
-              "h-fit w-full flex flex-col items-center justify-start gap-3",
+              "h-full w-full flex flex-col items-center justify-start gap-3",
           }}
         >
           {children}

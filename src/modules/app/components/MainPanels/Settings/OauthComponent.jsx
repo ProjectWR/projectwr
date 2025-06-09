@@ -86,9 +86,7 @@ export const OauthComponent = ({}) => {
         </AnimatePresence>
       </div>
       <DetailsPanelCenteredButton
-        onClick={() => {
-          handleLogout();
-        }}
+        onClick={() => {}}
         loading={false}
         icon={
           <span className="icon-[logos--microsoft-onedrive] w-full h-full"></span>
