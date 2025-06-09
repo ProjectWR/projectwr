@@ -140,6 +140,7 @@ export const DetailsPanelCenteredButton = ({
   onClick,
   loading,
   icon,
+  rightIcon,
   text,
   disabled = false,
 }) => {
@@ -149,7 +150,7 @@ export const DetailsPanelCenteredButton = ({
       gradientSizeY={10}
       onClick={onClick}
       disabled={loading || disabled}
-      className={`h-[3rem] border border-appLayoutBorder rounded-lg overflow-hidden`}
+      className={`h-[3rem] w-full border border-appLayoutBorder rounded-lg overflow-hidden`}
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -242,9 +243,11 @@ export const DetailsPanelCenteredButton = ({
               <span className="grow basis-0 flex items-center justify-center text-2xl md:text-xl lg:text-lg xl:text-[1rem]">
                 {text}
               </span>
-              <span className="w-[2.2rem] h-[2.2rem] flex items-center justify-center"></span>
               <span className="verticalDivider h-full min-w-px py-1">
                 <div className="h-full w-full bg-transparent"></div>
+              </span>
+              <span className="w-[2.2rem] h-[2.2rem] flex items-center justify-center">
+                {rightIcon}
               </span>
             </>
           )}

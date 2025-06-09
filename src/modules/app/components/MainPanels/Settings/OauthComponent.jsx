@@ -29,31 +29,37 @@ export const OauthComponent = ({}) => {
         }
       }
     >
-      <DetailsPanelCenteredButton
-        onClick={() => {
-          if (!loggedIn) {
-            handleLogin();
-          }
-        }}
-        loading={false}
-        disabled={loggedIn}
-        icon={
-          !loggedIn ? (
+      <div className="h-fit">
+        {" "}
+        <DetailsPanelCenteredButton
+          onClick={() => {
+            if (!loggedIn) {
+              handleLogin();
+            }
+          }}
+          loading={false}
+          disabled={loggedIn}
+          icon={
             <span className="icon-[logos--google-drive] w-[85%] h-[85%]"></span>
-          ) : (
-            <Avatar
-              src={userProfile?.picture ?? ""}
-              size="85%"
-              name={userProfile?.name ?? "default"}
-            />
-          )
-        }
-        text={
-          loggedIn
-            ? `Logged in as ${userProfile.email}`
-            : "Log into Google Drive"
-        }
-      />
+          }
+          rightIcon={
+            loggedIn ? (
+              <Avatar
+                src={userProfile?.picture ?? ""}
+                size="85%"
+                name={userProfile?.name ?? "default"}
+              />
+            ) : (
+              <span className="w-[85%] h-[85%]"></span>
+            )
+          }
+          text={
+            loggedIn
+              ? `Logged in as ${userProfile.email}`
+              : "Log into Google Drive"
+          }
+        />
+      </div>
       <DetailsPanelCenteredButton
         onClick={() => {
           handleLogout();
