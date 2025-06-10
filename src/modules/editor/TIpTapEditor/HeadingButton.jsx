@@ -219,7 +219,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
           className="min-w-fit w-fit"
           style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
-          Title
+          Heading 1
         </p>
       );
 
@@ -229,7 +229,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
           className="min-w-fit w-fit"
           style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
-          Heading 1
+          Heading 2
         </p>
       );
 
@@ -239,7 +239,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
           className="min-w-fit w-fit"
           style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
-          Heading 2
+          Heading 3
         </p>
       );
 
@@ -267,21 +267,21 @@ const ReturnElementForFormat = ({ format, toolbarFontSize }) => {
     case "h1":
       return (
         <h1 style={{ margin: 0 }} className="text-nowrap w-fit">
-          Title
+          Heading 1
         </h1>
       );
 
     case "h2":
       return (
         <h2 style={{ margin: 0 }} className="text-nowrap w-fit">
-          Heading 1
+          Heading 2
         </h2>
       );
 
     case "h3":
       return (
         <h3 style={{ margin: 0 }} className="text-nowrap w-fit">
-          Heading 2
+          Heading 3
         </h3>
       );
     default:
