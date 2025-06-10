@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { settingsStore } from "../../stores/settingsStore";
 import { loadSettings, saveSettings } from "../../lib/settings";
@@ -52,6 +52,9 @@ import imageManager from "../../lib/image";
 import { GrainyElementButton } from "../LayoutComponents/GrainyHoverButton";
 import { handleLogin } from "../../lib/auth/auth";
 import { OauthComponent } from "./Settings/OauthComponent";
+import templateManager from "../../lib/templates";
+import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
+import useMainPanel from "../../hooks/useMainPanel";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -67,7 +70,14 @@ const SettingsPanel = () => {
 
   const zoom = appStore((state) => state.zoom);
 
+  const setTemplateId = appStore((state) => state.setTemplateId);
+  const appStoreTemplateId = appStore((state) => state.appStoreTemplateId);
+  const setTemplateMode = appStore((state) => state.setTemplateMode);
+  const templateMode = appStore((state) => state.templateMode);
+
   const { zoomIn, zoomOut } = useZoom();
+
+  const { activatePanel } = useMainPanel();
 
   const [isLoginOpen, loginModalControl] = useDisclosure(false);
 
@@ -81,6 +91,8 @@ const SettingsPanel = () => {
 
   const images = useImages();
   console.log("images: ", images);
+
+  const [templates, setTemplates] = useState({});
 
   const settings = settingsStore((state) => state.settings);
 
@@ -114,7 +126,28 @@ const SettingsPanel = () => {
     }
   }, []);
 
-  console.log("settings: ", settings);
+  useEffect(() => {
+    const callback = async () => {
+      const newTemplates = await templateManager.getTemplates();
+
+      setTemplates(newTemplates);
+    };
+
+    templateManager.addCallback(callback);
+    // Initial fetch
+    callback();
+
+    return () => templateManager.removeCallback(callback);
+  }, []);
+
+  const handleCreateTemplate = () => {
+    const templateProps = {
+      template_name: "New Template",
+      template_editor: "TipTapEditor",
+      template_content: TipTapEditorDefaultPreferences,
+    };
+    templateManager.createTemplate("New Template", templateProps);
+  };
 
   return (
     <DetailsPanel>
@@ -531,6 +564,19 @@ const SettingsPanel = () => {
                   Images
                 </button>
 
+                <button
+                  className={`
+                  hover:text-appLayoutText
+                  ${
+                    fontImageToggle === "image"
+                      ? "text-appLayoutText"
+                      : "text-appLayoutTextMuted"
+                  } `}
+                  onClick={() => setFontImageToggle("templates")}
+                >
+                  Editor Styles
+                </button>
+
                 <span className="grow"></span>
                 <button
                   onClick={async () => {
@@ -540,6 +586,10 @@ const SettingsPanel = () => {
 
                     if (fontImageToggle === "image") {
                       await imageManager.addImage();
+                    }
+
+                    if (fontImageToggle === "templates") {
+                      await handleCreateTemplate();
                     }
                   }}
                   className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
@@ -587,6 +637,46 @@ const SettingsPanel = () => {
                             className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
                             onClick={async () => {
                               await imageManager.deleteImage(image.id);
+                            }}
+                          >
+                            <span className="icon-[typcn--delete] w-full h-full"></span>
+                          </button>
+                        </div>
+                      </HoverListItem>
+                    );
+                  })}
+
+                {fontImageToggle === "templates" &&
+                  Object.keys(templates).map((templateId) => {
+                    return (
+                      <HoverListItem disabled={true} key={templateId}>
+                        <div className="w-full h-full flex items-center gap-2 justify-between">
+                          <p className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                            {templateId}
+                          </p>
+                          <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
+                          <button
+                            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1.5 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                            onClick={async () => {
+                              if (
+                                appStoreTemplateId !== templateId ||
+                                templateMode !== "details"
+                              ) {
+                                setTemplateId(templateId);
+                                setTemplateMode("details");
+
+                                activatePanel("templates", "details", [
+                                  templateId,
+                                ]);
+                              }
+                            }}
+                          >
+                            <span className="icon-[mdi--edit-outline] w-full h-full"></span>
+                          </button>
+                          <button
+                            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                            onClick={async () => {
+                              
                             }}
                           >
                             <span className="icon-[typcn--delete] w-full h-full"></span>
