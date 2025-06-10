@@ -568,7 +568,7 @@ const SettingsPanel = () => {
                   className={`
                   hover:text-appLayoutText
                   ${
-                    fontImageToggle === "image"
+                    fontImageToggle === "templates"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
                   } `}
