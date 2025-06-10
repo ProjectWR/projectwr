@@ -21,8 +21,6 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
       isHeading1: editor.isActive("heading", { level: 1 }),
       isHeading2: editor.isActive("heading", { level: 2 }),
       isHeading3: editor.isActive("heading", { level: 3 }),
-      isHeading4: editor.isActive("heading", { level: 4 }),
-      isHeading5: editor.isActive("heading", { level: 5 }),
     }),
   });
 
@@ -204,32 +202,6 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
                 toolbarFontSize={toolbarFontSize}
               />
             </button>
-            <button
-              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
-              onClick={() => {
-                setIsOpened(false);
-
-                setFormat("h4", editor);
-              }}
-            >
-              <ReturnElementForFormat
-                format={"h4"}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </button>
-            <button
-              className={`w-full h-fit px-4 py-[0.3rem] toolbarButton flex items-center justify-center`}
-              onClick={() => {
-                setIsOpened(false);
-
-                setFormat("h5", editor);
-              }}
-            >
-              <ReturnElementForFormat
-                format={"h5"}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -268,26 +240,6 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
           style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
         >
           Heading 2
-        </p>
-      );
-
-    case "h4":
-      return (
-        <p
-          className="min-w-fit w-fit"
-          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
-        >
-          Heading 3
-        </p>
-      );
-
-    case "h5":
-      return (
-        <p
-          className="min-w-fit w-fit"
-          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
-        >
-          Heading 4
         </p>
       );
 
@@ -332,21 +284,6 @@ const ReturnElementForFormat = ({ format, toolbarFontSize }) => {
           Heading 2
         </h3>
       );
-
-    case "h4":
-      return (
-        <h4 style={{ margin: 0 }} className="text-nowrap w-fit">
-          Heading 3
-        </h4>
-      );
-
-    case "h5":
-      return (
-        <h5 style={{ margin: 0 }} className="text-nowrap w-fit">
-          Heading 4
-        </h5>
-      );
-
     default:
       return null;
   }
@@ -366,12 +303,6 @@ const setFormat = (format, editor) => {
     case "h3":
       editor.chain().focus().toggleHeading({ level: 3 }).run();
       break;
-    case "h4":
-      editor.chain().focus().toggleHeading({ level: 4 }).run();
-      break;
-    case "h5":
-      editor.chain().focus().toggleHeading({ level: 5 }).run();
-      break;
   }
 };
 
@@ -387,12 +318,6 @@ const getActiveHeading = (editor) => {
 
     case 3:
       return "h3";
-
-    case 4:
-      return "h4";
-
-    case 5:
-      return "h5";
 
     default:
       return "p";
