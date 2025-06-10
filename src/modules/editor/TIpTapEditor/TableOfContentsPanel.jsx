@@ -19,13 +19,13 @@ export const TableOfContentsPanel = ({
           return {
             level: heading.attributes.level,
             content: heading,
-            action: () => {
+            action: async () => {
               console.log("HEADING POS", heading.pos);
-              editor
+              await editor
                 .chain()
                 .setTextSelection(heading.pos)
                 .scrollIntoView()
-                .run();
+                .run();              
             },
           };
         })

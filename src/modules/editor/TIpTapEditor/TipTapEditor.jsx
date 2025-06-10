@@ -6,6 +6,7 @@ import {
   useEditorState,
   EditorContent,
   mergeAttributes,
+  BubbleMenu,
 } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -704,7 +705,7 @@ const TiptapEditor = ({
             backgroundColor: backgroundColor,
           }}
         >
-          <div
+          {/* <div
             id="EditableToolbar"
             style={{
               height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
@@ -726,7 +727,35 @@ const TiptapEditor = ({
               editor={editor}
               toolbarPreferences={toolbarPreferences}
             />
-          </div>
+          </div> */}
+
+          {editor && (
+            <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+              <div
+                id="EditableToolbar"
+                style={{
+                  height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                  minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                  backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                  borderColor: `${dividerColor}`,
+                  top: `calc(${toolbarPreferences.toolbarGapTop}rem * var(--uiScale))`,
+                }}
+                className={`
+            min-w-0 sticky
+            ${
+              isMobile
+                ? "order-1 w-full"
+                : "order-0 w-fit max-w-[99%] rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
+            }
+          `}
+              >
+                <TipTapToolbar
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                />
+              </div>
+            </BubbleMenu>
+          )}
 
           <EditorContent
             spellCheck={false}
