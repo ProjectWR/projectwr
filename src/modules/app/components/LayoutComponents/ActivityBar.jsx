@@ -95,7 +95,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               flexValue={"grow-1"}
             />
           )}
-          <ActivityButton
+          {/* <ActivityButton
             onClick={() => {
               if (activity !== "templates") {
                 setActivity("templates");
@@ -110,7 +110,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               <span className="icon-[carbon--template] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
             }
             flexValue={"grow-1"}
-          />
+          /> */}
           <ActivityButton
             onClick={() => {
               if (activity !== "dictionary") {
