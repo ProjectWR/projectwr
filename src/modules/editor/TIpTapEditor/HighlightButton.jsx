@@ -61,27 +61,32 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
     };
   }, [editor, onSelectionUpdate]);
 
-  // This is a bad use of useEffect, need to change this to useMemo. 
+  // This is a bad use of useEffect, need to change this to useMemo.
   useEffect(() => {
     if (isOpened && headerRef.current && dropdownRef.current) {
+      const toolbarRect = document
+        .querySelector("#toolbarBody")
+        ?.getBoundingClientRect();
       const headerRect = headerRef.current.getBoundingClientRect();
       const dropdownHeight = dropdownRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
 
+      if (!toolbarRect) return;
+
       // Calculate the top position for the dropdown
-      let top = headerRect.bottom;
+      let top = headerRect.height;
 
       // Check if the dropdown would go past the bottom of the viewport
       if (top + dropdownHeight > viewportHeight) {
         // Adjust the top position to ensure the dropdown stays within the viewport
-        top = headerRect.top - dropdownHeight;
+        top = headerRect.height - dropdownHeight;
       }
 
       // Calculate the left position for the dropdown (centered below the header)
       const left =
         headerRect.left +
-        (headerRect.width - dropdownRef.current.offsetWidth) / 2;
-
+        (headerRect.width - dropdownRef.current.offsetWidth) / 2 -
+        toolbarRect.left;
       const right = headerRect.right;
 
       if (left < 0) {
@@ -97,7 +102,7 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
         return;
       }
 
-      setDropdownPosition({ top: top , left: left });
+      setDropdownPosition({ top: top, left: left });
     }
   }, [isOpened]);
 
