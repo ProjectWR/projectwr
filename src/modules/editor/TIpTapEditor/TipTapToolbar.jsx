@@ -51,7 +51,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
       style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
       className="h-full w-full overflow-y-hidden overflow-x-scroll"
     >
-      <div className="h-full w-fit min-w-fit flex items-center">
+      <div id="toolbarBody" className="h-full w-fit min-w-fit flex items-center relative">
         <style>
           {`
             .toolbarButton {
