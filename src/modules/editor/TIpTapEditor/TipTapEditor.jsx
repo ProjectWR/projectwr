@@ -730,7 +730,11 @@ const TiptapEditor = ({
           </div> */}
 
           {editor && (
-            <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+            <BubbleMenu
+              className="w-fit h-fit"
+              editor={editor}
+              tippyOptions={{ duration: 100 }}
+            >
               <div
                 id="EditableToolbar"
                 style={{
@@ -738,14 +742,13 @@ const TiptapEditor = ({
                   minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
                   backgroundColor: `${toolbarPreferences.backgroundColor}`,
                   borderColor: `${dividerColor}`,
-                  top: `calc(${toolbarPreferences.toolbarGapTop}rem * var(--uiScale))`,
                 }}
                 className={`
             min-w-0 sticky
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 w-fit max-w-[99%] rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
+                : "order-0 w-fit max-w-[100%] rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
             }
           `}
               >
