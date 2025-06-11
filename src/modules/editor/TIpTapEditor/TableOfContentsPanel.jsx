@@ -51,13 +51,13 @@ export const TableOfContentsPanel = ({
       onMouseLeave={() => {
         refreshTOCPanel();
       }}
-      className={`absolute rounded-r-lg shadow-2xl 
+      className={`absolute rounded-r-lg shadow-lg
                 shadow-appLayoutGentleShadow z-[3] w-[20rem] 
                 h-[80%] top-1/2 left-0 -translate-y-1/2 
-                ${visible ? "translate-x-0" : "-translate-x-full"}
+                ${visible ? "translate-x-0" : "-translate-x-[150%]"}
                 border-r border-y border-appLayoutBorder 
                 text-appLayoutText bg-appBackground translate-transform
-                duration-100 flex flex-col items-start justify-start px-3 py-1`}
+                duration-200 flex flex-col items-start justify-start px-3 py-1`}
     >
       <span className="text-3xl text-appLayoutText py-2 border-b border-appLayoutBorder w-full">
         Outline

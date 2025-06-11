@@ -17,8 +17,8 @@ const TiptapDesktopDefaultPreferences = {
     paperBorderColor: "#525252",
     paperColor: "#171717",
     roundRadius: 0.5,
-    paperShadow: 0,
-    paperShadowColor: "#000",
+    paperShadow: 2,
+    paperShadowColor: "#000000AA",
 
     h1FontSize: 1.25 * 2,
     h1LineHeight: 1.75 * 2,
