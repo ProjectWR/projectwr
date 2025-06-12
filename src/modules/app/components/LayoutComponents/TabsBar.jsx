@@ -612,7 +612,7 @@ const TabButton = ({
               );
             }
           }}
-          className="min-w-tabsDeleteIconSize w-tabsDeleteIconSize h-tabsDeleteIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutGradientHover"
+          className="min-w-tabsDeleteIconSize w-tabsDeleteIconSize h-tabsDeleteIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
