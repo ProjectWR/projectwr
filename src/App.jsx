@@ -40,7 +40,7 @@ function App() {
 
   return (
     <DeviceTypeProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <WritingApp key={"WritingApp"} />
       </ThemeProvider>
     </DeviceTypeProvider>

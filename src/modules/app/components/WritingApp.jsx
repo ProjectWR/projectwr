@@ -401,7 +401,7 @@ const WritingApp = () => {
             <motion.div
               key="WritingApp"
               id="AppContainer"
-              className="dark border-appLayoutBorder bg-appBackground h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
+              className="border-appLayoutBorder bg-appBackground h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -50 }}

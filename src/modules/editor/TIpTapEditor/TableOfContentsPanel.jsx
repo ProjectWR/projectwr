@@ -51,7 +51,7 @@ export const TableOfContentsPanel = ({
       onMouseLeave={() => {
         refreshTOCPanel();
       }}
-      className={`absolute rounded-r-lg shadow-lg
+      className={`absolute rounded-r-lg shadow-sm
                 shadow-appLayoutGentleShadow z-[3] w-[20rem] 
                 h-[80%] top-1/2 left-0 -translate-y-1/2 
                 ${visible ? "translate-x-0" : "-translate-x-[150%]"}
