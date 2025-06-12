@@ -352,6 +352,7 @@ const TiptapEditor = ({
       const selection = editor.state.selection;
       const coords = editor.view.coordsAtPos(selection.from);
       const container = document.getElementById("EditableContainer");
+      if (!container) return;
       const containerRect = container.getBoundingClientRect();
       const relativeY = coords.top - containerRect.top;
 

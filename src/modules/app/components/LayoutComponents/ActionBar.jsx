@@ -659,7 +659,7 @@ export const ActionBarRightSide = ({}) => {
               <WindowButton
                 className={``}
                 buttonContent={
-                  <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
                 }
                 onClick={() => {
                   appWindow.minimize();
@@ -669,9 +669,9 @@ export const ActionBarRightSide = ({}) => {
                 className={``}
                 buttonContent={
                   isMaximized ? (
-                    <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                    <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
                   ) : (
-                    <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                    <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
                   )
                 }
                 onClick={() => {
@@ -682,7 +682,7 @@ export const ActionBarRightSide = ({}) => {
                 destructive={true}
                 className={``}
                 buttonContent={
-                  <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
                 }
                 onClick={() => {
                   appWindow.close();
