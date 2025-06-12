@@ -162,7 +162,7 @@
     --appLayoutInputBackground: 0 0% 14.9%;
     --appLayoutPressed: 0 22% 27%;
     --appLayoutDestruct: 0 90% 50%;
-    --appLayoutHighlight: 37 100% 88%;
+    --appLayoutHighlight: 0 22% 27%;
     --activitySelectLine: 0 0% 100%;
     --appLayoutSubmitButton: 0 0% 80%;
   }
