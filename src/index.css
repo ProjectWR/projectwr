@@ -153,10 +153,10 @@
     --appLayoutShadow: 0 0% 0%;
     --appLayoutGentleShadow: 0 0% 3%;
 
-    --appLayoutHover: 277, 50%, 75%, 50%;
-    --appLayoutDarkHover: 277 50% 75%, 80%;
-    --appLayoutHoverGentle: 300 62% 88%;
-    --appLayoutInverseHover: 315 38% 82%;
+    --appLayoutHover: 0, 22%, 27%, 19%;
+    --appLayoutDarkHover: 0, 22%, 27%, 15%;
+    --appLayoutHoverGentle: 0, 22%, 27%, 5%;
+    --appLayoutInverseHover: 0, 22%, 27%, 25%;
     --appLayoutGradientHover: 0 0% 70%;
 
     --appLayoutInputBackground: 0 0% 14.9%;
