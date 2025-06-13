@@ -280,11 +280,11 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
         >
           {name}
         </motion.span>
-        <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize w-fit pt-1">
+        <span className="text-recentlyOpenedDateFontSize w-fit pt-1">
           {type}
         </span>
       </span>
-      <span className="text-appLayoutTextMuted text-recentlyOpenedDateFontSize">
+      <span className="text-recentlyOpenedDateFontSize">
         {new Date(props.lastOpened).toLocaleString()}
       </span>
     </button>
