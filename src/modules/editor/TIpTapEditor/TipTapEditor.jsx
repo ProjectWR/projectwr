@@ -51,6 +51,7 @@ import dataManagerSubdocs from "../../app/lib/dataSubDoc";
 import useMainPanel from "../../app/hooks/useMainPanel";
 import { TableOfContentsPanel } from "./TableOfContentsPanel";
 import useRefreshableTimer from "../../app/hooks/useRefreshableTimer";
+import SearchAndReplace from "@sereneinserenade/tiptap-search-and-replace";
 
 const content = "<p>Hello World!</p>";
 
@@ -189,6 +190,11 @@ const TiptapEditor = ({
     }),
     ProsemirrorProofreadExtension,
     ProsemirrorVirtualCursor,
+    SearchAndReplace.configure({
+      searchResultClass: "search-result", // class to give to found items. default 'search-result'
+      caseSensitive: false, // no need to explain
+      disableRegex: false, // also no need to explain
+    }),
     Indent.configure({
       types: ["listItem", "paragraph"],
       minLevel: 0,
@@ -672,6 +678,10 @@ const TiptapEditor = ({
           .ProseMirror-focused .prosemirror-virtual-cursor-animation {
             animation: prosemirror-virtual-cursor-blink 1s linear infinite;
             animation-delay: 0.5s;
+          }
+
+          .search-result {
+            background-color: #0000FFaa;
           }
           
           

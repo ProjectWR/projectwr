@@ -219,7 +219,7 @@ const ActivityButton = ({
      
         ${
           selectedActivity === activity
-            ? "text-appBackground bg-appLayoutPressed z-1000 shadow-sm shadow-appLayoutShadow"
+            ? "text-activityButtonIconHighlight bg-appLayoutPressed z-1000 shadow-sm shadow-appLayoutShadow"
             : "text-appLayoutTextMuted bg-appBackground hover:text-appLayoutText"
         }
        

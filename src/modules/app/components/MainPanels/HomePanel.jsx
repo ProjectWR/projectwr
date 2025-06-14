@@ -272,7 +272,7 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}
-      className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md font-sans text-recentlyOpenedNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
+      className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md font-serif text-recentlyOpenedNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
     >
       <span className="h-fit flex items-center gap-2">
         <motion.span

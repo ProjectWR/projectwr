@@ -95,28 +95,6 @@
   :root {
     --uiScale: 0.9;
 
-    --appBackground: 44 73% 94%;
-    --appBackgroundAccent: 0 0% 6.9%;
-    --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
-    --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
-    --appLayoutBorder: 0 0% 16.9%;
-    --appLayoutText: 0 0% 70%;
-    
-    --appLayoutShadow: 0 0% 0%;
-    --appLayoutGentleShadow: 0 0% 3%;
-    --appLayoutHover: 0 0% 15%;
-    --appLayoutDarkHover: 0 0% 3.9%;
-    --appLayoutHoverGentle: 0 0% 12%;
-    --appLayoutInverseHover: 0 0% 20%;
-    --appLayoutGradientHover: 0 0% 30%;
-    --appLayoutInputBackground: 0 0% 14.9%;
-    --appLayoutPressed: 0 0% 3%;
-    --appLayoutDestruct: 0 90% 38%;
-    --appLayoutHighlight: 0 0% 80%;
-    --activitySelectLine: 0 0% 100%;
-    --appLayoutSubmitButton: 0 0% 80%;
-  }
-  .dark {
     --appBackground: 0 0% 8.9%;
     --appBackgroundAccent: 0 0% 6.9%;
     --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
@@ -139,15 +117,42 @@
     --activitySelectLine: 0 0% 100%;
     --appLayoutSubmitButton: 0 0% 80%;
   }
+  .dark {
+    --appBackground: 0 0% 8.9%;
+    --appBackgroundAccent: 0 0% 6.9%;
+    --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
+    --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
+    --appLayoutBorder: 0 0% 16.9%;
+    --appLayoutText: 0 0% 70%;
+    --appLayoutTextMuted: 0 0% 50%;
+
+    --appLayoutShadow: 0 0% 0%;
+    --appLayoutGentleShadow: 0 0% 3%;
+    --appLayoutHover: 0, 0%, 15%, 50%;
+    --appLayoutDarkHover: 0 0% 3.9%;
+    --appLayoutHoverGentle: 0 0% 12%;
+    --appLayoutInverseHover: 0 0% 20%;
+    --appLayoutGradientHover: 0 0% 30%;
+
+    --appLayoutInputBackground: 0 0% 14.9%;
+    --appLayoutPressed: 0 0% 3%;
+    --appLayoutDestruct: 0 90% 38%;
+    --appLayoutHighlight: 0 0% 80%;
+    --activitySelectLine: 0 0% 100%;
+    --appLayoutSubmitButton: 0 0% 80%;
+
+    --activityButtonIconHighlight: 0 0% 70%;
+  }
   .light {
     /* beige */
-    --appBackground: 37 100% 88%; 
+    --appBackground: 37 100% 88%;
 
     /* lightest purple */
     --appBackgroundAccent: 34 55% 78%;
+    
     --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
     --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
-    --appLayoutBorder: 0 22% 27%;
+    --appLayoutBorder: 0 10% 45%;
     --appLayoutText: 0 22% 27%;
     --appLayoutTextMuted: 0, 22%, 27%, 75%;
     --appLayoutShadow: 0, 22%, 27%, 100%;
@@ -167,6 +172,8 @@
     --appLayoutHighlight: 0 22% 27%;
     --activitySelectLine: 0 0% 100%;
     --appLayoutSubmitButton: 0 0% 80%;
+
+    --activityButtonIconHighlight: 37 100% 88%;
   }
   .desktop {
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.6rem);
@@ -408,6 +415,7 @@
   --color-appLayoutDarkHover: hsl(var(--appLayoutDarkHover));
   --color-appLayoutHighlight: hsl(var(--appLayoutHighlight));
   --color-appLayoutSubmitButton: hsl(var(--appLayoutSubmitButton));
+  --color-activityButtonIconHighlight: hsl(var(--activityButtonIconHighlight));
 
   --animate-scale-in: scaleIn 200ms ease;
   --animate-scale-out: scaleOut 200ms ease;
