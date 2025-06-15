@@ -223,7 +223,8 @@ const ActivityButton = ({
             : "text-appLayoutTextMuted bg-appBackground hover:text-appLayoutText"
         }
        
-        ${className}`}
+        ${className}
+      `}
       onClick={onClick}
     >
       {buttonContent}

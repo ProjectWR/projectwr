@@ -35,11 +35,23 @@
 - number untitled 
 - tooltips
 - subtitle rotation
-- add + button for notes in notes panel
+- ~~add + button for notes in notes panel~~
+
+Final Checklist before first release:
+- search panel
+- find and replace, for paper and global
+- import and export to docx
+- spellchecker ignore list
+- sync to google drive
+- template editor
+- word and character counter 
+- productivity tracker
+- website finalizing
 
 - FUTURE:
-- Notes
+- ~~Notes~~
 - Timelines
 - Mind maps (importable from xMind and Freemind and scrapple)
 - import notes from onenote and google keep
 - Search and Replace (only have search right now)
+- mark sections with time stamp (in universe time stamp)

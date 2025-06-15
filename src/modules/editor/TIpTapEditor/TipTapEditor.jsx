@@ -684,8 +684,6 @@ const TiptapEditor = ({
             background-color: #0000FFaa;
           }
           
-          
-
         `}
         </style>
 
