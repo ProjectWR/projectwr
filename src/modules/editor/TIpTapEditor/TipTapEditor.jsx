@@ -746,44 +746,15 @@ const TiptapEditor = ({
             <BubbleMenu
               className="h-fit"
               editor={editor}
-              tippyOptions={{ duration: 200 }}
-            >
-              <div
-                id="EditableToolbar"
-                style={{
-                  height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                  minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                  backgroundColor: `${toolbarPreferences.backgroundColor}`,
-                  borderColor: `${dividerColor}`,
-                }}
-                className={`
-            min-w-0 sticky
-            ${
-              isMobile
-                ? "order-1 w-full"
-                : "order-0 w-fit max-w-[100%] rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
-            }
-          `}
-              >
-                <TipTapToolbar
-                  editor={editor}
-                  toolbarPreferences={toolbarPreferences}
-                />
-              </div>
-            </BubbleMenu>
-          )}
-
-          {editor && (
-            <BubbleMenu
-              editor={editor}
               tippyOptions={{
-                maxWidth: 'none',
                 duration: 200,
                 popperOptions: {
-                  strategy: "fixed",
                   modifiers: [
                     {
                       name: "preventOverflow",
+                      options: {
+                        boundary: document.querySelector('#EditableContainer')
+                      },
                     },
                   ],
                 },
@@ -802,7 +773,7 @@ const TiptapEditor = ({
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
+                : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
             }
           `}
               >
@@ -813,6 +784,8 @@ const TiptapEditor = ({
               </div>
             </BubbleMenu>
           )}
+
+          
 
           {editor && (
             <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>

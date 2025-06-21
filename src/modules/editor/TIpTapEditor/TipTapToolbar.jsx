@@ -48,10 +48,13 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
 
   return (
     <div
-      style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
-      className="h-full w-full overflow-y-hidden overflow-x-scroll"
+      // style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
+      className="h-full"
     >
-      <div id="toolbarBody" className="h-full w-fit min-w-fit flex items-center relative">
+      <div
+        id="toolbarBody"
+        className="h-full flex items-center"
+      >
         <style>
           {`
             .toolbarButton {
@@ -63,7 +66,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
             }
           `}
         </style>
-        <button
+        {/* <button
           className="toolbarButton shrink-0"
           style={{
             height: `calc(${buttonHeight}rem * var(--uiScale))`,
@@ -87,6 +90,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--redo] w-full h-full text-appLayoutText"></span>
         </button>
+        */}
         <div
           className="w-px h-[70%]"
           style={{ backgroundColor: `${dividerColor}` }}
@@ -292,7 +296,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="w-px h-[70%]"
           style={{ backgroundColor: `${dividerColor}` }}
         ></div>
-        <button
+        {/* <button
           className="toolbarButton"
           style={{
             height: `calc(${buttonHeight}rem * var(--uiScale))`,
@@ -306,7 +310,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
         >
           <span className="icon-[material-symbols-light--horizontal-rule] w-full h-full text-appLayoutText"></span>
-        </button>
+        </button> */}
         {/* <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div> */}
       </div>
     </div>
