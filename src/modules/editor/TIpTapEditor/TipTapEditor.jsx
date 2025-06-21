@@ -56,6 +56,7 @@ import useRefreshableTimer from "../../app/hooks/useRefreshableTimer";
 import SearchAndReplace from "@sereneinserenade/tiptap-search-and-replace";
 import TiptapFloatingToolbar from "./TiptapFloatingToolbar";
 import TiptapUtilityToolbar from "./TiptapUtilityToolbar";
+import { StatisticsPanel } from "./StatisticsPanel";
 
 const content = "<p>Hello World!</p>";
 
@@ -695,8 +696,9 @@ const TiptapEditor = ({
 
         <div
           id="EditorSidePanelsContainer"
-          className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col justify-center items-center"
+          className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-2 justify-center items-center"
         >
+          <StatisticsPanel editor={editor} />
           <TableOfContentsPanel
             visible={isTOCPanelAwake}
             refreshTOCPanel={refreshTOCPanel}
@@ -704,6 +706,30 @@ const TiptapEditor = ({
             editor={editor}
           />
         </div>
+
+        {editor && (
+          <div
+            id="EditableUtilityToolbarWrapper"
+            className="w-fit h-fit absolute top-2 right-2"
+          >
+            <div
+              id="EditableUtilityToolbar"
+              className=" w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[1]"
+              style={{
+                height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                borderColor: `${dividerColor}`,
+              }}
+            >
+              <TiptapUtilityToolbar
+                editor={editor}
+                toolbarPreferences={toolbarPreferences}
+                keepTOCPanelAwake={keepTOCPanelAwake}
+              />
+            </div>
+          </div>
+        )}
 
         <div
           id="EditableContainer"
@@ -739,30 +765,6 @@ const TiptapEditor = ({
               toolbarPreferences={toolbarPreferences}
             />
           </div> */}
-
-          {editor && (
-            <div
-              id="EditableUtilityToolbarWrapper"
-              className="w-fit h-fit absolute top-2 right-2"
-            >
-              <div
-                id="EditableUtilityToolbar"
-                className="sticky  w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[1]"
-                style={{
-                  height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                  minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                  backgroundColor: `${toolbarPreferences.backgroundColor}`,
-                  borderColor: `${dividerColor}`,
-                }}
-              >
-                <TiptapUtilityToolbar
-                  editor={editor}
-                  toolbarPreferences={toolbarPreferences}
-                  keepTOCPanelAwake={keepTOCPanelAwake}
-                />
-              </div>
-            </div>
-          )}
 
           {editor && (
             <BubbleMenu
