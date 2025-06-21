@@ -23,7 +23,7 @@ const TiptapUtilityToolbar = ({
     pressedColor,
   } = toolbarPreferences;
   return (
-    <div className="w-fit h-full flex items-center">
+    <div className="w-fit h-full flex items-center z-[2]">
       <style>
         {`
             .toolbarButton {

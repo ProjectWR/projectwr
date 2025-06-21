@@ -25,7 +25,7 @@ export const TableOfContentsPanel = ({
                 .chain()
                 .setTextSelection(heading.pos)
                 .scrollIntoView()
-                .run();              
+                .run();
             },
           };
         })
@@ -45,17 +45,22 @@ export const TableOfContentsPanel = ({
 
   return (
     <div
+      id="TOCPanel"
       onMouseEnter={() => {
         keepTOCPanelAwake();
       }}
       onMouseLeave={() => {
         refreshTOCPanel();
       }}
-      className={`absolute rounded-r-lg shadow-sm
-                shadow-appLayoutGentleShadow z-[3] w-[20rem] 
-                h-[80%] top-1/2 left-0 -translate-y-1/2 
-                ${visible ? "translate-x-0" : "-translate-x-[150%]"}
-                border-r border-y border-appLayoutBorder 
+      style={{
+        transform: visible
+          ? `translateX(-105%) translateY(0%)`
+          : `translateX(0) translateY(0%)`,
+      }}
+      className={`rounded-lg shadow-sm
+                shadow-appLayoutGentleShadow w-full
+                h-[60%]
+                border border-appLayoutBorder 
                 text-appLayoutText bg-appBackground translate-transform
                 duration-200 flex flex-col items-start justify-start px-3 py-1`}
     >

@@ -693,12 +693,17 @@ const TiptapEditor = ({
         `}
         </style>
 
-        <TableOfContentsPanel
-          visible={isTOCPanelAwake}
-          refreshTOCPanel={refreshTOCPanel}
-          keepTOCPanelAwake={keepTOCPanelAwake}
-          editor={editor}
-        />
+        <div
+          id="EditorSidePanelsContainer"
+          className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col justify-center items-center"
+        >
+          <TableOfContentsPanel
+            visible={isTOCPanelAwake}
+            refreshTOCPanel={refreshTOCPanel}
+            keepTOCPanelAwake={keepTOCPanelAwake}
+            editor={editor}
+          />
+        </div>
 
         <div
           id="EditableContainer"
@@ -742,7 +747,7 @@ const TiptapEditor = ({
             >
               <div
                 id="EditableUtilityToolbar"
-                className="sticky  w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
+                className="sticky  w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[1]"
                 style={{
                   height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
                   minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
