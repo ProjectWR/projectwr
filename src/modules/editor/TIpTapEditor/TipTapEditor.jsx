@@ -36,6 +36,7 @@ import Mention from "@tiptap/extension-mention";
 import { ContextMenu } from "radix-ui";
 import { writeText, readText } from "@tauri-apps/plugin-clipboard-manager";
 
+import DragHandle from "@tiptap/extension-drag-handle-react";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
 import loremIpsum from "../lorem";
@@ -54,6 +55,7 @@ import { TableOfContentsPanel } from "./TableOfContentsPanel";
 import useRefreshableTimer from "../../app/hooks/useRefreshableTimer";
 import SearchAndReplace from "@sereneinserenade/tiptap-search-and-replace";
 import TiptapFloatingToolbar from "./TiptapFloatingToolbar";
+import TiptapUtilityToolbar from "./TiptapUtilityToolbar";
 
 const content = "<p>Hello World!</p>";
 
@@ -691,15 +693,6 @@ const TiptapEditor = ({
         `}
         </style>
 
-        <button
-          onClick={() => {
-            keepTOCPanelAwake();
-          }}
-          className="absolute z-[3] top-1/2 -translate-y-1/2 left-1 p-px w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize text-appLayoutText hover:bg-appLayoutInverseHover rounded-lg **:hover:bg-appLayoutHighlight"
-        >
-          <span className="icon-[carbon--table-of-contents] w-full h-full"></span>
-        </button>
-
         <TableOfContentsPanel
           visible={isTOCPanelAwake}
           refreshTOCPanel={refreshTOCPanel}
@@ -743,6 +736,30 @@ const TiptapEditor = ({
           </div> */}
 
           {editor && (
+            <div
+              id="EditableUtilityToolbarWrapper"
+              className="w-fit h-fit absolute top-2 right-2"
+            >
+              <div
+                id="EditableUtilityToolbar"
+                className="sticky  w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
+                style={{
+                  height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                  minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                  backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                  borderColor: `${dividerColor}`,
+                }}
+              >
+                <TiptapUtilityToolbar
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                  keepTOCPanelAwake={keepTOCPanelAwake}
+                />
+              </div>
+            </div>
+          )}
+
+          {editor && (
             <BubbleMenu
               className="h-fit"
               editor={editor}
@@ -753,7 +770,7 @@ const TiptapEditor = ({
                     {
                       name: "preventOverflow",
                       options: {
-                        boundary: document.querySelector('#EditableContainer')
+                        boundary: document.querySelector("#EditableContainer"),
                       },
                     },
                   ],
@@ -769,6 +786,7 @@ const TiptapEditor = ({
                   borderColor: `${dividerColor}`,
                 }}
                 className={`
+                  
             min-w-0 sticky
             ${
               isMobile
@@ -784,8 +802,6 @@ const TiptapEditor = ({
               </div>
             </BubbleMenu>
           )}
-
-          
 
           {editor && (
             <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>

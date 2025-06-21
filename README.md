@@ -39,6 +39,9 @@
 
 Final Checklist before first release:
 - search panel
+- tooltips
+- drag handle
+- remember scroll for each paper
 - find and replace, for paper and global
 - import and export to docx
 - spellchecker ignore list

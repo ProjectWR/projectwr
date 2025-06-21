@@ -164,6 +164,19 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          backgroundColor: editor.isActive({ textAlign: "justify" })
+            ? pressedColor
+            : "",
+        }}
+        onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+      >
+        <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-appLayoutText"></span>
+      </button>
+      <button
+        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        style={{
+          width: `calc(${buttonWidth}rem * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
           backgroundColor: editor.isActive("horizontalRule")
             ? pressedColor
             : "",
