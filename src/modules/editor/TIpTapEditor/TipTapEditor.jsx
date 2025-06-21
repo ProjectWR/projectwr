@@ -685,6 +685,8 @@ const TiptapEditor = ({
           .search-result {
             background-color: #0000FFaa;
           }
+
+
           
         `}
         </style>
@@ -708,7 +710,7 @@ const TiptapEditor = ({
         <div
           id="EditableContainer"
           className={`h-full w-full z-[2] flex justify-start flex-col items-center relative
-           overflow-y-scroll min-h-0 text-neutral-200
+           overflow-y-scroll min-h-0 text-neutral-200 overflow-x-hidden
           `}
           style={{
             paddingLeft: `calc(1.1 * var(--scrollbarWidth))`,
@@ -742,7 +744,7 @@ const TiptapEditor = ({
 
           {editor && (
             <BubbleMenu
-              className="w-fit h-fit"
+              className="h-fit"
               editor={editor}
               tippyOptions={{ duration: 200 }}
             >
@@ -773,9 +775,19 @@ const TiptapEditor = ({
 
           {editor && (
             <BubbleMenu
-              className="w-fit h-fit"
               editor={editor}
-              tippyOptions={{ duration: 200 }}
+              tippyOptions={{
+                maxWidth: 'none',
+                duration: 200,
+                popperOptions: {
+                  strategy: "fixed",
+                  modifiers: [
+                    {
+                      name: "preventOverflow",
+                    },
+                  ],
+                },
+              }}
             >
               <div
                 id="EditableToolbar"
@@ -790,7 +802,7 @@ const TiptapEditor = ({
             ${
               isMobile
                 ? "order-1 w-full"
-                : "order-0 w-fit max-w-[100%] rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
+                : "order-0 rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
             }
           `}
               >
@@ -806,6 +818,9 @@ const TiptapEditor = ({
             <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
               <div
                 id="FloatingMenuToolbar"
+                style={{
+                  height: `calc(var(--uiScale) * ${lineHeight}rem)`,
+                }}
                 className="h-full w-fit bg-transparent border-transparent min-w-0"
               >
                 <TiptapFloatingToolbar
