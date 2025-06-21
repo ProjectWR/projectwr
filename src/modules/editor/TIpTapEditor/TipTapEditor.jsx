@@ -7,6 +7,7 @@ import {
   EditorContent,
   mergeAttributes,
   BubbleMenu,
+  FloatingMenu,
 } from "@tiptap/react";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -52,6 +53,7 @@ import useMainPanel from "../../app/hooks/useMainPanel";
 import { TableOfContentsPanel } from "./TableOfContentsPanel";
 import useRefreshableTimer from "../../app/hooks/useRefreshableTimer";
 import SearchAndReplace from "@sereneinserenade/tiptap-search-and-replace";
+import TiptapFloatingToolbar from "./TiptapFloatingToolbar";
 
 const content = "<p>Hello World!</p>";
 
@@ -742,7 +744,7 @@ const TiptapEditor = ({
             <BubbleMenu
               className="w-fit h-fit"
               editor={editor}
-              tippyOptions={{ duration: 100 }}
+              tippyOptions={{ duration: 200 }}
             >
               <div
                 id="EditableToolbar"
@@ -767,6 +769,51 @@ const TiptapEditor = ({
                 />
               </div>
             </BubbleMenu>
+          )}
+
+          {editor && (
+            <BubbleMenu
+              className="w-fit h-fit"
+              editor={editor}
+              tippyOptions={{ duration: 200 }}
+            >
+              <div
+                id="EditableToolbar"
+                style={{
+                  height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                  minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                  backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                  borderColor: `${dividerColor}`,
+                }}
+                className={`
+            min-w-0 sticky
+            ${
+              isMobile
+                ? "order-1 w-full"
+                : "order-0 w-fit max-w-[100%] rounded-lg border shadow-md shadow-appLayoutGentleShadow relative z-2"
+            }
+          `}
+              >
+                <TipTapToolbar
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                />
+              </div>
+            </BubbleMenu>
+          )}
+
+          {editor && (
+            <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
+              <div
+                id="FloatingMenuToolbar"
+                className="h-full w-fit bg-transparent border-transparent min-w-0"
+              >
+                <TiptapFloatingToolbar
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                />
+              </div>
+            </FloatingMenu>
           )}
 
           <EditorContent

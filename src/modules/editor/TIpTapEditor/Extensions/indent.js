@@ -91,13 +91,12 @@ export const Indent = Extension.create({
         };
     },
 
-    addKeyboardShortcuts() {
+    addKeyboardShortcuts() {    
         return {
-            Tab: () => {
+            'Ctrl-Tab': () => {
                 this.editor.commands.indent()
-                return true;
             },
-            'Shift-Tab': () => {
+            'Ctrl-Shift-Tab': () => {
                 this.editor.commands.outdent();
                 return true;
             },
