@@ -17,6 +17,24 @@ export const StatisticsPanel = ({ editor, visible = true }) => {
       <span className="text-xl text-appLayoutText py-2 border-b border-appLayoutBorder w-full">
         Statistics
       </span>
+      <div className="grow w-full basis-0 min-h-0 flex flex-col items-start">
+        <div className="h-[3rem] w-full">
+          <span className="text-lg text-appLayoutTextMuted grow">
+            Word Count
+          </span>
+          <span className="text-lg text-appLayoutText grow">
+            {editor.storage.characterCount.words()}
+          </span>
+        </div>
+        <div className="h-[3rem] w-full">
+          <span className="text-lg text-appLayoutTextMuted grow">
+            Character Count
+          </span>
+          <span className="text-lg text-appLayoutText grow">
+            {editor.storage.characterCount.character()}
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

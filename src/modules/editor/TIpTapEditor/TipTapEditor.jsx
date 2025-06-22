@@ -36,6 +36,7 @@ import Mention from "@tiptap/extension-mention";
 import { ContextMenu } from "radix-ui";
 import { writeText, readText } from "@tauri-apps/plugin-clipboard-manager";
 
+import CharacterCount from "@tiptap/extension-character-count";
 import DragHandle from "@tiptap/extension-drag-handle-react";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { TipTapEditorDefaultPreferences } from "./TipTapEditorDefaultPreferences";
@@ -195,6 +196,7 @@ const TiptapEditor = ({
     }),
     ProsemirrorProofreadExtension,
     ProsemirrorVirtualCursor,
+    CharacterCount,
     SearchAndReplace.configure({
       searchResultClass: "search-result", // class to give to found items. default 'search-result'
       caseSensitive: false, // no need to explain

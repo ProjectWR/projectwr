@@ -34,7 +34,7 @@
     "@tiptap/extension-blockquote": "^2.11.2",
     "@tiptap/extension-bold": "^2.11.2",
     "@tiptap/extension-bullet-list": "^2.11.2",
-    "@tiptap/extension-character-count": "^2.12.0",
+    "@tiptap/extension-character-count": "^2.22.3",
     "@tiptap/extension-collaboration": "^2.22.2",
     "@tiptap/extension-document": "^2.11.2",
     "@tiptap/extension-drag-handle": "^2.22.2",
