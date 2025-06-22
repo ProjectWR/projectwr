@@ -112,6 +112,9 @@ const TiptapEditor = ({
   const [isTOCPanelAwake, refreshTOCPanel, keepTOCPanelAwake] =
     useRefreshableTimer();
 
+  const [isStatsPanelAwake, refreshStatsPanel, keepStatsPanelAwake] =
+    useRefreshableTimer();
+
   const {
     width,
     gapTop,
@@ -700,7 +703,12 @@ const TiptapEditor = ({
           id="EditorSidePanelsContainer"
           className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-2 justify-center items-center"
         >
-          <StatisticsPanel editor={editor} />
+          <StatisticsPanel
+            visible={isStatsPanelAwake}
+            refreshStatsPanel={refreshStatsPanel}
+            keepStatsPanelAwake={keepStatsPanelAwake}
+            editor={editor}
+          />
           <TableOfContentsPanel
             visible={isTOCPanelAwake}
             refreshTOCPanel={refreshTOCPanel}
@@ -712,11 +720,11 @@ const TiptapEditor = ({
         {editor && (
           <div
             id="EditableUtilityToolbarWrapper"
-            className="w-fit h-fit absolute top-2 right-2"
+            className="w-fit h-fit absolute top-2 right-5 z-[3]"
           >
             <div
               id="EditableUtilityToolbar"
-              className=" w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[1]"
+              className="w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow"
               style={{
                 height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
                 minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
@@ -728,6 +736,7 @@ const TiptapEditor = ({
                 editor={editor}
                 toolbarPreferences={toolbarPreferences}
                 keepTOCPanelAwake={keepTOCPanelAwake}
+                keepStatsPanelAwake={keepStatsPanelAwake}
               />
             </div>
           </div>

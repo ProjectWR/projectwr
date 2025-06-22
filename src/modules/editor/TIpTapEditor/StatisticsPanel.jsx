@@ -1,7 +1,18 @@
-export const StatisticsPanel = ({ editor, visible = true }) => {
+export const StatisticsPanel = ({
+  editor,
+  visible = false,
+  refreshStatsPanel,
+  keepStatsPanelAwake,
+}) => {
   return (
     <div
       id="StatisticsPanel"
+      onMouseEnter={() => {
+        keepStatsPanelAwake();
+      }}
+      onMouseLeave={() => {
+        refreshStatsPanel();
+      }}
       style={{
         transform: visible
           ? `translateX(-105%) translateY(0%)`
