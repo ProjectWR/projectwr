@@ -57,7 +57,7 @@ export const TableOfContentsPanel = ({
           ? `translateX(-105%) translateY(0%)`
           : `translateX(0) translateY(0%)`,
       }}
-      className={`rounded-lg shadow-sm
+      className={`rounded-sm shadow-sm
                 shadow-appLayoutGentleShadow w-full
                 h-[60%]
                 border border-appLayoutBorder 

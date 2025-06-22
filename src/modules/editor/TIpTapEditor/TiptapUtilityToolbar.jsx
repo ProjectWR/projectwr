@@ -2,7 +2,7 @@ const TiptapUtilityToolbar = ({
   editor,
   toolbarPreferences,
   keepTOCPanelAwake,
-  keepStatsPanelAwake
+  keepStatsPanelAwake,
 }) => {
   const {
     toolbarHeight,
@@ -60,6 +60,10 @@ const TiptapUtilityToolbar = ({
       >
         <span className="icon-[material-symbols-light--redo] w-full h-full text-appLayoutText"></span>
       </button>
+      <div
+        className="w-px h-[70%]"
+        style={{ backgroundColor: `${dividerColor}` }}
+      ></div>
       <button
         className="toolbarButton"
         style={{

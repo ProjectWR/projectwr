@@ -701,7 +701,7 @@ const TiptapEditor = ({
 
         <div
           id="EditorSidePanelsContainer"
-          className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-2 justify-center items-center"
+          className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-1 justify-center items-center"
         >
           <StatisticsPanel
             visible={isStatsPanelAwake}
@@ -805,13 +805,13 @@ const TiptapEditor = ({
                 }}
                 className={`
                   
-            min-w-0 sticky
-            ${
-              isMobile
-                ? "order-1 w-full"
-                : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
-            }
-          `}
+                min-w-0 sticky
+                ${
+                  isMobile
+                    ? "order-1 w-full"
+                    : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
+                }
+              `}
               >
                 <TipTapToolbar
                   editor={editor}
