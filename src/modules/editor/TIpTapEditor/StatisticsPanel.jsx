@@ -17,21 +17,21 @@ export const StatisticsPanel = ({ editor, visible = true }) => {
       <span className="text-xl text-appLayoutText py-2 border-b border-appLayoutBorder w-full">
         Statistics
       </span>
-      <div className="grow w-full basis-0 min-h-0 flex flex-col items-start">
-        <div className="h-[3rem] w-full">
-          <span className="text-lg text-appLayoutTextMuted grow">
-            Word Count
+      <div className="grow w-full basis-0 min-h-0 flex flex-col items-start font-sans">
+        <div className="h-[2rem] w-full flex items-center">
+          <span className="text-sm text-appLayoutTextMuted grow basis-0 flex items-center justify-start">
+            Word count
           </span>
-          <span className="text-lg text-appLayoutText grow">
+          <span className="text-sm text-appLayoutText grow basis-0 flex items-center justify-start">
             {editor.storage.characterCount.words()}
           </span>
         </div>
-        <div className="h-[3rem] w-full">
-          <span className="text-lg text-appLayoutTextMuted grow">
-            Character Count
+        <div className="h-[2rem] w-full flex items-center">
+          <span className="text-sm text-appLayoutTextMuted grow basis-0 flex items-center justify-start">
+            Character count
           </span>
-          <span className="text-lg text-appLayoutText grow">
-            {editor.storage.characterCount.character()}
+          <span className="text-sm text-appLayoutText grow basis-0 flex items-center justify-start">
+            {editor.storage.characterCount.characters()}
           </span>
         </div>
       </div>
