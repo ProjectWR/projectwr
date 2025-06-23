@@ -27,6 +27,13 @@ const useRefreshableTimer = ({ time = 250 } = {}) => {
     }, time);
   }, [time]);
 
+  const forceClose = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    setTimerState(false);
+  }, []);
+
   // Start the timer on mount and whenever 'time' changes
   useEffect(() => {
     // Cleanup on unmount
@@ -37,7 +44,7 @@ const useRefreshableTimer = ({ time = 250 } = {}) => {
     };
   }, [keepAwake]);
 
-  return [timerState, refreshTimer, keepAwake];
+  return [timerState, refreshTimer, keepAwake, forceClose];
 };
 
 export default useRefreshableTimer;

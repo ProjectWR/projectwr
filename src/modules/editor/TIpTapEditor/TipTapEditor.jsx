@@ -115,6 +115,9 @@ const TiptapEditor = ({
   const [isStatsPanelAwake, refreshStatsPanel, keepStatsPanelAwake] =
     useRefreshableTimer();
 
+  const [isSearchReplacePanelAwake, refreshSearchReplacePanel, keepSearchReplacePanelAwake] =
+    useRefreshableTimer();
+
   const {
     width,
     gapTop,
@@ -702,9 +705,7 @@ const TiptapEditor = ({
         <div
           id="EditorTopPanelsContainer"
           className="absolute top-0 left-0 -translate-y-full w-full z-[3] h-[20rem] flex gap-1 justify-center items-center"
-        >
-          
-        </div>
+        ></div>
 
         <div
           id="EditorSidePanelsContainer"
