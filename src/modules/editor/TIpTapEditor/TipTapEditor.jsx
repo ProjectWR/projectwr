@@ -115,8 +115,15 @@ const TiptapEditor = ({
   const [isStatsPanelAwake, refreshStatsPanel, keepStatsPanelAwake] =
     useRefreshableTimer();
 
-  const [isSearchReplacePanelAwake, refreshSearchReplacePanel, keepSearchReplacePanelAwake] =
-    useRefreshableTimer();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [replaceTerm, setReplaceTerm] = useState("");
+
+  const [
+    isSearchReplacePanelAwake,
+    refreshSearchReplacePanel,
+    keepSearchReplacePanelAwake,
+    forceCloseSearchReplacePanel,
+  ] = useRefreshableTimer();
 
   const {
     width,
