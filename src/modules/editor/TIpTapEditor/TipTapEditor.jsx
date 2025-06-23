@@ -58,6 +58,7 @@ import SearchAndReplace from "@sereneinserenade/tiptap-search-and-replace";
 import TiptapFloatingToolbar from "./TiptapFloatingToolbar";
 import TiptapUtilityToolbar from "./TiptapUtilityToolbar";
 import { StatisticsPanel } from "./StatisticsPanel";
+import { SearchReplacePanel } from "./SearchReplacePanel";
 
 const content = "<p>Hello World!</p>";
 
@@ -712,7 +713,14 @@ const TiptapEditor = ({
         <div
           id="EditorTopPanelsContainer"
           className="absolute top-0 left-0 -translate-y-full w-full z-[3] h-[20rem] flex gap-1 justify-center items-center"
-        ></div>
+        >
+          <SearchReplacePanel
+            visible={isSearchReplacePanelAwake}
+            refreshSearchReplacePanel={refreshSearchReplacePanel}
+            keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
+            editor={editor}
+          />
+        </div>
 
         <div
           id="EditorSidePanelsContainer"
@@ -752,6 +760,7 @@ const TiptapEditor = ({
                 toolbarPreferences={toolbarPreferences}
                 keepTOCPanelAwake={keepTOCPanelAwake}
                 keepStatsPanelAwake={keepStatsPanelAwake}
+                keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
               />
             </div>
           </div>

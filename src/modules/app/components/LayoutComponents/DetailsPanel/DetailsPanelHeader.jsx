@@ -6,7 +6,7 @@ const DetailsPanelHeader = ({ children}) => {
   return (
     <section
       id="DetailsPanelHeader"
-      className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-start justify-start relative
+      className={`h-detailsPanelHeaderHeight min-h-detailsPanelHeaderHeight w-full flex items-start justify-start relative z-[4]
         ${deviceType === "desktop" && "px-0 "}
       `}
     >

@@ -3,6 +3,7 @@ const TiptapUtilityToolbar = ({
   toolbarPreferences,
   keepTOCPanelAwake,
   keepStatsPanelAwake,
+  keepSearchReplacePanelAwake,
 }) => {
   const {
     toolbarHeight,
@@ -91,6 +92,20 @@ const TiptapUtilityToolbar = ({
         }}
       >
         <span className="icon-[nimbus--stats] w-[75%] h-[75%] text-appLayoutText"></span>
+      </button>
+      <button
+        className="toolbarButton flex items-center justify-center"
+        style={{
+          height: `calc(${buttonHeight}rem * var(--uiScale))`,
+          borderRadius: `${buttonRadius}rem`,
+          width: `calc(${buttonWidth}rem * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+        }}
+        onClick={() => {
+          keepSearchReplacePanelAwake();
+        }}
+      >
+        <span className="icon-[lsicon--find-filled] w-[75%] h-[75%] text-appLayoutText"></span>
       </button>
     </div>
   );
