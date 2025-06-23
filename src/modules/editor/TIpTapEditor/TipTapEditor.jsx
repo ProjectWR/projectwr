@@ -700,6 +700,13 @@ const TiptapEditor = ({
         </style>
 
         <div
+          id="EditorTopPanelsContainer"
+          className="absolute top-0 left-0 -translate-y-full w-full z-[3] h-[20rem] flex gap-1 justify-center items-center"
+        >
+          
+        </div>
+
+        <div
           id="EditorSidePanelsContainer"
           className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-1 justify-center items-center"
         >
