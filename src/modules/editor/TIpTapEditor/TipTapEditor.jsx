@@ -115,10 +115,6 @@ const TiptapEditor = ({
 
   const [isStatsPanelAwake, refreshStatsPanel, keepStatsPanelAwake] =
     useRefreshableTimer();
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [replaceTerm, setReplaceTerm] = useState("");
-
   const [
     isSearchReplacePanelAwake,
     refreshSearchReplacePanel,
@@ -719,6 +715,7 @@ const TiptapEditor = ({
             refreshSearchReplacePanel={refreshSearchReplacePanel}
             keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
             editor={editor}
+            toolbarPreferences={toolbarPreferences}
           />
         </div>
 
@@ -731,12 +728,14 @@ const TiptapEditor = ({
             refreshStatsPanel={refreshStatsPanel}
             keepStatsPanelAwake={keepStatsPanelAwake}
             editor={editor}
+            toolbarPreferences={toolbarPreferences}
           />
           <TableOfContentsPanel
             visible={isTOCPanelAwake}
             refreshTOCPanel={refreshTOCPanel}
             keepTOCPanelAwake={keepTOCPanelAwake}
             editor={editor}
+            toolbarPreferences={toolbarPreferences}
           />
         </div>
 
