@@ -79,7 +79,7 @@ export const SearchReplacePanel = ({
       style={{
         transform: visible
           ? `translateX(0) translateY(105%)`
-          : `translateX(0) translateY(0%)`,
+          : `translateX(0) translateY(-5%)`,
       }}
       className={`rounded-sm shadow-sm mt-auto
                 shadow-appLayoutGentleShadow h-fit text-[1rem]
