@@ -29,6 +29,44 @@ export const SearchReplacePanel = ({
     editor.commands.setReplaceTerm(replaceTerm);
   }, [replaceTerm, editor]);
 
+  const goToSelection = useCallback(() => {
+    if (!editor) return;
+
+    const { results, resultIndex } = editor.storage.searchAndReplace;
+    const position = results[resultIndex];
+
+    if (!position) return;
+
+    editor.commands.setTextSelection(position);
+
+    const { node } = editor.view.domAtPos(editor.state.selection.anchor);
+    node instanceof HTMLElement &&
+      node.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [editor]);
+
+  const replace = () => {
+    editor.commands.replace();
+    goToSelection();
+  };
+
+  const next = () => {
+    editor.commands.nextSearchResult();
+    goToSelection();
+  };
+
+  const previous = () => {
+    editor.commands.previousSearchResult();
+    goToSelection();
+  };
+
+  const clear = () => {
+    setSearchTerm("");
+    setReplaceTerm("");
+    editor.commands.resetIndex();
+  };
+
+  const replaceAll = () => editor.commands.replaceAll();
+
   return (
     <div
       id="SearchReplacePanel"
@@ -55,15 +93,15 @@ export const SearchReplacePanel = ({
           name="searchTermInput"
           placeholder="search"
           value={searchTerm}
-          className="w-[60%] rounded-sm h-full focus:bg-appLayoutInputBackground p-2 focus:outline-none border border-appLayoutBorder"
+          className="w-[80%] rounded-sm h-full focus:bg-appLayoutInputBackground p-2 focus:outline-none border border-appLayoutBorder"
           onChange={onSearchInputChange}
         />
         <div className="h-full grow basis-0 min-w-0 flex gap-1">
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border border-appLayoutBorder rounded-sm">
-            <span>P</span>
+          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm">
+            <span className="icon-[formkit--left] h-[80%] w-[80%]"></span>
           </button>
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border border-appLayoutBorder rounded-sm">
-            <span>N</span>
+          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm">
+            <span className="icon-[formkit--right] h-[80%] w-[80%]"></span>
           </button>
         </div>
       </div>
@@ -73,15 +111,15 @@ export const SearchReplacePanel = ({
           name="replaceTermInput"
           placeholder="replace"
           value={replaceTerm}
-          className="w-[60%] rounded-sm h-full focus:bg-appLayoutInputBackground p-2 focus:outline-none border border-appLayoutBorder"
+          className="w-[80%] rounded-sm h-full focus:bg-appLayoutInputBackground p-2 focus:outline-none border border-appLayoutBorder"
           onChange={onReplaceInputChange}
         />
         <div className="h-full grow basis-0 min-w-0 flex gap-1">
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border border-appLayoutBorder rounded-sm">
-            <span>P</span>
+          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm">
+            <span className="icon-[codicon--replace] h-[80%] w-[80%]"></span>
           </button>
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border border-appLayoutBorder rounded-sm">
-            <span>N</span>
+          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm">
+            <span className="icon-[codicon--replace-all] h-[80%] w-[80%]"></span>
           </button>
         </div>
       </div>
