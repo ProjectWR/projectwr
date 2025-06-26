@@ -77,7 +77,7 @@ export const SearchReplacePanel = ({
         refreshSearchReplacePanel();
       }}
       style={{
-        transform: true
+        transform: visible
           ? `translateX(0) translateY(105%)`
           : `translateX(0) translateY(0%)`,
       }}
@@ -97,10 +97,16 @@ export const SearchReplacePanel = ({
           onChange={onSearchInputChange}
         />
         <div className="h-full grow basis-0 min-w-0 flex gap-1">
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm">
+          <button
+            onClick={previous}
+            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm"
+          >
             <span className="icon-[formkit--left] h-[80%] w-[80%]"></span>
           </button>
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm">
+          <button
+            onClick={next}
+            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm"
+          >
             <span className="icon-[formkit--right] h-[80%] w-[80%]"></span>
           </button>
         </div>
@@ -115,10 +121,16 @@ export const SearchReplacePanel = ({
           onChange={onReplaceInputChange}
         />
         <div className="h-full grow basis-0 min-w-0 flex gap-1">
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm">
+          <button
+            onClick={replace}
+            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm"
+          >
             <span className="icon-[codicon--replace] h-[80%] w-[80%]"></span>
           </button>
-          <button className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm">
+          <button
+            onClick={replaceAll}
+            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm"
+          >
             <span className="icon-[codicon--replace-all] h-[80%] w-[80%]"></span>
           </button>
         </div>

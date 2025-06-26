@@ -110,17 +110,26 @@ const TiptapEditor = ({
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
 
-  const [isTOCPanelAwake, refreshTOCPanel, keepTOCPanelAwake] =
-    useRefreshableTimer();
+  const [
+    isTOCPanelAwake,
+    refreshTOCPanel,
+    keepTOCPanelAwake,
+    forceCloseTOCPanel,
+  ] = useRefreshableTimer({ time: 2000 });
 
-  const [isStatsPanelAwake, refreshStatsPanel, keepStatsPanelAwake] =
-    useRefreshableTimer();
+  const [
+    isStatsPanelAwake,
+    refreshStatsPanel,
+    keepStatsPanelAwake,
+    forceCloseStatsPanel,
+  ] = useRefreshableTimer({ time: 2000 });
+
   const [
     isSearchReplacePanelAwake,
     refreshSearchReplacePanel,
     keepSearchReplacePanelAwake,
     forceCloseSearchReplacePanel,
-  ] = useRefreshableTimer();
+  ] = useRefreshableTimer({ time: 2000 });
 
   const {
     width,
@@ -238,11 +247,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-                .getLibrary(libraryId)
-                ?.getMap("library_props")
-                ?.toJSON().item_properties.item_title
+              .getLibrary(libraryId)
+              ?.getMap("library_props")
+              ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                ?.item_title;
+              ?.item_title;
 
         return label;
 
@@ -273,11 +282,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-                .getLibrary(libraryId)
-                ?.getMap("library_props")
-                ?.toJSON().item_properties.item_title
+              .getLibrary(libraryId)
+              ?.getMap("library_props")
+              ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                ?.item_title;
+              ?.item_title;
 
         const elem = document.createElement("span");
 
@@ -758,8 +767,17 @@ const TiptapEditor = ({
                 editor={editor}
                 toolbarPreferences={toolbarPreferences}
                 keepTOCPanelAwake={keepTOCPanelAwake}
+                isTOCPanelAwake={isTOCPanelAwake}
+                forceCloseTOCPanel={forceCloseTOCPanel}
+                refreshTOCPanel={refreshTOCPanel}
                 keepStatsPanelAwake={keepStatsPanelAwake}
+                isStatsPanelAwake={isStatsPanelAwake}
+                forceCloseStatsPanel={forceCloseStatsPanel}
+                refreshStatsPanel={refreshStatsPanel}
                 keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
+                isSearchReplacePanelAwake={isSearchReplacePanelAwake}
+                forceCloseSearchReplacePanel={forceCloseSearchReplacePanel}
+                refreshSearchReplacePanel={refreshSearchReplacePanel}
               />
             </div>
           </div>
@@ -829,11 +847,10 @@ const TiptapEditor = ({
                 className={`
                   
                 min-w-0 sticky
-                ${
-                  isMobile
+                ${isMobile
                     ? "order-1 w-full"
                     : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
-                }
+                  }
               `}
               >
                 <TipTapToolbar

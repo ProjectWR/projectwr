@@ -2,8 +2,17 @@ const TiptapUtilityToolbar = ({
   editor,
   toolbarPreferences,
   keepTOCPanelAwake,
+  isTOCPanelAwake,
+  forceCloseTOCPanel,
+  refreshTOCPanel,
   keepStatsPanelAwake,
+  isStatsPanelAwake,
+  refreshStatsPanel,
+  forceCloseStatsPanel,
   keepSearchReplacePanelAwake,
+  isSearchReplacePanelAwake,
+  forceCloseSearchReplacePanel,
+  refreshSearchReplacePanel,
 }) => {
   const {
     toolbarHeight,
@@ -74,7 +83,11 @@ const TiptapUtilityToolbar = ({
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
         }}
         onClick={() => {
-          keepTOCPanelAwake();
+          if (isTOCPanelAwake) {
+            forceCloseTOCPanel();
+          } else {
+            refreshTOCPanel();
+          }
         }}
       >
         <span className="icon-[carbon--table-of-contents] w-[95%] h-[95%] text-appLayoutText"></span>
@@ -88,7 +101,12 @@ const TiptapUtilityToolbar = ({
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
         }}
         onClick={() => {
-          keepStatsPanelAwake();
+          if (isStatsPanelAwake) {
+            forceCloseStatsPanel();
+          } else {
+            keepStatsPanelAwake();
+            refreshStatsPanel();
+          }
         }}
       >
         <span className="icon-[nimbus--stats] w-[75%] h-[75%] text-appLayoutText"></span>
@@ -102,7 +120,12 @@ const TiptapUtilityToolbar = ({
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
         }}
         onClick={() => {
-          keepSearchReplacePanelAwake();
+          if (isSearchReplacePanelAwake) {
+            forceCloseSearchReplacePanel();
+          } else {
+            keepSearchReplacePanelAwake();
+            refreshSearchReplacePanel();
+          }
         }}
       >
         <span className="icon-[lsicon--find-filled] w-[75%] h-[75%] text-appLayoutText"></span>
