@@ -48,12 +48,14 @@ Final Checklist before first release:
   - tooltips
   - drag handle - maybe
   - remember scroll for each paper
-  - find and replace, for paper and global
+  - find and replace, for ~~paper~~ and global
+  - polish all editor side panels
   - template editor
-  - word and character counter 
+  - ~~word and character counter~~
   - productivity tracker
   - website finalizing
   - keyboard shortcuts
+  - focus mode in editor
 - 
 - FUTURE:
 - ~~Notes~~

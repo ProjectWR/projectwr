@@ -49,7 +49,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
   return (
     <div
       // style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
-      className="h-full"
+      className="h-full max-h-full EditorStyles text-appLayoutText"
     >
       <div
         id="toolbarBody"
@@ -59,6 +59,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           {`
             .toolbarButton {
               background-color: ${backgroundColor};
+              height: 100%;
             }
 
             .toolbarButton:hover {
@@ -69,7 +70,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         {/* <button
           className="toolbarButton shrink-0"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -81,7 +81,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -106,7 +105,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -119,7 +117,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -132,7 +129,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -145,7 +141,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -162,7 +157,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton p-1 pb-px"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -175,7 +169,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton p-1 pt-px"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -192,7 +185,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton p-1"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -205,7 +197,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -218,7 +209,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -235,7 +225,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -250,7 +239,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -265,7 +253,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -280,7 +267,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -299,7 +285,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         {/* <button
           className="toolbarButton"
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
             borderRadius: `${buttonRadius}rem`,
             width: `calc(${buttonWidth}rem * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,

@@ -107,10 +107,9 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
   return (
     <div className="h-full w-fit shrink-0 flex items-center" ref={innerRef}>
       <div
-        style={{ height: `${buttonHeight}rem` }}
         id="TextFormatButtonHeader"
         ref={headerRef}
-        className="px-1 w-fit flex items-center justify-center"
+        className="px-1 h-full w-fit flex items-center justify-center"
       >
         <button
           style={{

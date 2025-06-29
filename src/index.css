@@ -10,6 +10,23 @@
 
 @plugin "@iconify/tailwind4";
 
+/* Add this to your global styles or style tag */
+.tippy-box {
+  max-width: calc(100vw - 20px) !important;
+  transform: translateZ(0); /* Fix for Safari rendering */
+}
+
+.tippy-content {
+  padding: 0 !important;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#EditableToolbar {
+  max-width: calc(100vw - 40px);
+  overflow-x: auto;
+}
+
 .noiseFiner {
   /* ... */
   background: url(/src/assets/noiseFiner.svg);
@@ -149,7 +166,7 @@
 
     /* lightest purple */
     --appBackgroundAccent: 34 55% 78%;
-    
+
     --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
     --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
     --appLayoutBorder: 0 10% 45%;

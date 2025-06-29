@@ -540,11 +540,11 @@ const TiptapEditor = ({
     <ContextMenuWrapper options={options}>
       <div
         id="EditorContainer"
-        className="h-full w-full flex flex-col items-center bg-appBackgroundAccent relative"
+        className="h-full EditorStyles w-full max-w-full flex flex-col items-center bg-appBackgroundAccent relative"
       >
         <style>
           {`
-          #EditorContainer .tiptap {
+          .EditorStyles .tiptap {
             min-height: calc(20rem * var(--uiScale));
             padding: calc(${paddingTop}rem * var(--uiScale))
                      calc(${paddingRight}rem * var(--uiScale))
@@ -553,38 +553,38 @@ const TiptapEditor = ({
             font-family: ${font}, serif ;
           }
 
-          #EditorContainer h1 {
+          .EditorStyles h1 {
             font-size: calc(${h1FontSize}rem * var(--uiScale));
             line-height: calc(${h1LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h1MarginBottom}rem * var(--uiScale));
             font-family: ${font}, serif ;
           }
-          #EditorContainer h2 {
+          .EditorStyles h2 {
             font-size: calc(${h2FontSize}rem * var(--uiScale));
             line-height: calc(${h2LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h2MarginBottom}rem * var(--uiScale));
             font-family: ${font}, serif ;
           }
-          #EditorContainer h3 {
+          .EditorStyles h3 {
             font-size: calc(${h3FontSize}rem * var(--uiScale));
             line-height: calc(${h3LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h3MarginBottom}rem * var(--uiScale));
             font-family: ${font}, serif ;
           }
-          #EditorContainer h4 {
+          .EditorStyles h4 {
             font-size: calc(${h4FontSize}rem * var(--uiScale));
             line-height: calc(${h4LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h4MarginBottom}rem * var(--uiScale));
             font-family: ${font}, serif ;
           }
-          #EditorContainer h5 {
+          .EditorStyles h5 {
             font-size: calc(${h5FontSize}rem * var(--uiScale));
             line-height: calc(${h5LineHeight}rem * var(--uiScale));
             margin-bottom: calc(${h5MarginBottom}rem * var(--uiScale));
             font-family: ${font}, serif ;
           }
 
-          #EditorContainer p {
+          .EditorStyles p {
             font-size: calc(${fontSize}rem * var(--uiScale));
             line-height: calc(${lineHeight}rem * var(--uiScale));
             margin-bottom: calc(${marginBottom}rem * var(--uiScale));
@@ -592,32 +592,32 @@ const TiptapEditor = ({
             margin: 0;
           }
 
-          #EditorContainer {
+          .EditorStyles {
             font-size: calc(${fontSize}rem * var(--uiScale));
             line-height: calc(${lineHeight}rem * var(--uiScale));
           }
 
-          #EditorContainer ol,
-          #EditorContainer ul {
+          .EditorStyles ol,
+          .EditorStyles ul {
             padding-left: calc(${listPaddingLeft}rem * var(--uiScale));
             margin: calc(${listMarginTop}rem * var(--uiScale)) 1rem calc(${listMarginBottom}rem * var(--uiScale)) 0.4rem;
           }
 
-          #EditorContainer ul {
+          .EditorStyles ul {
             list-style: circle;
           }
 
-          #EditorContainer ol {
+          .EditorStyles ol {
             list-style: lower;
           }
 
-          #EditorContainer hr {
+          .EditorStyles hr {
             cursor: pointer;
             margin: calc(${hrMarginTop}rem * var(--uiScale)) 0 calc(${hrMarginBottom}rem * var(--uiScale)) 0;
             border-top: 1px solid ${hrBorderColor};
           }
 
-          #EditorContainer blockquote {
+          .EditorStyles blockquote {
             padding-left: ${blockquotePadding}rem;
             border-left: ${blockquoteBorderWidth}rem solid ${blockquoteBorderColor};
           }
@@ -769,6 +769,7 @@ const TiptapEditor = ({
             >
               <TiptapUtilityToolbar
                 editor={editor}
+                yXmlFragment={yXmlFragment}
                 toolbarPreferences={toolbarPreferences}
                 keepTOCPanelAwake={keepTOCPanelAwake}
                 isTOCPanelAwake={isTOCPanelAwake}
@@ -787,10 +788,75 @@ const TiptapEditor = ({
           </div>
         )}
 
+        {editor && (
+          <BubbleMenu
+
+            className="h-fit z-[10000]"
+            editor={editor}
+            tippyOptions={{
+              appendTo: () => document.body, // KEY FIX: Append to document body
+              duration: 200,
+              popperOptions: {
+                strategy: 'fixed', // Use fixed positioning strategy
+                modifiers: [
+
+                  {
+                    name: "preventOverflow",
+                    options: {
+                      padding: 10,
+                      boundary: 'viewport', // Constrain to viewport
+                      altAxis: true, // Prevent overflow in both directions
+                      tether: false, // Disable tethering
+                      rootBoundary: 'document',
+                    },
+                  },
+                  {
+                    name: 'flip', // Add flip modifier
+                    options: {
+                      padding: 10,
+                      boundary: 'viewport',
+                      flipVariations: true,
+                    },
+                  },
+                  {
+                    name: 'offset', // Add offset modifier
+                    options: {
+                      offset: [0, 10], // [horizontal, vertical] offset
+                    },
+                  },
+                ],
+              },
+            }}
+          >
+            <div
+              id="EditableToolbar"
+              style={{
+                height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                borderColor: `${dividerColor}`,
+              }}
+              className={`
+                overflow-y-hidden
+                min-w-0 sticky
+                ${isMobile
+                  ? "order-1 w-full"
+                  : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
+                }
+              `}
+            >
+              <TipTapToolbar
+                editor={editor}
+                toolbarPreferences={toolbarPreferences}
+              />
+            </div>
+          </BubbleMenu>
+        )}
+
         <div
           id="EditableContainer"
-          className={`h-full w-full z-[2] flex justify-start flex-col items-center relative
-           overflow-y-scroll min-h-0 text-neutral-200 overflow-x-hidden
+          className={`h-full w-full max-w-full z-[2] flex justify-start flex-col items-center relative
+           overflow-y-scroll min-h-0 text-neutral-200
           `}
           style={{
             paddingLeft: `calc(1.1 * var(--scrollbarWidth))`,
@@ -822,48 +888,6 @@ const TiptapEditor = ({
             />
           </div> */}
 
-          {editor && (
-            <BubbleMenu
-              className="h-fit"
-              editor={editor}
-              tippyOptions={{
-                duration: 200,
-                popperOptions: {
-                  modifiers: [
-                    {
-                      name: "preventOverflow",
-                      options: {
-                        boundary: document.querySelector("#EditableContainer"),
-                      },
-                    },
-                  ],
-                },
-              }}
-            >
-              <div
-                id="EditableToolbar"
-                style={{
-                  height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                  minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                  backgroundColor: `${toolbarPreferences.backgroundColor}`,
-                  borderColor: `${dividerColor}`,
-                }}
-                className={`
-                  
-                min-w-0 sticky
-                ${isMobile
-                    ? "order-1 w-full"
-                    : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
-                  }
-              `}
-              >
-                <TipTapToolbar
-                  editor={editor}
-                  toolbarPreferences={toolbarPreferences}
-                />
-              </div>
-            </BubbleMenu>
-          )}
 
           {editor && (
             <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
