@@ -30,12 +30,10 @@ export const SearchReplacePanel = ({
   }, [replaceTerm, editor]);
 
   useEffect(() => {
-    if (searchTerm.length < 1) {
+    if (searchTerm.length > 0 || replaceTerm.length > 0) {
       keepSearchReplacePanelAwake();
-    }
-
-    if (replaceTerm.length < 1) {
-      keepSearchReplacePanelAwake();
+    } else {
+      refreshSearchReplacePanel();
     }
   }, [searchTerm, replaceTerm]);
 

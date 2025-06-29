@@ -833,7 +833,7 @@ const TiptapEditor = ({
               style={{
                 height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
                 minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                backgroundColor: `${toolbarPreferences.backgroundColor}EE`,
                 borderColor: `${dividerColor}`,
               }}
               className={`
@@ -841,7 +841,7 @@ const TiptapEditor = ({
                 min-w-0 sticky
                 ${isMobile
                   ? "order-1 w-full"
-                  : "order-0 w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow z-[10000]"
+                  : "order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]"
                 }
               `}
             >

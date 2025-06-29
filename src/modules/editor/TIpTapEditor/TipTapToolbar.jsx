@@ -58,7 +58,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <style>
           {`
             .toolbarButton {
-              background-color: ${backgroundColor};
+              background-color: transparent;
               height: 100%;
             }
 
@@ -90,10 +90,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           <span className="icon-[material-symbols-light--redo] w-full h-full text-appLayoutText"></span>
         </button>
         */}
-        <div
+        {/* <div
           className="w-px h-[70%]"
           style={{ backgroundColor: `${dividerColor}` }}
-        ></div>
+        ></div> */}
         <TextFormatButton
           editor={editor}
           toolbarPreferences={toolbarPreferences}
@@ -278,10 +278,10 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         >
           <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-appLayoutText"></span>
         </button>
-        <div
+        {/* <div
           className="w-px h-[70%]"
           style={{ backgroundColor: `${dividerColor}` }}
-        ></div>
+        ></div> */}
         {/* <button
           className="toolbarButton"
           style={{
