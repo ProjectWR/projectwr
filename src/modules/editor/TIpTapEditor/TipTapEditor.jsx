@@ -791,7 +791,7 @@ const TiptapEditor = ({
         {editor && (
           <BubbleMenu
 
-            className="h-fit z-[10000]"
+            className="h-fit z-[10000] bg-transparent"
             editor={editor}
             tippyOptions={{
               appendTo: () => document.body, // KEY FIX: Append to document body

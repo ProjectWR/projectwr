@@ -42,7 +42,9 @@ Final Checklist before first release:
   - import and export to docx
   - proofreader ignore list
   - sync to google drive
-
+  - auto updating
+  - code signing
+  
 - MINOR:
   - search panel
   - tooltips
