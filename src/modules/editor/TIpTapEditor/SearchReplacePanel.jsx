@@ -29,6 +29,16 @@ export const SearchReplacePanel = ({
     editor.commands.setReplaceTerm(replaceTerm);
   }, [replaceTerm, editor]);
 
+  useEffect(() => {
+    if (searchTerm.length < 1) {
+      keepSearchReplacePanelAwake();
+    }
+
+    if (replaceTerm.length < 1) {
+      keepSearchReplacePanelAwake();
+    }
+  }, [searchTerm, replaceTerm]);
+
   const goToSelection = useCallback(() => {
     if (!editor) return;
 
@@ -74,7 +84,12 @@ export const SearchReplacePanel = ({
         keepSearchReplacePanelAwake();
       }}
       onMouseLeave={() => {
-        refreshSearchReplacePanel();
+        if (searchTerm.length > 0 || replaceTerm.length > 0) {
+          keepSearchReplacePanelAwake();
+        }
+        else {
+          refreshSearchReplacePanel();
+        }
       }}
       style={{
         transform: visible

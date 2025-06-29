@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ChromePicker, SketchPicker } from "react-color";
 import useOuterClick from "../../../design-system/useOuterClick";
 import { AnimatePresence, motion } from "framer-motion";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
@@ -607,17 +606,7 @@ const ColorPicker = ({ color, onChangeComplete }) => {
             }}
             className="absolute z-99 bg-appBackground text-appLayoutText rounded-lg shadow-md h-fit w-fit"
           >
-            <SketchPicker
-              className="bg-appBackground text-appLayoutText"
-              color={currentColor}
-              onChange={(color) => {
-                setCurrentColor(color);
-              }}
-              onChangeComplete={(color) => {
-                setCurrentColor(color.hex);
-                onChangeComplete(color.hex);
-              }}
-            />
+          
           </motion.div>
         )}
       </AnimatePresence>

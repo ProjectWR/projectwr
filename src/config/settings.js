@@ -13,6 +13,11 @@ export default {
     },
 
     storage: {
+        prefixes: {
+            gdrive: "gdrive",
+            onedrive: "onedrive",
+            dropbox: "dropbox"
+        },
         paths: {
             access_token: "access_token.db",
             tasks: "tasks.json",

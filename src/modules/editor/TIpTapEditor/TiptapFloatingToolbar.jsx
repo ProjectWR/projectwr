@@ -46,7 +46,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
   } = toolbarPreferences;
 
   return (
-    <div className="h-full w-fit overflow-hidden flex">
+    <div className="h-full w-fit overflow-hidden flex gap-1">
       <style>
         {`
 
@@ -60,7 +60,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
           `}
       </style>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -73,7 +73,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[cuida--heading1-outline] w-[80%] h-[80%] text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -86,7 +86,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[cuida--heading2-outline] w-[80%] h-[80%] text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -99,7 +99,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[cuida--heading3-outline] w-[80%] h-[80%] text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -110,7 +110,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[material-symbols-light--format-list-bulleted] w-[90%] h-[90%] text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -121,7 +121,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[material-symbols-light--format-list-numbered] w-[90%] h-[90%] text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -134,7 +134,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[material-symbols-light--format-align-left] w-full h-full text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -147,7 +147,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[material-symbols-light--format-align-center] w-full h-full text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -160,7 +160,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[material-symbols-light--format-align-right] w-full h-full text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
@@ -173,7 +173,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-appLayoutText"></span>
       </button>
       <button
-        className="toolbarButton h-full flex items-center justify-center focus:outline-none"
+        className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
           width: `calc(${buttonWidth}rem * var(--uiScale))`,
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,

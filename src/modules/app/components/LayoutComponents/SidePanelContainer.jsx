@@ -7,7 +7,7 @@ import ActivityBar from "./ActivityBar";
 import SidePanel from "./SidePanel";
 
 export const SidePanelContainer = ({ loading }) => {
-  const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer();
+  const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer({ time: 500 });
   const sidePanelWidth = appStore((state) => state.sidePanelWidth);
   const setSidePanelWidth = appStore((state) => state.setSidePanelWidth);
   const zoom = appStore((state) => state.zoom);
@@ -101,10 +101,9 @@ export const SidePanelContainer = ({ loading }) => {
           <motion.div
             key="SidePanelMotionContainer"
             id="SidePanelMotionContainer"
-            className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${
-              !isMd &&
+            className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${!isMd &&
               "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
-            } `}
+              } `}
             initial={{
               opacity: 0,
               width: 0,
@@ -127,11 +126,10 @@ export const SidePanelContainer = ({ loading }) => {
             <div id="SidePanelWrapper" className="h-full w-full relative">
               <SidePanel />
               <motion.div
-                className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${
-                  sidePanelSliderActive
+                className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${sidePanelSliderActive
                     ? "bg-sidePanelDragHandle"
                     : "bg-transparent"
-                } cursor-w-resize`}
+                  } cursor-w-resize`}
                 drag="x"
                 style={{
                   left: `${sidePanelSliderPos}px`,
