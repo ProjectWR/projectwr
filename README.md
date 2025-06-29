@@ -38,19 +38,23 @@
 - ~~add + button for notes in notes panel~~
 
 Final Checklist before first release:
-- search panel
-- tooltips
-- drag handle
-- remember scroll for each paper
-- find and replace, for paper and global
-- import and export to docx
-- spellchecker ignore list
-- sync to google drive
-- template editor
-- word and character counter 
-- productivity tracker
-- website finalizing
+- MAJOR:
+  - import and export to docx
+  - proofreader ignore list
+  - sync to google drive
 
+- MINOR:
+  - search panel
+  - tooltips
+  - drag handle - maybe
+  - remember scroll for each paper
+  - find and replace, for paper and global
+  - template editor
+  - word and character counter 
+  - productivity tracker
+  - website finalizing
+  - keyboard shortcuts
+- 
 - FUTURE:
 - ~~Notes~~
 - Timelines
