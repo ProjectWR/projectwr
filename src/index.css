@@ -145,6 +145,8 @@
 
     --appLayoutShadow: 0 0% 0%;
     --appLayoutGentleShadow: 0 0% 3%;
+    --sidePanelDragHandle: 0, 0%, 30%, 50%;
+
     --appLayoutHover: 0, 0%, 15%, 50%;
     --appLayoutDarkHover: 0 0% 3.9%;
     --appLayoutHoverGentle: 0 0% 12%;
