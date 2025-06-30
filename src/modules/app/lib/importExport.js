@@ -34,6 +34,7 @@ import { Indent } from "../../editor/TipTapEditor/Extensions/indent";
 import suggestion from "../../editor/TipTapEditor/Extensions/MentionExtension/suggestion";
 import { appStore } from "../stores/appStore";
 import { getOrInitLibraryYTree } from "./ytree";
+import { Document as docxDocument, Packer, Paragraph as docxParagrah, TextRun } from "docx";
 
 
 const extensions = [
@@ -174,12 +175,139 @@ function spawnEditor(yXmlFragment) {
     });
 }
 
-export function exportToDocx(yXmlFragment) {
+export function yXmlFragmentToDocx(yXmlFragment) {
     const editor = spawnEditor(yXmlFragment);
-
     const json = editor.getJSON();
 
-    console.log("JSON: ", json);
+    // Helper to convert marks to docx TextRun options
+    function getTextRunOptions(node) {
+        const options = {};
+        if (node.marks) {
+            for (const mark of node.marks) {
+                if (mark.type === "bold") options.bold = true;
+                if (mark.type === "italic") options.italics = true;
+                if (mark.type === "underline") options.underline = {};
+                if (mark.type === "strike") options.strike = true;
+                // Add more marks as needed
+            }
+        }
+        return options;
+    }
 
+    // Helper to convert inline content (text, mention, etc.) to TextRuns
+    function parseInlineContent(content) {
+        if (!content) return [];
+        return content.map(node => {
+            if (node.type === "text") {
+                return new TextRun({
+                    text: node.text,
+                    ...getTextRunOptions(node)
+                });
+            }
+            if (node.type === "mention") {
+                // Render mention as label, could style differently if needed
+                return new TextRun({
+                    text: node.attrs && node.attrs.label ? node.attrs.label : "",
+                    // Optionally, you can style mentions
+                    bold: true,
+                    color: "4472C4"
+                });
+            }
+            return new TextRun({ text: "" });
+        });
+    }
 
+    // Recursively parse block nodes
+    function parseBlock(node) {
+        if (!node) return [];
+        if (node.type === "paragraph") {
+            // Skip empty paragraphs
+            if (!node.content || node.content.length === 0) {
+                return [new docxParagrah({})];
+            }
+            return [
+                new docxParagrah({
+                    children: parseInlineContent(node.content),
+                    alignment: node.attrs && node.attrs.textAlign ? node.attrs.textAlign : undefined,
+                })
+            ];
+        }
+        if (node.type === "heading") {
+            return [
+                new docxParagrah({
+                    children: parseInlineContent(node.content),
+                    heading: node.attrs && node.attrs.level ? (
+                        node.attrs.level === 1 ? "TITLE" :
+                            node.attrs.level === 2 ? "HEADING_1" :
+                                node.attrs.level === 3 ? "HEADING_2" :
+                                    node.attrs.level === 4 ? "HEADING_3" :
+                                        node.attrs.level === 5 ? "HEADING_4" : undefined
+                    ) : undefined,
+                    alignment: node.attrs && node.attrs.textAlign ? node.attrs.textAlign : undefined,
+                })
+            ];
+        }
+        if (node.type === "bulletList" || node.type === "orderedList") {
+            const isOrdered = node.type === "orderedList";
+            const items = [];
+            if (node.content) {
+                for (const listItem of node.content) {
+                    // Each listItem contains a paragraph (or more)
+                    if (listItem.content) {
+                        for (const para of listItem.content) {
+                            // Only parse paragraphs inside list items
+                            if (para.type === "paragraph") {
+                                items.push(
+                                    new docxParagrah({
+                                        children: parseInlineContent(para.content),
+                                        bullet: isOrdered ? { level: 0, numbering: { reference: "ordered-list" } } : { level: 0 },
+                                    })
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+            return items;
+        }
+        if (node.type === "horizontalRule") {
+            return [new docxParagrah({ border: { bottom: { color: "auto", space: 1, value: "single", size: 6 } } })];
+        }
+        // Recursively handle other block types if needed
+        return [];
+    }
+
+    // Parse all top-level content nodes
+    const docxChildren = [];
+    if (json.content && Array.isArray(json.content)) {
+        for (const node of json.content) {
+            const blocks = parseBlock(node);
+            if (blocks && blocks.length) {
+                docxChildren.push(...blocks);
+            }
+        }
+    }
+
+    const doc = new docxDocument({
+        sections: [
+            {
+                properties: {},
+                children: docxChildren
+            }
+        ]
+    });
+
+    // Download the docx file
+    Packer.toBlob(doc).then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "export.docx";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    });
 }
