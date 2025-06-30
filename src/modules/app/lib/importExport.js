@@ -34,7 +34,7 @@ import { Indent } from "../../editor/TipTapEditor/Extensions/indent";
 import suggestion from "../../editor/TipTapEditor/Extensions/MentionExtension/suggestion";
 import { appStore } from "../stores/appStore";
 import { getOrInitLibraryYTree } from "./ytree";
-import { Document as docxDocument, Packer, Paragraph as docxParagrah, TextRun } from "docx";
+import { Document as docxDocument, Packer, Paragraph as docxParagrah, TextRun, HeadingLevel } from "docx";
 
 
 const extensions = [
@@ -174,10 +174,11 @@ function spawnEditor(yXmlFragment) {
         }),]
     });
 }
-
-export function yXmlFragmentToDocx(yXmlFragment) {
+export function yXmlFragmentToDocx(yXmlFragment, baseHeadingLevel = 1) {
     const editor = spawnEditor(yXmlFragment);
     const json = editor.getJSON();
+
+    console.log("EXPORT JSON: ", json);
 
     // Helper to convert marks to docx TextRun options
     function getTextRunOptions(node) {
@@ -233,16 +234,25 @@ export function yXmlFragmentToDocx(yXmlFragment) {
             ];
         }
         if (node.type === "heading") {
+            // Adjust heading level based on baseHeadingLevel
+            const origLevel = node.attrs && node.attrs.level ? node.attrs.level : 1;
+            const docxLevel = Math.max(1, baseHeadingLevel + (origLevel - 1));
+            let headingType;
+            // Map docxLevel to docx HeadingLevel enum
+            switch (docxLevel) {
+                case 1: headingType = HeadingLevel.TITLE; break;
+                case 2: headingType = HeadingLevel.HEADING_1; break;
+                case 3: headingType = HeadingLevel.HEADING_2; break;
+                case 4: headingType = HeadingLevel.HEADING_3; break;
+                case 5: headingType = HeadingLevel.HEADING_4; break;
+                case 6: headingType = HeadingLevel.HEADING_5; break;
+                case 7: headingType = HeadingLevel.HEADING_6; break;
+                default: headingType = undefined;
+            }
             return [
                 new docxParagrah({
                     children: parseInlineContent(node.content),
-                    heading: node.attrs && node.attrs.level ? (
-                        node.attrs.level === 1 ? "TITLE" :
-                            node.attrs.level === 2 ? "HEADING_1" :
-                                node.attrs.level === 3 ? "HEADING_2" :
-                                    node.attrs.level === 4 ? "HEADING_3" :
-                                        node.attrs.level === 5 ? "HEADING_4" : undefined
-                    ) : undefined,
+                    heading: headingType,
                     alignment: node.attrs && node.attrs.textAlign ? node.attrs.textAlign : undefined,
                 })
             ];
