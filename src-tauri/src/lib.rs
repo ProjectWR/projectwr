@@ -1,5 +1,6 @@
 mod libs;
 
+use tauri::Manager;
 use libs::filehelper::ENV_FILE;
 use libs::tauri_actions::{
     greet, load_access_token, load_code, save_access_token, save_code, test_command,
@@ -8,6 +9,7 @@ use once_cell::sync::OnceCell;
 use std::env;
 use tauri::{command, Emitter, Window};
 use tauri_plugin_oauth::start;
+use window_vibrancy::*;
 
 static SETTINGS: OnceCell<Settings> = OnceCell::new();
 
@@ -34,7 +36,6 @@ async fn start_server(window: Window) -> Result<u16, String> {
     })
     .map_err(|err| err.to_string())
 }
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     dotenv::from_filename(ENV_FILE).ok();
@@ -48,6 +49,8 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_oauth::init())
         .setup(|app| {
+            let window = app.get_webview_window("main").unwrap();
+
             tauri::async_runtime::block_on(async {
                 let settings_data = std::fs::read_to_string("resources/default_settings.json")
                     .map_err(|e| e.to_string())?;
@@ -66,6 +69,15 @@ pub fn run() {
                         .build(),
                 )?;
             }
+
+            #[cfg(target_os = "macos")]
+            apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
+                .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+
+            #[cfg(target_os = "windows")]
+            apply_blur(&window, Some((18, 18, 18, 125)))
+                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

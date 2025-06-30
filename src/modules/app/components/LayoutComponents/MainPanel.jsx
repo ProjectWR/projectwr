@@ -455,7 +455,7 @@ const MainPanel = ({}) => {
   }, [renderMainPanel]);
 
   return (
-    <div className="grow min-w-0 basis-0 h-full overflow-hidden z-3 flex flex-col items-center justify-center">
+    <div className="grow min-w-0 basis-0 h-full bg-appBackground overflow-hidden z-3 flex flex-col items-center justify-center">
       {/* <section className="w-full h-actionBarHeight min-h-actionBarHeight flex">
         <TabsBar /> 
         <NotesPanelOpenButton

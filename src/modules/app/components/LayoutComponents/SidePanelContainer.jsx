@@ -87,7 +87,7 @@ export const SidePanelContainer = ({ loading }) => {
   return (
     <div
       id="ActivityBarAndSidePanelContainer"
-      className="w-fit min-w-fit h-full flex flex-row items-center relative"
+      className="w-fit min-w-fit h-full flex flex-row items-center relative bg-transparent"
       onMouseEnter={() => {
         keepAwake();
       }}
@@ -101,7 +101,7 @@ export const SidePanelContainer = ({ loading }) => {
           <motion.div
             key="SidePanelMotionContainer"
             id="SidePanelMotionContainer"
-            className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${!isMd &&
+            className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent/87.5 ${!isMd &&
               "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
               } `}
             initial={{

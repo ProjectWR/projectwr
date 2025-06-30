@@ -32,7 +32,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
       {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex shrink-0 gap-px items-center bg-appBackground ${
+          className={`flex shrink-0 gap-px items-center bg-appBackground/75 backdrop-blur-2xl   ${
             deviceType === "mobile"
               ? "w-full h-activityBarHeight order-last flex-row border-t"
               : "h-full w-activityBarWidth order-first flex-col border-r"
@@ -219,8 +219,8 @@ const ActivityButton = ({
      
         ${
           selectedActivity === activity
-            ? "text-activityButtonIconHighlight bg-appLayoutPressed z-1000 shadow-sm shadow-appLayoutShadow"
-            : "text-appLayoutTextMuted bg-appBackground hover:text-appLayoutText"
+            ? "text-activityButtonIconHighlight bg-appLayoutPressed/50 z-1000 "
+            : "text-appLayoutTextMuted hover:text-appLayoutText"
         }
        
         ${className}
