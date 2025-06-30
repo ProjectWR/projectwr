@@ -49,7 +49,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
   return (
     <div
       // style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
-      className="h-full max-h-full EditorStyles text-appLayoutText"
+      className="h-full max-h-full z-[10001] EditorStyles text-appLayoutText"
     >
       <div
         id="toolbarBody"
@@ -58,7 +58,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
         <style>
           {`
             .toolbarButton {
-              background-color: transparent;
+              background-color: ${backgroundColor};
               height: 100%;
             }
 
@@ -67,33 +67,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
             }
           `}
         </style>
-        {/* <button
-          className="toolbarButton shrink-0"
-          style={{
-            borderRadius: `${buttonRadius}rem`,
-            width: `calc(${buttonWidth}rem * var(--uiScale))`,
-            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
-          }}
-          onClick={() => editor.commands.undo()}
-        >
-          <span className="icon-[material-symbols-light--undo] w-full h-full text-appLayoutText"></span>
-        </button>
-        <button
-          className="toolbarButton"
-          style={{
-            borderRadius: `${buttonRadius}rem`,
-            width: `calc(${buttonWidth}rem * var(--uiScale))`,
-            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
-          }}
-          onClick={() => editor.commands.redo()}
-        >
-          <span className="icon-[material-symbols-light--redo] w-full h-full text-appLayoutText"></span>
-        </button>
-        */}
-        {/* <div
-          className="w-px h-[70%]"
-          style={{ backgroundColor: `${dividerColor}` }}
-        ></div> */}
+
         <TextFormatButton
           editor={editor}
           toolbarPreferences={toolbarPreferences}
@@ -102,6 +76,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="w-px h-[70%]"
           style={{ backgroundColor: `${dividerColor}` }}
         ></div>
+        <button onClick={() => { console.log("HI"); }}>CLICK</button>
         <button
           className="toolbarButton"
           style={{
@@ -111,6 +86,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
             backgroundColor: editor.isActive("bold") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleBold().run()}
+
         >
           <span className="icon-[material-symbols-light--format-bold] w-full h-full text-appLayoutText"></span>
         </button>

@@ -1,4 +1,4 @@
-import { exportToDocx } from "../../app/lib/importExport";
+import { yXmlFragmentToDocx } from "../../app/lib/importExport";
 
 const TiptapUtilityToolbar = ({
   editor,
@@ -142,7 +142,7 @@ const TiptapUtilityToolbar = ({
           minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
         }}
         onClick={() => {
-          exportToDocx(yXmlFragment);
+          yXmlFragmentToDocx(yXmlFragment);
         }}
       >
         <span className="icon-[mdi--export] w-[75%] h-[75%] text-appLayoutText"></span>
