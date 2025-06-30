@@ -49,7 +49,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
   return (
     <div
       // style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
-      className="h-full max-h-full z-[10001] EditorStyles text-appLayoutText"
+      className="h-full max-h-full z-[10001] EditorStyles text-appLayoutText relative"
     >
       <div
         id="toolbarBody"
@@ -59,7 +59,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           {`
             .toolbarButton {
               background-color: ${backgroundColor};
-              height: 100%;
+              height: ${buttonHeight}rem;
             }
 
             .toolbarButton:hover {
@@ -76,7 +76,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           className="w-px h-[70%]"
           style={{ backgroundColor: `${dividerColor}` }}
         ></div>
-        <button onClick={() => { console.log("HI"); }}>CLICK</button>
         <button
           className="toolbarButton"
           style={{

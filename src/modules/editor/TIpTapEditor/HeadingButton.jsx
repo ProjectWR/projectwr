@@ -3,6 +3,7 @@ import useOuterClick from "../../design-system/useOuterClick";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import { useEditorState } from "@tiptap/react";
+import Tippy from '@tippyjs/react';
 
 const formats = {
   p: {
@@ -25,14 +26,6 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
   });
 
   const [isOpened, setIsOpened] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-
-  const headerRef = useRef(null);
-  const dropdownRef = useRef(null);
-
-  const innerRef = useOuterClick(() => {
-    setIsOpened(false);
-  });
 
   const [activeHeading, setActiveHeading] = useState(getActiveHeading(editor));
 
@@ -75,137 +68,106 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
     onSelectionUpdate();
   }, [editorState, onSelectionUpdate]);
 
-  useEffect(() => {
-    if (isOpened && headerRef.current && dropdownRef.current) {
-      const toolbarRect = document
-        .querySelector("#toolbarBody")
-        ?.getBoundingClientRect();
-      const headerRect = headerRef.current.getBoundingClientRect();
-      const dropdownHeight = dropdownRef.current.offsetHeight;
-      const viewportHeight = window.innerHeight;
-
-      if (!toolbarRect) return;
-
-      // Calculate the top position for the dropdown
-      let top = headerRect.height;
-
-      // Check if the dropdown would go past the bottom of the viewport
-      if (top + dropdownHeight > viewportHeight) {
-        // Adjust the top position to ensure the dropdown stays within the viewport
-        top = headerRect.height - dropdownHeight;
-      }
-
-      console.log("TOOLBAR HEADER DIMENSIONS: ", headerRect, toolbarRect);
-
-      // Calculate the left position for the dropdown (centered below the header)
-      const left = headerRect.left - toolbarRect.left;
-
-      setDropdownPosition({ top: top, left: left > 0 ? left : 0 });
-    }
-  }, [isOpened]);
-
   return (
-    <div className="h-full w-fit shrink-0 flex items-center" ref={innerRef}>
+    <div className="h-full w-fit shrink-0 flex items-center">
       <div
-        id="TextFormatButtonHeader"
-        ref={headerRef}
+        id="EditorStyles TextFormatButtonHeader"
         className="px-1 h-full w-fit flex items-center justify-center"
       >
-        <button
-          style={{
-            minWidth: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
-            width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
-          }}
-          className={`h-full px-[0.35rem] toolbarButton rounded-[0.35rem] `}
-          onClick={() => setIsOpened(!isOpened)}
-        >
-          <div className="w-full h-full flex items-center justify-between">
-            <div className="grow px-2 h-full py-[0.3rem] flex justify-center items-center">
-              <ReturnPlainElementForFormat
-                format={activeHeading}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </div>
-            <motion.span
-              animate={{
-                rotate: isOpened ^ (deviceType === "mobile") ? 0 : 180,
+        <Tippy
+          visible={isOpened}
+          onClickOutside={() => setIsOpened(false)}
+          interactive={true}
+          placement="bottom"
+          appendTo={() => document.querySelector("#EditorContainer")}
+          offset={[0, 4]}
+          content={
+            <div
+              className={`h-fit p-1 px-1 bg-appBackground z-30 bg-opacity-100 flex items-center flex-col rounded-[0.2rem] shadow-2xl shadow-appLayoutGentleShadow`}
+              style={{
+                minWidth: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+                width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+                border: `1px solid ${dividerColor}`,
               }}
-              className={`icon-[material-symbols-light--keyboard-arrow-up] mt-px h-full w-[2rem]`}
-            ></motion.span>
-          </div>
-        </button>
+            >
+              <button
+                className={`w-full h-fit px-2 toolbarButton flex items-center justify-center relative`}
+                onClick={() => {
+                  setIsOpened(false);
+                  setFormat("p", editor);
+                }}
+              >
+                <ReturnPlainElementForFormat
+                  format={"p"}
+                  toolbarFontSize={toolbarFontSize}
+                />
+              </button>
+              <button
+                className={`w-full h-fit px-2 toolbarButton flex items-center justify-center`}
+                onClick={() => {
+                  setIsOpened(false);
+                  setFormat("h1", editor);
+                }}
+              >
+                <ReturnPlainElementForFormat
+                  format={"h1"}
+                  toolbarFontSize={toolbarFontSize}
+                />
+              </button>
+              <button
+                className={`w-full h-fit px-2 toolbarButton flex items-center justify-center`}
+                onClick={() => {
+                  setIsOpened(false);
+                  setFormat("h2", editor);
+                }}
+              >
+                <ReturnPlainElementForFormat
+                  format={"h2"}
+                  toolbarFontSize={toolbarFontSize}
+                />
+              </button>
+              <button
+                className={`w-full h-fit px-2 toolbarButton flex items-center justify-center`}
+                onClick={() => {
+                  setIsOpened(false);
+                  setFormat("h3", editor);
+                }}
+              >
+                <ReturnPlainElementForFormat
+                  format={"h3"}
+                  toolbarFontSize={toolbarFontSize}
+                />
+              </button>
+            </div>
+          }
+        >
+          <button
+            style={{
+              minWidth: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+              width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+            }}
+            className={`h-full px-[0.35rem] toolbarButton rounded-[0.35rem] `}
+            onClick={() => setIsOpened(!isOpened)}
+          >
+            <div className="w-full h-full flex items-center justify-between">
+              <div className="grow px-2 h-full py-[0.3rem] flex justify-center items-center">
+                <ReturnPlainElementForFormat
+                  format={activeHeading}
+                  toolbarFontSize={toolbarFontSize}
+                />
+              </div>
+              <motion.span
+                animate={{
+                  rotate: isOpened ^ (deviceType === "mobile") ? 0 : 180,
+                }}
+                className={`icon-[material-symbols-light--keyboard-arrow-up] mt-px h-full w-[2rem]`}
+              ></motion.span>
+            </div>
+          </button>
+        </Tippy>
       </div>
 
-      <AnimatePresence>
-        {isOpened && (
-          <motion.div
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 10, opacity: 0 }}
-            ref={dropdownRef}
-            className={`h-fit p-1 px-1 bg-appBackground z-30 bg-opacity-100 flex fixed items-center flex-col rounded-[0.2rem] shadow-2xl shadow-appLayoutGentleShadow`}
-            style={{
-              top: `${dropdownPosition.top}px`,
-              left: `${dropdownPosition.left}px`,
-              width: `fit-content`,
-              border: `1px solid ${dividerColor}`,
-            }}
-          >
-            <button
-              className={`w-fit h-fit px-4 py-1 toolbarButton flex items-center justify-center relative`}
-              onClick={() => {
-                setIsOpened(false);
 
-                setFormat("p", editor);
-              }}
-            >
-              <ReturnElementForFormat
-                format={"p"}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </button>
-            <button
-              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
-              onClick={() => {
-                setIsOpened(false);
-
-                setFormat("h1", editor);
-              }}
-            >
-              <ReturnElementForFormat
-                format={"h1"}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </button>
-            <button
-              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
-              onClick={() => {
-                setIsOpened(false);
-
-                setFormat("h2", editor);
-              }}
-            >
-              <ReturnElementForFormat
-                format={"h2"}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </button>
-            <button
-              className={`w-full h-fit px-4 py-1 toolbarButton flex items-center justify-center`}
-              onClick={() => {
-                setIsOpened(false);
-
-                setFormat("h3", editor);
-              }}
-            >
-              <ReturnElementForFormat
-                format={"h3"}
-                toolbarFontSize={toolbarFontSize}
-              />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
@@ -260,28 +222,28 @@ const ReturnElementForFormat = ({ format, toolbarFontSize }) => {
   switch (format) {
     case "p":
       return (
-        <p style={{}} className="text-nowrap w-fit">
+        <p className="EditorStyles text-nowrap">
           Normal Text
         </p>
       );
 
     case "h1":
       return (
-        <h1 style={{ margin: 0 }} className="text-nowrap w-fit">
+        <h1 className="EditorStyles text-nowrap">
           Heading 1
         </h1>
       );
 
     case "h2":
       return (
-        <h2 style={{ margin: 0 }} className="text-nowrap w-fit">
+        <h2 className="EditorStyles text-nowrap">
           Heading 2
         </h2>
       );
 
     case "h3":
       return (
-        <h3 style={{ margin: 0 }} className="text-nowrap w-fit">
+        <h3 className="EditorStyles text-nowrap">
           Heading 3
         </h3>
       );

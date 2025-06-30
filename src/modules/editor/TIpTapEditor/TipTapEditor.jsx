@@ -799,45 +799,45 @@ const TiptapEditor = ({
 
             className="h-fit z-[10000] bg-transparent"
             editor={editor}
-     
+
           >
-        <div
-          id="EditableToolbar"
-          style={{
-            height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-            minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-            backgroundColor: `${toolbarPreferences.backgroundColor}`,
-            borderColor: `${dividerColor}`,
-          }}
-          className={`
-                overflow-y-hidden
+            <div
+              id="EditableToolbar"
+              style={{
+                height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
+                backgroundColor: `${toolbarPreferences.backgroundColor}`,
+                borderColor: `${dividerColor}`,
+              }}
+              className={`
+                
                 min-w-0 sticky
                 ${isMobile
-              ? "order-1 w-full"
-              : "order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]"
-            }
+                  ? "order-1 w-full"
+                  : "order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]"
+                }
               `}
-        >
-          <TipTapToolbar
-            editor={editor}
-            toolbarPreferences={toolbarPreferences}
-          />
-        </div>
-      </BubbleMenu>
+            >
+              <TipTapToolbar
+                editor={editor}
+                toolbarPreferences={toolbarPreferences}
+              />
+            </div>
+          </BubbleMenu>
         )}
 
-      <div
-        id="EditableContainer"
-        className={`h-full w-full max-w-full z-[2] flex justify-start flex-col items-center relative
+        <div
+          id="EditableContainer"
+          className={`h-full w-full max-w-full z-[2] flex justify-start flex-col items-center relative
            overflow-y-scroll min-h-0 text-neutral-200
           `}
-        style={{
-          paddingLeft: `calc(1.1 * var(--scrollbarWidth))`,
-          paddingRight: `calc(1 * var(--scrollbarWidth))`,
-          backgroundColor: backgroundColor,
-        }}
-      >
-        {/* <div
+          style={{
+            paddingLeft: `calc(1.1 * var(--scrollbarWidth))`,
+            paddingRight: `calc(1 * var(--scrollbarWidth))`,
+            backgroundColor: backgroundColor,
+          }}
+        >
+          {/* <div
             id="EditableToolbar"
             style={{
               height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
@@ -862,50 +862,50 @@ const TiptapEditor = ({
           </div> */}
 
 
-        {editor && (
-          <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
-            <div
-              id="FloatingMenuToolbar"
-              style={{
-                height: `calc(var(--uiScale) * ${lineHeight}rem)`,
-              }}
-              className="h-full w-fit bg-transparent border-transparent min-w-0"
-            >
-              <TiptapFloatingToolbar
-                editor={editor}
-                toolbarPreferences={toolbarPreferences}
-              />
-            </div>
-          </FloatingMenu>
-        )}
+          {editor && (
+            <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
+              <div
+                id="FloatingMenuToolbar"
+                style={{
+                  height: `calc(var(--uiScale) * ${lineHeight}rem)`,
+                }}
+                className="h-full w-fit bg-transparent border-transparent min-w-0"
+              >
+                <TiptapFloatingToolbar
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                />
+              </div>
+            </FloatingMenu>
+          )}
 
-        <EditorContent
-          spellCheck={false}
-          editor={editor}
-          id="PaperEditorContent"
-          className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200
+          <EditorContent
+            spellCheck={false}
+            editor={editor}
+            id="PaperEditorContent"
+            className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200
                   `}
-          style={{
-            width: width.endsWith("%")
-              ? `${width}`
-              : `calc(${width} * var(--uiScale))`,
-            maxWidth: "100%",
-            backgroundColor: `${paperColor}`,
-            borderTopWidth: `${paperBorderWidth}px`,
-            borderRightWidth: `${paperBorderWidth}px`,
-            borderBottomWidth: `0`,
-            borderLeftWidth: `${paperBorderWidth}px`,
-            borderTopColor: `${paperBorderColor}`,
-            borderLeftColor: `${paperBorderColor}`,
-            borderRightColor: `${paperBorderColor}`,
-            marginTop: `calc(${gapTop}rem * var(--uiScale))`,
-            borderTopRightRadius: `${roundRadius}rem`,
-            borderTopLeftRadius: `${roundRadius}rem`,
-            boxShadow: `0px 0px ${paperShadow}rem ${paperShadowColor}`,
-          }}
-        />
+            style={{
+              width: width.endsWith("%")
+                ? `${width}`
+                : `calc(${width} * var(--uiScale))`,
+              maxWidth: "100%",
+              backgroundColor: `${paperColor}`,
+              borderTopWidth: `${paperBorderWidth}px`,
+              borderRightWidth: `${paperBorderWidth}px`,
+              borderBottomWidth: `0`,
+              borderLeftWidth: `${paperBorderWidth}px`,
+              borderTopColor: `${paperBorderColor}`,
+              borderLeftColor: `${paperBorderColor}`,
+              borderRightColor: `${paperBorderColor}`,
+              marginTop: `calc(${gapTop}rem * var(--uiScale))`,
+              borderTopRightRadius: `${roundRadius}rem`,
+              borderTopLeftRadius: `${roundRadius}rem`,
+              boxShadow: `0px 0px ${paperShadow}rem ${paperShadowColor}`,
+            }}
+          />
+        </div>
       </div>
-    </div>
     </ContextMenuWrapper >
   );
 };
