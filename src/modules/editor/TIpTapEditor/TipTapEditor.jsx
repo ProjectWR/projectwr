@@ -810,7 +810,7 @@ const TiptapEditor = ({
                 borderColor: `${dividerColor}`,
               }}
               className={`
-                
+                overflow-y-hidden
                 min-w-0 sticky
                 ${isMobile
                   ? "order-1 w-full"
