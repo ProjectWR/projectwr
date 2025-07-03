@@ -101,7 +101,7 @@ export const SidePanelContainer = ({ loading }) => {
           <motion.div
             key="SidePanelMotionContainer"
             id="SidePanelMotionContainer"
-            className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent/87.5 ${!isMd &&
+            className={`h-full border-r border-appLayoutBorder z-5 bg-appBackgroundAccent ${!isMd &&
               "absolute top-0 left-full bg-appBackgroundAccent/95 backdrop-blur-[1px]"
               } `}
             initial={{

@@ -174,6 +174,7 @@ function spawnEditor(yXmlFragment) {
         }),]
     });
 }
+
 export function yXmlFragmentToDocx(yXmlFragment, baseHeadingLevel = 1) {
     const editor = spawnEditor(yXmlFragment);
     const json = editor.getJSON();
@@ -321,3 +322,4 @@ export function yXmlFragmentToDocx(yXmlFragment, baseHeadingLevel = 1) {
         }, 0);
     });
 }
+

@@ -32,7 +32,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
       {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex shrink-0 gap-px items-center bg-appBackground/75 backdrop-blur-2xl   ${
+          className={`flex shrink-0 gap-px items-center bg-appBackground backdrop-blur-2xl   ${
             deviceType === "mobile"
               ? "w-full h-activityBarHeight order-last flex-row border-t"
               : "h-full w-activityBarWidth order-first flex-col border-r"

@@ -796,7 +796,11 @@ const TiptapEditor = ({
 
         {editor && (
           <BubbleMenu
-
+            tippyOptions={
+              {
+                duration: 200
+              }
+            }
             className="h-fit z-[10000] bg-transparent"
             editor={editor}
 
