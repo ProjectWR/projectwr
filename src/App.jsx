@@ -34,6 +34,7 @@ function App() {
       },
       onError: (err) => {
         console.log(err);
+
       },
     });
   }, []);
