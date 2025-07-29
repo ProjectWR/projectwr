@@ -96,7 +96,7 @@ const HomePanel = () => {
             transition={{ bounce: 0 }}
             className="text-homePanelHeaderFontSize select-none pointer-events-none"
           >
-            Tulip Writer
+            Calamus
           </motion.h1>
           {latestItems.length === 0 && (
             <>

@@ -761,11 +761,11 @@ const TiptapEditor = ({
         {editor && (
           <div
             id="EditableUtilityToolbarWrapper"
-            className="w-fit h-fit absolute top-2 right-5 z-[3]"
+            className="w-fit h-fit absolute top-2 left-2 z-[3]"
           >
             <div
               id="EditableUtilityToolbar"
-              className="w-fit rounded-lg border shadow-md shadow-appLayoutGentleShadow"
+              className="w-fit rounded-lg border shadow-sm shadow-appLayoutGentleShadow"
               style={{
                 height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
                 minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
