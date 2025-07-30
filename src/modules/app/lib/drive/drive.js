@@ -1,15 +1,42 @@
+import * as Y from "yjs";
+
 class DriveManager {
     constructor(driveName, providerImpl) {
         this.driveName = driveName;
         this.ydocs = new Map(); // docId -> { ydoc, clientId, folderId, state }
         this.provider = providerImpl;
+        this.rootFolderName = "YjsDocuments"; // Default root folder name
     }
 
     async initDriveSync() {
-        await this.provider.init();
+        return await this.provider.init();
     }
 
-    async addDocument(docId, ydoc, clientId, folderId) {
+    async setupDocumentFolder(docId, folderName) {
+        // Check if root folder exists
+        const rootFolder = await this.findOrCreateFolder(this.rootFolderName);
+
+        // Create document-specific folder
+        const docFolder = await this.findOrCreateFolder(folderName || docId, rootFolder.id);
+        return docFolder.id;
+    }
+
+    async findOrCreateFolder(folderName, parentId = null) {
+        const folders = await this.provider.listFolder(parentId || "root");
+        const existingFolder = folders?.find(f => f.name === folderName);
+
+        if (existingFolder) {
+            return existingFolder;
+        }
+
+        // Create new folder
+        return await this.provider.createFolder(folderName, parentId);
+    }
+
+    async addDocument(docId, ydoc, clientId, folderName) {
+        // Setup folder structure
+        const folderId = await this.setupDocumentFolder(docId, folderName);
+
         const state = {
             ydoc,
             clientId,
@@ -18,11 +45,14 @@ class DriveManager {
             processedUpdates: new Set(),
             syncInterval: null
         };
+
         this.ydocs.set(docId, state);
+        return folderId; // Return folder ID for persistence
     }
 
     async startSync(docId, interval = 5000) {
         const state = this.ydocs.get(docId);
+        console.log("ydocs in driveManager: ", this.ydocs);
         if (!state) throw new Error(`Document ${docId} not found`);
 
         await this.provider.init();
@@ -32,6 +62,7 @@ class DriveManager {
 
         // Start periodic sync
         state.syncInterval = setInterval(async () => {
+            console.log("PUSHING AND PULLING CHANGES FOR: ", docId)
             await this.pullChanges(docId);
             await this.pushChanges(docId);
         }, interval);

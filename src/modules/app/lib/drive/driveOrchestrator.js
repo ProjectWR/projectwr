@@ -2,7 +2,17 @@ import DriveManager from "./drive";
 import { googleDriveProvider } from "./provider";
 
 class DriveOrchestrator {
+    /**
+     * Initializes a new instance of the class.
+     * 
+     * @constructor
+     * @description
+     * Creates a new Map to store drive managers, where each key is a drive name and the value is a DriveManager instance.
+     */
     constructor() {
+        /**
+         * @type {Map<string, DriveManager>}
+         */
         this.managers = new Map(); // driveName -> DriveManager
     }
 
@@ -29,4 +39,7 @@ class DriveOrchestrator {
 }
 
 const driveOrchestrator = new DriveOrchestrator();
-const googleManager = driveOrchestrator.registerProvider('googleDrive', googleDriveProvider);
+
+driveOrchestrator.registerProvider('googleDrive', googleDriveProvider);
+
+export default driveOrchestrator;

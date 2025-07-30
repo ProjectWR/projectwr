@@ -55,6 +55,12 @@ import {
 } from "./LayoutComponents/ActionBar";
 import { TabsBar } from "./LayoutComponents/TabsBar";
 import { SidePanelContainer } from "./LayoutComponents/SidePanelContainer";
+import driveOrchestrator from "../lib/drive/driveOrchestrator";
+import { listen_for_auth_code } from "../lib/auth/eventlisteners";
+import { getAccessToken, handleInitialLogin, handleLoadFrom, saveAuthCode } from "../lib/auth/auth";
+
+const firebaseFlag = false;
+const googleDriveFlag = true;
 
 const WritingApp = () => {
   console.log("rendering writing app");
@@ -211,7 +217,42 @@ const WritingApp = () => {
 
         console.log("Local Libraries: ", localLibraries);
 
-        if (false) {
+        handleInitialLogin().then(
+          async () => {
+            if (googleDriveFlag) {
+              const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+              if (googleDriveManager.initDriveSync()) {
+                console.log("INITIATED GOOGLE DRIVE SYNC!")
+                await googleDriveManager.addDocument("303d384c-d624-4a0a-af4c-916948809920", dataManagerSubdocs.getLibrary("303d384c-d624-4a0a-af4c-916948809920"), dataManagerSubdocs.getLibrary("303d384c-d624-4a0a-af4c-916948809920")?.clientID, "303d384c-d624-4a0a-af4c-916948809920")
+                await driveOrchestrator.startSync("googleDrive", "303d384c-d624-4a0a-af4c-916948809920", 600000)
+              }
+            }
+
+          }
+        ).catch((err) => {
+          console.log(err);
+        });
+
+        listen_for_auth_code({
+          onSucess: (code) => {
+            console.log(code, "code generated");
+            if (code) {
+              saveAuthCode(code).then(() => {
+                console.log("code saved");
+              });
+              getAccessToken(code).then((accessTokenBody) => {
+                handleLoadFrom(accessTokenBody);
+              });
+            }
+          },
+          onError: (err) => {
+            console.log(err);
+
+          },
+        });
+
+
+        if (firebaseFlag) {
           setLoadingStage("Fetching cloud storage");
 
           console.log("path: ", `users/${user.uid}/docs/`);
@@ -247,7 +288,7 @@ const WritingApp = () => {
         // await wait(1000);
         setLoadingStage("Finished Loading");
 
-        return () => {};
+        return () => { };
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -310,9 +351,8 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-full max-h-full w-full max-w-full bg-transparent font-serif ${
-            !isMaximized && "border"
-          } border-appLayoutBorder overflow-hidden text-appLayoutText`}
+          className={`h-full max-h-full w-full max-w-full bg-transparent font-serif ${!isMaximized && "border"
+            } border-appLayoutBorder overflow-hidden text-appLayoutText`}
         >
           {loading && (
             <motion.div
@@ -327,8 +367,8 @@ const WritingApp = () => {
               >
                 <span
                   className="w-full h-full"
-                  // animate={{ rotate: 360 }}
-                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                // animate={{ rotate: 360 }}
+                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
