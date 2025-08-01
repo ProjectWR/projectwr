@@ -221,10 +221,16 @@ const WritingApp = () => {
           async () => {
             if (googleDriveFlag) {
               const googleDriveManager = driveOrchestrator.getManager("googleDrive");
-              if (googleDriveManager.initDriveSync()) {
+              if (await googleDriveManager.initDriveSync()) {
                 console.log("INITIATED GOOGLE DRIVE SYNC!")
-                await googleDriveManager.addDocument("303d384c-d624-4a0a-af4c-916948809920", dataManagerSubdocs.getLibrary("303d384c-d624-4a0a-af4c-916948809920"), dataManagerSubdocs.getLibrary("303d384c-d624-4a0a-af4c-916948809920")?.clientID, "303d384c-d624-4a0a-af4c-916948809920")
-                await driveOrchestrator.startSync("googleDrive", "303d384c-d624-4a0a-af4c-916948809920", 20000)
+
+                // start sync for all local ydocs
+                for (const localLibraryId of localLibraries) {
+                  await googleDriveManager.addDocument(localLibraryId, dataManagerSubdocs.getLibrary(localLibraryId), dataManagerSubdocs.getLibrary(localLibraryId)?.clientID, localLibraryId)
+                  await driveOrchestrator.startSync("googleDrive", localLibraryId, 20000)
+                }
+
+                await driveOrchestrator.startSyncForAllDriveDocs("googleDrive", 20000);
               }
             }
 

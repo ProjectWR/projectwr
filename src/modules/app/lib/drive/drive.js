@@ -5,11 +5,18 @@ class DriveManager {
         this.driveName = driveName;
         this.ydocs = new Map(); // docId -> { ydoc, clientId, folderId }
         this.provider = providerImpl;
-        this.rootFolderName = "YjsDocuments";
+        this.rootFolderName = "CalamusApp";
     }
 
     async initDriveSync() {
-        return await this.provider.init();
+        await this.provider.init();
+        await this.findOrCreateFolder(this.rootFolderName);
+        return true;
+    }
+
+    async fetchAllDriveDocIds() {
+        const docIds = await this.provider.listFoldersInFolder(this.rootFolderName);
+        return docIds;
     }
 
     async setupDocumentFolder(docId, folderName) {

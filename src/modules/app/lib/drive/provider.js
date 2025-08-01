@@ -11,6 +11,56 @@ export const googleDriveProvider = {
         return;
     },
 
+    // New function to list all folders in the root "YjsDocuments" folder
+    listFoldersInFolder: async (folderId = "CalamusApp") => {
+        const token = oauthStore.getState()?.accessTokenState;
+        if (!token) return null;
+
+        try {
+            // First, find the root "YjsDocuments" folder
+            const rootResponse = await axios.get(
+                'https://www.googleapis.com/drive/v3/files',
+                {
+                    params: {
+                        q: `name='${folderId}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                        fields: 'files(id)'
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (!rootResponse.data.files || rootResponse.data.files.length === 0) {
+                return []; // Root folder doesn't exist
+            }
+
+            const rootFolderId = rootResponse.data.files[0].id;
+
+            // Now list all folders within the root folder
+            const foldersResponse = await axios.get(
+                'https://www.googleapis.com/drive/v3/files',
+                {
+                    params: {
+                        q: `'${rootFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                        fields: 'files(id, name)',
+                        orderBy: 'name'
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            return foldersResponse.data.files;
+        } catch (error) {
+            console.error("Error listing folders:", error.response?.data || error.message);
+            return null;
+        }
+    },
+
     listFolder: async (folderId = "root") => {
         const token = oauthStore.getState()?.accessTokenState;
         if (!token) return null;

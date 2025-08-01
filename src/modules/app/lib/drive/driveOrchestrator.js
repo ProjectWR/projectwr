@@ -1,3 +1,5 @@
+import dataManagerSubdocs from "../dataSubDoc";
+import persistenceManagerForSubdocs from "../persistenceSubDocs";
 import DriveManager from "./drive";
 import { googleDriveProvider } from "./provider";
 
@@ -24,6 +26,38 @@ class DriveOrchestrator {
 
     getManager(driveName) {
         return this.managers.get(driveName);
+    }
+
+    async startSyncForAllDriveDocs(driveName, interval) {
+        const manager = this.managers.get(driveName);
+        if (!manager) throw new Error(`Manager for ${driveName} not found`);
+
+        const docIds = await manager.fetchAllDriveDocIds();
+
+        console.log("ALL DOCS IN GOOGLE DRIVE: ", docIds);
+
+        for (const docId of docIds.map(value => value.name)) {
+            if (typeof docId !== "string") {
+                console.warn(`docId is not a string:`, docId);
+                continue;
+            }
+
+            let ydoc = dataManagerSubdocs.getLibrary(docId);
+
+            if (!ydoc) {
+                await dataManagerSubdocs.initLibrary(docId);
+                ydoc = dataManagerSubdocs.getLibrary(docId);
+
+                console.log("ydoc iin startSyncForAllDriveDocs", ydoc);
+
+                await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(
+                    ydoc
+                );
+                await manager.addDocument(docId, ydoc, ydoc.clientID, docId);
+
+                await manager.startSync(docId, interval);
+            }
+        }
     }
 
     async startSync(driveName, docId, interval) {
