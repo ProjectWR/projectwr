@@ -240,7 +240,7 @@ const WritingApp = () => {
         });
 
         listen_for_auth_code({
-          onSucess: (code) => {
+          onSucess: async (code) => {
             console.log(code, "code generated");
             if (code) {
               saveAuthCode(code).then(() => {
@@ -249,6 +249,21 @@ const WritingApp = () => {
               getAccessToken(code).then((accessTokenBody) => {
                 handleLoadFrom(accessTokenBody);
               });
+
+              if (googleDriveFlag) {
+                const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+                if (await googleDriveManager.initDriveSync()) {
+                  console.log("INITIATED GOOGLE DRIVE SYNC!")
+
+                  // start sync for all local ydocs
+                  for (const localLibraryId of localLibraries) {
+                    await googleDriveManager.addDocument(localLibraryId, dataManagerSubdocs.getLibrary(localLibraryId), dataManagerSubdocs.getLibrary(localLibraryId)?.clientID, localLibraryId)
+                    await driveOrchestrator.startSync("googleDrive", localLibraryId, 20000)
+                  }
+
+                  await driveOrchestrator.startSyncForAllDriveDocs("googleDrive", 20000);
+                }
+              }
             }
           },
           onError: (err) => {

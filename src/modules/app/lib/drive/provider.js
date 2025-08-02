@@ -10,7 +10,7 @@ export const googleDriveProvider = {
         }
         return;
     },
-
+    
     // New function to list all folders in the root "YjsDocuments" folder
     listFoldersInFolder: async (folderId = "CalamusApp") => {
         const token = oauthStore.getState()?.accessTokenState;

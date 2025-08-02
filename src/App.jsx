@@ -9,8 +9,12 @@ import {
   saveAuthCode,
 } from "./modules/app/lib/auth/auth";
 import { listen_for_auth_code } from "./modules/app/lib/auth/eventlisteners";
+import { oauthStore } from "./modules/app/stores/oauthStore";
+import driveOrchestrator from "./modules/app/lib/drive/driveOrchestrator";
 
 function App() {
+  const accessTokenState = oauthStore((state) => state.accessTokenState);
+
   // // check the offline data for access token
   // useEffect(() => {
   //   handleInitialLogin().catch((err) => {
@@ -38,6 +42,12 @@ function App() {
   //     },
   //   });
   // }, []);
+
+  useEffect(() => {
+    if (!accessTokenState && driveOrchestrator.getManager("googleDrive")) {
+      driveOrchestrator.stopSync("googleDrive");
+    }
+  }, [accessTokenState])
 
   return (
     <DeviceTypeProvider>

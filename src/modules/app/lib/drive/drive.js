@@ -6,11 +6,13 @@ class DriveManager {
         this.ydocs = new Map(); // docId -> { ydoc, clientId, folderId }
         this.provider = providerImpl;
         this.rootFolderName = "CalamusApp";
+        this.syncActive = false;
     }
 
     async initDriveSync() {
         await this.provider.init();
         await this.findOrCreateFolder(this.rootFolderName);
+        this.syncActive = true;
         return true;
     }
 
@@ -131,6 +133,17 @@ class DriveManager {
             state.syncInterval = null;
         }
     }
+
+    stopSyncForAllDocs() {
+        for (const state of this.ydocs.values()) {
+            if (state?.syncInterval) {
+                clearInterval(state.syncInterval);
+                state.syncInterval = null;
+            }
+        }
+        this.syncActive = false;
+    }
+
 
     // Helper function to compare state vectors
     areStateVectorsEqual(vec1, vec2) {

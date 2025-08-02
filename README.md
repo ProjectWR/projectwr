@@ -41,7 +41,7 @@ Final Checklist before first release:
 - MAJOR:
   - import and export to docx
   - proofreader ignore list
-  - sync to google drive
+  - ~~sync to google drive~~
   - auto updating
   - code signing
   

@@ -66,9 +66,11 @@ class DriveOrchestrator {
         await manager.startSync(docId, interval);
     }
 
-    stopSync(driveName, docId) {
+    stopSync(driveName) {
         const manager = this.managers.get(driveName);
-        if (manager) manager.stopSync(docId);
+        if (manager.syncActive) {
+            if (manager) manager.stopSyncForAllDocs();
+        }
     }
 }
 
