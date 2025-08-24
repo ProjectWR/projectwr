@@ -44,6 +44,8 @@ Final Checklist before first release:
   - ~~sync to google drive~~
   - auto updating
   - code signing
+  - tooltips
+  - loading indicators and warnings
   
 - MINOR:
   - search panel

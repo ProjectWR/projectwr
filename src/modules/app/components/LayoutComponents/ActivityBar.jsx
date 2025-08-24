@@ -2,6 +2,7 @@ import { appStore } from "../../stores/appStore";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import useStoreHistory from "../../hooks/useStoreHistory";
+import { Tooltip } from "@mantine/core";
 
 const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const { deviceType } = useDeviceType();
@@ -32,11 +33,10 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
       {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex shrink-0 gap-px items-center bg-appBackground backdrop-blur-2xl   ${
-            deviceType === "mobile"
-              ? "w-full h-activityBarHeight order-last flex-row border-t"
-              : "h-full w-activityBarWidth order-first flex-col border-r"
-          } border-appLayoutBorder z-1000 overflow-hidden`}
+          className={`flex shrink-0 gap-px items-center bg-appBackground backdrop-blur-2xl   ${deviceType === "mobile"
+            ? "w-full h-activityBarHeight order-last flex-row border-t"
+            : "h-full w-activityBarWidth order-first flex-col border-r"
+            } border-appLayoutBorder z-1000 overflow-hidden`}
           style={{
             boxShadow:
               deviceType === "mobile"
@@ -68,6 +68,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                 setLibraryId("unselected");
               }
             }}
+            label={'Your Libraries'}
             activity={activity}
             selectedActivity={"libraries"}
             deviceType={deviceType}
@@ -199,51 +200,52 @@ const ActivityButton = ({
   buttonContent,
   selectedActivity,
   activity,
+  label = "Default Label",
   deviceType,
   flexValue,
   toggleButton = false,
 }) => {
   return (
-    <motion.button
-      key={activity}
-      initial={{ opacity: toggleButton ? 0 : 1 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: toggleButton ? 0 : 1 }}
-      transition={{ duration: 0.15 }}
-      className={`relative z-1000
-        ${
-          deviceType === "mobile"
+    <Tooltip label={label} position="right" withArrow arrowSize={8} offset={{ mainAxis: 10, crossAxis: 0 }}>
+      <motion.button
+        key={activity}
+        initial={{ opacity: toggleButton ? 0 : 1 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: toggleButton ? 0 : 1 }}
+        transition={{ duration: 0.15 }}
+        className={`relative z-1000
+        ${deviceType === "mobile"
             ? `h-full ${flexValue}`
             : "w-full h-activityButtonHeight"
-        } 
+          } 
      
-        ${
-          selectedActivity === activity
+        ${selectedActivity === activity
             ? "text-activityButtonIconHighlight bg-appLayoutPressed/50 z-1000 "
             : "text-appLayoutTextMuted hover:text-appLayoutText"
-        }
+          }
        
         ${className}
       `}
-      onClick={onClick}
-    >
-      {buttonContent}
-      <AnimatePresence mode="wait">
-        {selectedActivity === activity && (
-          <motion.div
-            id="ActivitySelectLine"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className={`absolute ${
-              deviceType === "mobile"
+        onClick={onClick}
+      >
+        {buttonContent}
+        <AnimatePresence mode="wait">
+          {selectedActivity === activity && (
+            <motion.div
+              id="ActivitySelectLine"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className={`absolute ${deviceType === "mobile"
                 ? "h-px w-full top-0"
                 : "w-px h-full left-full top-0"
-            } bg-activitySelectLine`}
-          />
-        )}
-      </AnimatePresence>
-    </motion.button>
+                } bg-activitySelectLine`}
+            />
+          )}
+        </AnimatePresence>
+      </motion.button>
+    </Tooltip>
+
   );
 };
