@@ -3,6 +3,7 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import { AnimatePresence, motion } from "motion/react";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { Tooltip } from "@mantine/core";
+import { StyledTooltip } from "./StyledTooltip";
 
 const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const { deviceType } = useDeviceType();
@@ -206,7 +207,7 @@ const ActivityButton = ({
   toggleButton = false,
 }) => {
   return (
-    <Tooltip label={label} position="right" withArrow arrowSize={8} offset={{ mainAxis: 10, crossAxis: 0 }}>
+    <StyledTooltip label={label} >
       <motion.button
         key={activity}
         initial={{ opacity: toggleButton ? 0 : 1 }}
@@ -245,7 +246,7 @@ const ActivityButton = ({
           )}
         </AnimatePresence>
       </motion.button>
-    </Tooltip>
+    </StyledTooltip>
 
   );
 };
