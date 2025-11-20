@@ -353,7 +353,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
           />
         </div>
       </div>
-      <div className="divider w-full px-0">
+      <div className="divider w-full px-2">
         <div className="w-full h-px bg-appLayoutBorder"></div>
       </div>
       <ScrollArea
@@ -361,10 +361,10 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
         scrollbars="y"
         type="hover"
         classNames={{
-          root: `grow p-0 basis-0 w-full`,
+          root: `grow p-0 px-2 basis-0 w-full`,
           scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5] opacity-70`,
           thumb: `bg-appLayoutBorder rounded-t-full hover:bg-appLayoutInverseHover`,
-          content: "h-fit w-full grid grid-cols-1 auto-rows-max gap-0 ",
+          content: "h-fit w-full grid grid-cols-1 auto-rows-max gap-2 ",
         }}
       >
         <Suspense fallback={<div>Loading</div>}>
@@ -399,9 +399,7 @@ const SortedNotes = ({ sortedNoteIds, libraryId, ytree }) => {
               libraryId={libraryId}
               ytree={ytree}
             />
-            <div className="divider w-full">
-              <div className="w-full h-px bg-appLayoutBorder"></div>
-            </div>
+           
           </>
         ))}
     </>
