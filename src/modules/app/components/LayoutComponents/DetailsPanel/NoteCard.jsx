@@ -68,7 +68,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="h-fit bg-appBackground shadow-sm shadow-appLayoutGentleShadow flex flex-col w-full border border-appLayoutInverseHover rounded-sm"
+        className="h-fit min-h- shadow-none shadow-appLayoutGentleShadow flex flex-col w-full border-none border-appLayoutInverseHover rounded-sm"
       >
         <div className="h-noteCardHeaderHeight w-full flex pl-2">
           <input
@@ -102,7 +102,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
           </button>
         </div>
 
-        <div className="divider w-full px-1">
+        <div className="divider w-full">
           <div className="w-full h-px bg-appLayoutBorder"></div>
         </div>
         <NoteCardEditor
@@ -166,12 +166,12 @@ const NoteCardEditor = ({
   }, [initialItemProperties, editor]);
 
   return (
-    <div className="h-fit w-full px-1">
+    <div className="h-fit min-h-[5rem] w-full px-1">
       <RichTextEditor
         editor={editor}
         variant="subtle"
         classNames={{
-          root: "bg-transparent border-none w-full border-appLayoutBorder rounded-none",
+          root: "bg-transparent px-2 border-none w-full border-appLayoutBorder rounded-none",
           toolbar: "bg-transparent border-b border-appLayoutBorder",
           content: `bg-transparent text-appLayoutText 
           ${fixedSize ? "h-nodeCardHeight" : " max-h-noteCardHeight min-h-fit"} 
