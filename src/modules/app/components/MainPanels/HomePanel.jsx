@@ -159,7 +159,10 @@ const HomePanel = () => {
                     <div className="divider w-full px-3">
                       <div className="w-full h-px bg-appLayoutBorder"></div>
                     </div>{" "}
-                    {latestItems.map(({ itemId, props, type }) => {
+                    {latestItems.map(({ itemIdLibraryId, props, type }) => {
+
+                      const itemId = itemIdLibraryId.split("::")[1];
+
                       let name = "";
 
                       /**
@@ -209,8 +212,8 @@ const HomePanel = () => {
                               if (type === "library") {
                                 itemLocalStateManager.setItemOpened(
                                   itemId,
-                                  true,
-                                  itemId
+                                  itemId,
+                                  true
                                 );
                                 setLibraryId(itemId);
                                 setItemId("unselected");

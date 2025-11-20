@@ -120,7 +120,7 @@ export default PaperSettingsPanel;
 const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   const [pickingEditorStyle, setPickingEditorStyle] = useState(false);
   const [paperEditorTemplateId, setPaperEditorTemplateId] = useState(
-    itemLocalStateManager.getPaperEditorTemplate(paperId)
+    itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId)
   );
 
   const EditorStylePickerRef = useOuterClick(() => {
@@ -156,21 +156,20 @@ const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   useEffect(() => {
     const updatePaperEditorTemplateId = () => {
       setPaperEditorTemplateId(
-        itemLocalStateManager.getPaperEditorTemplate(paperId)
+        itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId)
       );
     };
 
-    if (!itemLocalStateManager.hasItemLocalState(paperId)) {
-      itemLocalStateManager.createItemLocalState(paperId, {
+    if (!itemLocalStateManager.hasItemLocalState(libraryId, paperId)) {
+      itemLocalStateManager.createItemLocalState(libraryId, paperId, {
         type: "paper",
-        libraryId: ytree._ydoc.guid,
       });
     }
 
-    itemLocalStateManager.on(paperId, updatePaperEditorTemplateId);
+    itemLocalStateManager.on(libraryId, paperId, updatePaperEditorTemplateId);
 
     return () => {
-      itemLocalStateManager.off(paperId, updatePaperEditorTemplateId);
+      itemLocalStateManager.off(libraryId, paperId, updatePaperEditorTemplateId);
     };
   }, [paperId]);
 
@@ -215,9 +214,9 @@ const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
               key={`resetToDefault`}
               onClick={() => {
                 itemLocalStateManager.setPaperEditorTemplate(
+                  libraryId,
                   paperId,
-                  null,
-                  libraryId
+                  null
                 );
                 setPickingEditorStyle(false);
               }}
@@ -233,9 +232,9 @@ const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
                   key={templateId}
                   onClick={() => {
                     itemLocalStateManager.setPaperEditorTemplate(
+                      libraryId,
                       paperId,
-                      templateId,
-                      libraryId
+                      templateId
                     );
                     setPickingEditorStyle(false);
                   }}

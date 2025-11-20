@@ -39,7 +39,6 @@ import fontManager from "../lib/font";
 import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
-import { setupEnDictionary } from "../../editor/EnDictionary";
 import dictionaryManager from "../lib/dictionary";
 import useRefreshableTimer from "../hooks/useRefreshableTimer";
 import { useDebouncedCallback } from "@mantine/hooks";

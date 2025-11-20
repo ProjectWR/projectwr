@@ -205,7 +205,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             setLibraryId(libraryId);
             setItemId("unselected");
 
-            itemLocalStateManager.setItemOpened(libraryId, true, libraryId);
+            itemLocalStateManager.setItemOpened(libraryId, libraryId, true);
 
             setPanelOpened(true);
             activatePanel("libraries", "details", [libraryId]);
@@ -386,7 +386,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     setLibraryId(libraryId);
                     setItemId("unselected");
 
-                    itemLocalStateManager.setItemOpened(libraryId, true, libraryId);
+                    itemLocalStateManager.setItemOpened(libraryId, libraryId, true);
 
                     setPanelOpened(true);
 

@@ -70,7 +70,7 @@ const DirectoryItemNode = ({
   );
 
   const [isOpened, setIsOpened] = useState(
-    itemLocalStateManager.isItemOpened(itemId)
+    itemLocalStateManager.isItemOpened(libraryId, itemId)
   );
 
   const [isHovered, setIsHovered] = useState(false);
@@ -89,20 +89,19 @@ const DirectoryItemNode = ({
     const itemMap = itemMapRef.current;
     const type = itemMap.get("type");
 
-    if (!itemLocalStateManager.hasItemLocalState(itemId)) {
-      itemLocalStateManager.createItemLocalState(itemId, {
+    if (!itemLocalStateManager.hasItemLocalState(libraryId, itemId)) {
+      itemLocalStateManager.createItemLocalState(libraryId, itemId, {
         type: type,
-        libraryId: ytree._ydoc.guid,
       });
     }
 
     if (type === "section" || type === "book") {
-      itemLocalStateManager.on(itemId, updateisOpened);
+      itemLocalStateManager.on(libraryId, itemId, updateisOpened);
     }
 
     return () => {
       if (type === "section" || type === "book") {
-        itemLocalStateManager.off(itemId, updateisOpened);
+        itemLocalStateManager.off(libraryId, itemId, updateisOpened);
       }
     };
   }, [itemId]);
@@ -125,7 +124,7 @@ const DirectoryItemNode = ({
     setIsOpened(true);
     setFocusedItemId(newId);
     activatePanel("libraries", "details", [libraryId, newId]);
-    itemLocalStateManager.setItemOpened(newId, true, libraryId);
+    itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const onCreatePaperClick = useCallback(() => {
@@ -133,7 +132,7 @@ const DirectoryItemNode = ({
     setIsOpened(true);
     setFocusedItemId(newId);
     activatePanel("libraries", "details", [libraryId, newId]);
-    itemLocalStateManager.setItemOpened(newId, true, libraryId);
+    itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const onCreateNoteClick = useCallback(() => {
@@ -141,7 +140,7 @@ const DirectoryItemNode = ({
     setIsOpened(true);
     setFocusedItemId(newId);
     activatePanel("libraries", "details", [libraryId, newId]);
-    itemLocalStateManager.setItemOpened(newId, true, libraryId);
+    itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -694,9 +693,9 @@ const DirectoryItemNode = ({
                   const newOpenedState = !isOpened;
                   setIsOpened(newOpenedState);
                   itemLocalStateManager.setItemOpened(
+                    libraryId,
                     itemId,
-                    newOpenedState,
-                    libraryId
+                    newOpenedState
                   );
                 }}
               >

@@ -296,7 +296,7 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
-              itemLocalStateManager.setItemOpened(bookId, true, libraryId);
+              itemLocalStateManager.setItemOpened(libraryId, bookId, true);
             }}
           >
             <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -352,11 +352,11 @@ const LibraryDirectory = ({ libraryId }) => {
 
               if (focusedItemId)
                 itemLocalStateManager.setItemOpened(
+                  libraryId,
                   focusedItemId,
-                  true,
-                  libraryId
+                  true
                 );
-              itemLocalStateManager.setItemOpened(sectionId, true, libraryId);
+              itemLocalStateManager.setItemOpened(libraryId, sectionId, true);
             }}
           >
             <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -412,11 +412,11 @@ const LibraryDirectory = ({ libraryId }) => {
               setPanelOpened(true);
               if (focusedItemId)
                 itemLocalStateManager.setItemOpened(
+                  libraryId,
                   focusedItemId,
-                  true,
-                  libraryId
+                  true
                 );
-              itemLocalStateManager.setItemOpened(paperId, true, libraryId);
+              itemLocalStateManager.setItemOpened(libraryId, paperId, true);
             }}
           >
             <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
@@ -472,11 +472,11 @@ const LibraryDirectory = ({ libraryId }) => {
               setPanelOpened(true);
               if (focusedItemId)
                 itemLocalStateManager.setItemOpened(
+                  libraryId,
                   focusedItemId,
-                  true,
-                  libraryId
+                  true
                 );
-              itemLocalStateManager.setItemOpened(noteId, true, libraryId);
+              itemLocalStateManager.setItemOpened(libraryId, noteId, true);
             }}
           >
             <span className="icon-[fluent--square-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>

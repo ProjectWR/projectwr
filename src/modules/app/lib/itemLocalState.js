@@ -16,23 +16,29 @@ class ItemLocalStateManager {
     instance = this;
   }
 
-  on(itemId, callback) {
-    if (!this.callbacks.has(itemId)) {
-      this.callbacks.set(itemId, new Set());
+  _getKey(libraryId, itemId) {
+    return `${libraryId}::${itemId}`;
+  }
+
+  on(libraryId, itemId, callback) {
+    const key = this._getKey(libraryId, itemId);
+    if (!this.callbacks.has(key)) {
+      this.callbacks.set(key, new Set());
     }
-    this.callbacks.get(itemId).add(callback);
+    this.callbacks.get(key).add(callback);
   }
 
   onAll(callback) {
     this.callbacksForAll.add(callback);
   }
 
-  off(itemId, callback) {
-    if (this.callbacks.has(itemId)) {
-      const callbacksForItem = this.callbacks.get(itemId);
+  off(libraryId, itemId, callback) {
+    const key = this._getKey(libraryId, itemId);
+    if (this.callbacks.has(key)) {
+      const callbacksForItem = this.callbacks.get(key);
       callbacksForItem.delete(callback);
       if (callbacksForItem.size === 0) {
-        this.callbacks.delete(itemId);
+        this.callbacks.delete(key);
       }
     }
   }
@@ -41,9 +47,10 @@ class ItemLocalStateManager {
     this.callbacksForAll.delete(callback);
   }
 
-  _trigger(itemId, ...args) {
-    if (this.callbacks.has(itemId)) {
-      this.callbacks.get(itemId).forEach(callback => callback(...args));
+  _trigger(libraryId, itemId, ...args) {
+    const key = this._getKey(libraryId, itemId);
+    if (this.callbacks.has(key)) {
+      this.callbacks.get(key).forEach(callback => callback(...args));
     }
     this.callbacksForAll.forEach(callback => callback(...args));
   }
@@ -66,39 +73,44 @@ class ItemLocalStateManager {
     return nextItems;
   }
 
-  getPaperEditorTemplate(itemId) {
+  getPaperEditorTemplate(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const items = this._getItems();
-    return items[itemId]?.props?.EditorTemplate || null;
+    return items[key]?.props?.EditorTemplate || null;
   }
 
-  setPaperEditorTemplate(itemId, templateId, libraryId) {
+  setPaperEditorTemplate(libraryId, itemId, templateId) {
+    const key = this._getKey(libraryId, itemId);
     const nextItems = this._updateItems(draft => {
-      if (draft[itemId]) {
-        draft[itemId].props.EditorTemplate = templateId;
+      if (draft[key]) {
+        draft[key].props.EditorTemplate = templateId;
       }
     });
 
-    if (nextItems[itemId]?.props?.EditorTemplate === templateId) {
-      this._trigger(itemId, templateId, nextItems[itemId]);
+    if (nextItems[key]?.props?.EditorTemplate === templateId) {
+      this._trigger(libraryId, itemId, templateId, nextItems[key]);
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
       this.setItemAndParentsOpened(libraryId, itemId);
     }
   }
 
-  getPaperEditorType(itemId) {
+  getPaperEditorType(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const items = this._getItems();
-    return items[itemId]?.props?.EditorType || null;
+    return items[key]?.props?.EditorType || null;
   }
 
-  isItemOpened(itemId) {
+  isItemOpened(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const items = this._getItems();
-    return items[itemId]?.props?.isOpened || false;
+    return items[key]?.props?.isOpened || false;
   }
 
-  setItemOpened(itemId, isOpened, libraryId) {
+  setItemOpened(libraryId, itemId, isOpened) {
+    const key = this._getKey(libraryId, itemId);
     const nextItems = this._updateItems(draft => {
-      const item = draft[itemId];
+      const item = draft[key];
       if (item?.props?.libraryId === libraryId) {
         item.props.isOpened = isOpened;
         if (isOpened) {
@@ -107,33 +119,36 @@ class ItemLocalStateManager {
       }
     });
 
-    const item = nextItems[itemId];
+    const item = nextItems[key];
     if (item?.props?.libraryId === libraryId) {
-      this._trigger(itemId, isOpened, item);
+      this._trigger(libraryId, itemId, isOpened, item);
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
       this.setItemAndParentsOpened(libraryId, itemId);
     }
   }
 
-  getLastOpened(itemId) {
+  getLastOpened(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const items = this._getItems();
-    return items[itemId]?.props?.lastOpened || null;
+    return items[key]?.props?.lastOpened || null;
   }
 
-  setLastOpened(itemId, timestamp) {
+  setLastOpened(libraryId, itemId, timestamp) {
+    const key = this._getKey(libraryId, itemId);
     this._updateItems(draft => {
-      if (draft[itemId]) {
-        draft[itemId].props.lastOpened = timestamp;
+      if (draft[key]) {
+        draft[key].props.lastOpened = timestamp;
       }
     });
   }
 
-  setNoteScope(itemId, noteScopeItemId, libraryId) {
+  setNoteScope(libraryId, itemId, noteScopeItemId) {
+    const key = this._getKey(libraryId, itemId);
     let wasUpdated = false;
 
     const nextItems = this._updateItems(draft => {
-      const item = draft[itemId];
+      const item = draft[key];
       if (item?.props?.libraryId === libraryId) {
         item.props.noteScopeItemId = noteScopeItemId;
         wasUpdated = true;
@@ -141,14 +156,14 @@ class ItemLocalStateManager {
     });
 
     if (wasUpdated) {
-      this._trigger(itemId, nextItems[itemId].props.noteScopeItemId, nextItems[itemId]);
+      this._trigger(libraryId, itemId, nextItems[key].props.noteScopeItemId, nextItems[key]);
     } else {
       console.warn(`Item with ID ${itemId} does not exist.`);
       this.setItemAndParentsOpened(libraryId, itemId);
 
       this._updateItems(draft => {
-        if (draft[itemId]) {
-          draft[itemId].props.noteScopeItemId = noteScopeItemId;
+        if (draft[key]) {
+          draft[key].props.noteScopeItemId = noteScopeItemId;
         }
       });
     }
@@ -163,40 +178,44 @@ class ItemLocalStateManager {
       (a, b) => b[1].props.lastOpened - a[1].props.lastOpened
     );
     return sortedItems.slice(0, n).map(([itemId, item]) => ({
-      itemId,
+      itemIdLibraryId: itemId,
       ...item,
     }));
   }
 
-  getItemLocalState(itemId) {
+  getItemLocalState(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const items = this._getItems();
-    return items[itemId] || null;
+    return items[key] || null;
   }
 
-  deleteItemLocalState(itemId) {
+  deleteItemLocalState(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const prevItems = this._getItems();
     const nextItems = this._updateItems(draft => {
-      delete draft[itemId];
+      delete draft[key];
     });
 
-    if (prevItems[itemId] && !nextItems[itemId]) {
-      if (this.callbacks.has(itemId)) {
-        this.callbacks.delete(itemId);
+    if (prevItems[key] && !nextItems[key]) {
+      if (this.callbacks.has(key)) {
+        this.callbacks.delete(key);
       }
     }
   }
 
-  hasItemLocalState(itemId) {
+  hasItemLocalState(libraryId, itemId) {
+    const key = this._getKey(libraryId, itemId);
     const items = this._getItems();
-    return !!items[itemId];
+    return !!items[key];
   }
 
-  createItemLocalState(itemId, props) {
+  createItemLocalState(libraryId, itemId, props) {
+    const key = this._getKey(libraryId, itemId);
     this._updateItems(draft => {
-      draft[itemId] = {
+      draft[key] = {
         type: props.type || 'default',
         props: {
-          libraryId: props.libraryId || null,
+          libraryId: libraryId,
           EditorTemplate: props.EditorTemplate || null,
           EditorType: props.EditorType || null,
           isOpened: props.isOpened || false,
@@ -212,17 +231,16 @@ class ItemLocalStateManager {
     let parentKey = itemId;
 
     while (parentKey && parentKey !== "root") {
-      if (!this.hasItemLocalState(parentKey)) {
+      if (!this.hasItemLocalState(libraryId, parentKey)) {
         const node = libraryYTree.getNodeValueFromKey(parentKey);
-        this.createItemLocalState(parentKey, {
+        this.createItemLocalState(libraryId, parentKey, {
           type: node?.get("type"),
           props: {
-            libraryId,
             noteScopeItemId: libraryYTree.getNodeParentFromKey(parentKey)
           }
         });
       }
-      this.setItemOpened(parentKey, true, libraryId);
+      this.setItemOpened(libraryId, parentKey, true);
       parentKey = libraryYTree.getNodeParentFromKey(parentKey);
     }
   }

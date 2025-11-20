@@ -13,7 +13,7 @@
 - Add context menus where it is appropriate
 - ~~Add tabs~~
 - Settings page needs to be finished
-  - theme selector (currently dark or light mode)
+  - ~~theme selector (currently dark or light mode)~~
   - ~~fonts~~
   - auth
   - ~~zoom selector~~
@@ -39,6 +39,7 @@
 
 Final Checklist before first release:
 - MAJOR:
+  - search panel
   - import and export to docx
   - proofreader ignore list
   - ~~sync to google drive~~
@@ -48,8 +49,6 @@ Final Checklist before first release:
   - loading indicators and warnings
   
 - MINOR:
-  - search panel
-  - tooltips
   - drag handle - maybe
   - remember scroll for each paper
   - find and replace, for ~~paper~~ and global

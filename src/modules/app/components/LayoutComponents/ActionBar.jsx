@@ -338,14 +338,14 @@ const SearchBar = () => {
           {searchResults.length > 0 &&
             searchResults
               .toSorted((a, b) => {
-                if (!itemLocalStateManager.getLastOpened(a.id)) {
+                if (!itemLocalStateManager.getLastOpened(a.libraryId, a.id)) {
                   return false;
-                } else if (!itemLocalStateManager.getLastOpened(b.id)) {
+                } else if (!itemLocalStateManager.getLastOpened(b.libraryId, b.id)) {
                   return true;
                 } else {
                   return (
-                    itemLocalStateManager.getLastOpened(b.id) -
-                    itemLocalStateManager.getLastOpened(a.id)
+                    itemLocalStateManager.getLastOpened(b.libraryId, b.id) -
+                    itemLocalStateManager.getLastOpened(a.libraryId, a.id)
                   );
                 }
               })
@@ -409,7 +409,7 @@ const SearchBar = () => {
                     <span> {item_properties.item_title}</span>
                     <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
                       {new Date(
-                        itemLocalStateManager.getLastOpened(result.id)
+                        itemLocalStateManager.getLastOpened(result.libraryId, result.id)
                       ).toLocaleString()}
                     </span>
                   </HoverListButton>

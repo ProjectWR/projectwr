@@ -63,7 +63,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 
   const preferences = useMemo(() => {
     if (
-      !itemLocalStateManager.getPaperEditorTemplate(paperId) ||
+      !itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId) ||
       templateFromFile === null ||
       templateFromFile === undefined
     )
@@ -77,12 +77,13 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     const callback = async () => {
       try {
         const templateJSON = await templateManager.getTemplate(
-          itemLocalStateManager.getPaperEditorTemplate(paperId)
+          itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId)
         );
         setTemplateFromFile(templateJSON);
       } catch (e) {
         console.error(
           `Error finding template with name ${itemLocalStateManager.getPaperEditorTemplate(
+            libraryId,
             paperId
           )}:`,
           e
