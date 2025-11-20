@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
+import { useTheme } from "../../ConfigProviders/ThemeProvider";
 import { settingsStore } from "../../stores/settingsStore";
 import { loadSettings, saveSettings } from "../../lib/settings";
 import { AnimatePresence, motion } from "motion/react";
@@ -38,6 +39,7 @@ import {
 } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import {
   HoverListBody,
+  HoverListButton,
   HoverListDivider,
   HoverListHeader,
   HoverListItem,
@@ -67,6 +69,7 @@ const maxLengthRegex = /^.{1,128}$/;
 const SettingsPanel = () => {
   console.log("rendering settings panel");
   const { deviceType } = useDeviceType();
+  const { theme, setTheme } = useTheme();
 
   const zoom = appStore((state) => state.zoom);
 
@@ -82,6 +85,7 @@ const SettingsPanel = () => {
   const [isLoginOpen, loginModalControl] = useDisclosure(false);
 
   const [fontImageToggle, setFontImageToggle] = useState("font");
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
@@ -125,6 +129,20 @@ const SettingsPanel = () => {
       setIsLogoutLoading(false);
     }
   }, []);
+
+  // Close theme dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (themeDropdownOpen && !event.target.closest('.ThemeSelector') && !event.target.closest('.HoverListShell')) {
+        setThemeDropdownOpen(false);
+      }
+    };
+
+    if (themeDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [themeDropdownOpen]);
 
   useEffect(() => {
     const callback = async () => {
@@ -429,8 +447,8 @@ const SettingsPanel = () => {
                                 <div className={`relative w-[3rem] h-[3rem]`}>
                                   <span
                                     className="w-full h-full"
-                                    // animate={{ rotate: 360 }}
-                                    // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                                  // animate={{ rotate: 360 }}
+                                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -496,25 +514,25 @@ const SettingsPanel = () => {
                                 </div>
                               </div>
                             )) || (
-                              <motion.span
-                                key={
-                                  isLogoutLoading
-                                    ? "logoutLoading"
-                                    : "logoutNotLoading"
-                                }
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="h-authButtonSize flex items-center justify-center"
-                              >
-                                {!isLogoutLoading ? (
-                                  <span>Logout</span>
-                                ) : (
-                                  <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize"></span>
-                                )}
-                              </motion.span>
-                            )}
+                                <motion.span
+                                  key={
+                                    isLogoutLoading
+                                      ? "logoutLoading"
+                                      : "logoutNotLoading"
+                                  }
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{ opacity: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="h-authButtonSize flex items-center justify-center"
+                                >
+                                  {!isLogoutLoading ? (
+                                    <span>Logout</span>
+                                  ) : (
+                                    <span className="icon-[line-md--loading-twotone-loop] h-authButtonLoadingSize w-authButtonLoadingSize"></span>
+                                  )}
+                                </motion.span>
+                              )}
                           </GrainyElementButton>
                         </AnimatePresence>
                       </div>
@@ -541,11 +559,10 @@ const SettingsPanel = () => {
                 <button
                   className={`
                   hover:text-appLayoutText
-                  ${
-                    fontImageToggle === "font"
+                  ${fontImageToggle === "font"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
-                  } `}
+                    } `}
                   onClick={() => setFontImageToggle("font")}
                 >
                   Fonts
@@ -554,11 +571,10 @@ const SettingsPanel = () => {
                 <button
                   className={`
                   hover:text-appLayoutText
-                  ${
-                    fontImageToggle === "image"
+                  ${fontImageToggle === "image"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
-                  } `}
+                    } `}
                   onClick={() => setFontImageToggle("image")}
                 >
                   Images
@@ -567,11 +583,10 @@ const SettingsPanel = () => {
                 <button
                   className={`
                   hover:text-appLayoutText
-                  ${
-                    fontImageToggle === "templates"
+                  ${fontImageToggle === "templates"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
-                  } `}
+                    } `}
                   onClick={() => setFontImageToggle("templates")}
                 >
                   Editor Styles
@@ -676,7 +691,7 @@ const SettingsPanel = () => {
                           <button
                             className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
                             onClick={async () => {
-                              
+
                             }}
                           >
                             <span className="icon-[typcn--delete] w-full h-full"></span>
@@ -707,9 +722,8 @@ const SettingsPanel = () => {
               </div>
               <div
                 id="PreferencesBody"
-                className={`grow basis-0 w-full flex flex-col gap-2 items-center justify-start py-1 px-1                 ${
-                  deviceType === "desktop" && "px-6"
-                }
+                className={`grow basis-0 w-full flex flex-col gap-2 items-center justify-start py-1 px-1                 ${deviceType === "desktop" && "px-6"
+                  }
               `}
               >
                 <div className="w-full h-preferencesItemHeight flex gap-2 items-center justify-between">
@@ -743,7 +757,55 @@ const SettingsPanel = () => {
                     Theme
                   </h1>
                   <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
-                  <span>Dark</span>
+
+                  <div className="relative w-fit h-full flex items-center">
+                    <button
+                      className="ThemeSelector text-preferencesItemFontSize w-[7rem] h-preferencesItemButtonSize flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100"
+                      onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+                    >
+                      {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
+                    </button>
+
+                    <HoverListShell condition={themeDropdownOpen} className="min-w-[7rem] shadow-md">
+                      <HoverListBody scrollPadding={false} className="px-0 py-0">
+                        <HoverListButton
+                          onClick={() => {
+                            setTheme("dark");
+                            setThemeDropdownOpen(false);
+                          }}
+                        >
+                          <span className="text-appLayoutText">Dark</span>
+                          {theme === "dark" && (
+                            <span className="icon-[material-symbols-light--check-rounded] w-[1.2rem] h-[1.2rem]"></span>
+                          )}
+                        </HoverListButton>
+
+                        <HoverListButton
+                          onClick={() => {
+                            setTheme("light");
+                            setThemeDropdownOpen(false);
+                          }}
+                        >
+                          <span className="text-appLayoutText">Light</span>
+                          {theme === "light" && (
+                            <span className="icon-[material-symbols-light--check-rounded] w-[1.2rem] h-[1.2rem]"></span>
+                          )}
+                        </HoverListButton>
+
+                        <HoverListButton
+                          onClick={() => {
+                            setTheme("system");
+                            setThemeDropdownOpen(false);
+                          }}
+                        >
+                          <span className="text-appLayoutText">System</span>
+                          {theme === "system" && (
+                            <span className="icon-[material-symbols-light--check-rounded] w-[1.2rem] h-[1.2rem]"></span>
+                          )}
+                        </HoverListButton>
+                      </HoverListBody>
+                    </HoverListShell>
+                  </div>
                 </div>
               </div>
             </div>

@@ -78,6 +78,8 @@ export const SidePanelContainer = ({ loading }) => {
     newWidth = min(MAX_WIDTH, max(MIN_WIDTH, newWidth));
 
     setSidePanelWidth(newWidth);
+    setSidePanelSliderPos(newWidth);
+
   }, [setSidePanelWidth, zoom]);
 
   useEffect(() => {
@@ -127,8 +129,8 @@ export const SidePanelContainer = ({ loading }) => {
               <SidePanel />
               <motion.div
                 className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${sidePanelSliderActive
-                    ? "bg-sidePanelDragHandle"
-                    : "bg-transparent"
+                  ? "bg-sidePanelDragHandle"
+                  : "bg-transparent"
                   } cursor-w-resize`}
                 drag="x"
                 style={{

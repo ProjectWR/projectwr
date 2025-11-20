@@ -121,6 +121,8 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
 
               setPanelOpened(true);
             }}
+            label={'Your Dictionary'}
+
             activity={activity}
             selectedActivity={"dictionary"}
             deviceType={deviceType}
@@ -157,6 +159,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                       setPanelOpened(false);
                     }
                   }}
+                  label={'Close Side Panel'}
                   activity={"closeSidePanelButton"}
                   deviceType={deviceType}
                   toggleButton={true}
@@ -177,6 +180,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                       setPanelOpened(true);
                     }
                   }}
+                  label={'Open Side Panel'}
                   activity={"openSidePanelButton"}
                   deviceType={deviceType}
                   toggleButton={true}

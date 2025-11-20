@@ -103,6 +103,7 @@ const WritingApp = () => {
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
+  
   useEffect(() => {
     onAuthStateChanged(getAuth(firebaseApp), (user) => {
       if (user) {

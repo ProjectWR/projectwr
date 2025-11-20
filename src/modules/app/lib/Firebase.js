@@ -14,6 +14,7 @@ import { FirebaseConfig } from "../../../FirebaseConfig";
 
 // Initialize Firebase
 
+
 const firebaseApp = initializeApp(FirebaseConfig);
 
 const analytics = getAnalytics();

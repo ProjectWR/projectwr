@@ -52,13 +52,13 @@ export const HoverListDivider = () => {
   return <div className="w-[98.5%] h-px shrink-0 bg-appLayoutBorder"></div>;
 };
 
-export const HoverListBody = ({ children }) => {
+export const HoverListBody = ({ children, scrollPadding = true, className }) => {
   return (
     <div
       style={{
-        paddingLeft: `var(--scrollbarWidth)`,
+        paddingLeft: scrollPadding ? `var(--scrollbarWidth)` : 0,
       }}
-      className="w-full max-h-actionBarSearchMaxHeight overflow-y-scroll text-actionBarResultTextSize flex flex-col py-1"
+      className={`w-full max-h-actionBarSearchMaxHeight ${scrollPadding ? "overflow-y-scroll" : "overflow-y-hidden"} text-actionBarResultTextSize flex flex-col py-1 px-0 ${className}`}
     >
       {children}
     </div>
@@ -85,7 +85,7 @@ export const HoverListItem = ({ children, disabled }) => {
   );
 };
 
-export const HoverListButton = ({ children, disabled, onClick }) => {
+export const HoverListButton = ({ children, disabled, onClick, className }) => {
   return (
     <motion.button
       initial={{ opacity: 0 }}
@@ -98,7 +98,7 @@ export const HoverListButton = ({ children, disabled, onClick }) => {
       }}
       className={`px-3 h-actionBarResultNodeHeight w-full hover:bg-appLayoutInverseHover ${
         disabled && "hover:bg-transparent text-appLayoutTextMuted"
-      } rounded-md flex items-center justify-between `}
+      } rounded-md flex items-center justify-between ${className}`}
       onClick={onClick}
     >
       {children}
