@@ -57,6 +57,7 @@ import { OauthComponent } from "./Settings/OauthComponent";
 import templateManager from "../../lib/templates";
 import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
 import useMainPanel from "../../hooks/useMainPanel";
+import { DropdownMenu } from "radix-ui";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -85,7 +86,6 @@ const SettingsPanel = () => {
   const [isLoginOpen, loginModalControl] = useDisclosure(false);
 
   const [fontImageToggle, setFontImageToggle] = useState("font");
-  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
@@ -130,19 +130,7 @@ const SettingsPanel = () => {
     }
   }, []);
 
-  // Close theme dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (themeDropdownOpen && !event.target.closest('.ThemeSelector') && !event.target.closest('.HoverListShell')) {
-        setThemeDropdownOpen(false);
-      }
-    };
 
-    if (themeDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [themeDropdownOpen]);
 
   useEffect(() => {
     const callback = async () => {
@@ -758,54 +746,47 @@ const SettingsPanel = () => {
                   </h1>
                   <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
 
-                  <div className="relative w-fit h-full flex items-center">
-                    <button
-                      className="ThemeSelector text-preferencesItemFontSize w-[7rem] h-preferencesItemButtonSize flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100"
-                      onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                      <button className="text-preferencesItemFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
+                        {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
+                      </button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                      style={{ opacity: 1 }}
+                      className="contextMenuContent z-[1100] max-h-[20rem] overflow-y-auto"
+                      sideOffset={5}
+                      align="center"
                     >
-                      {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
-                    </button>
-
-                    <HoverListShell condition={themeDropdownOpen} className="min-w-[7rem] shadow-md">
-                      <HoverListBody scrollPadding={false} className="px-0 py-0">
-                        <HoverListButton
-                          onClick={() => {
-                            setTheme("dark");
-                            setThemeDropdownOpen(false);
-                          }}
-                        >
-                          <span className="text-appLayoutText">Dark</span>
-                          {theme === "dark" && (
-                            <span className="icon-[material-symbols-light--check-rounded] w-[1.2rem] h-[1.2rem]"></span>
-                          )}
-                        </HoverListButton>
-
-                        <HoverListButton
-                          onClick={() => {
-                            setTheme("light");
-                            setThemeDropdownOpen(false);
-                          }}
-                        >
-                          <span className="text-appLayoutText">Light</span>
-                          {theme === "light" && (
-                            <span className="icon-[material-symbols-light--check-rounded] w-[1.2rem] h-[1.2rem]"></span>
-                          )}
-                        </HoverListButton>
-
-                        <HoverListButton
-                          onClick={() => {
-                            setTheme("system");
-                            setThemeDropdownOpen(false);
-                          }}
-                        >
-                          <span className="text-appLayoutText">System</span>
-                          {theme === "system" && (
-                            <span className="icon-[material-symbols-light--check-rounded] w-[1.2rem] h-[1.2rem]"></span>
-                          )}
-                        </HoverListButton>
-                      </HoverListBody>
-                    </HoverListShell>
-                  </div>
+                      <DropdownMenu.Item
+                        className="contextMenuItem"
+                        onClick={() => setTheme("dark")}
+                      >
+                        <span className="text-appLayoutText">Dark</span>
+                        {theme === "dark" && (
+                          <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                        )}
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        className="contextMenuItem"
+                        onClick={() => setTheme("light")}
+                      >
+                        <span className="text-appLayoutText">Light</span>
+                        {theme === "light" && (
+                          <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                        )}
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        className="contextMenuItem"
+                        onClick={() => setTheme("system")}
+                      >
+                        <span className="text-appLayoutText">System</span>
+                        {theme === "system" && (
+                          <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                        )}
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
                 </div>
               </div>
             </div>
