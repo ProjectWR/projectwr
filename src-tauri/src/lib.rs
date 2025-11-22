@@ -55,12 +55,14 @@ pub fn run() {
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
 
-            // Setup deep link listener for OAuth redirects from redirect server
+            // Setup deep link listener for OAuth redirects from Firebase redirect server
+            // Clone window to avoid borrow issues
+            let window_clone = window.clone();
             app.deep_link().on_open_url(move |event| {
                 let urls = event.urls();
                 if let Some(url) = urls.first() {
                     // Emit the URL to the frontend for OAuth processing
-                    let _ = window.emit("oauth://url", url.as_str());
+                    let _ = window_clone.emit("oauth://url", url.as_str());
                 }
             });
 

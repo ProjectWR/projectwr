@@ -15,7 +15,7 @@ const SCOPE = settings.auth.SCOPE;
 const STORAGE_PATHS = settings.storage.paths;
 
 // Deep link redirect URI - your redirect server will redirect to this
-const REDIRECT_URI = "https://tulip-writer-3bd49.firebaseapp.com/__/oauth/handler";
+const REDIRECT_URI = "https://tulipwriter-website-git-main-yeshan-kaushiks-projects.vercel.app/api/oauth/callback";
 
 export async function getAccessToken(code) {
   try {
