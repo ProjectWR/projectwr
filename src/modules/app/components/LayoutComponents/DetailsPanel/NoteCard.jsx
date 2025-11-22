@@ -4,6 +4,7 @@ import { BubbleMenu, FloatingMenu, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
+import Placeholder from "@tiptap/extension-placeholder";
 import ProsemirrorProofreadExtension from "../../../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
 import { RichTextEditor } from "@mantine/tiptap";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
@@ -133,7 +134,20 @@ const NoteCardEditor = ({
       Underline,
       Highlight,
       ProsemirrorProofreadExtension,
-      
+      Placeholder.configure({
+        emptyEditorClass:
+          "before:content-[attr(data-placeholder)] before:float-left before:text-appLayoutTextMuted before:h-0 before:pointer-events-none",
+        // Use a placeholder:
+        placeholder: "Write something...",
+        // Use different placeholders depending on the node type:
+        // placeholder: ({ node }) => {
+        //   if (node.type.name === 'heading') {
+        //     return 'What’s the title?'
+        //   }
+
+        //   return 'Can you add some further context?'
+        // },
+      }),
     ],
     content: itemProperties.item_description,
     onUpdate: ({ editor }) => {
@@ -171,19 +185,18 @@ const NoteCardEditor = ({
       <RichTextEditor
         editor={editor}
         variant="subtle"
-        
         classNames={{
           root: "bg-transparent px-2 border-none w-full border-appLayoutBorder rounded-none",
           toolbar: "bg-transparent border-b border-appLayoutBorder",
-          content: `bg-transparent text-appLayoutText 
+          content: `bg-transparent text-appLayoutText placeholder:text-gray-500 placeholder:italic 
           ${fixedSize ? "h-nodeCardHeight" : " max-h-noteCardHeight"} 
           ${sizeMode === 1 && "text-noteCardFontSizeOne"} 
           ${sizeMode === 2 && "text-noteCardFontSizeTwo"} 
           ${sizeMode === 3 && "text-noteCardFontSizeThree"} 
           overflow-y-scroll p-1 NoteCardEditor`,
-          controlsGroup: "bg-appBackground gap-1 rounded-lg",
+          controlsGroup: "bg-appBackgroundAccent gap-1 rounded-lg",
           control:
-            "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
+            "bg-transparent border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
         }}
       >
         <style>
@@ -226,6 +239,9 @@ const NoteCardEditor = ({
             margin: calc(0rem * var(--uiScale)) 1rem calc(0rem * var(--uiScale)) 0.4rem;
           }
 
+          &[data-placeholder] {
+            color: black;
+          }
           `}
         </style>
         {/* <RichTextEditor.Toolbar sticky stickyOffset="1rem">
