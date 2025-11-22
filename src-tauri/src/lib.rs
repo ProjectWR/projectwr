@@ -1,13 +1,14 @@
 mod libs;
 
-use tauri::Manager;
 use libs::filehelper::ENV_FILE;
 use libs::tauri_actions::{
     greet, load_access_token, load_code, save_access_token, save_code, test_command,
 };
 use once_cell::sync::OnceCell;
 use std::env;
+use tauri::Manager;
 use tauri::{command, Emitter, Window};
+use tauri_plugin_deep_link::DeepLinkExt;
 use tauri_plugin_oauth::start;
 use window_vibrancy::*;
 
@@ -36,11 +37,13 @@ async fn start_server(window: Window) -> Result<u16, String> {
     })
     .map_err(|err| err.to_string())
 }
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     dotenv::from_filename(ENV_FILE).ok();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -48,8 +51,18 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_oauth::init())
+        .plugin(tauri_plugin_deep_link::init())
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
+
+            // Setup deep link listener for OAuth redirects from redirect server
+            app.deep_link().on_open_url(move |event| {
+                let urls = event.urls();
+                if let Some(url) = urls.first() {
+                    // Emit the URL to the frontend for OAuth processing
+                    let _ = window.emit("oauth://url", url.as_str());
+                }
+            });
 
             tauri::async_runtime::block_on(async {
                 let settings_data = std::fs::read_to_string("resources/default_settings.json")

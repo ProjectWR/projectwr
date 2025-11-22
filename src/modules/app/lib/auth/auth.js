@@ -1,6 +1,6 @@
 import axios from "axios";
-import { readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
-import { delete_access_token, generate_oauth_port, get_access_token, get_auth_code, save_access_token, save_auth_code } from "./invoker";
+import { readTextFile, remove, writeTextFile} from '@tauri-apps/plugin-fs';
+import { delete_access_token, get_access_token, get_auth_code, save_access_token, save_auth_code } from "./invoker";
 import settings from "../../../../config/settings";
 import { CLIENT_ID, CLIENT_SECRET } from "../../../../config/credentials";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -13,28 +13,17 @@ const DEFAULT_DIRECTORY = settings.fs.DEFAULT_DIRECTORY;
 const GOOGLE_OAUTH_ENDPOINT = settings.auth.GOOGLE_OAUTH_ENDPOINT;
 const SCOPE = settings.auth.SCOPE;
 const STORAGE_PATHS = settings.storage.paths;
-// anonymous class for managing port
-class PortManager {
-  async getPort() {
-    this.port = this.port || await this.generatePort();
-    return this.port;
-  }
-  async generatePort() {
-    const port = await generate_oauth_port();
-    return port;
-  }
-}
 
-const portManager = new PortManager();
+// Deep link redirect URI - your redirect server will redirect to this
+const REDIRECT_URI = "https://tulip-writer-3bd49.firebaseapp.com/__/oauth/handler";
 
 export async function getAccessToken(code) {
   try {
-    const port = await portManager.getPort();
     const data = {
       code,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
-      redirect_uri: getLocalHostUrl(port),
+      redirect_uri: REDIRECT_URI,
       grant_type: "authorization_code",
     };
     console.log(data, "data");
@@ -118,7 +107,7 @@ export async function openAuthWindow() {
   url.searchParams.append("access_type", "offline");
   url.searchParams.append("response_type", "code");
   url.searchParams.append("client_id", CLIENT_ID);
-  url.searchParams.append("redirect_uri", getLocalHostUrl(await portManager.getPort()));
+  url.searchParams.append("redirect_uri", REDIRECT_URI);
   url.searchParams.append("include_granted_scopes", "true");
   url.searchParams.append("state", "state_parameter_passthrough_value");
   openUrl(url.href);
@@ -269,11 +258,6 @@ export async function handleInitialLogin() {
   oauthStore.setState({ accessTokenState: accessToken.access_token });
 }
 
-
-
-function getLocalHostUrl(port) {
-  return `http://localhost:${port}`;
-}
 
 
 

@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api/core';
 import * as commands from './commands.js';
 import { AuthStore } from './DBStores.js';
 import settings from '../../../../config/settings.js';
@@ -44,8 +43,4 @@ export async function test_command() {
 
 export async function greet(name) {
     return await commands.greet(name);
-}
-
-export async function generate_oauth_port() {
-    return await invoke("plugin:oauth|start");
 }
