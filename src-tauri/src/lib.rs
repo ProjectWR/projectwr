@@ -43,6 +43,43 @@ pub fn run() {
     dotenv::from_filename(ENV_FILE).ok();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+            println!("Single instance triggered with args: {:?}", args);
+
+            // When a second instance is launched (e.g., from a deep link),
+            // this callback runs in the FIRST instance with the args from the second instance
+            if let Some(url) = args.get(1) {
+                println!("Received URL from new instance: {}", url);
+
+                // Get the main window and emit the deep link event
+                if let Some(window) = app.get_webview_window("main") {
+                    println!("Emitting deep link event: {}", url);
+                    let _ = window.emit("oauth://url", url);
+
+                    // Bring window to focus
+                    let _ = window.unminimize();
+                    let _ = window.show();
+                    let _ = window.set_always_on_top(true);
+                    let _ = window.set_focus();
+
+                    #[cfg(target_os = "windows")]
+                    {
+                        use tauri::UserAttentionType;
+                        let _ =
+                            window.request_user_attention(Some(UserAttentionType::Informational));
+                    }
+
+                    // Remove always on top after a brief moment
+                    let window_clone = window.clone();
+                    std::thread::spawn(move || {
+                        std::thread::sleep(std::time::Duration::from_millis(100));
+                        let _ = window_clone.set_always_on_top(false);
+                    });
+
+                    println!("Window focus attempted for single instance");
+                }
+            }
+        }))
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
@@ -51,20 +88,18 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_oauth::init())
-        .plugin(tauri_plugin_deep_link::init())
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
 
-            // Setup deep link listener for OAuth redirects from Firebase redirect server
-            // Clone window to avoid borrow issues
-            let window_clone = window.clone();
-            app.deep_link().on_open_url(move |event| {
-                let urls = event.urls();
-                if let Some(url) = urls.first() {
-                    // Emit the URL to the frontend for OAuth processing
-                    let _ = window_clone.emit("oauth://url", url.as_str());
+            // Register the deep link protocol with the OS for dev mode
+            #[cfg(any(windows, target_os = "linux"))]
+            {
+                use tauri_plugin_deep_link::DeepLinkExt;
+                match app.deep_link().register_all() {
+                    Ok(_) => println!("Deep link protocol registered successfully!"),
+                    Err(e) => eprintln!("Failed to register deep link: {:?}", e),
                 }
-            });
+            }
 
             tauri::async_runtime::block_on(async {
                 let settings_data = std::fs::read_to_string("resources/default_settings.json")
