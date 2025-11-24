@@ -265,7 +265,7 @@ const SettingsPanel = () => {
 
           <motion.div
             id="AuthContainer"
-            animate={{ height: "fit-content" }}
+            animate={{ height: "fit-content", display: "none" }}
             className="w-full"
           >
             <AnimatePresence mode="wait">
@@ -531,7 +531,7 @@ const SettingsPanel = () => {
             </AnimatePresence>
           </motion.div>
 
-          <DetailsPanelDivider />
+          {/* <DetailsPanelDivider /> */}
 
           <div className="w-full h-fit">
             <OauthComponent />
