@@ -529,7 +529,7 @@ export const ActionBarLeftSide = ({}) => {
             <div className={`w-full h-full bg-appLayoutBorder`}></div>
           </div>
         </div>
-        <ActionButton
+        {/* <ActionButton
           onClick={() => {}}
           className={`${false && "bg-appLayoutPressed"}`}
         >
@@ -543,7 +543,7 @@ export const ActionBarLeftSide = ({}) => {
               className="icon-[material-symbols-light--search] w-full h-full top-0 left-0 absolute bg-appLayoutText"
             ></motion.span>
           </div>
-        </ActionButton>
+        </ActionButton> */}
         <div className="grow basis-0 min-w-0"></div>
 
         <div className="w-px min-w-px h-full py-2">

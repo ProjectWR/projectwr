@@ -34,10 +34,11 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
       {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex shrink-0 gap-px items-center bg-appBackground backdrop-blur-2xl   ${deviceType === "mobile"
-            ? "w-full h-activityBarHeight order-last flex-row border-t"
-            : "h-full w-activityBarWidth order-first flex-col border-r"
-            } border-appLayoutBorder z-1000 overflow-hidden`}
+          className={`flex shrink-0 gap-px items-center bg-appBackground backdrop-blur-2xl   ${
+            deviceType === "mobile"
+              ? "w-full h-activityBarHeight order-last flex-row border-t"
+              : "h-full w-activityBarWidth order-first flex-col border-r"
+          } border-appLayoutBorder z-1000 overflow-hidden`}
           style={{
             boxShadow:
               deviceType === "mobile"
@@ -64,17 +65,21 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               setPanelOpened(true);
 
               if (activity === "libraries" && libraryId !== "unselected") {
-                console.log("ACTIVITY AND LIBRARYID INSIDE", activity, libraryId);
+                console.log(
+                  "ACTIVITY AND LIBRARYID INSIDE",
+                  activity,
+                  libraryId
+                );
 
                 setLibraryId("unselected");
               }
             }}
-            label={'Your Libraries'}
+            label={"Your Libraries"}
             activity={activity}
             selectedActivity={"libraries"}
             deviceType={deviceType}
             buttonContent={
-              <span className="icon-[ion--library-sharp] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+              <span className="icon-[ion--library-sharp] h-activityBarIconSize w-activityBarIconSize"></span>
             }
             flexValue={"grow-3"}
           />
@@ -92,11 +97,28 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               selectedActivity={"home"}
               deviceType={deviceType}
               buttonContent={
-                <span className="icon-[material-symbols-light--home] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                <span className="icon-[material-symbols-light--home]  h-activityBarIconSize w-activityBarIconSize"></span>
               }
               flexValue={"grow-1"}
             />
           )}
+          <ActivityButton
+            onClick={() => {
+              if (activity !== "search") {
+                setActivity("search");
+              }
+
+              setPanelOpened(true);
+            }}
+            label={"Search your Library"}
+            activity={activity}
+            selectedActivity={"search"}
+            deviceType={deviceType}
+            buttonContent={
+              <span className="icon-[material-symbols-light--search] h-activityBarIconSize w-activityBarIconSize"></span>
+            }
+            flexValue={"grow-1"}
+          />
           {/* <ActivityButton
             onClick={() => {
               if (activity !== "templates") {
@@ -121,13 +143,12 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
 
               setPanelOpened(true);
             }}
-            label={'Your Dictionary'}
-
+            label={"Your Dictionary"}
             activity={activity}
             selectedActivity={"dictionary"}
             deviceType={deviceType}
             buttonContent={
-              <span className="icon-[material-symbols-light--match-word-rounded] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+              <span className="icon-[material-symbols-light--match-word-rounded]  h-activityBarIconSize w-activityBarIconSize"></span>
             }
             flexValue={"grow-1"}
           />
@@ -144,7 +165,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               selectedActivity={"settings"}
               deviceType={deviceType}
               buttonContent={
-                <span className="icon-[material-symbols-light--settings] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                <span className="icon-[material-symbols-light--settings]  h-activityBarIconSize w-activityBarIconSize"></span>
               }
               flexValue={"grow-1"}
             />
@@ -159,12 +180,12 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                       setPanelOpened(false);
                     }
                   }}
-                  label={'Close Side Panel'}
+                  label={"Close Side Panel"}
                   activity={"closeSidePanelButton"}
                   deviceType={deviceType}
                   toggleButton={true}
                   buttonContent={
-                    <span className="icon-[material-symbols-light--arrow-menu-close] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                    <span className="icon-[material-symbols-light--arrow-menu-close] h-activityBarIconSize w-activityBarIconSize"></span>
                   }
                   flexValue={"grow-1"}
                 />
@@ -180,12 +201,12 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                       setPanelOpened(true);
                     }
                   }}
-                  label={'Open Side Panel'}
+                  label={"Open Side Panel"}
                   activity={"openSidePanelButton"}
                   deviceType={deviceType}
                   toggleButton={true}
                   buttonContent={
-                    <span className="icon-[material-symbols-light--arrow-menu-open] mt-1 h-activityBarIconSize w-activityBarIconSize"></span>
+                    <span className="icon-[material-symbols-light--arrow-menu-open] h-activityBarIconSize w-activityBarIconSize"></span>
                   }
                   flexValue={"grow-1"}
                 />
@@ -211,7 +232,7 @@ const ActivityButton = ({
   toggleButton = false,
 }) => {
   return (
-    <StyledTooltip label={label} >
+    <StyledTooltip label={label}>
       <motion.button
         key={activity}
         initial={{ opacity: toggleButton ? 0 : 1 }}
@@ -219,15 +240,19 @@ const ActivityButton = ({
         exit={{ opacity: toggleButton ? 0 : 1 }}
         transition={{ duration: 0.15 }}
         className={`relative z-1000
-        ${deviceType === "mobile"
+        ${
+          deviceType === "mobile"
             ? `h-full ${flexValue}`
             : "w-full h-activityButtonHeight"
-          } 
+        } 
+
+        flex items-center justify-center
      
-        ${selectedActivity === activity
+        ${
+          selectedActivity === activity
             ? "text-activityButtonIconHighlight bg-appLayoutPressed/50 z-1000 "
             : "text-appLayoutTextMuted hover:text-appLayoutText"
-          }
+        }
        
         ${className}
       `}
@@ -242,15 +267,15 @@ const ActivityButton = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className={`absolute ${deviceType === "mobile"
-                ? "h-px w-full top-0"
-                : "w-px h-full left-full top-0"
-                } bg-activitySelectLine`}
+              className={`absolute ${
+                deviceType === "mobile"
+                  ? "h-px w-full top-0"
+                  : "w-px h-full left-full top-0"
+              } bg-activitySelectLine`}
             />
           )}
         </AnimatePresence>
       </motion.button>
     </StyledTooltip>
-
   );
 };

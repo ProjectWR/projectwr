@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import LibraryDirectory from "../SidePanels/LibraryDirectory/LibraryDirectory";
 import TemplateManager from "../SidePanels/TemplateManager/TemplateManager";
 import DictionaryManager from "../SidePanels/DictionaryManager/DictionaryManager";
+import SearchSidePanel from "../SIdePanels/Search/SearchSidePanel";
 
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -25,6 +26,10 @@ const SidePanel = ({}) => {
         key.current = "libraryManager";
         return <LibraryManager />;
       }
+    } else if (activity === "search") {
+      key.current = "searchSelected-" + libraryId;
+
+      return <SearchSidePanel libraryId={libraryId} />;
     } else if (activity === "templates") {
       key.current = "templateManager";
       return <TemplateManager />;
