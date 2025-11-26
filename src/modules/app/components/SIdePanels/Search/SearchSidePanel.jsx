@@ -120,7 +120,7 @@ const SearchSidePanel = ({ libraryId }) => {
         >
           <div
             id="SearchListContainer"
-            className="h-fit w-full px-2 flex flex-col gap-1 justify-start items-center"
+            className="h-fit w-full px-2 flex flex-col gap-0 justify-start items-center"
           >
             {searchResults.length > 0 &&
               searchResults
@@ -138,7 +138,7 @@ const SearchSidePanel = ({ libraryId }) => {
                     );
                   }
                 })
-                .map((result) => {
+                .map((result, index) => {
                   const item_properties =
                     result.id === result.libraryId
                       ? dataManagerSubdocs
@@ -153,49 +153,53 @@ const SearchSidePanel = ({ libraryId }) => {
                           .get("item_properties");
 
                   return (
-                    <SearchNode
-                      key={result.id}
-                      label={item_properties.item_title}
-                      onClick={() => {
-                        if (item_properties.item_title) {
-                          setLibraryId(result.libraryId);
-                          setItemId("unselected");
-                          if (deviceType === "mobile") {
-                            setPanelOpened(false);
+                    <div key={result.id} className="h-fit w-full flex gap-1 items-center">
+                      <span className="text-libraryDirectoryBookNodeFontSize pb-px text-appLayoutTextMuted w-fit h-fit">
+                        {index + 1}
+                      </span>
+                      <SearchNode
+                        label={item_properties.item_title}
+                        onClick={() => {
+                          if (item_properties.item_title) {
+                            setLibraryId(result.libraryId);
+                            setItemId("unselected");
+                            if (deviceType === "mobile") {
+                              setPanelOpened(false);
+                            }
+                            setPanelOpened(true);
+
+                            activatePanel("libraries", "details", [
+                              result.libraryId,
+                            ]);
                           }
-                          setPanelOpened(true);
+
+                          if (
+                            result.type === "book" ||
+                            result.type === "paper" ||
+                            result.type === "section"
+                          ) {
+                            itemLocalStateManager.setItemAndParentsOpened(
+                              result.libraryId,
+                              result.id
+                            );
+
+                            setLibraryId(result.libraryId);
+                            setItemId(result.id);
+                            setItemMode("details");
+                            if (deviceType === "mobile") {
+                              setPanelOpened(false);
+                            }
+                            setPanelOpened(true);
+                          }
+                          setActivity("libraries");
 
                           activatePanel("libraries", "details", [
                             result.libraryId,
+                            result.id,
                           ]);
-                        }
-
-                        if (
-                          result.type === "book" ||
-                          result.type === "paper" ||
-                          result.type === "section"
-                        ) {
-                          itemLocalStateManager.setItemAndParentsOpened(
-                            result.libraryId,
-                            result.id
-                          );
-
-                          setLibraryId(result.libraryId);
-                          setItemId(result.id);
-                          setItemMode("details");
-                          if (deviceType === "mobile") {
-                            setPanelOpened(false);
-                          }
-                          setPanelOpened(true);
-                        }
-                        setActivity("libraries");
-
-                        activatePanel("libraries", "details", [
-                          result.libraryId,
-                          result.id,
-                        ]);
-                      }}
-                    />
+                        }}
+                      />
+                    </div>
                   );
                 })}
 
@@ -224,8 +228,8 @@ const SearchNode = ({ itemId, label, onClick, disabled }) => {
         className={`flex justify-between items-center ${
           disabled ? "" : "hover:bg-appLayoutHover"
         }
-                    
-                    rounded-r-sm
+                    px-1 
+                    rounded-sm
         
                     h-libraryDirectoryPaperNodeHeight
 
