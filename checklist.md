@@ -27,10 +27,9 @@ Production Readiness
 🟡 HIGH PRIORITY (IMPORTANT FOR V1.0)
 Settings Page Completion
 Based on typical desktop apps, you need:
-
- Theme selector (already done)
- Fonts (already done)
- Zoom selector (already done)
+ ~~Theme selector (already done)~~
+ ~~Fonts (already done)~~
+ ~~Zoom selector (already done)~~
  Auth/OAuth (exists)
  Keyboard shortcuts customization
  Language/locale settings

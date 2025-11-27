@@ -92,7 +92,7 @@ const SearchSidePanel = ({ libraryId }) => {
 
       <div
         id="SearchInputContainer"
-        className={`flex flex-col items-center justify-between h-fit w-full px-2 min-h-fit mt-1 border-appLayoutBorder   z-1`}
+        className={`flex flex-col items-center justify-between h-fit w-full px-2 min-h-fit mt-0 border-appLayoutBorder   z-1`}
       >
         <div className="h-fit min-h-fit py-1 w-full flex flex-row gap-1 items-center">
           <input
@@ -101,12 +101,25 @@ const SearchSidePanel = ({ libraryId }) => {
             onChange={handleChange}
             type="text"
             placeholder="Search"
-            className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-1 bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-appLayoutBorder border rounded-sm"
+            className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-appLayoutBorder border rounded-sm"
           />
         </div>
+
+        {searchResults.length > 0 && (
+          <>
+            <div className="divider w-full px-1">
+              <div className="w-full h-px bg-appLayoutBorder"></div>
+            </div>
+            <div className="h-fit min-h-fit w-fit flex flex-row gap-1 items-center">
+              <span className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full  text-appLayoutTextMuted">
+                {searchResults.length} results
+              </span>
+            </div>
+          </>
+        )}
       </div>
 
-      <div id="SearchBodyContainer" className={`grow min-h-0 w-full mt-1`}>
+      <div id="SearchBodyContainer" className={`grow min-h-0 w-full mt-0`}>
         <ScrollArea
           overscrollBehavior="none"
           scrollbars="y"
@@ -153,9 +166,12 @@ const SearchSidePanel = ({ libraryId }) => {
                           .get("item_properties");
 
                   return (
-                    <div key={result.id} className="h-fit w-full flex gap-1 items-center">
+                    <div
+                      key={result.id}
+                      className="h-fit w-full flex gap-1 items-center"
+                    >
                       <span className="text-libraryDirectoryBookNodeFontSize pb-px text-appLayoutTextMuted w-fit h-fit">
-                        {index + 1}
+                        -
                       </span>
                       <SearchNode
                         label={item_properties.item_title}
@@ -242,7 +258,7 @@ const SearchNode = ({ itemId, label, onClick, disabled }) => {
       >
         <button
           className="grow min-w-0 flex items-center justify-start h-full"
-          onClick
+          onClick={onClick}
           disabled={disabled}
         >
           <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
