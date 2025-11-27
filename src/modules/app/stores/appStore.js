@@ -36,14 +36,14 @@ export const appStore = create((set) => ({
   zoom: 1,
   setZoom: (nextZoom) =>
     set((state) => ({
-      zoom: typeof nextZoom === 'function' ? nextZoom(state.zoom) : nextZoom,
+      zoom: typeof nextZoom === "function" ? nextZoom(state.zoom) : nextZoom,
     })),
   activity: "home",
   setActivity: (activity) => {
     return set({ activity: activity });
   },
 
-  libraryId: 'unselected',
+  libraryId: "unselected",
   setLibraryId: (libraryId) => {
     return set({ libraryId: libraryId });
   },
@@ -53,37 +53,37 @@ export const appStore = create((set) => ({
     return set({ focusedItem: focusedItem });
   },
 
-  itemId: 'unselected',
+  itemId: "unselected",
   setItemId: (itemId) => {
     return set({ itemId: itemId });
   },
 
-  itemMode: 'details',
+  itemMode: "details",
   setItemMode: (itemMode) => {
     return set({ itemMode: itemMode });
   },
 
-  templateId: 'unselected',
+  templateId: "unselected",
   setTemplateId: (templateId) => {
     return set({ templateId: templateId });
   },
 
-  templateMode: 'details',
+  templateMode: "details",
   setTemplateMode: (templateMode) => {
     return set({ templateMode: templateMode });
   },
 
-  dictionaryWord: '',
+  dictionaryWord: "",
   setDictionaryWord: (dictionaryWord) => {
     return set({ dictionaryWord: dictionaryWord });
   },
 
-  dictionaryMode: '',
+  dictionaryMode: "",
   setDictionaryMode: (dictionaryMode) => {
     return set({ dictionaryMode: dictionaryMode });
   },
 
-  searchQuery: '',
+  searchQuery: "",
   setSearchQuery: (searchQuery) => {
     return set({ searchQuery: searchQuery });
   },
@@ -95,12 +95,12 @@ export const appStore = create((set) => ({
 
   sidePanelWidth: 240,
   setSidePanelWidth: (sidePanelWidth) => {
-    return set({ sidePanelWidth: sidePanelWidth })
+    return set({ sidePanelWidth: sidePanelWidth });
   },
 
   notesPanelWidth: 284.8,
   setNotesPanelWidth: (notesPanelWidth) => {
-    return set({ notesPanelWidth: notesPanelWidth })
+    return set({ notesPanelWidth: notesPanelWidth });
   },
 
   notesPanelOpened: true,
@@ -115,6 +115,10 @@ export const appStore = create((set) => ({
 
   proofreadContextItems: [],
   setProofreadContextItems: (proofreadContextItems) => {
-    return (set({ proofreadContextItems: proofreadContextItems }));
-  }
+    return set({ proofreadContextItems: proofreadContextItems });
+  },
+  libraryManagerOpened: false,
+  setLibraryManagerOpened: (libraryManagerOpened) => {
+    return set({ libraryManagerOpened: libraryManagerOpened });
+  },
 }));

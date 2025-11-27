@@ -198,6 +198,8 @@
     --libraryManagerNodeIconSize: calc(var(--uiScale) * 1.6rem);
     --libraryManagerHeaderHeight: calc(var(--uiScale) * 2.18rem);
     --libraryManagerHeaderWidth: calc(var(--uiScale) * 240px * 0.8);
+    --libraryManagerHeaderText: calc(var(--uiScale) * 1rem);
+    --libraryManagerHeaderButtonSize: calc(var(--uiScale) * 1.5rem);
     --actionBarHeight: calc(var(--uiScale) * 2.4rem);
     --actionBarLogoSize: calc(var(--uiScale) * 1.8rem);
     --actionBarButtonIconSize: calc(var(--uiScale) * 1.4rem);
@@ -247,8 +249,6 @@
     --sidePanelWidth: calc(var(--uiScale) * 360px);
     --activityBarIconSize: calc(var(--uiScale) * 1.5rem);
     --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
-
-    --libraryManagerHeaderText: calc(var(--uiScale) * 1.1rem);
 
     --homePanelHeaderHeight: calc(var(--uiScale) * 6rem);
     --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
@@ -458,6 +458,7 @@
   --spacing-sidePanelWidth: var(--sidePanelWidth);
   --spacing-libraryManagerHeaderHeight: var(--libraryManagerHeaderHeight);
   --spacing-libraryManagerHeaderWidth: var(--libraryManagerHeaderWidth);
+  --spacing-libraryManagerHeaderButtonSize: var(--libraryManagerHeaderButtonSize);
 
   --spacing-libraryManagerNodeHeight: var(--libraryManagerNodeHeight);
   --spacing-libraryManagerAddButtonSize: var(--libraryManagerAddButtonSize);
