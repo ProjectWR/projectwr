@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import DirectoryItemNode from "./DirectoryItemNode";
+import LibraryDirectoryHeader from "./LibraryDirectoryHeader";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { checkForYTree, YTree } from "yjs-orderedtree";
@@ -109,38 +110,12 @@ const LibraryDirectory = ({ libraryId }) => {
       className={`h-full w-full flex flex-col items-center`}
     >
       {deviceType === "desktop" && (
-        <button
-          onClick={() => {
-            setFocusedItemId(null);
-          }}
-          id="LibraryDirectoryHeader"
-          className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis gap-2 px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  `}
-        >
-          <div className="h-fit min-h-fit max-h-full py-3 w-full flex items-center justify-start order-2">
-            <h1
-              className={`h-fit w-full grow pt-1 px-3 text-libraryManagerHeaderText text-appLayoutText order-2 ${
-                deviceType === "mobile" ? "ml-3" : ""
-              }
-                ${
-                  focusedItem === null &&
-                  "text-shadow-md text-shadow-appLayoutHighlight"
-                }
-              `}
-            >
-              <motion.p
-                animate={{
-                  textShadow:
-                    focusedItemId === null
-                      ? `0 0 10px hsl(var(--appLayoutTextMuted))`
-                      : "none",
-                }}
-                className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis"
-              >
-                {libraryPropsMapState.item_properties.item_title}
-              </motion.p>
-            </h1>
-          </div>
-        </button>
+        <div id="LibraryDirectoryHeaderContainer" className="h-fit min-h-libraryManagerHeaderHeight w-full p-2">
+          <LibraryDirectoryHeader
+            currentLibraryId={libraryId}
+            libraryPropsMapState={libraryPropsMapState}
+          />
+        </div>
       )}
       {deviceType === "mobile" && (
         <div
@@ -255,7 +230,7 @@ const LibraryDirectory = ({ libraryId }) => {
       </div>
 
       <div
-        id="LibraryDirectoryHeader"
+        id="LibraryDirectoryCreateHeader"
         className={`flex flex-col items-center justify-between h-fit min-h-fit mt-1 border-appLayoutBorder   z-1`}
       >
         <div className="h-fit min-h-fit py-1 px-1 w-full flex flex-row gap-2 items-center order-2">
