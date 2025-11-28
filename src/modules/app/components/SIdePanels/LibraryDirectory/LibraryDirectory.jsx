@@ -42,6 +42,33 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const [focusedItemId, setFocusedItemId] = useState(null);
 
+  // Only initialize library data refs if libraryId is not "unselected"
+  const libraryPropsMapRef = useRef(
+    libraryId !== "unselected"
+      ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+      : null
+  );
+  const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
+
+  /** @type {{current: YTree}} */
+  const libraryYTreeRef = useRef(libraryId);
+
+  /**
+   * @type {[Array<String>, function]}
+   */
+  const [sortedChildrenState, setSortedChildrenState] = useState(null);
+
+  const updateChildrenState = useCallback(() => {
+    if (libraryYTreeRef.current && libraryId !== "unselected") {
+      setSortedChildrenState(
+        libraryYTreeRef.current.sortChildrenByOrder(
+          libraryYTreeRef.current.getNodeChildrenFromKey("root"),
+          "root"
+        )
+      );
+    }
+  }, [libraryId]);
+
   useEffect(() => {
     if (
       focusedItem?.type === "libraries" &&
@@ -55,29 +82,12 @@ const LibraryDirectory = ({ libraryId }) => {
     console.log("Focused Item: ", focusedItemId);
   }, [focusedItemId]);
 
-  const libraryPropsMapRef = useRef(
-    dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-  );
-  const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
-
-  /** @type {{current: YTree}} */
-  const libraryYTreeRef = useRef(libraryId);
-
-  /**
-   * @type {[Array<String>, function]}
-   */
-  const [sortedChildrenState, setSortedChildrenState] = useState(null);
-
-  const updateChildrenState = useCallback(() => {
-    setSortedChildrenState(
-      libraryYTreeRef.current.sortChildrenByOrder(
-        libraryYTreeRef.current.getNodeChildrenFromKey("root"),
-        "root"
-      )
-    );
-  }, []);
-
   useEffect(() => {
+    // Skip data subscriptions if libraryId is "unselected"
+    if (libraryId === "unselected") {
+      return;
+    }
+
     if (
       !checkForYTree(
         dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
@@ -104,14 +114,43 @@ const LibraryDirectory = ({ libraryId }) => {
     };
   }, [libraryId, updateChildrenState]);
 
+  // Early return if libraryId is unselected to prevent rendering library content
+  if (libraryId === "unselected") {
+    return (
+      <div
+        id="LibraryDirectoryContainer"
+        className={`h-full w-full flex flex-col items-center`}
+      >
+        {deviceType === "desktop" && (
+          <div
+            id="LibraryDirectoryHeaderContainer"
+            className="h-fit min-h-fit w-full p-2"
+          >
+            <LibraryDirectoryHeader
+              currentLibraryId={libraryId}
+              libraryPropsMapState={libraryPropsMapState}
+            />
+          </div>
+        )}
+        <div className="grow w-full flex items-center justify-center">
+          <div className="text-appLayoutText text-lg">No Library Selected</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       id="LibraryDirectoryContainer"
       className={`h-full w-full flex flex-col items-center`}
     >
       {deviceType === "desktop" && (
-        <div id="LibraryDirectoryHeaderContainer" className="h-fit min-h-libraryManagerHeaderHeight w-full p-2">
+        <div
+          id="LibraryDirectoryHeaderContainer"
+          className="h-fit min-h-fit w-full p-2"
+        >
           <LibraryDirectoryHeader
+            key={`libraryDirectoryHeader`}
             currentLibraryId={libraryId}
             libraryPropsMapState={libraryPropsMapState}
           />

@@ -131,41 +131,40 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
     <div
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
-      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit min-h-libraryManagerHeaderHeight  border rounded-md flex-col transition-all duration-200 ease-in-out ${
+      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border rounded-md flex-col transition-all duration-200 ease-in-out ${
         libraryManagerOpened
           ? "border-appLayoutBorder bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="h-fit min-h-fit max-h-full w-full flex items-center justify-center ">
+      <div className="h-fit min-h-fit w-full flex items-center justify-center ">
         <div
-          className={`h-full w-full grow py-1 pl-3 pr-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
+          className={`h-fit w-full grow py-1 pl-3 pr-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
           <p className="max-w-full w-full h-fit  text-nowrap overflow-hidden text-ellipsis text-left">
-            {libraryPropsMapState.item_properties.item_title}
+            {libraryPropsMapState?.item_properties?.item_title ||
+              "Select a Library"}
           </p>
 
-          <button
-            onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
-            className="hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center"
-          >
-            <span
-              className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
-            ></span>
-          </button>
+          {currentLibraryId !== "unselected" && (
+            <button
+              onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
+              className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
+            >
+              <span
+                className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
+              ></span>
+            </button>
+          )}
         </div>
       </div>
 
       <AnimatePresence mode="wait">
-        <motion.div
+        <div
           className="w-full"
           key={libraryManagerOpened ? "openedDropdown" : "closedDropdown"}
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.1 }}
         >
-          {libraryManagerOpened && (
+          {(currentLibraryId == "unselected" || libraryManagerOpened) && (
             <>
               <div className="h-[0.5px] w-full px-2">
                 <div className="h-[0.5px] w-full bg-appLayoutBorder"></div>
@@ -177,8 +176,8 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
                 transition={{ duration: 0.2 }}
                 className="w-full overflow-hidden"
               >
-                <div className="h-fit w-full grid grid-cols-1">
-                  {sortedLibraryIds.map(
+                <div className="h-0 min-h-fit w-full flex flex-col">
+                  {sortedLibraryIds && sortedLibraryIds.map(
                     ([libraryId, props]) =>
                       appLibraryId != libraryId && (
                         <AnimatePresence key={libraryId} mode="wait">
@@ -235,15 +234,10 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
               </motion.div>
             </>
           )}
-        </motion.div>
+        </div>
       </AnimatePresence>
     </div>
   );
-};
-
-LibraryDirectoryHeader.propTypes = {
-  currentLibraryId: PropTypes.string.isRequired,
-  libraryPropsMapState: PropTypes.object.isRequired,
 };
 
 export default LibraryDirectoryHeader;

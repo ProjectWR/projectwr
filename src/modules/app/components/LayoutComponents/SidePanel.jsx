@@ -19,13 +19,8 @@ const SidePanel = ({}) => {
 
   const renderSidePanel = () => {
     if (activity === "libraries") {
-      if (libraryId !== "unselected") {
-        key.current = "librarySelected-" + libraryId;
-        return <LibraryDirectory libraryId={libraryId} />;
-      } else {
-        key.current = "libraryManager";
-        return <LibraryManager />;
-      }
+      key.current = "librarySelected-" + libraryId;
+      return <LibraryDirectory libraryId={libraryId} />;
     } else if (activity === "search") {
       key.current = "searchSelected-" + libraryId;
 

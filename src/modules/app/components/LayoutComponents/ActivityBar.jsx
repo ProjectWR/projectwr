@@ -70,8 +70,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                   activity,
                   libraryId
                 );
-
-                setLibraryId("unselected");
               }
             }}
             label={"Your Libraries"}

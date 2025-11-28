@@ -1,4 +1,4 @@
-import { useEffect, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 
 // Global registry: YMap instance -> { state, listeners, observer }
 const yMapStoreRegistry = new WeakMap();
@@ -46,10 +46,20 @@ function getOrCreateStore(yMap) {
 
 /**
  * Shared YMap hook: subscribes to YMap in a singleton way.
- * @param {Y.Map} yMap
+ * @param {Y.Map | null} yMap
  */
 export default function useSharedYMap(yMap) {
-  const store = getOrCreateStore(yMap);
+  // Create a stable dummy store for null yMap to avoid conditional hook calls
+  // IMPORTANT: getSnapshot must return a stable reference to prevent infinite re-renders
+  const dummyStore = useMemo(() => {
+    const emptyState = {};
+    return {
+      subscribe: () => () => {},
+      getSnapshot: () => emptyState,
+    };
+  }, []);
+
+  const store = yMap ? getOrCreateStore(yMap) : dummyStore;
   // useSyncExternalStore handles subscribe/getSnapshot
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }
