@@ -567,18 +567,18 @@ const DirectoryItemNode = ({
             rounded-r-sm
             ${isChildOfRoot && "rounded-l-sm"}
 
-          ${(() => {
-            const type = itemMapRef.current.get("type");
-            if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
-            if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
-            if (type === "section")
-              return "h-libraryDirectorySectionNodeHeight ";
-            if (type === "book") return "h-libraryDirectoryBookNodeHeight";
-            return "";
-          })()}
+            ${(() => {
+              const type = itemMapRef.current.get("type");
+              if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+              if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
+              if (type === "section")
+                return "h-libraryDirectorySectionNodeHeight ";
+              if (type === "book") return "h-libraryDirectoryBookNodeHeight";
+              return "";
+            })()}
 
-          transition-colors
-          duration-0
+              transition-colors
+              duration-0
 
         `}
             onMouseEnter={() => {

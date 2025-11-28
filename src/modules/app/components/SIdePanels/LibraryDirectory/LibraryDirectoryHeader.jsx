@@ -160,9 +160,17 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
       </div>
 
       <AnimatePresence mode="wait">
-        <div
+        <motion.div
           className="w-full"
-          key={libraryManagerOpened ? "openedDropdown" : "closedDropdown"}
+          key={
+            currentLibraryId == "unselected" || libraryManagerOpened
+              ? "opened"
+              : "closed"
+          }
+          initial={{ y: -10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -10, opacity: 0 }}
+          transition={{ duration: 0.1 }}
         >
           {(currentLibraryId == "unselected" || libraryManagerOpened) && (
             <>
@@ -176,53 +184,63 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
                 transition={{ duration: 0.2 }}
                 className="w-full overflow-hidden"
               >
-                <div className="h-0 min-h-fit w-full flex flex-col">
-                  {sortedLibraryIds && sortedLibraryIds.map(
-                    ([libraryId, props]) =>
-                      appLibraryId != libraryId && (
-                        <AnimatePresence key={libraryId} mode="wait">
-                          <motion.div
-                            initial={{
-                              opacity: 0,
-                            }}
-                            animate={{
-                              opacity: 1,
-                            }}
-                            exit={{
-                              opacity: 0,
-                            }}
-                            onMouseEnter={() => setLibraryHovered(libraryId)}
-                            onMouseLeave={() => setLibraryHovered(null)}
-                            transition={{ duration: 0.05 }}
+                <div className="h-fit w-full grid grid-cols-1">
+                  {sortedLibraryIds &&
+                    sortedLibraryIds.map(
+                      ([libraryId, props]) =>
+                        appLibraryId != libraryId && (
+                          <div
                             key={libraryId}
-                            className="text-libraryManagerHeaderText text-appLayoutTextMuted hover:text-appLayoutHighlight h-fit py-1 pl-3 w-full flex items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 group"
-                            onClick={() => handleLibrarySelect(libraryId)}
+                            id="DirectoryItemNodeContainer"
+                            className={`w-full h-fit`}
                           >
-                            <motion.div
-                              animate={{
-                                width:
-                                  libraryHovered === libraryId
-                                    ? "fit-content"
-                                    : 0,
-                                opacity: libraryHovered === libraryId ? 1 : 0,
-                              }}
-                              transition={{ duration: 0.1 }}
-                              className="h-full flex items-center justify-center"
-                            >
-                              <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
-                            </motion.div>
-                            <span className="grow">
-                              {props.item_properties.item_title}
-                            </span>
-                            <div className="flex items-center h-full pr-2">
-                              {libraryId === currentLibraryId && (
-                                <span className="icon-[material-symbols-light--check-rounded] w-libraryDirectorySectionNodeIconSize h-full text-appLayoutText"></span>
-                              )}
-                            </div>
-                          </motion.div>
-                        </AnimatePresence>
-                      )
-                  )}
+                            <AnimatePresence mode="wait">
+                              <motion.div
+                                initial={{
+                                  opacity: 0,
+                                }}
+                                animate={{
+                                  opacity: 1,
+                                }}
+                                exit={{
+                                  opacity: 0,
+                                }}
+                                onMouseEnter={() =>
+                                  setLibraryHovered(libraryId)
+                                }
+                                onMouseLeave={() => setLibraryHovered(null)}
+                                transition={{ duration: 0.05 }}
+                                key={libraryId}
+                                className="text-libraryManagerHeaderText h-[2.5rem] text-appLayoutTextMuted hover:text-appLayoutHighlight py-1 pl-3 w-full flex items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 group"
+                                onClick={() => handleLibrarySelect(libraryId)}
+                              >
+                                <motion.div
+                                  animate={{
+                                    width:
+                                      libraryHovered === libraryId
+                                        ? "fit-content"
+                                        : 0,
+                                    opacity:
+                                      libraryHovered === libraryId ? 1 : 0,
+                                  }}
+                                  transition={{ duration: 0.1 }}
+                                  className="h-full flex items-center justify-center"
+                                >
+                                  <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                                </motion.div>
+                                <span className="grow">
+                                  {props.item_properties.item_title}
+                                </span>
+                                <div className="flex items-center h-full pr-2">
+                                  {libraryId === currentLibraryId && (
+                                    <span className="icon-[material-symbols-light--check-rounded] w-libraryDirectorySectionNodeIconSize h-full text-appLayoutText"></span>
+                                  )}
+                                </div>
+                              </motion.div>
+                            </AnimatePresence>{" "}
+                          </div>
+                        )
+                    )}
                 </div>
                 <div className="h-[0.5px] w-full px-2">
                   <div className="h-[0.5px] w-full bg-appLayoutBorder"></div>
@@ -234,7 +252,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
               </motion.div>
             </>
           )}
-        </div>
+        </motion.div>
       </AnimatePresence>
     </div>
   );
