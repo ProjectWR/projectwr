@@ -3,7 +3,7 @@ Based on your README.md, plan.md, and the additional features you mentioned, her
 
 🔴 CRITICAL (BLOCKING RELEASE)
 Core Functionality
- Search Panel - Global search across all libraries/papers
+ ~~Search Panel - Global search across all libraries/papers~~ need to scope it to library
  Custom Dictionary - Finish the dictionary feature (I see DictionaryCreatePanel and DictionaryDetailsPanel exist)
  Delete Buttons - Add delete functionality where missing (items, notes, libraries, etc.)
  Context Menus - Right-click menus for common actions throughout the app

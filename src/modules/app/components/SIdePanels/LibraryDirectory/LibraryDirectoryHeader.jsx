@@ -112,6 +112,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
       }
       setPanelOpened(true);
       activatePanel("libraries", "details", [libraryId]);
+      setLibraryManagerOpened(false);
     },
     [setLibraryId, setItemId, setPanelOpened, deviceType, activatePanel]
   );
@@ -125,6 +126,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
     }
     setPanelOpened(true);
     activatePanel("libraries", "details", [newLibraryId]);
+    setLibraryManagerOpened(false);
   }, [setLibraryId, setPanelOpened, deviceType, activatePanel]);
 
   return (
@@ -211,7 +213,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
                                 onMouseLeave={() => setLibraryHovered(null)}
                                 transition={{ duration: 0.05 }}
                                 key={libraryId}
-                                className="text-libraryManagerHeaderText h-[2.5rem] text-appLayoutTextMuted hover:text-appLayoutHighlight py-1 pl-3 w-full flex items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 group"
+                                className="text-libraryManagerHeaderText h-fit text-appLayoutTextMuted hover:text-appLayoutHighlight py-1 pl-3 w-full flex items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 group"
                                 onClick={() => handleLibrarySelect(libraryId)}
                               >
                                 <motion.div

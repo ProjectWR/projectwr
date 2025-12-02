@@ -70,36 +70,64 @@ const HomePanel = () => {
   );
 
   return (
-    <AnimatePresence mode="wait">
-      <div
-        id="HomeContainer"
-        className={`h-full flex flex-col items-start justify-start mr-auto
-        ${deviceType === "mobile" && "w-full"}   
-        ${deviceType === "desktop" && "mt-0 pb-20 px-8 pt-8"}       
-      `}
-        style={
-          deviceType === "desktop" && {
-            width: `100%`,
-            minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-          }
-        }
-      >
+    <main className="w-full h-full flex flex-col items-center">
+      <AnimatePresence mode="wait">
         <div
-          id="HomeHeader"
-          className={`h-fit min-h-fit w-full flex flex-col items-start
+          id="HomeContainer"
+          className={`h-full w-full flex flex-col items-center justify-start
+            ${deviceType === "mobile" && "w-full"}   
+            ${deviceType === "desktop" && "mt-0 pb-20 px-8 pt-8"}       
+          `}
+          style={
+            deviceType === "desktop" && {
+              width: `var(--detailsPanelWidth)`,
+              maxWidth: `100%`,
+              minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+            }
+          }
+        >
+          <div
+            id="HomeHeader"
+            className={`h-fit min-h-fit w-full flex flex-col items-start
             ${deviceType === "desktop" && "px-6"}
           `}
-        >
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ bounce: 0 }}
-            className="text-homePanelHeaderFontSize select-none pointer-events-none"
           >
-            Calamus
-          </motion.h1>
-          {latestItems.length === 0 && (
-            <>
+            <motion.h1
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ bounce: 0 }}
+              className="text-homePanelHeaderFontSize select-none pointer-events-none"
+            >
+              Calamus
+            </motion.h1>
+            {latestItems.length === 0 && (
+              <>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5, bounce: 0 }}
+                  className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
+                >
+                  &nbsp;
+                  <q>
+                    The problems of the human heart in conflict with itself…
+                    alone can make good writing because only that is worth
+                    writing about, worth the agony and the sweat.
+                  </q>
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1, bounce: 0 }}
+                  className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
+                >
+                  <span className="grow"></span>
+                  <span className="w-fit">- Rohit Kottamasu</span>
+                </motion.p>
+              </>
+            )}
+
+            {latestItems.length > 0 && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -107,162 +135,138 @@ const HomePanel = () => {
                 className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
               >
                 &nbsp;
-                <q>
-                  The problems of the human heart in conflict with itself… alone
-                  can make good writing because only that is worth writing
-                  about, worth the agony and the sweat.
-                </q>
+                <q>A subtitle goes here</q>
               </motion.p>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1, bounce: 0 }}
-                className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
-              >
-                <span className="grow"></span>
-                <span className="w-fit">- Rohit Kottamasu</span>
-              </motion.p>
-            </>
-          )}
+            )}
+          </div>
 
-          {latestItems.length > 0 && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, bounce: 0 }}
-              className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
-            >
-              &nbsp;
-              <q>A subtitle goes here</q>
-            </motion.p>
-          )}
-        </div>
+          <div
+            id="HomeBody"
+            className="h-fit min-h-fit w-full font-sans flex flex-col items-center justify-start mt-6"
+          >
+            <AnimatePresence>
+              {latestItems.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full h-fit overflow-hidden rounded-lg"
+                >
+                  <div className={`h-fit w-full`}>
+                    <div className="w-full h-full flex flex-col items-center justify-start pt-3 pb-2 gap-1">
+                      <div className="h-fit w-full text-xl px-6 pb-2 flex items-center justify-between">
+                        <span>Recently Opened</span>
+                        <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
+                      </div>
+                      <div className="divider w-full px-3">
+                        <div className="w-full h-px bg-appLayoutBorder"></div>
+                      </div>{" "}
+                      {latestItems.map(({ itemIdLibraryId, props, type }) => {
+                        const itemId = itemIdLibraryId.split("::")[1];
 
-        <div
-          id="HomeBody"
-          className="h-fit min-h-fit w-full flex flex-col items-center justify-start mt-6"
-        >
-          <AnimatePresence>
-            {latestItems.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="w-full h-fit overflow-hidden rounded-lg"
-              >
-                <div className={`h-fit w-full`}>
-                  <div className="w-full h-full flex flex-col items-center justify-start pt-6 pb-5 gap-1">
-                    <div className="h-fit w-full text-3xl px-6 pb-2 flex items-center justify-between">
-                      <span>Recently Opened</span>
-                      <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
-                    </div>
-                    <div className="divider w-full px-3">
-                      <div className="w-full h-px bg-appLayoutBorder"></div>
-                    </div>{" "}
-                    {latestItems.map(({ itemIdLibraryId, props, type }) => {
+                        let name = "";
 
-                      const itemId = itemIdLibraryId.split("::")[1];
+                        /**
+                         * @type {YTree}
+                         */
+                        let ytree;
 
-                      let name = "";
+                        if (type !== "library") {
+                          if (
+                            !dataManagerSubdocs.getLibrary(props.libraryId) ||
+                            !checkForYTree(
+                              dataManagerSubdocs
+                                .getLibrary(props.libraryId)
+                                .getMap("library_directory")
+                            )
+                          ) {
+                            return null;
+                          }
 
-                      /**
-                       * @type {YTree}
-                       */
-                      let ytree;
-
-                      if (type !== "library") {
-                        if (
-                          !dataManagerSubdocs.getLibrary(props.libraryId) ||
-                          !checkForYTree(
+                          ytree = new YTree(
                             dataManagerSubdocs
                               .getLibrary(props.libraryId)
                               .getMap("library_directory")
-                          )
-                        ) {
-                          return null;
-                        }
+                          );
 
-                        ytree = new YTree(
-                          dataManagerSubdocs
+                          name = ytree
+                            .getNodeValueFromKey(itemId)
+                            .get("item_properties")["item_title"];
+                        } else {
+                          if (!dataManagerSubdocs.getLibrary(props.libraryId)) {
+                            return null;
+                          }
+                          name = dataManagerSubdocs
                             .getLibrary(props.libraryId)
-                            .getMap("library_directory")
-                        );
-
-                        name = ytree
-                          .getNodeValueFromKey(itemId)
-                          .get("item_properties")["item_title"];
-                      } else {
-                        if (!dataManagerSubdocs.getLibrary(props.libraryId)) {
-                          return null;
+                            .getMap("library_props")
+                            .get("item_properties")["item_title"];
                         }
-                        name = dataManagerSubdocs
-                          .getLibrary(props.libraryId)
-                          .getMap("library_props")
-                          .get("item_properties")["item_title"];
-                      }
 
-                      return (
-                        <div key={itemId} className="w-full h-fit px-3">
-                          <RecentlyOpenedItemButton
-                            name={name}
-                            itemId={itemId}
-                            props={props}
-                            type={type}
-                            onClick={() => {
-                              if (type === "library") {
-                                itemLocalStateManager.setItemOpened(
-                                  itemId,
-                                  itemId,
-                                  true
-                                );
-                                setLibraryId(itemId);
-                                setItemId("unselected");
-                                if (deviceType === "mobile") {
-                                  setPanelOpened(false);
+                        return (
+                          <div key={itemId} className="w-full h-fit px-3">
+                            <RecentlyOpenedItemButton
+                              name={name}
+                              itemId={itemId}
+                              props={props}
+                              type={type}
+                              onClick={() => {
+                                if (type === "library") {
+                                  itemLocalStateManager.setItemOpened(
+                                    itemId,
+                                    itemId,
+                                    true
+                                  );
+                                  setLibraryId(itemId);
+                                  setItemId("unselected");
+                                  if (deviceType === "mobile") {
+                                    setPanelOpened(false);
+                                  }
+                                  setPanelOpened(true);
+
+                                  activatePanel("libraries", "details", [
+                                    itemId,
+                                  ]);
                                 }
-                                setPanelOpened(true);
 
-                                activatePanel("libraries", "details", [itemId]);
-                              }
+                                if (
+                                  type === "book" ||
+                                  type === "paper" ||
+                                  type === "section"
+                                ) {
+                                  itemLocalStateManager.setItemAndParentsOpened(
+                                    props.libraryId,
+                                    itemId
+                                  );
 
-                              if (
-                                type === "book" ||
-                                type === "paper" ||
-                                type === "section"
-                              ) {
-                                itemLocalStateManager.setItemAndParentsOpened(
-                                  props.libraryId,
-                                  itemId
-                                );
-                              
-                                setLibraryId(props.libraryId);
-                                setItemId(itemId);
-                                setItemMode("details");
-                                if (deviceType === "mobile") {
-                                  setPanelOpened(false);
+                                  setLibraryId(props.libraryId);
+                                  setItemId(itemId);
+                                  setItemMode("details");
+                                  if (deviceType === "mobile") {
+                                    setPanelOpened(false);
+                                  }
+                                  setPanelOpened(true);
+
+                                  activatePanel("libraries", "details", [
+                                    props.libraryId,
+                                    itemId,
+                                  ]);
                                 }
-                                setPanelOpened(true);
 
-                                activatePanel("libraries", "details", [
-                                  props.libraryId,
-                                  itemId,
-                                ]);
-                              }
-
-                              setActivity("libraries");
-                            }}
-                          />
-                        </div>
-                      );
-                    })}
+                                setActivity("libraries");
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </main>
   );
 };
 
@@ -275,14 +279,10 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}
-      className="px-3 py-3 w-full h-fit flex items-center justify-between rounded-md font-serif text-recentlyOpenedNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
+      className="px-3 py-1 w-full h-fit flex items-center justify-between rounded-md font-sans text-recentlyOpenedNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
     >
       <span className="h-fit flex items-center gap-2">
-        <motion.span
-          transition={{ duration: 0.2 }}
-        >
-          {name}
-        </motion.span>
+        <motion.span transition={{ duration: 0.2 }}>{name}</motion.span>
         <span className="text-recentlyOpenedDateFontSize w-fit pt-1">
           {type}
         </span>

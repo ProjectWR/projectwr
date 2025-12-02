@@ -263,7 +263,7 @@ const SettingsPanel = () => {
             </form>
           </Modal>
 
-          <motion.div
+          {/* <motion.div
             id="AuthContainer"
             animate={{ height: "fit-content", display: "none" }}
             className="w-full"
@@ -272,8 +272,8 @@ const SettingsPanel = () => {
               {!user && (
                 <motion.div
                   key={"loggedOutComponent"}
-                  initial={{ opacity: 0 }}
-                  animate={{ height: "3rem", opacity: 1 }}
+                  initial={{  opacity: 0 }}
+                  animate={{ height: 0, opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="w-full flex rounded-md gap-1"
                 >
@@ -529,7 +529,7 @@ const SettingsPanel = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </motion.div> */}
 
           {/* <DetailsPanelDivider /> */}
 

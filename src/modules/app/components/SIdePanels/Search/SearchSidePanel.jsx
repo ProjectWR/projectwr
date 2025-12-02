@@ -80,7 +80,7 @@ const SearchSidePanel = ({}) => {
           </div>
         )}
         <div className="grow w-full flex items-center justify-center">
-          <div className="text-appLayoutText text-lg">No Library Selected</div>
+          <div className="text-appLayoutText text-lg"></div>
         </div>
       </div>
     );

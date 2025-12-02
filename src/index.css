@@ -213,8 +213,8 @@
     --actionBarResultNodeHeight: calc(var(--uiScale) * 2.5rem);
     --actionBarWindowButtonIconSize: calc(var(--uiScale) * 1.3rem);
     --actionBarResultDateFontSize: calc(var(--uiScale) * 1rem);
-    --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.5rem);
-    --recentlyOpenedDateFontSize: calc(var(--uiScale) * 1rem);
+    --recentlyOpenedNodeFontSize: calc(var(--uiScale) * 1.2rem);
+    --recentlyOpenedDateFontSize: calc(var(--uiScale) * 0.9rem);
     --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
     --breadcrumbHeight: calc(var(--uiScale) * 1.2rem);
@@ -458,7 +458,9 @@
   --spacing-sidePanelWidth: var(--sidePanelWidth);
   --spacing-libraryManagerHeaderHeight: var(--libraryManagerHeaderHeight);
   --spacing-libraryManagerHeaderWidth: var(--libraryManagerHeaderWidth);
-  --spacing-libraryManagerHeaderButtonSize: var(--libraryManagerHeaderButtonSize);
+  --spacing-libraryManagerHeaderButtonSize: var(
+    --libraryManagerHeaderButtonSize
+  );
 
   --spacing-libraryManagerNodeHeight: var(--libraryManagerNodeHeight);
   --spacing-libraryManagerAddButtonSize: var(--libraryManagerAddButtonSize);
