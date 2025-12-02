@@ -31,6 +31,7 @@ import Tokenizr from "tokenizr";
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import { DetailsPanelButton } from "../LayoutComponents/DetailsPanel/DetailsPanelButton";
+import ExportTreeComponent from "../LayoutComponents/DetailsPanel/ExportTreeComponent";
 
 let lexer = new Tokenizr();
 
@@ -210,6 +211,13 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
               itemProperties={itemProperties}
               setItemProperties={setItemProperties}
             />
+            {ytree && (
+              <ExportTreeComponent
+                ytree={ytree}
+                itemId={bookId}
+                libraryId={libraryId}
+              />
+            )}
             {/* <div className="prop w-full h-fit relative">
             <h2 className="w-full h-fit pt-2 px-3 border-t border-x border-appLayoutBorder rounded-t-md flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
               Book Description

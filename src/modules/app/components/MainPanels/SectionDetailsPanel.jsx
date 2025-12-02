@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
@@ -24,6 +23,7 @@ import {
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
+import ExportTreeComponent from "../LayoutComponents/DetailsPanel/ExportTreeComponent";
 
 /**
  *
@@ -126,6 +126,11 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
             <DetailsPanelDescriptionProp
               itemProperties={itemProperties}
               setItemProperties={setItemProperties}
+            />
+            <ExportTreeComponent
+              ytree={ytree}
+              itemId={sectionId}
+              libraryId={libraryId}
             />
           </DetailsPanelProperties>
         </DetailsPanelBody>
