@@ -117,7 +117,8 @@ export const appStore = create((set) => ({
   setProofreadContextItems: (proofreadContextItems) => {
     return set({ proofreadContextItems: proofreadContextItems });
   },
-  libraryManagerOpened: false,
+  
+  libraryManagerOpened: true,
   setLibraryManagerOpened: (libraryManagerOpened) => {
     return set({ libraryManagerOpened: libraryManagerOpened });
   },

@@ -10,12 +10,14 @@ import useMainPanel from "../../../hooks/useMainPanel";
 import { ScrollArea } from "@mantine/core";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import { queryData } from "../../../lib/search";
+import LibraryDirectoryHeader from "../LibraryDirectory/LibraryDirectoryHeader";
 
-const SearchSidePanel = ({ libraryId }) => {
-  console.log("Search Panel was rendered: ", libraryId);
+const SearchSidePanel = ({}) => {
   const { deviceType } = useDeviceType();
 
   const searchInputRef = useRef(null);
+
+  const libraryId = appStore((state) => state.libraryId);
 
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
@@ -45,7 +47,9 @@ const SearchSidePanel = ({ libraryId }) => {
   } = useStoreHistory();
 
   const libraryPropsMapRef = useRef(
-    dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+    libraryId !== "unselected"
+      ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+      : null
   );
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
@@ -57,37 +61,51 @@ const SearchSidePanel = ({ libraryId }) => {
     }
   }, [searchQuery]);
 
+  // Early return if libraryId is unselected to prevent rendering library content
+  if (libraryId === "unselected") {
+    return (
+      <div
+        id="SearchContainer"
+        className={`h-full w-full flex flex-col items-center`}
+      >
+        {deviceType === "desktop" && (
+          <div
+            id="LibraryDirectoryHeaderContainer"
+            className="h-fit min-h-fit w-full p-2"
+          >
+            <LibraryDirectoryHeader
+              currentLibraryId={libraryId}
+              libraryPropsMapState={libraryPropsMapState}
+            />
+          </div>
+        )}
+        <div className="grow w-full flex items-center justify-center">
+          <div className="text-appLayoutText text-lg">No Library Selected</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       id="SearchContainer"
       className={`h-full w-full flex flex-col items-center`}
     >
-      <div
-        id="SearchHeader"
-        className={`flex items-center justify-between px-1 h-libraryManagerHeaderHeight min-h-libraryManagerHeaderHeight border-appLayoutBorder  z-1`}
-      >
-        <div className="h-fit min-h-fit max-h-full py-3 w-full flex items-center justify-start order-2">
-          <h1
-            className={`h-fit w-full grow pt-1 px-3 text-libraryManagerHeaderText text-appLayoutText order-2 ${
-              deviceType === "mobile" ? "ml-3" : ""
-            }
-                ${"text-shadow-md text-shadow-appLayoutHighlight"}
-              `}
-          >
-            <motion.p
-              animate={{
-                textShadow: "none",
-              }}
-              className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis"
-            >
-              {libraryPropsMapState.item_properties.item_title}
-            </motion.p>
-          </h1>
+      {deviceType === "desktop" && (
+        <div
+          id="LibraryDirectoryHeaderContainer"
+          className="h-fit min-h-fit w-full p-2"
+        >
+          <LibraryDirectoryHeader
+            key={`libraryDirectoryHeader`}
+            currentLibraryId={libraryId}
+            libraryPropsMapState={libraryPropsMapState}
+          />
         </div>
-      </div>
+      )}
 
       <div className="divider w-full px-3">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
+        <div className="w-full h-[0.5px] bg-appLayoutBorder"></div>
       </div>
 
       <div
