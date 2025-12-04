@@ -27,6 +27,7 @@ import { DetailsPanelButtonOnClick } from "./DetailsPanel/DetailsPanelSubmitButt
 import { mainPanelStore } from "../../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
 import { getOrInitLibraryYTree } from "../../lib/ytree";
+import DictionaryPanel from "../MainPanels/DictionaryPanel";
 
 const MainPanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -281,15 +282,7 @@ const MainPanel = ({}) => {
         );
       }
     } else if (panelType === "dictionary") {
-      if (mode === "create") {
-        key.current = "Dictionary-" + mode;
-        return <DictionaryCreatePanel />;
-      }
-
-      if (mode === "details") {
-        key.current = "Dictionary-" + rootId + "-" + mode;
-        return <DictionaryDetailsPanel word={rootId} />;
-      }
+      return <DictionaryPanel />;
     } else if (panelType === "settings") {
       key.current = "settings";
       return <SettingsPanel />;

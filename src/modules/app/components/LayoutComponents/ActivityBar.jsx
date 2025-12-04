@@ -133,7 +133,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             }
             flexValue={"grow-1"}
           /> */}
-          <ActivityButton
+          {/* <ActivityButton
             onClick={() => {
               if (activity !== "dictionary") {
                 setActivity("dictionary");
@@ -149,7 +149,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
               <span className="icon-[material-symbols-light--match-word-rounded]  h-activityBarIconSize w-activityBarIconSize"></span>
             }
             flexValue={"grow-1"}
-          />
+          /> */}
           {deviceType === "mobile" && (
             <ActivityButton
               onClick={() => {

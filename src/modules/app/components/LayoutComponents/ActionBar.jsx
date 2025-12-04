@@ -340,7 +340,9 @@ const SearchBar = () => {
               .toSorted((a, b) => {
                 if (!itemLocalStateManager.getLastOpened(a.libraryId, a.id)) {
                   return false;
-                } else if (!itemLocalStateManager.getLastOpened(b.libraryId, b.id)) {
+                } else if (
+                  !itemLocalStateManager.getLastOpened(b.libraryId, b.id)
+                ) {
                   return true;
                 } else {
                   return (
@@ -409,7 +411,10 @@ const SearchBar = () => {
                     <span> {item_properties.item_title}</span>
                     <span className="ml-auto text-appLayoutTextMuted text-actionBarResultDateFontSize">
                       {new Date(
-                        itemLocalStateManager.getLastOpened(result.libraryId, result.id)
+                        itemLocalStateManager.getLastOpened(
+                          result.libraryId,
+                          result.id
+                        )
                       ).toLocaleString()}
                     </span>
                   </HoverListButton>
@@ -529,21 +534,23 @@ export const ActionBarLeftSide = ({}) => {
             <div className={`w-full h-full bg-appLayoutBorder`}></div>
           </div>
         </div>
-        {/* <ActionButton
-          onClick={() => {}}
+        <ActionButton
+          onClick={() => {
+            activatePanel("dictionary", null, []);
+          }}
           className={`${false && "bg-appLayoutPressed"}`}
         >
-          <div className={`h-full w-actionBarButtonIconSize relative`}>
+          <div className={`h-full pt-px w-actionBarButtonIconSize relative`}>
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
               key="searchButton"
-              className="icon-[material-symbols-light--search] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              className="icon-[material-symbols-light--match-word-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
             ></motion.span>
           </div>
-        </ActionButton> */}
+        </ActionButton>
         <div className="grow basis-0 min-w-0"></div>
 
         <div className="w-px min-w-px h-full py-2">

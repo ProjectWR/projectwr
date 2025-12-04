@@ -521,7 +521,7 @@ const TabButton = ({
       setIcon(
         <span className="icon-[material-symbols-light--match-word-rounded] w-full h-full"></span>
       );
-      setLabel(rootId);
+      setLabel("Dictionary");
     } else if (panelType === "settings") {
       setIcon(
         <span className="icon-[material-symbols-light--settings] w-full h-full"></span>
