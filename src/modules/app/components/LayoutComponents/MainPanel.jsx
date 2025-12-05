@@ -459,10 +459,6 @@ const MainPanel = ({}) => {
       <AnimatePresence mode="wait">
         <motion.div
           key={key.current}
-          initial={{ y: -5, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 5, opacity: 0 }}
-          transition={{ duration: 0.1 }}
           className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
         >
           <ErrorBoundary
