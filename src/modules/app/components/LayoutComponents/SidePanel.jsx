@@ -7,6 +7,7 @@ import LibraryDirectory from "../SidePanels/LibraryDirectory/LibraryDirectory";
 import TemplateManager from "../SidePanels/TemplateManager/TemplateManager";
 import DictionaryManager from "../SidePanels/DictionaryManager/DictionaryManager";
 import SearchSidePanel from "../SIdePanels/Search/SearchSidePanel";
+import LibraryDirectoryHeader from "../SIdePanels/LibraryDirectory/LibraryDirectoryHeader";
 
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
@@ -43,16 +44,29 @@ const SidePanel = ({}) => {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
-        key={key.current}
-        initial={{ x: -10, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 10, opacity: 0 }}
-        transition={{ duration: 0.1, bounce: 0 }}
-        className="w-full h-full z-[49]"
-      >
-        {renderSidePanel()}
-      </motion.div>
+      <div className="w-full h-full z-[49] flex flex-col items-center">
+        {deviceType === "desktop" && (
+          <div
+            id="LibraryDirectoryHeaderContainer"
+            className="h-fit min-h-fit w-full p-2"
+          >
+            <LibraryDirectoryHeader
+              key={`libraryDirectoryHeader`}
+              currentLibraryId={libraryId}
+            />
+          </div>
+        )}
+        <motion.div
+          key={key.current}
+          initial={{ x: -10, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 10, opacity: 0 }}
+          transition={{ duration: 0.1, bounce: 0 }}
+          className="w-full grow z-[49]"
+        >
+          {renderSidePanel()}
+        </motion.div>
+      </div>
     </AnimatePresence>
   );
 };

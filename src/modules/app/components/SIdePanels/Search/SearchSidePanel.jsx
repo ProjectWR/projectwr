@@ -68,7 +68,7 @@ const SearchSidePanel = ({}) => {
         id="SearchContainer"
         className={`h-full w-full flex flex-col items-center`}
       >
-        {deviceType === "desktop" && (
+        {false && deviceType === "desktop" && (
           <div
             id="LibraryDirectoryHeaderContainer"
             className="h-fit min-h-fit w-full p-2"
@@ -91,7 +91,7 @@ const SearchSidePanel = ({}) => {
       id="SearchContainer"
       className={`h-full w-full flex flex-col items-center`}
     >
-      {deviceType === "desktop" && (
+      {false && deviceType === "desktop" && (
         <div
           id="LibraryDirectoryHeaderContainer"
           className="h-fit min-h-fit w-full p-2"

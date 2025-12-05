@@ -19,7 +19,7 @@ import { equalityDeep } from "lib0/function";
 import { setupSearchForLibrary } from "../../../lib/search";
 import useMainPanel from "../../../hooks/useMainPanel";
 
-const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
+const LibraryDirectoryHeader = ({}) => {
   const { deviceType } = useDeviceType();
 
   const appLibraryId = appStore((state) => state.libraryId);
@@ -114,7 +114,14 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
       activatePanel("libraries", "details", [libraryId]);
       setLibraryManagerOpened(false);
     },
-    [setLibraryId, setItemId, setPanelOpened, deviceType, activatePanel]
+    [
+      setLibraryId,
+      setItemId,
+      deviceType,
+      setPanelOpened,
+      activatePanel,
+      setLibraryManagerOpened,
+    ]
   );
 
   const handleCreateLibrary = useCallback(() => {
@@ -127,7 +134,13 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
     setPanelOpened(true);
     activatePanel("libraries", "details", [newLibraryId]);
     setLibraryManagerOpened(false);
-  }, [setLibraryId, setPanelOpened, deviceType, activatePanel]);
+  }, [
+    setLibraryId,
+    deviceType,
+    setPanelOpened,
+    activatePanel,
+    setLibraryManagerOpened,
+  ]);
 
   return (
     <div
@@ -144,11 +157,12 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
           className={`h-fit w-full grow py-1 pl-3 pr-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
           <p className="max-w-full w-full h-fit  text-nowrap overflow-hidden text-ellipsis text-left">
-            {libraryPropsMapState?.item_properties?.item_title ||
-              "Select a Library"}
+            {libraryIdsWithProps.find(
+              (library) => library[0] === appLibraryId
+            )?.[1]?.item_properties?.item_title || "Select a Library"}
           </p>
 
-          {currentLibraryId !== "unselected" && (
+          {appLibraryId !== "unselected" && (
             <button
               onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
               className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
@@ -165,7 +179,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
         <motion.div
           className="w-full"
           key={
-            currentLibraryId == "unselected" || libraryManagerOpened
+            appLibraryId == "unselected" || libraryManagerOpened
               ? "opened"
               : "closed"
           }
@@ -174,7 +188,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.1 }}
         >
-          {(currentLibraryId == "unselected" || libraryManagerOpened) && (
+          {(appLibraryId == "unselected" || libraryManagerOpened) && (
             <>
               <div className="h-[0.5px] w-full px-2">
                 <div className="h-[0.5px] w-full bg-appLayoutBorder"></div>
@@ -234,7 +248,7 @@ const LibraryDirectoryHeader = ({ currentLibraryId, libraryPropsMapState }) => {
                                   {props.item_properties.item_title}
                                 </span>
                                 <div className="flex items-center h-full pr-2">
-                                  {libraryId === currentLibraryId && (
+                                  {libraryId === appLibraryId && (
                                     <span className="icon-[material-symbols-light--check-rounded] w-libraryDirectorySectionNodeIconSize h-full text-appLayoutText"></span>
                                   )}
                                 </div>
