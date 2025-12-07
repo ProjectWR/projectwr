@@ -239,6 +239,15 @@ class DataManagerSubdocs {
   }
 
   /**
+  * @param {YTree} ytree 
+  * @param {string} itemId 
+   */
+  deleteItem(ytree, itemId) {
+    ytree.deleteNodeAndDescendants(itemId);
+    itemLocalStateManager.deleteItemLocalState(itemId);
+  }
+
+  /**
   * 
   * @param {YTree} ytree 
   * @param {string} parentId 

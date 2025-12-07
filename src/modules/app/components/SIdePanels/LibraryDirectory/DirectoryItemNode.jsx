@@ -390,6 +390,21 @@ const DirectoryItemNode = ({
             dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
           },
         },
+
+        {
+          isDivider: true,
+        },
+
+        {
+          label: "Delete",
+          icon: (
+            <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("delete item button");
+            dataManagerSubdocs.deleteItem(ytree, itemId);
+          },
+        },
       ];
     }
 
@@ -472,6 +487,21 @@ const DirectoryItemNode = ({
             );
           },
         },
+
+        {
+          isDivider: true,
+        },
+
+        {
+          label: "Delete",
+          icon: (
+            <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("delete paper button");
+            dataManagerSubdocs.deleteItem(ytree, itemId);
+          },
+        },
       ];
     }
 
@@ -500,6 +530,21 @@ const DirectoryItemNode = ({
 
               activatePanel("libraries", "details", [libraryId, itemId]);
             }
+          },
+        },
+
+        {
+          isDivider: true,
+        },
+
+        {
+          label: "Delete",
+          icon: (
+            <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            console.log("delete note button");
+            dataManagerSubdocs.deleteItem(ytree, itemId);
           },
         },
       ];

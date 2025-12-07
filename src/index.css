@@ -703,7 +703,7 @@ input[type="number"] {
   }
 
   .contextMenuSeparator {
-    @apply h-px bg-appLayoutBorder m-px;
+    @apply h-[1px] bg-appLayoutBorder m-px;
   }
 
   .rightSlot {
