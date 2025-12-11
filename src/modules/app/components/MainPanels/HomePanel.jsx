@@ -154,7 +154,7 @@ const HomePanel = () => {
                 >
                   <div className={`h-fit w-full`}>
                     <div className="w-full h-full flex flex-col items-center justify-start pt-3 pb-2 gap-1">
-                      <div className="h-fit w-full text-xl px-6 pb-2 flex items-center justify-between">
+                      <div className="h-f it w-full text-xl px-6 pb-2 flex items-center justify-between">
                         <span>Recently Opened</span>
                         <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
                       </div>
@@ -163,47 +163,54 @@ const HomePanel = () => {
                       </div>{" "}
                       {latestItems.map(({ itemIdLibraryId, props, type }) => {
                         const itemId = itemIdLibraryId.split("::")[1];
+                        const libraryId = itemIdLibraryId.split("::")[0];
 
                         let name = "";
 
-                        /**
-                         * @type {YTree}
-                         */
-                        let ytree;
+                        try {
 
-                        if (type !== "library") {
-                          if (
-                            !dataManagerSubdocs.getLibrary(props.libraryId) ||
-                            !checkForYTree(
+                          /**
+                           * @type {YTree}
+                           */
+                          let ytree;
+
+                          if (type !== "library") {
+                            if (
+                              !dataManagerSubdocs.getLibrary(libraryId) ||
+                              !checkForYTree(
+                                dataManagerSubdocs
+                                  .getLibrary(libraryId)
+                                  .getMap("library_directory")
+                              )
+                            ) {
+                              return null;
+                            }
+
+                            ytree = new YTree(
                               dataManagerSubdocs
-                                .getLibrary(props.libraryId)
+                                .getLibrary(libraryId)
                                 .getMap("library_directory")
-                            )
-                          ) {
-                            return null;
-                          }
+                            );
 
-                          ytree = new YTree(
-                            dataManagerSubdocs
-                              .getLibrary(props.libraryId)
-                              .getMap("library_directory")
-                          );
-
-                          name = ytree
-                            .getNodeValueFromKey(itemId)
-                            .get("item_properties")["item_title"];
-                        } else {
-                          if (!dataManagerSubdocs.getLibrary(props.libraryId)) {
-                            return null;
+                            name = ytree
+                              .getNodeValueFromKey(itemId)
+                              .get("item_properties")["item_title"];
+                          } else {
+                            if (!dataManagerSubdocs.getLibrary(libraryId)) {
+                              return null;
+                            }
+                            name = dataManagerSubdocs
+                              .getLibrary(libraryId)
+                              .getMap("library_props")
+                              .get("item_properties")["item_title"];
                           }
-                          name = dataManagerSubdocs
-                            .getLibrary(props.libraryId)
-                            .getMap("library_props")
-                            .get("item_properties")["item_title"];
+                        }
+                        catch (e) {
+                          return null;
                         }
 
                         return (
-                          <div key={itemId} className="w-full h-fit px-3">
+                          <div key={itemIdLibraryId} className="w-full h-fit px-3">
                             <RecentlyOpenedItemButton
                               name={name}
                               itemId={itemId}
@@ -276,6 +283,7 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
   const [hover, setHover] = useState(false);
   return (
     <button
+      id={itemId}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}

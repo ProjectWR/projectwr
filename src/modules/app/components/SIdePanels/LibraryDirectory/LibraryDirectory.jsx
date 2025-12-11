@@ -15,6 +15,7 @@ import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { ScrollArea } from "@mantine/core";
+import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
@@ -289,7 +290,9 @@ const LibraryDirectory = ({ libraryId }) => {
               setPanelOpened(true);
             }}
           >
-            <span className="icon-[bitcoin-icons--edit-outline] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            <StyledTooltip label="Edit Properties" position="bottom">
+              <span className="icon-[bitcoin-icons--edit-outline] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </StyledTooltip>
           </button>
 
           <button
@@ -313,7 +316,9 @@ const LibraryDirectory = ({ libraryId }) => {
               itemLocalStateManager.setItemOpened(libraryId, bookId, true);
             }}
           >
-            <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            <StyledTooltip label="Create Book" position="bottom">
+              <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </StyledTooltip>
           </button>
 
           <button
@@ -373,7 +378,9 @@ const LibraryDirectory = ({ libraryId }) => {
               itemLocalStateManager.setItemOpened(libraryId, sectionId, true);
             }}
           >
-            <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            <StyledTooltip label="Create Section" position="bottom">
+              <span className="icon-[fluent--folder-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </StyledTooltip>
           </button>
 
           <button
@@ -433,7 +440,9 @@ const LibraryDirectory = ({ libraryId }) => {
               itemLocalStateManager.setItemOpened(libraryId, paperId, true);
             }}
           >
-            <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            <StyledTooltip label="Create Paper" position="bottom">
+              <span className="icon-[fluent--document-one-page-add-24-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </StyledTooltip>
           </button>
 
           <button
@@ -493,7 +502,9 @@ const LibraryDirectory = ({ libraryId }) => {
               itemLocalStateManager.setItemOpened(libraryId, noteId, true);
             }}
           >
-            <span className="icon-[fluent--square-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            <StyledTooltip label="Create Note" position="bottom">
+              <span className="icon-[fluent--square-add-20-regular] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+            </StyledTooltip>
           </button>
         </div>
       </div>

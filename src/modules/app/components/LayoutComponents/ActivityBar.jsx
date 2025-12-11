@@ -91,6 +91,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
 
                 setPanelOpened(false);
               }}
+              label={"Home"}
               activity={activity}
               selectedActivity={"home"}
               deviceType={deviceType}
@@ -159,6 +160,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
 
                 setPanelOpened(false);
               }}
+              label={"Settings"}
               activity={activity}
               selectedActivity={"settings"}
               deviceType={deviceType}

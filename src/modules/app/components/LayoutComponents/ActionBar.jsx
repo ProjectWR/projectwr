@@ -19,6 +19,7 @@ import {
 import useMainPanel from "../../hooks/useMainPanel";
 import { YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
+import { StyledTooltip } from "./StyledTooltip";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
@@ -80,30 +81,32 @@ const ActionBar = () => {
           </div>
 
           <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
-            <div className="h-full w-actionBarButtonIconSize relative">
-              <AnimatePresence mode="sync">
-                {sideBarOpened && (
-                  <motion.span
-                    initial={{ opacity: 0.6 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0.6 }}
-                    transition={{ duration: 0.05 }}
-                    key="sideBarOpened"
-                    className="icon-[tabler--layout-sidebar-left-collapse-filled] w-full h-full top-0 left-0 absolute bg-appLayoutTextMuted"
-                  ></motion.span>
-                )}
-                {!sideBarOpened && (
-                  <motion.span
-                    initial={{ opacity: 0.6 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0.6 }}
-                    transition={{ duration: 0.05 }}
-                    key="sideBarClosed"
-                    className="icon-[tabler--layout-sidebar-left-expand] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-                  ></motion.span>
-                )}
-              </AnimatePresence>
-            </div>
+            <StyledTooltip label="Toggle Sidebar">
+              <div className="h-full w-actionBarButtonIconSize relative">
+                <AnimatePresence mode="sync">
+                  {sideBarOpened && (
+                    <motion.span
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.6 }}
+                      transition={{ duration: 0.05 }}
+                      key="sideBarOpened"
+                      className="icon-[tabler--layout-sidebar-left-collapse-filled] w-full h-full top-0 left-0 absolute bg-appLayoutTextMuted"
+                    ></motion.span>
+                  )}
+                  {!sideBarOpened && (
+                    <motion.span
+                      initial={{ opacity: 0.6 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.6 }}
+                      transition={{ duration: 0.05 }}
+                      key="sideBarClosed"
+                      className="icon-[tabler--layout-sidebar-left-expand] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                    ></motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
+            </StyledTooltip>
           </ActionButton>
 
           <ActionButton
@@ -112,16 +115,18 @@ const ActionBar = () => {
             }}
             className={`${false && "bg-appLayoutPressed"}`}
           >
-            <div className={`h-full w-actionBarButtonIconSize relative`}>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="homeButton"
-                className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
+            <StyledTooltip label="Home">
+              <div className={`h-full w-actionBarButtonIconSize relative`}>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="homeButton"
+                  className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                ></motion.span>
+              </div>
+            </StyledTooltip>
           </ActionButton>
         </div>
 
@@ -134,16 +139,18 @@ const ActionBar = () => {
             }}
             disabled={!canGoBack}
           >
-            <div className="h-full w-actionBarButtonIconSize relative">
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: canGoBack ? 1 : 0.6 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="historyGoBack"
-                className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
+            <StyledTooltip label="Go Back">
+              <div className="h-full w-actionBarButtonIconSize relative">
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: canGoBack ? 1 : 0.6 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="historyGoBack"
+                  className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                ></motion.span>
+              </div>
+            </StyledTooltip>
           </ActionButton>
           <ActionButton
             onClick={() => {
@@ -153,39 +160,43 @@ const ActionBar = () => {
             }}
             disabled={!canGoForward}
           >
-            <div className="h-full w-actionBarButtonIconSize relative">
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: canGoForward ? 1 : 0.6 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="historyGoForward"
-                className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
+            <StyledTooltip label="Go Forward">
+              <div className="h-full w-actionBarButtonIconSize relative">
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: canGoForward ? 1 : 0.6 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  key="historyGoForward"
+                  className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                ></motion.span>
+              </div>
+            </StyledTooltip>
           </ActionButton>
           <SearchBar />
         </div>
 
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
-            <ActionButton
-              onClick={() => {
-                activatePanel("settings", null, []);
-              }}
-              className={`${false && "bg-appLayoutPressed"}`}
-            >
-              <div className={`h-full w-actionBarButtonIconSize relative`}>
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  key="settingsButton"
-                  className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-                ></motion.span>
-              </div>
-            </ActionButton>
+            <StyledTooltip label="Settings">
+              <ActionButton
+                onClick={() => {
+                  activatePanel("settings", null, []);
+                }}
+                className={`${false && "bg-appLayoutPressed"}`}
+              >
+                <div className={`h-full w-actionBarButtonIconSize relative`}>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    key="settingsButton"
+                    className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                  ></motion.span>
+                </div>
+              </ActionButton>
+            </StyledTooltip>
           </div>
 
           {deviceType !== "mobile" && (
@@ -193,7 +204,9 @@ const ActionBar = () => {
               <WindowButton
                 className={``}
                 buttonContent={
-                  <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  <StyledTooltip label="Minimize">
+                    <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  </StyledTooltip>
                 }
                 onClick={() => {
                   appWindow.minimize();
@@ -202,11 +215,13 @@ const ActionBar = () => {
               <WindowButton
                 className={``}
                 buttonContent={
-                  isMaximized ? (
-                    <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                  ) : (
-                    <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                  )
+                  <StyledTooltip label={isMaximized ? "Restore" : "Maximize"}>
+                    {isMaximized ? (
+                      <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                    ) : (
+                      <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                    )}
+                  </StyledTooltip>
                 }
                 onClick={() => {
                   appWindow.toggleMaximize();
@@ -216,7 +231,9 @@ const ActionBar = () => {
                 destructive={true}
                 className={``}
                 buttonContent={
-                  <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  <StyledTooltip label="Close">
+                    <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                  </StyledTooltip>
                 }
                 onClick={() => {
                   appWindow.close();
@@ -500,33 +517,35 @@ export const ActionBarLeftSide = ({}) => {
             style={{
               width: `calc(var(--activityBarWidth) - 1px)`,
             }}
-            className="h-full flex items-center justify-center"
+            className="h-full z-[2] flex items-center justify-center"
           >
             <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
-              <div className="h-full w-actionBarButtonIconSize relative">
-                <AnimatePresence mode="sync">
-                  {sideBarOpened && (
-                    <motion.span
-                      initial={{ opacity: 0.6 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0.6 }}
-                      transition={{ duration: 0.05 }}
-                      key="sideBarOpened"
-                      className="icon-[tabler--layout-sidebar-left-collapse-filled] w-full h-full top-0 left-0 absolute bg-appLayoutTextMuted"
-                    ></motion.span>
-                  )}
-                  {!sideBarOpened && (
-                    <motion.span
-                      initial={{ opacity: 0.6 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0.6 }}
-                      transition={{ duration: 0.05 }}
-                      key="sideBarClosed"
-                      className="icon-[tabler--layout-sidebar-left-expand] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-                    ></motion.span>
-                  )}
-                </AnimatePresence>
-              </div>
+              <StyledTooltip label="Toggle Sidebar">
+                <div className="h-full w-actionBarButtonIconSize relative">
+                  <AnimatePresence mode="sync">
+                    {sideBarOpened && (
+                      <motion.span
+                        initial={{ opacity: 0.6 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0.6 }}
+                        transition={{ duration: 0.05 }}
+                        key="sideBarOpened"
+                        className="icon-[tabler--layout-sidebar-left-collapse-filled] w-full h-full top-0 left-0 absolute bg-appLayoutTextMuted"
+                      ></motion.span>
+                    )}
+                    {!sideBarOpened && (
+                      <motion.span
+                        initial={{ opacity: 0.6 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0.6 }}
+                        transition={{ duration: 0.05 }}
+                        key="sideBarClosed"
+                        className="icon-[tabler--layout-sidebar-left-expand] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                      ></motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </StyledTooltip>
             </ActionButton>
           </div>
 
@@ -538,18 +557,20 @@ export const ActionBarLeftSide = ({}) => {
           onClick={() => {
             activatePanel("dictionary", null, []);
           }}
-          className={`${false && "bg-appLayoutPressed"}`}
+          className={`${false && "z-[1] bg-appLayoutPressed"}`}
         >
-          <div className={`h-full pt-px w-actionBarButtonIconSize relative`}>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="searchButton"
-              className="icon-[material-symbols-light--match-word-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-            ></motion.span>
-          </div>
+          <StyledTooltip label="Dictionary">
+            <div className={`h-full pt-px w-actionBarButtonIconSize relative`}>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="searchButton"
+                className="icon-[material-symbols-light--match-word-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </StyledTooltip>
         </ActionButton>
         <div className="grow basis-0 min-w-0"></div>
 
@@ -573,7 +594,7 @@ export const ActionBarRightSide = ({}) => {
     canGoForward,
     goForward,
     clearFuture,
-  } = useStoreHistory();
+  } = useStoreHistory();  
 
   const { activatePanel } = useMainPanel();
 
@@ -642,23 +663,25 @@ export const ActionBarRightSide = ({}) => {
         <div className="grow"></div>
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
-            <ActionButton
-              onClick={() => {
-                activatePanel("settings", null, []);
-              }}
-              className={`${false && "bg-appLayoutPressed"}`}
-            >
-              <div className={`h-full w-actionBarButtonIconSize relative`}>
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  key="settingsButton"
-                  className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-                ></motion.span>
-              </div>
-            </ActionButton>
+            <StyledTooltip label="Settings">
+              <ActionButton
+                onClick={() => {
+                  activatePanel("settings", null, []);
+                }}
+                className={`${false && "bg-appLayoutPressed"}`}
+              >
+                <div className={`h-full w-actionBarButtonIconSize relative`}>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    key="settingsButton"
+                    className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                  ></motion.span>
+                </div>
+              </ActionButton>
+            </StyledTooltip>
           </div>
 
           {deviceType !== "mobile" && (
@@ -666,7 +689,9 @@ export const ActionBarRightSide = ({}) => {
               <WindowButton
                 className={``}
                 buttonContent={
-                  <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                  <StyledTooltip label="Minimize" position="bottom">
+                    <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                  </StyledTooltip>
                 }
                 onClick={() => {
                   appWindow.minimize();
@@ -675,11 +700,13 @@ export const ActionBarRightSide = ({}) => {
               <WindowButton
                 className={``}
                 buttonContent={
-                  isMaximized ? (
-                    <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
-                  ) : (
-                    <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
-                  )
+                  <StyledTooltip label={isMaximized ? "Restore" : "Maximize"} position="bottom">
+                    {isMaximized ? (
+                      <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                    ) : (
+                      <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                    )}
+                  </StyledTooltip>
                 }
                 onClick={() => {
                   appWindow.toggleMaximize();
@@ -689,7 +716,9 @@ export const ActionBarRightSide = ({}) => {
                 destructive={true}
                 className={``}
                 buttonContent={
-                  <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                  <StyledTooltip label="Close" position="bottom">
+                    <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                  </StyledTooltip>
                 }
                 onClick={() => {
                   appWindow.close();

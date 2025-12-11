@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../stores/appStore";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { ActionButton } from "./ActionBar";
+import { StyledTooltip } from "./StyledTooltip";
 
 export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   /**
@@ -103,16 +104,18 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           }}
           className={`${false && "bg-appLayoutPressed"}`}
         >
-          <div className={`h-full w-actionBarButtonIconSize relative`}>
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="homeButton"
-              className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-            ></motion.span>
-          </div>
+          <StyledTooltip label="Home" position="bottom">
+            <div className={`h-full w-actionBarButtonIconSize relative`}>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="homeButton"
+                className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </StyledTooltip>
         </ActionButton>
 
         <ActionButton
@@ -123,17 +126,20 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           }}
           disabled={!canGoBack}
         >
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: canGoBack ? 1 : 0.6 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="historyGoBack"
-              className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-            ></motion.span>
-          </div>
+          <StyledTooltip label="Go Back" position="bottom">
+            <div className="h-full w-actionBarButtonIconSize relative">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: canGoBack ? 1 : 0.6 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="historyGoBack"
+                className="icon-[material-symbols-light--arrow-back-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </StyledTooltip>
         </ActionButton>
+
         <ActionButton
           onClick={() => {
             if (canGoForward) {
@@ -142,16 +148,18 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           }}
           disabled={!canGoForward}
         >
-          <div className="h-full w-actionBarButtonIconSize relative">
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: canGoForward ? 1 : 0.6 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-              key="historyGoForward"
-              className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-            ></motion.span>
-          </div>
+          <StyledTooltip label="Go Forward" position="bottom">
+            <div className="h-full w-actionBarButtonIconSize relative">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: canGoForward ? 1 : 0.6 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="historyGoForward"
+                className="icon-[material-symbols-light--arrow-forward-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </StyledTooltip>
         </ActionButton>
       </div>
       <ScrollArea
@@ -734,29 +742,31 @@ const NotesPanelOpenButton = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           }}
           className={`${false && "bg-appLayoutPressed"}`}
         >
-          <div className={`h-full w-actionBarButtonIconSize relative`}>
-            <AnimatePresence mode="wait">
-              {notesPanelOpened && (isMd || isNotesPanelAwake) ? (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  key="homeButton"
-                  className="icon-[solar--telescope-bold] w-[100%] h-[100%]"
-                ></motion.span>
-              ) : (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  key="homeButton"
-                  className="icon-[solar--telescope-bold-duotone] w-[100%] h-[100%]"
-                ></motion.span>
-              )}
-            </AnimatePresence>
-          </div>
+          <StyledTooltip label="Toggle Notes Panel">
+            <div className={`h-full w-actionBarButtonIconSize relative`}>
+              <AnimatePresence mode="wait">
+                {notesPanelOpened && (isMd || isNotesPanelAwake) ? (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    key="homeButton"
+                    className="icon-[solar--telescope-bold] w-[100%] h-[100%]"
+                  ></motion.span>
+                ) : (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    key="homeButton"
+                    className="icon-[solar--telescope-bold-duotone] w-[100%] h-[100%]"
+                  ></motion.span>
+                )}
+              </AnimatePresence>
+            </div>
+          </StyledTooltip>
         </ActionButton>
       )}
     </AnimatePresence>

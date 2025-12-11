@@ -1,12 +1,22 @@
-import { Tooltip } from "@mantine/core"
+import { Tooltip } from "@mantine/core";
 
-export const StyledTooltip = ({ children, label }) => {
-    return (
-        <Tooltip classNames={{
-            tooltip: "border-appLayoutGradientHover shadow-sm shadow-appLayoutShadow border bg-appBackgroundAccent/95 backdrop-blur-[2px] text-appLayoutTextMuted text-tooltipFontSize w-fit h-fit w-4",
-            arrow: "border-appLayoutGradientHover shadow-sm border bg-appBackgroundAccent/95 backdrop-blur-[2px]"
-        }} label={label} position="right" withArrow arrowSize={10} offset={{ mainAxis: 10, crossAxis: 0 }}>
-            {children}
-        </Tooltip>
-    )
-}
+export const StyledTooltip = ({ children, label, position = "right" }) => {
+  return (
+    <Tooltip
+      classNames={{
+        tooltip:
+          "z-[9999] border-appLayoutGradientHover shadow-sm shadow-appLayoutShadow border bg-appBackgroundAccent text-appLayoutText px-2 py-px text-tooltipFontSize w-fit h-fit",
+        arrow:
+          "z-[9999] border-appLayoutGradientHover shadow-sm border bg-appBackgroundAccent",
+      }}
+      label={label}
+      position={position}
+      withArrow
+      arrowSize={10}
+      zIndex={100000000}
+      offset={{ mainAxis: 10, crossAxis: 0 }}
+    >
+      {children}
+    </Tooltip>
+  );
+};
