@@ -594,7 +594,7 @@ export const ActionBarRightSide = ({}) => {
     canGoForward,
     goForward,
     clearFuture,
-  } = useStoreHistory();  
+  } = useStoreHistory();
 
   const { activatePanel } = useMainPanel();
 
@@ -663,13 +663,13 @@ export const ActionBarRightSide = ({}) => {
         <div className="grow"></div>
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
-            <StyledTooltip label="Settings">
-              <ActionButton
-                onClick={() => {
-                  activatePanel("settings", null, []);
-                }}
-                className={`${false && "bg-appLayoutPressed"}`}
-              >
+            <ActionButton
+              onClick={() => {
+                activatePanel("settings", null, []);
+              }}
+              className={`${false && "bg-appLayoutPressed"}`}
+            >
+              <StyledTooltip label="Settings" position="bottom">
                 <div className={`h-full w-actionBarButtonIconSize relative`}>
                   <motion.span
                     initial={{ opacity: 0 }}
@@ -680,8 +680,8 @@ export const ActionBarRightSide = ({}) => {
                     className="icon-[material-symbols-light--settings] w-full h-full top-0 left-0 absolute bg-appLayoutText"
                   ></motion.span>
                 </div>
-              </ActionButton>
-            </StyledTooltip>
+              </StyledTooltip>
+            </ActionButton>
           </div>
 
           {deviceType !== "mobile" && (
@@ -700,7 +700,10 @@ export const ActionBarRightSide = ({}) => {
               <WindowButton
                 className={``}
                 buttonContent={
-                  <StyledTooltip label={isMaximized ? "Restore" : "Maximize"} position="bottom">
+                  <StyledTooltip
+                    label={isMaximized ? "Restore" : "Maximize"}
+                    position="bottom"
+                  >
                     {isMaximized ? (
                       <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
                     ) : (

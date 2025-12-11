@@ -18,6 +18,7 @@ import { sortArrayWithPropsByOrder } from "../../../utils/orderUtil";
 import { equalityDeep } from "lib0/function";
 import { setupSearchForLibrary } from "../../../lib/search";
 import useMainPanel from "../../../hooks/useMainPanel";
+import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 
 const LibraryDirectoryHeader = ({}) => {
   const { deviceType } = useDeviceType();
@@ -162,14 +163,19 @@ const LibraryDirectoryHeader = ({}) => {
             )?.[1]?.item_properties?.item_title || "Select a Library"}
           </p>
 
-          {appLibraryId !== "unselected" && (
+          {appLibraryId != "unselected" && (
             <button
               onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
               className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
             >
-              <span
-                className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
-              ></span>
+              <StyledTooltip
+                label={libraryManagerOpened ? "Close" : "Change Library"}
+                position="bottom"
+              >
+                <span
+                  className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
+                ></span>
+              </StyledTooltip>
             </button>
           )}
         </div>
