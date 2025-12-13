@@ -34,6 +34,8 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const libraryDirectoryBodyRef = useRef(null);
 
+  const libraryManagerOpened = appStore((state) => state.libraryManagerOpened);
+
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
 
@@ -265,9 +267,11 @@ const LibraryDirectory = ({ libraryId }) => {
         </div>
       )}
 
-      <div className="divider w-full px-3">
-        <div className="w-full h-px bg-appLayoutBorder"></div>
-      </div>
+      {!libraryManagerOpened && (
+        <div className="divider w-full px-3">
+          <div className="w-full h-px bg-appLayoutBorder"></div>
+        </div>
+      )}
 
       <div
         id="LibraryDirectoryCreateHeader"

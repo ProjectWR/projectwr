@@ -579,14 +579,14 @@ const DirectoryItemNode = ({
          
         ${isDragging ? "opacity-20" : ""}
 
-        border-0
+        border-y-2 border-y-transparent
 
         ${(() => {
           if (!isSelfSelected && !isAncestor && isOverCurrent) {
             if (areaSelected === "top")
-              return "border-t-2 border-t-appLayoutDirectoryNodeHover";
+              return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
             if (areaSelected === "bottom")
-              return "border-b-2 border-b-appLayoutDirectoryNodeHover";
+              return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
             if (areaSelected === "middle")
               return "bg-appLayoutDirectoryNodeHover";
           }
