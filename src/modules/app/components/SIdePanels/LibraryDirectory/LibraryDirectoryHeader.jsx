@@ -147,17 +147,17 @@ const LibraryDirectoryHeader = ({}) => {
     <div
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
-      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border rounded-md flex-col transition-all duration-200 ease-in-out ${
+      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
         libraryManagerOpened
-          ? "border-appLayoutBorder bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
+          ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
           : "border-transparent bg-transparent"
       }`}
     >
       <div className="h-fit min-h-fit w-full flex items-center justify-center ">
         <div
-          className={`h-fit w-full grow py-1 pl-3 pr-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
+          className={`h-fit w-full grow py-3 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
-          <p className="max-w-full w-full h-fit  text-nowrap overflow-hidden text-ellipsis text-left">
+          <p className="max-w-full w-full h-fit  text-nowrap overflow-hidden text-ellipsis text-center">
             {libraryIdsWithProps.find(
               (library) => library[0] === appLibraryId
             )?.[1]?.item_properties?.item_title || "Select a Library"}
@@ -233,7 +233,7 @@ const LibraryDirectoryHeader = ({}) => {
                                 onMouseLeave={() => setLibraryHovered(null)}
                                 transition={{ duration: 0.05 }}
                                 key={libraryId}
-                                className="text-libraryManagerHeaderText h-[2rem] text-appLayoutTextMuted hover:text-appLayoutHighlight py-1 pl-3 w-full flex items-center justify-between hover:bg-appLayoutHover transition-colors duration-100 group"
+                                className="text-libraryManagerHeaderText h-[2.4rem] text-appLayoutTextMuted hover:text-appLayoutHighlight  w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group"
                                 onClick={() => handleLibrarySelect(libraryId)}
                               >
                                 <motion.div
@@ -246,18 +246,27 @@ const LibraryDirectoryHeader = ({}) => {
                                       libraryHovered === libraryId ? 1 : 0,
                                   }}
                                   transition={{ duration: 0.1 }}
-                                  className="h-full flex items-center justify-center"
+                                  className="h-full w-fit flex items-center justify-center"
                                 >
                                   <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
                                 </motion.div>
-                                <span className="grow">
+                                <span className="w-fit pt-px">
                                   {props.item_properties.item_title}
                                 </span>
-                                <div className="flex items-center h-full pr-2">
-                                  {libraryId === appLibraryId && (
-                                    <span className="icon-[material-symbols-light--check-rounded] w-libraryDirectorySectionNodeIconSize h-full text-appLayoutText"></span>
-                                  )}
-                                </div>
+                                <motion.div
+                                  animate={{
+                                    width:
+                                      libraryHovered === libraryId
+                                        ? "fit-content"
+                                        : 0,
+                                    opacity:
+                                      libraryHovered === libraryId ? 1 : 0,
+                                  }}
+                                  transition={{ duration: 0.1 }}
+                                  className="h-full w-fit flex items-center justify-center"
+                                >
+                                  <span className="icon-[formkit--left] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                                </motion.div>
                               </motion.div>
                             </AnimatePresence>{" "}
                           </div>

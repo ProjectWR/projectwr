@@ -48,7 +48,7 @@ const SidePanel = ({}) => {
         {deviceType === "desktop" && (
           <div
             id="LibraryDirectoryHeaderContainer"
-            className="h-fit min-h-fit w-full p-2"
+            className="h-fit min-h-fit w-full"
           >
             <LibraryDirectoryHeader
               key={`libraryDirectoryHeader`}
