@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDrag, useDrop } from "react-dnd";
 import { AnimatePresence, motion } from "motion/react";
@@ -10,6 +10,7 @@ import {
 import dataManagerSubdocs, {
   getArrayFromYDocMap,
 } from "../../../lib/dataSubDoc";
+import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 
 const LibraryDirectoryHeaderButton = ({
   libraryId,
@@ -130,11 +131,39 @@ const LibraryDirectoryHeaderButton = ({
 
   drag(drop(ref));
 
+  const options = useMemo(() => {
+    return [
+      {
+        label: "Edit",
+        icon: (
+          <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          onSelect(libraryId);
+        },
+      },
+      {
+        isDivider: true,
+      },
+
+      {
+        label: "Delete",
+        icon: (
+          <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          dataManagerSubdocs.destroyLibrary(libraryId);
+        },
+      },
+    ];
+  }, []);
+
   return (
-    <div
-      ref={ref}
-      id="DirectoryItemNodeContainer"
-      className={`w-full h-fit
+    <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>
+      <div
+        ref={ref}
+        id="DirectoryItemNodeContainer"
+        className={`w-full h-fit
         ${isDragging ? "opacity-20" : ""}
         
         ${(() => {
@@ -147,51 +176,50 @@ const LibraryDirectoryHeaderButton = ({
           }
         })()}
       `}
-    >
-      <AnimatePresence mode="wait">
-        <motion.div
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-          }}
-          exit={{
-            opacity: 0,
-          }}
-          onMouseEnter={() => onHover(libraryId)}
-          onMouseLeave={() => onHover(null)}
-          transition={{ duration: 0.05 }}
-          key={libraryId}
-          className="text-libraryManagerHeaderText h-[2.5rem] text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
-          onClick={() => onSelect(libraryId)}
-        >
+      >
+        <AnimatePresence mode="wait">
           <motion.div
-            animate={{
-              width: isHovered ? "fit-content" : 0,
-              opacity: isHovered ? 1 : 0,
+            initial={{
+              opacity: 0,
             }}
-            transition={{ duration: 0.1 }}
-            className="h-full w-fit flex items-center justify-center"
-          >
-            <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
-          </motion.div>
-          <span className="w-fit pt-px">
-            {props.item_properties.item_title}
-          </span>
-          <motion.div
             animate={{
-              width: isHovered ? "fit-content" : 0,
-              opacity: isHovered ? 1 : 0,
+              opacity: 1,
             }}
-            transition={{ duration: 0.1 }}
-            className="h-full w-fit flex items-center justify-center"
+            exit={{
+              opacity: 0,
+            }}
+            onMouseEnter={() => onHover(libraryId)}
+            onMouseLeave={() => onHover(null)}
+            transition={{ duration: 0.05 }}
+            key={libraryId}
+            className="text-libraryManagerHeaderText h-[2.5rem] text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
+            onClick={() => onSelect(libraryId)}
           >
-            <span className="icon-[formkit--left] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+            <motion.div
+              animate={{
+                width: isHovered ? "fit-content" : 0,
+                opacity: isHovered ? 1 : 0,
+              }}
+              transition={{ duration: 0.1 }}
+              className="h-full w-fit flex items-center justify-center"
+            >
+              <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+            </motion.div>
+            <span className="w-fit">{props.item_properties.item_title}</span>
+            <motion.div
+              animate={{
+                width: isHovered ? "fit-content" : 0,
+                opacity: isHovered ? 1 : 0,
+              }}
+              transition={{ duration: 0.1 }}
+              className="h-full w-fit flex items-center justify-center"
+            >
+              <span className="icon-[formkit--left] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+        </AnimatePresence>
+      </div>
+    </ContextMenuWrapper>
   );
 };
 
