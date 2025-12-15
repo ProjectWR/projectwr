@@ -157,10 +157,10 @@ const ExportTreeComponent = forwardRef(
 
     return (
       <div className="w-full h-fit">
-        <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-1 border border-appLayoutBorder rounded-md">
+        <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-1 border-none rounded-md">
           <div className="w-full flex justify-between items-center px-2 pt-1 pb-2">
             <h2 className="text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
-              Select Items to Export
+              Export
             </h2>
             <div className="flex gap-2">
               <button
@@ -180,7 +180,7 @@ const ExportTreeComponent = forwardRef(
             </div>
           </div>
 
-          <div className="w-full max-h-96 overflow-y-auto">
+          <div className="w-full max-h-96 py-3 px-2 overflow-y-auto border border-appLayoutBorder rounded-lg">
             {hasChildren ? (
               <div className="flex flex-col">
                 {ytree
@@ -205,7 +205,7 @@ const ExportTreeComponent = forwardRef(
           </div>
 
           {getSelectedCount() > 0 && (
-            <div className="w-full px-2 pt-2 border-t border-appLayoutBorder text-xs text-appLayoutTextMuted">
+            <div className="w-full text-right px-2 pt-1 border-none text-detailsPanelPropsFontSize text-appLayoutTextMuted">
               {getSelectedCount()} item{getSelectedCount() !== 1 ? "s" : ""}{" "}
               selected
             </div>

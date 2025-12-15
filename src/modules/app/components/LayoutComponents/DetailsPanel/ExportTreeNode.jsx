@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "motion/react";
 import useYMap from "../../../hooks/useYMap";
+import { Checkbox } from "@mantine/core";
 
 /**
  * ExportTreeNode - Recursive tree node component for export selection
@@ -80,55 +81,69 @@ const ExportTreeNode = ({
   };
 
   return (
-    <div className="w-full">
-      {/* Node Header */}
-      <div
-        className={`flex items-center gap-2 py-1 px-2 rounded-md hover:bg-appLayoutHover transition-colors ${
-          disabled ? "opacity-50" : ""
-        }`}
-        style={{
-          paddingLeft: `${depth * 1.5 + 0.5}rem`,
-        }}
-      >
-        {/* Expand/Collapse Button */}
-        {canExpand ? (
-          <button
-            type="button"
-            onClick={handleExpandToggle}
-            className="w-4 h-4 flex items-center justify-center shrink-0"
-          >
-            <motion.span
-              animate={{ rotate: isExpanded ? 90 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="icon-[formkit--right] w-3 h-3"
-            />
-          </button>
-        ) : (
-          <div className="w-4 h-4 flex-shrink-0" />
-        )}
-
-        {/* Checkbox */}
-        <input
-          type="checkbox"
-          checked={checked}
-          disabled={disabled}
-          onChange={handleCheckboxChange}
-          className={`w-4 h-4 shrink-0 rounded border-appLayoutBorder cursor-pointer ${
-            disabled ? "cursor-not-allowed" : ""
-          }`}
-        />
-
-        {/* Icon */}
-        <span className={`${getIcon()} w-4 h-4 shrink-0`} />
-
-        {/* Title */}
-        <span
-          className={`text-sm grow min-w-0 truncate ${
-            disabled ? "text-appLayoutTextMuted" : "text-appLayoutText"
+    <div className="w-full flex flex-col h-fit">
+      <div className="w-full flex items-center h-libraryDirectoryPaperNodeHeight">
+        {/* Node Header */}
+        <div
+          className={`h-full grow flex items-center gap-2 py-1 px-2 rounded-md hover:bg-appLayoutHover transition-colors ${
+            disabled ? "opacity-50" : ""
           }`}
         >
-          {itemMapState.item_properties?.item_title || "Untitled"}
-        </span>
+          {/* Expand/Collapse Button */}
+          {canExpand && (
+            <button
+              type="button"
+              onClick={handleExpandToggle}
+              className="h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize flex items-center justify-center shrink-0"
+            >
+              <motion.span
+                animate={{ rotate: isExpanded ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="icon-[formkit--right] w-full h-full"
+              />
+            </button>
+          )}
+
+          {/* Checkbox */}
+          <Checkbox
+            checked={checked}
+            disabled={disabled}
+            onChange={handleCheckboxChange}
+            variant="outline"
+            iconColor="var(--appLayoutText)"
+            styles={{
+              input: {
+                borderColor:
+                  checked && !disabled ? "var(--appLayoutText)" : undefined,
+              },
+            }}
+            classNames={{
+              root: "w-libraryDirectoryPaperNodeIconSize h-libraryDirectoryPaperNodeIconSize cursor-pointer ",
+              body: "w-full h-full",
+              inner: "w-full h-full",
+              input:
+                "w-full h-full bg-transparent border-appLayoutInverseHover",
+              label:
+                "text-libraryDirectoryPaperNodeFontSize grow min-w-0 truncate",
+              icon: "bg-appLayoutBorder border-appLayoutBorder ",
+              labelWrapper: "flex items-center gap-2",
+            }}
+          />
+
+          {/* Icon */}
+          <span
+            className={`${getIcon()} w-libraryDirectoryPaperNodeIconSize h-libraryDirectoryPaperNodeIconSize shrink-0`}
+          />
+
+          {/* Title */}
+          <span
+            className={`text-libraryDirectoryPaperNodeFontSize grow min-w-0 truncate ${
+              disabled ? "text-appLayoutTextMuted" : "text-appLayoutText"
+            }`}
+          >
+            {itemMapState.item_properties?.item_title || "Untitled"}
+          </span>
+        </div>
       </div>
 
       {/* Children */}
@@ -139,33 +154,29 @@ const ExportTreeNode = ({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            className="overflow-hidden px-2 w-full h-fit flex"
           >
-            <div className="relative">
-              {/* Vertical connecting line */}
-              <div
-                className="absolute top-0 bottom-0 w-px bg-appLayoutBorder"
-                style={{
-                  left: `${depth * 1.5 + 0.5 + 0.5}rem`,
-                }}
-              />
+            {/* Vertical connecting line */}
 
-              {/* Child nodes */}
-              <div className="flex flex-col">
-                {ytree
-                  .sortChildrenByOrder(nodeChildren, itemId)
-                  .map((childId) => (
-                    <ExportTreeNode
-                      key={childId}
-                      ytree={ytree}
-                      itemId={childId}
-                      checkboxState={checkboxState}
-                      onCheckboxChange={onCheckboxChange}
-                      isDisabled={isDisabled}
-                      depth={depth + 1}
-                    />
-                  ))}
-              </div>
+            <div className="w-libraryDirectoryBookNodeIconSize min-w-libraryDirectoryBookNodeIconSize flex flex-col items-center justify-center ">
+              <div className="w-px min-w-px h-full grow bg-appLayoutBorder"></div>
+            </div>
+
+            {/* Child nodes */}
+            <div className="w-full h-fit flex flex-col">
+              {ytree
+                .sortChildrenByOrder(nodeChildren, itemId)
+                .map((childId) => (
+                  <ExportTreeNode
+                    key={childId}
+                    ytree={ytree}
+                    itemId={childId}
+                    checkboxState={checkboxState}
+                    onCheckboxChange={onCheckboxChange}
+                    isDisabled={isDisabled}
+                    depth={depth + 1}
+                  />
+                ))}
             </div>
           </motion.div>
         )}
