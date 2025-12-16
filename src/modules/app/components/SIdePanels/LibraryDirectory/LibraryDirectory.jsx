@@ -512,128 +512,126 @@ const LibraryDirectory = ({ libraryId }) => {
           </button>
         </div>
       </div>
-      <div id="libraryDirectoryBodyContainer" className={`grow min-h-0 w-full`}>
-        <ScrollArea
-          overscrollBehavior="none"
-          scrollbars="y"
-          type="hover"
-          classNames={{
-            root: "w-full h-full",
-            scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
-            thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover opacity-70`,
-            content: `h-fit w-full px-1`,
-          }}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              setFocusedItemId(null);
-            }
-          }}
-          ref={libraryDirectoryBodyRef}
+      <ScrollArea
+        scrollbars="y"
+        id="libraryDirectoryBodyContainer"
+        type="hover"
+        classNames={{
+          root: "grow min-h-0 basis-0  w-full",
+          scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
+          thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover opacity-70`,
+          content: `h-fit w-full max-h-full px-1`,
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
+            setFocusedItemId(null);
+          }
+        }}
+        ref={libraryDirectoryBodyRef}
+      >
+        <div
+          id="BookListContainer"
+          className="h-fit w-full flex flex-col justify-start items-center"
         >
-          <div
-            id="BookListContainer"
-            className="h-fit w-full flex flex-col justify-start items-center"
-          >
-            {sortedChildrenState &&
-              sortedChildrenState.length > 0 &&
-              sortedChildrenState.map((bookId) => (
-                <motion.div
-                  id={`Node-${bookId}`}
-                  key={bookId}
-                  className="w-full h-fit"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <DirectoryItemNode
-                    libraryId={libraryId}
-                    ytree={libraryYTreeRef.current}
-                    itemId={bookId}
-                    breadcrumbs={[libraryId, bookId]}
-                    focusedItemId={focusedItemId}
-                    setFocusedItemId={setFocusedItemId}
-                  />
-                </motion.div>
-              ))}
-
-            {deviceType === "mobile" && (
-              <OptionsButton
-                id="DirectoryItemAddButton"
-                container={libraryDirectoryBodyRef.current}
-                className={`mt-3 bg-appBackground rounded-full w-libraryDirectoryBookNodeHeight h-libraryDirectoryBookNodeHeight p-1 hover:bg-appLayoutInverseHover`}
-                buttonIcon={
-                  <span className="icon-[material-symbols-light--add-2-rounded] h-full w-full"></span>
-                }
-                origin={"topMiddle"}
-                options={[
-                  {
-                    label: "Create Book",
-                    icon: (
-                      <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("Create Book!");
-                      const bookId = dataManagerSubdocs.createEmptyBook(
-                        libraryYTreeRef.current
-                      );
-                      setItemId(bookId);
-                      if (deviceType === "mobile") {
-                        setPanelOpened(false);
-                      }
-
-                      setPanelOpened(true);
-                    },
-                  },
-                  {
-                    label: "Create Section",
-                    icon: (
-                      <span className="icon-[fluent--folder-add-20-regular] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("create section button");
-                      const sectionId = dataManagerSubdocs.createEmptySection(
-                        libraryYTreeRef.current,
-                        "root"
-                      );
-
-                      setItemId(sectionId);
-                      if (deviceType === "mobile") {
-                        setPanelOpened(false);
-                      }
-
-                      setPanelOpened(true);
-                    },
-                  },
-                  {
-                    label: "Create Paper",
-                    icon: (
-                      <span className="icon-[fluent--document-one-page-add-20-regular] h-full w-full"></span>
-                    ),
-                    callback: () => {
-                      console.log("create paper button");
-                      const paperId = dataManagerSubdocs.createEmptyPaper(
-                        libraryYTreeRef.current,
-                        "root"
-                      );
-
-                      setItemId(paperId);
-                      if (deviceType === "mobile") {
-                        setPanelOpened(false);
-                      }
-
-                      setPanelOpened(true);
-                    },
-                  },
-                ]}
+          {sortedChildrenState &&
+            sortedChildrenState.length > 0 &&
+            sortedChildrenState.map((bookId) => (
+              <motion.div
+                id={`Node-${bookId}`}
+                key={bookId}
+                className="w-full h-fit"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
               >
-                <span
-                  className={`icon-[material-symbols-light--add-2-rounded] h-full w-full`}
-                ></span>
-              </OptionsButton>
-            )}
-          </div>
-        </ScrollArea>
-      </div>
+                <DirectoryItemNode
+                  libraryId={libraryId}
+                  ytree={libraryYTreeRef.current}
+                  itemId={bookId}
+                  breadcrumbs={[libraryId, bookId]}
+                  focusedItemId={focusedItemId}
+                  setFocusedItemId={setFocusedItemId}
+                />
+              </motion.div>
+            ))}
+
+          {deviceType === "mobile" && (
+            <OptionsButton
+              id="DirectoryItemAddButton"
+              container={libraryDirectoryBodyRef.current}
+              className={`mt-3 bg-appBackground rounded-full w-libraryDirectoryBookNodeHeight h-libraryDirectoryBookNodeHeight p-1 hover:bg-appLayoutInverseHover`}
+              buttonIcon={
+                <span className="icon-[material-symbols-light--add-2-rounded] h-full w-full"></span>
+              }
+              origin={"topMiddle"}
+              options={[
+                {
+                  label: "Create Book",
+                  icon: (
+                    <span className="icon-[fluent--book-add-20-regular] hover:text-appLayoutHighlight rounded-full h-full w-full"></span>
+                  ),
+                  callback: () => {
+                    console.log("Create Book!");
+                    const bookId = dataManagerSubdocs.createEmptyBook(
+                      libraryYTreeRef.current
+                    );
+                    setItemId(bookId);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
+                  },
+                },
+                {
+                  label: "Create Section",
+                  icon: (
+                    <span className="icon-[fluent--folder-add-20-regular] h-full w-full"></span>
+                  ),
+                  callback: () => {
+                    console.log("create section button");
+                    const sectionId = dataManagerSubdocs.createEmptySection(
+                      libraryYTreeRef.current,
+                      "root"
+                    );
+
+                    setItemId(sectionId);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
+                  },
+                },
+                {
+                  label: "Create Paper",
+                  icon: (
+                    <span className="icon-[fluent--document-one-page-add-20-regular] h-full w-full"></span>
+                  ),
+                  callback: () => {
+                    console.log("create paper button");
+                    const paperId = dataManagerSubdocs.createEmptyPaper(
+                      libraryYTreeRef.current,
+                      "root"
+                    );
+
+                    setItemId(paperId);
+                    if (deviceType === "mobile") {
+                      setPanelOpened(false);
+                    }
+
+                    setPanelOpened(true);
+                  },
+                },
+              ]}
+            >
+              <span
+                className={`icon-[material-symbols-light--add-2-rounded] h-full w-full`}
+              ></span>
+            </OptionsButton>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 };

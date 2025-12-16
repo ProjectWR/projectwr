@@ -8,6 +8,13 @@ import {
 import PropTypes from "prop-types";
 import ExportTreeNode from "./ExportTreeNode";
 import { YTree } from "yjs-orderedtree";
+import { save } from "@tauri-apps/plugin-dialog";
+import { writeFile } from "@tauri-apps/plugin-fs";
+import { exportItem } from "../../../lib/importExport";
+import JSZip from "jszip";
+import { AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
+import { ScrollArea } from "@mantine/core";
 
 /**
  * ExportTreeComponent - Main wrapper for export tree with checkbox selection
@@ -23,6 +30,7 @@ const ExportTreeComponent = forwardRef(
   ({ ytree, itemId, onSelectionChange }, ref) => {
     // Track checkbox state for each node independently
     const [checkboxState, setCheckboxState] = useState({});
+    const [isExporting, setIsExporting] = useState(false);
 
     /**
      * Check if a node has a selected ancestor (should be disabled)
@@ -140,6 +148,51 @@ const ExportTreeComponent = forwardRef(
       }
     }, [onSelectionChange]);
 
+    /**
+     * Handle export of selected items
+     */
+    const handleExport = useCallback(async () => {
+      const selectedItems = getSelectedItems();
+      if (selectedItems.length === 0) return;
+
+      setIsExporting(true);
+      try {
+        if (selectedItems.length === 1) {
+          // Single item export
+          await exportItem(ytree, selectedItems[0]);
+        } else {
+          // Multiple items - create a zip file
+          const zip = new JSZip();
+
+          for (const itemId of selectedItems) {
+            await exportItem(ytree, itemId, zip, "");
+          }
+
+          // Generate and save the zip
+          const zipBlob = await zip.generateAsync({ type: "uint8array" });
+          const path = await save({
+            defaultPath: "Export.zip",
+            filters: [
+              {
+                name: "ZIP Archive",
+                extensions: ["zip"],
+              },
+            ],
+          });
+
+          if (path) {
+            await writeFile(path, zipBlob);
+            console.log(`Exported ${selectedItems.length} items to: ${path}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error during export:", error);
+        alert(`Export failed: ${error.message}`);
+      } finally {
+        setIsExporting(false);
+      }
+    }, [ytree, getSelectedItems]);
+
     // Expose methods via ref
     useImperativeHandle(ref, () => ({
       getSelectedItems,
@@ -166,21 +219,29 @@ const ExportTreeComponent = forwardRef(
               <button
                 type="button"
                 onClick={selectAll}
-                className="text-xs px-2 py-1 rounded bg-appLayoutInverseHover hover:bg-appLayoutPressed text-appLayoutText transition-colors"
+                className="text-libraryDirectoryBookNodeFontSize border border-appLayoutBorder px-3 py-1 rounded-lg bg-transparent hover:bg-appLayoutInverseHover text-appLayoutText transition-colors"
               >
                 Select All
               </button>
               <button
                 type="button"
                 onClick={deselectAll}
-                className="text-xs px-2 py-1 rounded bg-appLayoutInverseHover hover:bg-appLayoutPressed text-appLayoutText transition-colors"
+                className="text-libraryDirectoryBookNodeFontSize  border border-appLayoutBorder px-3 py-1 rounded-lg bg-transparent hover:bg-appLayoutInverseHover text-appLayoutText transition-colors"
               >
                 Clear
               </button>
             </div>
           </div>
 
-          <div className="w-full max-h-96 py-3 px-2 overflow-y-auto border border-appLayoutBorder rounded-lg">
+          <ScrollArea
+            classNames={{
+              root: "w-full h-fit py-3 px-2 overflow-y-auto border border-appLayoutBorder rounded-lg",
+              scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin`,
+              thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover`,
+              content:
+                "flex flex-col w-full h-fit max-h-detailsPanelDescriptionInputHeight",
+            }}
+          >
             {hasChildren ? (
               <div className="flex flex-col">
                 {ytree
@@ -202,14 +263,51 @@ const ExportTreeComponent = forwardRef(
                 No items to export
               </div>
             )}
-          </div>
+          </ScrollArea>
 
-          {getSelectedCount() > 0 && (
-            <div className="w-full text-right px-2 pt-1 border-none text-detailsPanelPropsFontSize text-appLayoutTextMuted">
-              {getSelectedCount()} item{getSelectedCount() !== 1 ? "s" : ""}{" "}
-              selected
-            </div>
-          )}
+          <AnimatePresence>
+            {getSelectedCount() > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="h-fit w-full overflow-hidden"
+              >
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{
+                    height:
+                      "calc(var(--spacing-detailsPanelButtonHeight) * 0.66)",
+                  }}
+                  exit={{ height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full text-right px-4 pt-1 border-none text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted"
+                >
+                  {getSelectedCount()} item{getSelectedCount() !== 1 ? "s" : ""}{" "}
+                  selected
+                </motion.div>
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{
+                    height: "var(--spacing-detailsPanelButtonHeight)",
+                  }}
+                  exit={{ height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="w-full px-2 flex items-center justify-end"
+                >
+                  <button
+                    type="button"
+                    onClick={handleExport}
+                    disabled={isExporting}
+                    className="text-libraryDirectoryBookNodeFontSize border border-appLayoutBorder px-4 py-2 rounded-lg bg-transparent hover:bg-appLayoutInverseHover text-appLayoutText transition-colors"
+                  >
+                    {isExporting ? "Exporting..." : "Export Selected"}
+                  </button>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     );

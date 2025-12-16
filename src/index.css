@@ -469,8 +469,8 @@
   );
   --spacing-libraryManagerNodeIconSize: var(--libraryManagerNodeIconSize);
   --spacing-detailsPanelHeaderHeight: var(--detailsPanelHeaderHeight);
-  --spacing-detailsPanelDescriptionInputSize: var(
-    --detailsPanelDescriptionInputSize
+  --spacing-detailsPanelDescriptionInputHeight: var(
+    --detailsPanelDescriptionInputHeight
   );
   --spacing-detailsPanelPropLabelHeight: var(--detailsPanelPropLabelHeight);
   --spacing-libraryDirectoryBookNodeHeight: var(
