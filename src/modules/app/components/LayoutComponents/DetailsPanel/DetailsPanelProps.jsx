@@ -218,24 +218,23 @@ export const DetailsPanelDescriptionProp = ({
   }, [editor, selectingError, setSearchQuery]);
 
   return (
-    <div className="w-full h-fit">
-      <div className="w-full h-fit px-1 py-1 flex flex-col items-start gap-2 border border-transparent rounded-md overflow-hidden">
+    <div className="w-full h-full">
+      <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-2 border border-transparent rounded-md overflow-hidden">
         <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
           {label}
         </h2>
-        <ContextMenuWrapper options={options} triggerClassname="w-full h-fit">
+        <ContextMenuWrapper options={options} triggerClassname="w-full grow">
           <RichTextEditor
             editor={editor}
             variant="subtle"
             classNames={{
-              root: "bg-appBackground border border-appLayoutBorder rounded-lg px-1",
+              root: "bg-appBackground h-full border border-appLayoutBorder rounded-lg px-1",
               toolbar: "bg-appBackground border-b border-appLayoutBorder",
               content:
-                "bg-appBackground text-appLayoutText  max-h-detailsPanelDescriptionInputHeight h-fit min-h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize DetailsPanelDescriptionProp",
+                "bg-appBackground text-appLayoutText h-full max-h-detailsPanelDescriptionInputHeight h-fit min-h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize DetailsPanelDescriptionProp",
               controlsGroup: "bg-appBackground gap-1",
               control:
                 "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
-
             }}
           >
             <style>

@@ -8,15 +8,17 @@ export const DetailsPanelButtonsShell = ({ children }) => {
   return (
     <section
       id="DetailsPanelButtonsShell"
-      className={`w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-6`}
+      className={`w-full h-fit flex flex-col gap-2 px-2 pt-1`}
       style={
         deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
+          width: `100%`,
           maxWidth: `100%`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.25)`,
         }
       }
     >
+      <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+        Actions
+      </h2>
       {children}
     </section>
   );
@@ -35,7 +37,7 @@ export const DetailsPanelButton = ({
       gradientSizeY={10}
       onClick={onClick}
       disabled={loading || disabled}
-      className={`h-[3rem] border border-appLayoutBorder rounded-lg overflow-hidden`}
+      className={`min-h-fit h-fit py-1 border border-appLayoutBorder rounded-lg overflow-hidden`}
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -44,7 +46,7 @@ export const DetailsPanelButton = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.1 }}
-          className="w-full h-full flex items-center justify-center px-6 lg:px-3 gap-6 lg:gap-3"
+          className="w-full h-full flex items-center justify-center px-2 gap-2"
         >
           {loading && (
             <div className={`relative w-full h-full`}>
@@ -119,13 +121,13 @@ export const DetailsPanelButton = ({
 
           {!loading && (
             <>
-              <span className="w-[2.2rem] h-[2.2rem] flex items-center justify-center">
+              <span className="w-detailsPanelButtonIconHeight h-detailsPanelButtonIconHeight p-1 shrink-0 flex items-center justify-center">
                 {icon}
               </span>
-              <span className="verticalDivider h-full min-w-px py-1">
+              <span className="verticalDivider h-full min-w-px w-[1px] shrink-0">
                 <div className="h-full w-full bg-appLayoutInverseHover"></div>
               </span>
-              <span className="grow basis-0 flex items-center justify-start text-2xl md:text-xl lg:text-lg xl:text-[1rem]">
+              <span className="grow min-w-0 flex items-center justify-start text-detailsPanelPropFontSize truncate">
                 {text}
               </span>
             </>

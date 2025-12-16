@@ -27,7 +27,7 @@ import { ScrollArea } from "@mantine/core";
  * @param {Function} props.onSelectionChange - Optional callback when selection changes
  */
 const ExportTreeComponent = forwardRef(
-  ({ ytree, itemId, onSelectionChange }, ref) => {
+  ({ ytree, itemId, libraryId, onSelectionChange }, ref) => {
     // Track checkbox state for each node independently
     const [checkboxState, setCheckboxState] = useState({});
     const [isExporting, setIsExporting] = useState(false);
@@ -203,8 +203,10 @@ const ExportTreeComponent = forwardRef(
 
     // Get children of the root item
     const rootChildren = useMemo(() => {
-      return ytree.getNodeChildrenFromKey(itemId);
-    }, [ytree, itemId]);
+      return ytree.getNodeChildrenFromKey(
+        itemId == libraryId ? "root" : itemId
+      );
+    }, [ytree, itemId, libraryId]);
 
     const hasChildren = rootChildren && rootChildren.length > 0;
 
@@ -242,10 +244,24 @@ const ExportTreeComponent = forwardRef(
                 "flex flex-col w-full h-fit max-h-detailsPanelDescriptionInputHeight",
             }}
           >
-            {hasChildren ? (
+            {itemId !== libraryId ? (
               <div className="flex flex-col">
+                {/* Show the parent node itself */}
+                <ExportTreeNode
+                  key={itemId}
+                  ytree={ytree}
+                  itemId={itemId}
+                  checkboxState={checkboxState}
+                  onCheckboxChange={handleCheckboxChange}
+                  isDisabled={isDisabled}
+                  depth={0}
+                />
+              </div>
+            ) : hasChildren ? (
+              <div className="flex flex-col">
+                {/* For libraries, show all root children */}
                 {ytree
-                  .sortChildrenByOrder(rootChildren, itemId)
+                  .sortChildrenByOrder(rootChildren, "root")
                   .map((childId) => (
                     <ExportTreeNode
                       key={childId}

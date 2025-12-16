@@ -21,6 +21,7 @@ import { ContextMenu } from "radix-ui";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
+import { exportItem } from "../../../lib/importExport";
 
 /**
  *
@@ -373,21 +374,20 @@ const DirectoryItemNode = ({
 
         {
           label: `Export 
-                  ${
-                    itemMapRef.current.get("type") === "section" &&
-                    "section as .docx"
-                  }
-                  ${
-                    itemMapRef.current.get("type") === "book" && "book as .docx"
-                  }`,
+          ${
+            itemMapRef.current.get("type") === "section"
+              ? "section"
+              : ""
+          }
+          ${itemMapRef.current.get("type") === "book" ? "book" : ""}
+          `,
           icon: (
             <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
 
           action: () => {
             console.log("export section button");
-
-            dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
+            exportItem(ytree, itemId);
           },
         },
 
@@ -435,56 +435,37 @@ const DirectoryItemNode = ({
             }
           },
         },
+        // {
+        //   label: "Edit Paper Settings",
+        //   icon: (
+        //     <span className="icon-[bi--sliders2] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        //   ),
+        //   action: () => {
+        //     console.log("edit paper editor button");
+        //     if (!(appStoreItemId === itemId && itemMode === "settings")) {
+        //       setItemId(itemId);
+        //       setFocusedItemId(itemId);
+        //       setItemMode("settings");
+        //       if (deviceType === "mobile") {
+        //         setPanelOpened(false);
+        //       }
 
-        {
-          label: "Edit Paper Settings",
-          icon: (
-            <span className="icon-[bi--sliders2] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-          ),
-          action: () => {
-            console.log("edit paper editor button");
-            if (!(appStoreItemId === itemId && itemMode === "settings")) {
-              setItemId(itemId);
-              setFocusedItemId(itemId);
-              setItemMode("settings");
-              if (deviceType === "mobile") {
-                setPanelOpened(false);
-              }
-
-              activatePanel("libraries", "settings", [libraryId, itemId]);
-            }
-          },
-        },
+        //       activatePanel("libraries", "settings", [libraryId, itemId]);
+        //     }
+        //   },
+        // },
 
         {
           isDivider: true,
         },
 
         {
-          label: "Export paper as .docx",
+          label: "Export paper",
           icon: (
             <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("export paper button");
-            dataManagerSubdocs.exportAllChildrenToDocx(ytree, itemId);
-          },
-        },
-
-        {
-          label: "Import paper from .docx",
-          icon: (
-            <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-          ),
-          action: () => {
-            console.log("import paper button");
-            console.log(
-              dataManagerSubdocs.setHtmlToPaper(
-                ytree,
-                itemId,
-                "<p> Imported Content </p>"
-              )
-            );
+            exportItem(ytree, itemId);
           },
         },
 
@@ -530,6 +511,16 @@ const DirectoryItemNode = ({
 
               activatePanel("libraries", "details", [libraryId, itemId]);
             }
+          },
+        },
+
+        {
+          label: "Export note",
+          icon: (
+            <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: () => {
+            exportItem(ytree, itemId);
           },
         },
 

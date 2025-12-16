@@ -32,6 +32,7 @@ import {
 import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
+import ExportTreeComponent from "../LayoutComponents/DetailsPanel/ExportTreeComponent";
 
 const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   const { deviceType } = useDeviceType();
@@ -53,7 +54,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   const itemMapState = useYMap(
     dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
   );
-
 
   const initialItemProperties = useRef({
     item_title: itemMapState.item_properties.item_title,
@@ -169,7 +169,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
             </>
           )}
 
-
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
@@ -183,78 +182,94 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
 
         <DetailsPanelBody>
           <DetailsPanelProperties>
-            <DetailsPanelButtonsShell>
-              <DetailsPanelButton
-                onClick={async () => {
-                  setSyncLoading(true);
+            <div className="w-full flex flex-col lg:flex-row gap-4">
+              {/* Buttons Section */}
+              <div className="w-full lg:w-1/2">
+                <DetailsPanelButtonsShell>
+                  <DetailsPanelButton
+                    onClick={async () => {
+                      setSyncLoading(true);
 
-                  await syncManager.initFireSync(
-                    dataManagerSubdocs.getLibrary(libraryId)
-                  );
+                      await syncManager.initFireSync(
+                        dataManagerSubdocs.getLibrary(libraryId)
+                      );
 
-                  await wait(2000);
+                      await wait(2000);
 
-                  setSyncLoading(false);
-                }}
-                icon={
-                  isSynced ? (
-                    <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
-                  ) : (
-                    <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
-                  )
-                }
-                text={"Synchronize"}
-                loading={syncLoading}
-              />
-              <DetailsPanelButton
-                onClick={async () => {
-                  setSaveLoading(true);
-                  console.log("Saving Archive");
-                  await persistenceManagerForSubdocs.saveArchive(
-                    dataManagerSubdocs.getLibrary(libraryId)
-                  );
+                      setSyncLoading(false);
+                    }}
+                    icon={
+                      isSynced ? (
+                        <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
+                      ) : (
+                        <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
+                      )
+                    }
+                    text={"Synchronize"}
+                    loading={syncLoading}
+                  />
+                  <DetailsPanelButton
+                    onClick={async () => {
+                      setSaveLoading(true);
+                      console.log("Saving Archive");
+                      await persistenceManagerForSubdocs.saveArchive(
+                        dataManagerSubdocs.getLibrary(libraryId)
+                      );
 
-                  setSaveLoading(false);
-                }}
-                icon={
-                  <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-200"></span>
-                }
-                text={"Save as archive"}
-                loading={saveLoading}
+                      setSaveLoading(false);
+                    }}
+                    icon={
+                      <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-200"></span>
+                    }
+                    text={"Save as archive"}
+                    loading={saveLoading}
+                  />
+                  <DetailsPanelButton
+                    onClick={async () => {
+                      setLoadLoading(true);
+                      console.log("Loading Archive");
+                      await persistenceManagerForSubdocs.loadArchive(
+                        dataManagerSubdocs.getLibrary(libraryId)
+                      );
+                      setLoadLoading(false);
+                    }}
+                    icon={
+                      <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-200"></span>
+                    }
+                    text={"Load from archive"}
+                    loading={loadLoading}
+                  />
+                  <DetailsPanelButton
+                    onClick={async () => {
+                      setDeleteLoading(true);
+                      console.log("Deleting Library");
+                      await wait(1000);
+                      setDeleteLoading(false);
+                    }}
+                    icon={
+                      <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-200"></span>
+                    }
+                    text={"Delete"}
+                    loading={deleteLoading}
+                  />
+                </DetailsPanelButtonsShell>
+              </div>
+
+              {/* Description Section */}
+              <div className="w-full lg:w-1/2">
+                <DetailsPanelDescriptionProp
+                  itemProperties={itemProperties}
+                  setItemProperties={setItemProperties}
+                />
+              </div>
+            </div>
+            {ytree && (
+              <ExportTreeComponent
+                ytree={ytree}
+                itemId={libraryId}
+                libraryId={libraryId}
               />
-              <DetailsPanelButton
-                onClick={async () => {
-                  setLoadLoading(true);
-                  console.log("Loading Archive");
-                  await persistenceManagerForSubdocs.loadArchive(
-                    dataManagerSubdocs.getLibrary(libraryId)
-                  );
-                  setLoadLoading(false);
-                }}
-                icon={
-                  <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-200"></span>
-                }
-                text={"Load from archive"}
-                loading={loadLoading}
-              />
-              <DetailsPanelButton
-                onClick={async () => {
-                  setDeleteLoading(true);
-                  console.log("Deleting Library");
-                  await wait(1000);
-                  setDeleteLoading(false);
-                }}
-                icon={
-                  <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-200"></span>
-                }
-                text={"Delete from device"}
-                loading={deleteLoading}
-              />
-            </DetailsPanelButtonsShell>
-            <DetailsPanelDescriptionProp
-              itemProperties={itemProperties}
-              setItemProperties={setItemProperties}
-            />
+            )}
           </DetailsPanelProperties>
         </DetailsPanelBody>
       </form>
