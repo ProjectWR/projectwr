@@ -110,10 +110,11 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
             name="item_title"
             onChange={handleChange}
             value={itemProperties.item_title}
+            unsavedChangesExist={unsavedChangesExist}
           />
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
         </DetailsPanelHeader>
-        <DetailsPanelDivider />
+        {/* <DetailsPanelDivider /> */}
         <DetailsPanelBody>
           <DetailsPanelProperties>
             <DetailsPanelDescriptionProp

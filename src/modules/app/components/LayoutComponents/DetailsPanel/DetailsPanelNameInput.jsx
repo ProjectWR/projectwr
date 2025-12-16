@@ -1,8 +1,16 @@
-export const DetailsPanelNameInput = ({ className, name, onChange, value }) => {
+export const DetailsPanelNameInput = ({
+  className,
+  name,
+  onChange,
+  value,
+  unsavedChangesExist,
+}) => {
   return (
     <input
       className={`bg-appBackground grow h-full text-detailsPanelNameFontSize text-center
-                    focus:bg-appLayoutInputBackground rounded-t-lg focus:outline-none 
+                    focus:bg-appLayoutInputBackground  focus:outline-none ${
+                      unsavedChangesExist ? "rounded-lg" : ""
+                    }
                      px-3 pb-1 transition-colors duration-200 ${className}`}
       name={name}
       onChange={onChange}

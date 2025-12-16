@@ -27,6 +27,7 @@ import {
 } from "../LayoutComponents/DetailsPanel/DetailsPanelButton";
 import {
   DetailsPanelButtonOnClick,
+  DetailsPanelButtonPlaceHolder,
   DetailsPanelSubmitButton,
 } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
@@ -168,23 +169,34 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
               </button>
             </>
           )}
+          <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
 
           <DetailsPanelNameInput
             name="item_title"
             onChange={handleChange}
             value={itemProperties.item_title}
+            unsavedChangesExist={unsavedChangesExist}
           />
 
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
         </DetailsPanelHeader>
 
-        <DetailsPanelDivider />
-
         <DetailsPanelBody>
           <DetailsPanelProperties>
             <div className="w-full flex flex-col lg:flex-row gap-4">
-              {/* Buttons Section */}
+              {/* Description Section - First Column */}
               <div className="w-full lg:w-1/2">
+                <DetailsPanelDescriptionProp
+                  itemProperties={itemProperties}
+                  setItemProperties={setItemProperties}
+                />
+              </div>
+
+              {/* Buttons Section - Second Column */}
+              <div className="w-full lg:w-1/2">
+                <h2 className="w-fit h-fit px-2 pt-1 pb-2 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+                  {/* Blank placeholder */}
+                </h2>
                 <DetailsPanelButtonsShell>
                   <DetailsPanelButton
                     onClick={async () => {
@@ -253,14 +265,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
                     loading={deleteLoading}
                   />
                 </DetailsPanelButtonsShell>
-              </div>
-
-              {/* Description Section */}
-              <div className="w-full lg:w-1/2">
-                <DetailsPanelDescriptionProp
-                  itemProperties={itemProperties}
-                  setItemProperties={setItemProperties}
-                />
               </div>
             </div>
             {ytree && (

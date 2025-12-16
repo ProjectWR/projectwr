@@ -570,7 +570,7 @@ const DirectoryItemNode = ({
          
         ${isDragging ? "opacity-20" : ""}
 
-        border-y-2 border-y-transparent
+        border-y-transparent
 
         ${(() => {
           if (!isSelfSelected && !isAncestor && isOverCurrent) {
@@ -579,13 +579,11 @@ const DirectoryItemNode = ({
             if (areaSelected === "bottom")
               return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
             if (areaSelected === "middle")
-              return "bg-appLayoutDirectoryNodeHover";
+              return "bg-appLayoutDirectoryNodeHover border-y-0";
           }
           return "";
         })()}
 
-   
-          
           `}
       >
         <AnimatePresence mode="wait">
