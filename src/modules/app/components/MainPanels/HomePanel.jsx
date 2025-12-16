@@ -55,7 +55,7 @@ const HomePanel = () => {
       };
     },
     () => {
-      const latestItems = itemLocalStateManager.fetchLatestOpenedItems(5);
+      const latestItems = itemLocalStateManager.fetchLatestOpenedItems(10);
       if (
         prevLatestItemsRef.current === null ||
         prevLatestItemsRef.current === undefined ||
