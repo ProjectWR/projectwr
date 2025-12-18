@@ -57,18 +57,53 @@ const LibraryDirectory = ({ libraryId }) => {
   const libraryYTreeRef = useRef(libraryId);
 
   /**
-   * @type {[Array<String>, function]}
+   * Centralized state tracking all descendants (name, type, children)
+   * @type {[Map<string, {name: string, type: string, sortedChildren: string[]}>, function]}
    */
-  const [sortedChildrenState, setSortedChildrenState] = useState(null);
+  const [sortedDescendants, setSortedDescendants] = useState(new Map());
 
-  const updateChildrenState = useCallback(() => {
+  const updateDescendantsState = useCallback(() => {
     if (libraryYTreeRef.current && libraryId !== "unselected") {
-      setSortedChildrenState(
-        libraryYTreeRef.current.sortChildrenByOrder(
-          libraryYTreeRef.current.getNodeChildrenFromKey("root"),
-          "root"
-        )
+      const descendants = new Map();
+
+      // Recursive function to build descendants map
+      const processNode = (nodeId) => {
+        const nodeValue = libraryYTreeRef.current.getNodeValueFromKey(nodeId);
+        const children = libraryYTreeRef.current.getNodeChildrenFromKey(nodeId);
+        const sortedChildren = libraryYTreeRef.current.sortChildrenByOrder(
+          children,
+          nodeId
+        );
+
+        descendants.set(nodeId, {
+          name: nodeValue?.get("item_properties")?.item_title || "",
+          type: nodeValue?.get("type"),
+          sortedChildren: sortedChildren,
+        });
+
+        // Recursively process all children
+        sortedChildren.forEach((childId) => processNode(childId));
+      };
+
+      // Start with root's children
+      const rootChildren =
+        libraryYTreeRef.current.getNodeChildrenFromKey("root");
+      const sortedRootChildren = libraryYTreeRef.current.sortChildrenByOrder(
+        rootChildren,
+        "root"
       );
+
+      descendants.set("root", {
+        name: "root",
+        type: "root",
+        sortedChildren: sortedRootChildren,
+      });
+
+      sortedRootChildren.forEach((childId) => processNode(childId));
+
+      console.log("updating descendants state");
+
+      setSortedDescendants(descendants);
     }
   }, [libraryId]);
 
@@ -103,19 +138,16 @@ const LibraryDirectory = ({ libraryId }) => {
       dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
     );
 
-    setSortedChildrenState(
-      libraryYTreeRef.current.sortChildrenByOrder(
-        libraryYTreeRef.current.getNodeChildrenFromKey("root"),
-        "root"
-      )
-    );
+    // Initialize the centralized descendants state
+    updateDescendantsState();
 
-    libraryYTreeRef.current.observe(updateChildrenState);
+    // Single observe call for entire tree
+    libraryYTreeRef.current.observe(updateDescendantsState);
 
     return () => {
-      libraryYTreeRef.current.unobserve(updateChildrenState);
+      libraryYTreeRef.current.unobserve(updateDescendantsState);
     };
-  }, [libraryId, updateChildrenState]);
+  }, [libraryId, updateDescendantsState]);
 
   // Early return if libraryId is unselected to prevent rendering library content
   if (libraryId === "unselected") {
@@ -533,9 +565,9 @@ const LibraryDirectory = ({ libraryId }) => {
           id="BookListContainer"
           className="h-fit w-full flex flex-col justify-start items-center"
         >
-          {sortedChildrenState &&
-            sortedChildrenState.length > 0 &&
-            sortedChildrenState.map((bookId) => (
+          {sortedDescendants.get("root")?.sortedChildren &&
+            sortedDescendants.get("root").sortedChildren.length > 0 &&
+            sortedDescendants.get("root").sortedChildren.map((bookId) => (
               <motion.div
                 id={`Node-${bookId}`}
                 key={bookId}
@@ -551,6 +583,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   breadcrumbs={[libraryId, bookId]}
                   focusedItemId={focusedItemId}
                   setFocusedItemId={setFocusedItemId}
+                  sortedDescendants={sortedDescendants}
                 />
               </motion.div>
             ))}

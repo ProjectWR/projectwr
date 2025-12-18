@@ -36,6 +36,7 @@ const DirectoryItemNode = ({
   focusedItemId,
   setFocusedItemId,
   isChildOfRoot = true,
+  sortedDescendants,
 }) => {
   // console.log("Directory item node rendered: ", itemId);
   const { deviceType } = useDeviceType();
@@ -66,9 +67,13 @@ const DirectoryItemNode = ({
 
   const itemMapState = useYMap(itemMapRef.current);
 
-  const [nodeChildrenState, setNodeChildrenState] = useState(
-    ytree.getNodeChildrenFromKey(itemId)
-  );
+  // const [nodeChildrenState, setNodeChildrenState] = useState(
+  //   ytree.getNodeChildrenFromKey(itemId)
+  // );
+
+  const nodeChildrenStates = useMemo(() => {
+    return sortedDescendants.get(itemId)?.sortedChildren || [];
+  }, [sortedDescendants, itemId]);
 
   const [isOpened, setIsOpened] = useState(
     itemLocalStateManager.isItemOpened(libraryId, itemId)
@@ -105,20 +110,20 @@ const DirectoryItemNode = ({
         itemLocalStateManager.off(libraryId, itemId, updateisOpened);
       }
     };
-  }, [itemId]);
+  }, [itemId, libraryId]);
 
-  // Update the header label (title) and children when the underlying Yjs node changes.
-  useEffect(() => {
-    const updateNodeChildrenState = () => {
-      setNodeChildrenState(ytree.getNodeChildrenFromKey(itemId));
-    };
+  // // Update the header label (title) and children when the underlying Yjs node changes.
+  // useEffect(() => {
+  //   // const updat,eNodeChildrenState = () => {
+  //   //   setNodeChildrenState(ytree.getNodeChildrenFromKey(itemId));
+  //   // };
 
-    ytree.observe(updateNodeChildrenState);
+  //   // ytree (updateNodeChildrenState);
 
-    return () => {
-      ytree.unobserve(updateNodeChildrenState);
-    };
-  }, [itemId, ytree]);
+  //   return () => {
+  //     // ytree.unobserve(updateNodeChildrenState);
+  //   };
+  // }, [itemId, ytree]);
 
   const onCreateSectionClick = useCallback(() => {
     const newId = dataManagerSubdocs.createEmptySection(ytree, itemId);
@@ -374,11 +379,7 @@ const DirectoryItemNode = ({
 
         {
           label: `Export 
-          ${
-            itemMapRef.current.get("type") === "section"
-              ? "section"
-              : ""
-          }
+          ${itemMapRef.current.get("type") === "section" ? "section" : ""}
           ${itemMapRef.current.get("type") === "book" ? "book" : ""}
           `,
           icon: (
@@ -790,22 +791,22 @@ const DirectoryItemNode = ({
                     id="DirectoryItemNodeBody"
                     className="h-fit w-full grid grid-cols-1"
                   >
-                    {nodeChildrenState !== null &&
-                      ytree
-                        .sortChildrenByOrder(nodeChildrenState, itemId)
-                        .map((childKey) => (
-                          <div id="DirectoryItemNodeChild" key={childKey}>
-                            <DirectoryItemNode
-                              libraryId={libraryId}
-                              ytree={ytree}
-                              itemId={childKey}
-                              breadcrumbs={[...breadcrumbs, childKey]}
-                              setFocusedItemId={setFocusedItemId}
-                              focusedItemId={focusedItemId}
-                              isChildOfRoot={false}
-                            />
-                          </div>
-                        ))}
+                    {nodeChildrenStates !== null &&
+                      nodeChildrenStates.length > 0 &&
+                      nodeChildrenStates.map((childKey) => (
+                        <div id="DirectoryItemNodeChild" key={childKey}>
+                          <DirectoryItemNode
+                            libraryId={libraryId}
+                            ytree={ytree}
+                            itemId={childKey}
+                            breadcrumbs={[...breadcrumbs, childKey]}
+                            setFocusedItemId={setFocusedItemId}
+                            focusedItemId={focusedItemId}
+                            isChildOfRoot={false}
+                            sortedDescendants={sortedDescendants}
+                          />
+                        </div>
+                      ))}
                   </div>
                 </motion.div>
               )}
@@ -819,6 +820,7 @@ const DirectoryItemNode = ({
 DirectoryItemNode.propTypes = {
   ytree: PropTypes.object.isRequired,
   itemId: PropTypes.string.isRequired,
+  sortedDescendants: PropTypes.instanceOf(Map).isRequired,
 };
 
 export default DirectoryItemNode;
