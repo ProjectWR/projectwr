@@ -469,7 +469,7 @@ const WritingApp = () => {
               transition={{ duration: 0.2 }}
             >
               {/* {deviceType === "desktop" && (<ActionBar />)} */}
-              <div className="w-full bg-appBackground h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
+              <div className="w-full bg-appBackgroundAccent h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
                 <ActionBarLeftSide />
                 <TabsBar isNotesPanelAwake={isNotesPanelAwake} refreshNotesPanel={refreshNotesPanel} />
                 <ActionBarRightSide />

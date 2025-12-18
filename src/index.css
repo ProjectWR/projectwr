@@ -135,8 +135,8 @@
     --appLayoutSubmitButton: 0 0% 80%;
   }
   .dark {
-    --appBackground: 0, 0%, 8.9%, 100%;
-    --appBackgroundAccent: 0, 0%, 6.9%, 100%;
+    --appBackground: 0, 0%, 6.9%, 100%;
+    --appBackgroundAccent: 0, 0%, 8.9%, 100%;
     --appBackgroundAccentGentleTransient: 0, 0% 6.9%, 95%;
     --appBackgroundAccentTransient: 0, 0%, 6.9%, 50%;
     --appLayoutBorder: 0 0% 16.9%;
@@ -326,7 +326,7 @@
 
     --scrollbarSize: calc(var(--uiScale) * 0.25rem);
     --tabsHeight: calc(var(--uiScale) * 2.2rem);
-    --tabsIconSize: calc(var(--uiScale) * 1.8rem);
+    --tabsIconSize: calc(var(--uiScale) * 1.3rem);
     --tabsDeleteIconSize: calc(var(--uiScale) * 1.4rem);
     --tabsFontSize: calc(var(--uiScale) * 0.9rem);
     --tabWidth: calc(var(--uiScale) * 12rem);

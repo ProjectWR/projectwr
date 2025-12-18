@@ -96,7 +96,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
     <>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans px-1"
+        className="border-b flex w-fit z-1000 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText font-sans px-1"
       >
         <ActionButton
           onClick={() => {
@@ -179,7 +179,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       >
         <div
           id="TabsContent"
-          className="w-fit min-w-full h-full z-[4] flex items-center"
+          className="w-fit min-w-full h-full z-[4] flex items-end "
         >
           <AnimatePresence>
             {tabs?.map((tab) => {
@@ -202,7 +202,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
                       : `calc(var(--tabWidth) * 0.7)`,
                   }}
                   exit={{ opacity: 0, width: 0 }}
-                  className="h-full overflow-x-hidden overflow-ellipsis"
+                  className="h-full overflow-x-hidden overflow-ellipsis flex items-end"
                 >
                   <TabButton
                     panelType={panelType}
@@ -537,7 +537,7 @@ const TabButton = ({
       setLabel("Settings");
     } else if (panelType === "home") {
       setIcon(
-        <span className="icon-[material-symbols-light--home] w-full h-full"></span>
+        <span className="icon-[material-symbols-light--home] w-full h-full mb-0.5"></span>
       );
       setLabel("Home");
     }
@@ -558,8 +558,8 @@ const TabButton = ({
   return (
     <div
       ref={dndRef}
-      className={`h-full min-h-full w-full flex items-center justify-start gap-1 pr-1
-          transition-colors duration-200 font-sans
+      className={`h-[85%] min-h-[85%] w-full flex items-center justify-start gap-1 px-1
+          transition-colors duration-200 font-sans rounded-t-lg
 
           border
 
@@ -585,7 +585,7 @@ const TabButton = ({
               mode,
               breadcrumbs,
             })
-              ? "border-t-appLayoutHighlight border-x-appLayoutBorder border-b-transparent"
+              ? "border-t-appLayoutBorder border-x-appLayoutBorder border-b-transparent bg-appBackground"
               : "border-t-transparent border-b-appLayoutBorder border-x-transparent hover:bg-appLayoutInverseHover "
           }
         `}
@@ -595,8 +595,8 @@ const TabButton = ({
         onClick={action}
         className={`grow basis-0 min-w-0 h-full min-h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted overflow-x-hidden overflow-y-hidden overflow-ellipsis`}
       >
-        <span className="w-tabsIconSize h-tabsIconSize p-1">{icon}</span>
-        <div className="grow min-w-0 pr-4 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
+        <span className="w-tabsIconSize h-tabsIconSize">{icon}</span>
+        <div className="grow min-w-0 px-1 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
           {label}
         </div>
       </button>
@@ -620,7 +620,7 @@ const TabButton = ({
               );
             }
           }}
-          className="min-w-tabsDeleteIconSize w-tabsDeleteIconSize h-tabsDeleteIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
+          className="min-w-tabsIconSize w-tabsIconSize h-tabsIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
