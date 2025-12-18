@@ -51,10 +51,10 @@ const useMainPanel = () => {
         const ytree = getOrInitLibraryYTree(breadcrumbs[0]);
 
         if (breadcrumbs[0] === breadcrumbs[1]) {
-          setNotesPanelState({
-            libraryId: breadcrumbs[0],
-            itemId: breadcrumbs[1],
-          });
+          // setNotesPanelState({
+          //   libraryId: breadcrumbs[0],
+          //   itemId: breadcrumbs[1],
+          // });
           return;
         }
 
@@ -63,17 +63,17 @@ const useMainPanel = () => {
         console.log("ITEM TYPE: ", itemType);
 
         if (itemType !== "book" && itemType !== "section") {
-          setNotesPanelState({
-            libraryId: breadcrumbs[0],
-            itemId: ytree.getNodeParentFromKey(breadcrumbs[1]),
-          });
+          // setNotesPanelState({
+          //   libraryId: breadcrumbs[0],
+          //   itemId: ytree.getNodeParentFromKey(breadcrumbs[1]),
+          // });
           return;
         }
 
-        setNotesPanelState({
-          libraryId: breadcrumbs[0],
-          itemId: breadcrumbs[1],
-        });
+        // setNotesPanelState({
+        //   libraryId: breadcrumbs[0],
+        //   itemId: breadcrumbs[1],
+        // });
       }
     },
     [setMainPanelState, clearFuture, saveStateInHistory]
