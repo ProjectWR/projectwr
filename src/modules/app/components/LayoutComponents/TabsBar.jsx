@@ -543,22 +543,24 @@ const TabButton = ({
     }
   }, [panelType, breadcrumbs]);
 
+  const tabIsSelected = useMemo(() => {
+    return equalityDeep(mainPanelState, {
+      panelType,
+      mode,
+      breadcrumbs,
+    });
+  }, [panelType, mode, breadcrumbs, mainPanelState]);
+
   useEffect(() => {
-    if (
-      equalityDeep(mainPanelState, {
-        panelType,
-        mode,
-        breadcrumbs,
-      })
-    ) {
+    if (tabIsSelected) {
       dndRef.current?.scrollIntoView();
     }
-  }, [mainPanelState, breadcrumbs, mode, panelType]);
+  }, [tabIsSelected]);
 
   return (
     <div
       ref={dndRef}
-      className={`h-[85%] min-h-[85%] w-full flex items-center justify-start gap-1 px-1
+      className={`h-[85%] min-h-[85%] w-full flex items-center justify-start gap-1
           transition-colors duration-200 font-sans rounded-t-lg
 
           border
@@ -580,11 +582,7 @@ const TabButton = ({
           }
          
           ${
-            equalityDeep(mainPanelState, {
-              panelType,
-              mode,
-              breadcrumbs,
-            })
+            tabIsSelected
               ? "border-t-appLayoutBorder border-x-appLayoutBorder border-b-transparent bg-appBackground"
               : "border-t-transparent border-b-appLayoutBorder border-x-transparent hover:bg-appLayoutInverseHover "
           }
@@ -593,7 +591,7 @@ const TabButton = ({
       <button
         autoFocus
         onClick={action}
-        className={`grow basis-0 min-w-0 h-full min-h-full flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted overflow-x-hidden overflow-y-hidden overflow-ellipsis`}
+        className={`grow basis-0 min-w-0 h-full min-h-full pl-1 flex items-center justify-start focus:-outline-offset-4  focus:outline-appLayoutTextMuted overflow-x-hidden overflow-y-hidden overflow-ellipsis`}
       >
         <span className="w-tabsIconSize h-tabsIconSize">{icon}</span>
         <div className="grow min-w-0 px-1 basis-0 h-full flex items-center text-nowrap overflow-x-hidden overflow-y-hidden overflow-ellipsis text-tabsFontSize">
@@ -620,7 +618,11 @@ const TabButton = ({
               );
             }
           }}
-          className="min-w-tabsIconSize w-tabsIconSize h-tabsIconSize p-px rounded-md hover:text-appLayoutHighlight hover:bg-appLayoutInverseHover"
+          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${
+            !tabIsSelected
+              ? "hover:bg-appBackgroundAccent"
+              : "hover:bg-appLayoutInverseHover"
+          }`}
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
