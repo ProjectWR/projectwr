@@ -13,8 +13,7 @@ import PaperSettingsPanel from "../MainPanels/PaperSettingsPanel";
 import TemplateViewPanel from "../MainPanels/TemplateViewPanel";
 import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
 import HomePanel from "../MainPanels/HomePanel";
-import DictionaryCreatePanel from "../MainPanels/DictionaryCreatePanel";
-import DictionaryDetailsPanel from "../MainPanels/DictionaryDetailsPanel";
+
 import useMainPanel from "../../hooks/useMainPanel";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { Breadcrumbs } from "./Breadcrumbs";
@@ -30,6 +29,8 @@ import { getOrInitLibraryYTree } from "../../lib/ytree";
 import DictionaryPanel from "../MainPanels/DictionaryPanel";
 
 const MainPanel = ({}) => {
+  console.log("MainPanel rendering");
+
   const { deviceType } = useDeviceType();
 
   const {
@@ -41,51 +42,14 @@ const MainPanel = ({}) => {
     clearFuture,
   } = useStoreHistory();
 
-  const mainPanelPreviousRef = useRef(null);
-
+  /* Simplified subscriptions - MainPanel mainly depends on mainPanelState now */
   const libraryId = appStore((state) => state.libraryId);
   const setActivity = appStore((state) => state.setActivity);
-
   const setLibraryId = appStore((state) => state.setLibraryId);
-  const setFocusedItem = appStore((state) => state.setFocusedItem);
-
-  const itemId = appStore((state) => state.itemId);
-  const itemMode = appStore((state) => state.itemMode);
-
-  const templateId = appStore((state) => state.templateId);
-  const templateMode = appStore((state) => state.templateMode);
-
-  const setTemplateId = appStore((state) => state.setTemplateId);
-
   const setPanelOpened = appStore((state) => state.setPanelOpened);
-
-  const dictionaryWord = appStore((state) => state.dictionaryWord);
-  const dictionaryMode = appStore((state) => state.dictionaryMode);
-
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
 
-  const activity = appStore((state) => state.activity);
-
-  const setNotesPanelState = appStore((state) => state.setNotesPanelState);
-
-  const notesScopeLibraryIdRef = useRef(null);
-
   const { mainPanelState, activatePanel } = useMainPanel();
-
-  useEffect(() => {
-    const { panelType, mode, breadcrumbs } = mainPanelState;
-    if (panelType === "libraries") {
-      const libraryId = breadcrumbs[0];
-
-      if (
-        notesScopeLibraryIdRef.current === null ||
-        notesScopeLibraryIdRef.current !== libraryId
-      ) {
-        notesScopeLibraryIdRef.current = libraryId;
-        setNotesPanelState({ libraryId: libraryId, itemId: "root" });
-      }
-    }
-  }, [mainPanelState, setNotesPanelState]);
 
   const key = useRef("empty");
 
@@ -109,7 +73,8 @@ const MainPanel = ({}) => {
     libraryYTreeRef.current = new YTree(
       dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
     );
-  }, [libraryId, activity, itemId, itemMode, templateId, templateMode]);
+    // Only re-initialize YTree if libraryId changes
+  }, [libraryId]);
 
   const renderMainPanel = useCallback(() => {
     const { panelType, mode, breadcrumbs } = mainPanelState;
@@ -120,12 +85,6 @@ const MainPanel = ({}) => {
     const youngestId = breadcrumbs[breadcrumbs.length - 1];
 
     if (panelType === "libraries") {
-      setFocusedItem({
-        type: "libraries",
-        libraryId: rootId,
-        itemId: isAtRoot ? null : youngestId,
-      });
-
       const breadcrumbValues = [
         {
           label: "Your Libraries",
@@ -248,7 +207,7 @@ const MainPanel = ({}) => {
       }
     } else if (panelType === "templates") {
       // setActivity("templates");
-      setTemplateId(rootId);
+
       key.current = "templateDetails-" + rootId + "-" + mode;
 
       const breadcrumbValues = [
@@ -298,154 +257,7 @@ const MainPanel = ({}) => {
     setActivity,
     setPanelOpened,
     setLibraryId,
-    setFocusedItem,
-    setTemplateId,
   ]);
-
-  const renderMainPanelOld = useCallback(() => {
-    if (activity === "libraries") {
-      if (libraryId !== "unselected") {
-        if (itemId !== "unselected") {
-          key.current = "itemDetails-" + itemId + "-" + itemMode;
-
-          if (!libraryYTreeRef.current) {
-            if (
-              !checkForYTree(
-                dataManagerSubdocs
-                  .getLibrary(libraryId)
-                  .getMap("library_directory")
-              )
-            ) {
-              throw new Error("Tried to access uninitialized directory");
-            }
-
-            libraryYTreeRef.current = new YTree(
-              dataManagerSubdocs
-                .getLibrary(libraryId)
-                .getMap("library_directory")
-            );
-          }
-
-          const itemMap = libraryYTreeRef.current.getNodeValueFromKey(itemId);
-
-          if (itemMap) {
-            if (itemMap.get("type") === "book") {
-              return (
-                <BookDetailsPanel
-                  ytree={libraryYTreeRef.current}
-                  bookId={itemId}
-                  key={itemId}
-                />
-              );
-            }
-
-            if (itemMap.get("type") === "section") {
-              return (
-                <SectionDetailsPanel
-                  ytree={libraryYTreeRef.current}
-                  sectionId={itemId}
-                  key={itemId}
-                />
-              );
-            }
-
-            if (itemMap.get("type") === "paper") {
-              if (itemMode === "details") {
-                return (
-                  <PaperPanel
-                    ytree={libraryYTreeRef.current}
-                    paperId={itemId}
-                    key={itemId}
-                  />
-                );
-              }
-
-              if (itemMode === "settings") {
-                return (
-                  <PaperSettingsPanel
-                    ytree={libraryYTreeRef.current}
-                    paperId={itemId}
-                  />
-                );
-              }
-            }
-          }
-        }
-
-        key.current = "libraryDetails-" + libraryId;
-        return <LibraryDetailsPanel libraryId={libraryId} />;
-      }
-
-      // key.current = "empty";
-      // return <HomePanel />;
-    }
-
-    if (activity === "templates") {
-      if (templateId !== "unselected") {
-        key.current = "templateDetails-" + templateId + "-" + templateMode;
-        if (templateMode === "details") {
-          return (
-            <TemplateDetailsPanel templateId={templateId} key={templateId} />
-          );
-        }
-        if (templateMode === "preview") {
-          return <TemplateViewPanel templateId={templateId} key={templateId} />;
-        }
-      }
-
-      // key.current = "empty";
-      // return <HomePanel />;
-    }
-
-    if (activity === "dictionary") {
-      if (dictionaryMode === "create") {
-        key.current = "Dictionary-" + dictionaryMode;
-        return <DictionaryCreatePanel />;
-      }
-
-      if (dictionaryMode === "details") {
-        key.current = "Dictionary-" + dictionaryWord + "-" + dictionaryMode;
-        return <DictionaryDetailsPanel word={dictionaryWord} />;
-      }
-
-      // key.current = "empty";
-      // return <HomePanel />;
-    }
-
-    if (activity === "settings") {
-      key.current = "settings";
-      return <SettingsPanel />;
-    }
-
-    if (activity === "home") {
-      key.current = "home";
-      return <HomePanel />;
-    }
-
-    return null;
-  }, [
-    libraryId,
-    activity,
-    itemId,
-    itemMode,
-    templateId,
-    templateMode,
-    dictionaryMode,
-    dictionaryWord,
-  ]);
-
-  const renderProxyOld = useCallback(() => {
-    const mainPanel = renderMainPanel();
-
-    if (mainPanel) {
-      mainPanelPreviousRef.current = { key: key.current, mainPanel: mainPanel };
-      return mainPanelPreviousRef.current.mainPanel;
-    } else if (mainPanelPreviousRef.current) {
-      return mainPanelPreviousRef.current.mainPanel;
-    } else {
-      return null;
-    }
-  }, [renderMainPanel]);
 
   return (
     <div className="grow min-w-0 basis-0 h-full bg-appBackground overflow-hidden z-3 flex flex-col items-center justify-center">
@@ -456,22 +268,20 @@ const MainPanel = ({}) => {
           refreshNotesPanel={refreshNotesPanel}
         />
       </section> */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={key.current}
-          className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
+      <div
+        key={key.current}
+        className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
+      >
+        <ErrorBoundary
+          fallback={
+            <div className="w-full h-full flex items-center justify-center">
+              Something went wrong
+            </div>
+          }
         >
-          <ErrorBoundary
-            fallback={
-              <div className="w-full h-full flex items-center justify-center">
-                Something went wrong
-              </div>
-            }
-          >
-            {renderMainPanel()}
-          </ErrorBoundary>
-        </motion.div>
-      </AnimatePresence>
+          {renderMainPanel()}
+        </ErrorBoundary>
+      </div>
     </div>
   );
 };

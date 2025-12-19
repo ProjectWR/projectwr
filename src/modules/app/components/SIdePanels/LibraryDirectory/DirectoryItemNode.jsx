@@ -1,23 +1,12 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
-import { YTree } from "yjs-orderedtree";
 import { useDrag, useDrop } from "react-dnd";
 import useYMap from "../../../hooks/useYMap";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
 import itemLocalStateManager from "../../../lib/itemLocalState";
-import useOuterClick from "../../../../design-system/useOuterClick";
-import { min, max } from "lib0/math";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-import useComputedCssVar from "../../../hooks/useComputedCssVar";
-import { ContextMenu } from "radix-ui";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
@@ -40,14 +29,7 @@ const DirectoryItemNode = ({
 }) => {
   // console.log("Directory item node rendered: ", itemId);
   const { deviceType } = useDeviceType();
-  const {
-    saveStateInHistory,
-    canGoBack,
-    goBack,
-    canGoForward,
-    goForward,
-    clearFuture,
-  } = useStoreHistory();
+  // const { saveStateInHistory } = useStoreHistory();
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const panelOpened = appStore((state) => state.panelOpened);
@@ -78,8 +60,6 @@ const DirectoryItemNode = ({
   const [isOpened, setIsOpened] = useState(
     itemLocalStateManager.isItemOpened(libraryId, itemId)
   );
-
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (focusedItemId === itemId) {
@@ -616,12 +596,6 @@ const DirectoryItemNode = ({
               duration-0
 
         `}
-            onMouseEnter={() => {
-              setIsHovered(true);
-            }}
-            onMouseLeave={() => {
-              setIsHovered(false);
-            }}
           >
             {itemMapRef.current.get("type") == "paper" && (
               <>
@@ -630,8 +604,6 @@ const DirectoryItemNode = ({
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
                     console.log("edit paper button");
-                    setFocusedItemId(itemId);
-
                     if (
                       !(
                         appStoreItemId === itemId &&
@@ -639,8 +611,6 @@ const DirectoryItemNode = ({
                         panelOpened
                       )
                     ) {
-                      setItemId(itemId);
-                      setItemMode("details");
                       if (deviceType === "mobile") {
                         setPanelOpened(false);
                       }
@@ -678,8 +648,6 @@ const DirectoryItemNode = ({
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
                     console.log("edit note button");
-                    setFocusedItemId(itemId);
-
                     if (
                       !(
                         appStoreItemId === itemId &&
@@ -687,8 +655,6 @@ const DirectoryItemNode = ({
                         panelOpened
                       )
                     ) {
-                      setItemId(itemId);
-                      setItemMode("details");
                       if (deviceType === "mobile") {
                         setPanelOpened(false);
                       }
@@ -818,8 +784,13 @@ const DirectoryItemNode = ({
 };
 
 DirectoryItemNode.propTypes = {
+  libraryId: PropTypes.string.isRequired,
   ytree: PropTypes.object.isRequired,
   itemId: PropTypes.string.isRequired,
+  breadcrumbs: PropTypes.array.isRequired,
+  focusedItemId: PropTypes.string,
+  setFocusedItemId: PropTypes.func.isRequired,
+  isChildOfRoot: PropTypes.bool,
   sortedDescendants: PropTypes.instanceOf(Map).isRequired,
 };
 

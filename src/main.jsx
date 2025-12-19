@@ -13,16 +13,13 @@ import App from "./App.jsx";
 
 const theme = createTheme({
   activeClassName: "",
-  
 });
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <MantineProvider
-      cssVariablesSelector={`:root${":not(#\\#)".repeat(3)}`}
-      theme={theme}
-    >
-      <App />
-    </MantineProvider>
-  </StrictMode>
+  <MantineProvider
+    cssVariablesSelector={`:root${":not(#\\#)".repeat(3)}`}
+    theme={theme}
+  >
+    <App />
+  </MantineProvider>
 );

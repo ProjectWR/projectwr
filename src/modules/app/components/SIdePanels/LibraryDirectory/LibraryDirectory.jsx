@@ -21,15 +21,6 @@ const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
   const { deviceType } = useDeviceType();
 
-  const {
-    saveStateInHistory,
-    canGoBack,
-    goBack,
-    canGoForward,
-    goForward,
-    clearFuture,
-  } = useStoreHistory();
-
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const libraryDirectoryBodyRef = useRef(null);
@@ -43,7 +34,35 @@ const LibraryDirectory = ({ libraryId }) => {
 
   const focusedItem = appStore((state) => state.focusedItem);
 
-  const [focusedItemId, setFocusedItemId] = useState(null);
+  /* Optimization: Derive focusedItemId directly from store to avoid double renders */
+  const focusedItemId = useMemo(() => {
+    if (
+      focusedItem?.type === "libraries" &&
+      focusedItem.libraryId === libraryId
+    ) {
+      return focusedItem.itemId;
+    }
+    return null;
+  }, [focusedItem, libraryId]);
+
+  /* Handler to update global store instead of local state */
+  const handleSetFocusedItemId = useCallback(
+    (itemId) => {
+      // If null, we might want to clear focus or do nothing?
+      if (itemId === null) {
+        // appStore.getState().setFocusedItem(null); // Optional: decide if clicking background clears focus
+        return;
+      }
+
+      const setFocusedItem = appStore.getState().setFocusedItem;
+      setFocusedItem({
+        type: "libraries",
+        libraryId: libraryId,
+        itemId: itemId,
+      });
+    },
+    [libraryId]
+  );
 
   // Only initialize library data refs if libraryId is not "unselected"
   const libraryPropsMapRef = useRef(
@@ -107,18 +126,9 @@ const LibraryDirectory = ({ libraryId }) => {
     }
   }, [libraryId]);
 
-  useEffect(() => {
-    if (
-      focusedItem?.type === "libraries" &&
-      focusedItem.libraryId === libraryId
-    ) {
-      setFocusedItemId(focusedItem.itemId);
-    }
-  }, [focusedItem, libraryId]);
-
-  useEffect(() => {
-    console.log("Focused Item: ", focusedItemId);
-  }, [focusedItemId]);
+  // useEffect(() => {
+  //   console.log("Focused Item: ", focusedItemId);
+  // }, [focusedItemId]);
 
   useEffect(() => {
     // Skip data subscriptions if libraryId is "unselected"
@@ -342,7 +352,7 @@ const LibraryDirectory = ({ libraryId }) => {
               );
 
               setItemId(bookId);
-              setFocusedItemId(bookId);
+
               activatePanel("libraries", "details", [libraryId, bookId]);
               if (deviceType === "mobile") {
                 setPanelOpened(false);
@@ -397,7 +407,7 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setItemId(sectionId);
-              setFocusedItemId(sectionId);
+
               activatePanel("libraries", "details", [libraryId, sectionId]);
               if (deviceType === "mobile") {
                 setPanelOpened(false);
@@ -459,7 +469,7 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setItemId(paperId);
-              setFocusedItemId(paperId);
+
               activatePanel("libraries", "details", [libraryId, paperId]);
 
               if (deviceType === "mobile") {
@@ -521,7 +531,7 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setItemId(noteId);
-              setFocusedItemId(noteId);
+
               activatePanel("libraries", "details", [libraryId, noteId]);
 
               if (deviceType === "mobile") {
@@ -556,7 +566,7 @@ const LibraryDirectory = ({ libraryId }) => {
         }}
         onClick={(event) => {
           if (event.target === event.currentTarget) {
-            setFocusedItemId(null);
+            handleSetFocusedItemId(null);
           }
         }}
         ref={libraryDirectoryBodyRef}
@@ -582,7 +592,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   itemId={bookId}
                   breadcrumbs={[libraryId, bookId]}
                   focusedItemId={focusedItemId}
-                  setFocusedItemId={setFocusedItemId}
+                  setFocusedItemId={handleSetFocusedItemId}
                   sortedDescendants={sortedDescendants}
                 />
               </motion.div>
