@@ -179,7 +179,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       >
         <div
           id="TabsContent"
-          className="w-fit min-w-full h-full z-[4] flex items-end "
+          className="w-fit min-w-full h-full z-[4] flex items-end gap-1 border-b border-appLayoutBorder"
         >
           <AnimatePresence>
             {tabs?.map((tab) => {
@@ -202,7 +202,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
                       : `calc(var(--tabWidth) * 0.7)`,
                   }}
                   exit={{ opacity: 0, width: 0 }}
-                  className="h-full overflow-x-hidden overflow-ellipsis flex items-end"
+                  className="h-full overflow-x-hidden overflow-ellipsis flex items-center"
                 >
                   <TabButton
                     panelType={panelType}
@@ -561,7 +561,7 @@ const TabButton = ({
     <div
       ref={dndRef}
       className={`h-[85%] min-h-[85%] w-full flex items-center justify-start gap-1
-          transition-colors duration-200 font-sans rounded-t-lg
+          transition-colors duration-200 font-sans rounded-lg
 
           border
 
@@ -583,8 +583,8 @@ const TabButton = ({
          
           ${
             tabIsSelected
-              ? "border-t-appLayoutBorder border-x-appLayoutBorder border-b-transparent bg-appBackground"
-              : "border-t-transparent border-b-appLayoutBorder border-x-transparent hover:bg-appLayoutInverseHover "
+              ? "border-appLayoutBorder bg-appBackground"
+              : "border-transparent hover:bg-appLayoutInverseHover "
           }
         `}
     >
@@ -705,7 +705,7 @@ const UnusedSpace = ({ offset = false }) => {
       style={{
         height: "100%",
       }}
-      className={`border-b border-b-appLayoutBorder
+      className={`
         ${
           isOverCurrent && isHovering
             ? ` border-l border-l-appLayoutHighlight`
