@@ -321,7 +321,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
             onFocus={() => {
               setSearchOpened(true);
             }}
-            className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted bg-appBackground focus:bg-appLayoutInputBackground focus:text-appLayoutText focus:outline-0 flex items-center justify-start px-2 rounded-md"
+            className="h-fit min-h-fit text-notesPanelHeaderFontSize w-full px-2 py-1 bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-appLayoutBorder border rounded-sm"
             value={headerText}
             onChange={(e) => {
               setHeaderText(e.target.value);

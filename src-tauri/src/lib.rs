@@ -42,21 +42,20 @@ async fn start_server(window: Window) -> Result<u16, String> {
 pub fn run() {
     dotenv::from_filename(ENV_FILE).ok();
 
-    tauri::Builder::default()
-        .plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
+    let mut builder = tauri::Builder::default();
+
+    #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
             println!("Single instance triggered with args: {:?}", args);
 
-            // When a second instance is launched (e.g., from a deep link),
-            // this callback runs in the FIRST instance with the args from the second instance
             if let Some(url) = args.get(1) {
                 println!("Received URL from new instance: {}", url);
 
-                // Get the main window and emit the deep link event
                 if let Some(window) = app.get_webview_window("main") {
                     println!("Emitting deep link event: {}", url);
                     let _ = window.emit("oauth://url", url);
 
-                    // Bring window to focus
                     let _ = window.unminimize();
                     let _ = window.show();
                     let _ = window.set_always_on_top(true);
@@ -69,17 +68,17 @@ pub fn run() {
                             window.request_user_attention(Some(UserAttentionType::Informational));
                     }
 
-                    // Remove always on top after a brief moment
                     let window_clone = window.clone();
                     std::thread::spawn(move || {
                         std::thread::sleep(std::time::Duration::from_millis(100));
                         let _ = window_clone.set_always_on_top(false);
                     });
-
-                    println!("Window focus attempted for single instance");
                 }
             }
-        }))
+        }));
+    }
+
+    builder
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
@@ -101,16 +100,12 @@ pub fn run() {
                 }
             }
 
-            tauri::async_runtime::block_on(async {
-                let settings_data = std::fs::read_to_string("resources/default_settings.json")
-                    .map_err(|e| e.to_string())?;
-                let settings: Settings =
-                    serde_json::from_str(&settings_data).map_err(|e| e.to_string())?;
-                SETTINGS
-                    .set(settings)
-                    .map_err(|_| "Failed to set settings".to_string())?;
-                Ok::<(), String>(())
-            })?;
+            let settings_data = include_str!("../resources/default_settings.json");
+            let settings: Settings =
+                serde_json::from_str(settings_data).map_err(|e| e.to_string())?;
+            SETTINGS
+                .set(settings)
+                .map_err(|_| "Failed to set settings".to_string())?;
 
             if cfg!(debug_assertions) {
                 app.handle().plugin(
