@@ -172,19 +172,6 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
         className={formClassName}
       >
         <DetailsPanelHeader>
-          {deviceType === "mobile" && (
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
-             order-first
-          `}
-              onClick={() => {
-                setPanelOpened(true);
-                setItemId("unselected");
-              }}
-            >
-              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-          )}
           <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
 
           <DetailsPanelNameInput

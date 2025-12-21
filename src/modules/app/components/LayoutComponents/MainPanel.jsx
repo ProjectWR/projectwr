@@ -314,11 +314,16 @@ const MainPanel = ({}) => {
 export default MainPanel;
 
 const PrependBreadcrumbs = ({ breadcrumbValues, children }) => {
+  const { deviceType } = useDeviceType();
+  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
+
   return (
     <>
-      <section className="w-full h-fit py-[5px] px-3 flex items-center justify-start">
-        <Breadcrumbs breadcrumbs={breadcrumbValues} />{" "}
-      </section>
+      {isDesktop && ( 
+        <section className="w-full h-fit py-[5px] px-3 flex items-center justify-start">
+          <Breadcrumbs breadcrumbs={breadcrumbValues} />
+        </section>
+      )}
       <section className="MainPanelShell w-full grow basis-0 overflow-hidden">
         {children}
       </section>

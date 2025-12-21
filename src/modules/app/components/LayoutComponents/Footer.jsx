@@ -10,8 +10,6 @@ const Footer = () => {
 
   const { zoomIn, zoomOut } = useZoom();
 
-  if (deviceType === "mobile") return;
-
   return (
     <div
       id="FooterContainer"

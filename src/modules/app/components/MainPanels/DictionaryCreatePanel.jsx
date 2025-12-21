@@ -55,8 +55,7 @@ const DictionaryCreatePanel = ({}) => {
       }}
       id="DictionaryCreateContainer"
       className={`h-full flex flex-col items-center justify-start 
-      ${deviceType === "mobile" && "w-full"}   
-      ${deviceType === "desktop" && "mt-10"}       
+      mt-10       
     `}
       style={{
         width: `var(--detailsPanelWidth)`,

@@ -34,26 +34,16 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
       {showActivityBar && sideBarOpened && (
         <motion.div
           id="ActivityBarContainer"
-          className={`flex shrink-0 gap-px items-center bg-appBackgroundAccent backdrop-blur-2xl   ${
-            deviceType === "mobile"
-              ? "w-full h-activityBarHeight order-last flex-row border-t"
-              : "h-full w-activityBarWidth order-first flex-col border-r"
-          } border-appLayoutBorder z-1000 overflow-hidden`}
+          className={`flex shrink-0 gap-px items-center bg-appBackgroundAccent backdrop-blur-2xl   
+          "h-full w-activityBarWidth order-first flex-col border-r"
+           border-appLayoutBorder z-1000 overflow-hidden`}
           style={{
-            boxShadow:
-              deviceType === "mobile"
-                ? "0 -1px 6px -1px hsl(var(--appLayoutShadow))"
-                : "", // Right shadow
-            clipPath: deviceType === "mobile" ? "inset(-10px 0 0 0)" : "", // Clip the shadow on the bottom
+            clipPath: "inset(-10px 0 0 0)", // Clip the shadow on the bottom
           }}
           key={`${showActivityBar}`}
-          initial={deviceType !== "mobile" ? { width: 0 } : { height: 0 }}
-          animate={
-            deviceType !== "mobile"
-              ? { width: "var(--activityBarWidth)" }
-              : { height: "var(--activityBarHeight)" }
-          }
-          exit={deviceType !== "mobile" ? { width: 0 } : { height: 0 }}
+          initial={{ height: 0 }}
+          animate={{ height: "var(--activityBarHeight)" }}
+          exit={{ height: 0 }}
           transition={{ duration: 0.1 }}
         >
           <ActivityButton

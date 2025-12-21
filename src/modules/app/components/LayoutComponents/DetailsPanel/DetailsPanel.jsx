@@ -12,7 +12,6 @@ const DetailsPanel = ({ children, breadcrumbs, className }) => {
       <section
         id="DetailsPanel"
         className={`${formClassName}
-        ${deviceType === "mobile" && "w-full"}   
         ${deviceType === "desktop" && "pt-0"}    
         ${className}   
       `}

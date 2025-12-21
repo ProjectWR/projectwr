@@ -199,48 +199,44 @@ const ActionBar = () => {
             </StyledTooltip>
           </div>
 
-          {deviceType !== "mobile" && (
-            <>
-              <WindowButton
-                className={``}
-                buttonContent={
-                  <StyledTooltip label="Minimize">
-                    <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                  </StyledTooltip>
-                }
-                onClick={() => {
-                  appWindow.minimize();
-                }}
-              />
-              <WindowButton
-                className={``}
-                buttonContent={
-                  <StyledTooltip label={isMaximized ? "Restore" : "Maximize"}>
-                    {isMaximized ? (
-                      <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                    ) : (
-                      <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                    )}
-                  </StyledTooltip>
-                }
-                onClick={() => {
-                  appWindow.toggleMaximize();
-                }}
-              />
-              <WindowButton
-                destructive={true}
-                className={``}
-                buttonContent={
-                  <StyledTooltip label="Close">
-                    <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
-                  </StyledTooltip>
-                }
-                onClick={() => {
-                  appWindow.close();
-                }}
-              />
-            </>
-          )}
+          <WindowButton
+            className={``}
+            buttonContent={
+              <StyledTooltip label="Minimize">
+                <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+              </StyledTooltip>
+            }
+            onClick={() => {
+              appWindow.minimize();
+            }}
+          />
+          <WindowButton
+            className={``}
+            buttonContent={
+              <StyledTooltip label={isMaximized ? "Restore" : "Maximize"}>
+                {isMaximized ? (
+                  <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                ) : (
+                  <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+                )}
+              </StyledTooltip>
+            }
+            onClick={() => {
+              appWindow.toggleMaximize();
+            }}
+          />
+          <WindowButton
+            destructive={true}
+            className={``}
+            buttonContent={
+              <StyledTooltip label="Close">
+                <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize"></span>
+              </StyledTooltip>
+            }
+            onClick={() => {
+              appWindow.close();
+            }}
+          />
         </div>
       </div>
     </div>
@@ -684,51 +680,47 @@ export const ActionBarRightSide = ({}) => {
             </ActionButton>
           </div>
 
-          {deviceType !== "mobile" && (
-            <>
-              <WindowButton
-                className={``}
-                buttonContent={
-                  <StyledTooltip label="Minimize" position="bottom">
-                    <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
-                  </StyledTooltip>
-                }
-                onClick={() => {
-                  appWindow.minimize();
-                }}
-              />
-              <WindowButton
-                className={``}
-                buttonContent={
-                  <StyledTooltip
-                    label={isMaximized ? "Restore" : "Maximize"}
-                    position="bottom"
-                  >
-                    {isMaximized ? (
-                      <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
-                    ) : (
-                      <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
-                    )}
-                  </StyledTooltip>
-                }
-                onClick={() => {
-                  appWindow.toggleMaximize();
-                }}
-              />
-              <WindowButton
-                destructive={true}
-                className={``}
-                buttonContent={
-                  <StyledTooltip label="Close" position="bottom">
-                    <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
-                  </StyledTooltip>
-                }
-                onClick={() => {
-                  appWindow.close();
-                }}
-              />
-            </>
-          )}
+          <WindowButton
+            className={``}
+            buttonContent={
+              <StyledTooltip label="Minimize" position="bottom">
+                <span className="icon-[fluent--minimize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+              </StyledTooltip>
+            }
+            onClick={() => {
+              appWindow.minimize();
+            }}
+          />
+          <WindowButton
+            className={``}
+            buttonContent={
+              <StyledTooltip
+                label={isMaximized ? "Restore" : "Maximize"}
+                position="bottom"
+              >
+                {isMaximized ? (
+                  <span className="icon-[clarity--window-restore-line] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                ) : (
+                  <span className="icon-[fluent--maximize-16-regular] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+                )}
+              </StyledTooltip>
+            }
+            onClick={() => {
+              appWindow.toggleMaximize();
+            }}
+          />
+          <WindowButton
+            destructive={true}
+            className={``}
+            buttonContent={
+              <StyledTooltip label="Close" position="bottom">
+                <span className="icon-[material-symbols-light--close-rounded] w-actionBarWindowButtonIconSize h-actionBarWindowButtonIconSize text-appLayoutTextMuted"></span>
+              </StyledTooltip>
+            }
+            onClick={() => {
+              appWindow.close();
+            }}
+          />
         </div>
       </div>
     </div>

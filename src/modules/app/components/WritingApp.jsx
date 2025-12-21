@@ -527,7 +527,6 @@ const WritingApp = () => {
                 id="AppBodyContainer"
                 className={`w-full grow min-h-0 bg-transparent overflow-hidden basis-0 flex relative
                 ${deviceType === "desktop" && "flex-row"}
-                ${deviceType === "mobile" && "flex-col"}
               `}
               >
                 {deviceType === "desktop" && (
@@ -559,8 +558,8 @@ const WritingApp = () => {
               transition={{ duration: 0.2 }}
             >
               <div
-                id=" MainPanelContainer"
-                className="grow overflow-hidden relative"
+                id="MainPanelContainer"
+                className="relative grow overflow-hidden relative"
               >
                 <MainPanel />
                 <MobileSidePanelDrawer />

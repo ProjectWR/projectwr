@@ -6,6 +6,7 @@ const MobileDockBar = () => {
 
   const activity = appStore((state) => state.activity);
   const setActivity = appStore((state) => state.setActivity);
+  const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
   const { mainPanelState, activatePanel } = useMainPanel();
@@ -30,7 +31,8 @@ const MobileDockBar = () => {
         icon="icon-[ion--library-sharp]"
         label="Library"
         isActive={
-          activity === "libraries" || mainPanelState.panelType === "libraries"
+          (panelOpened && activity === "libraries") ||
+          mainPanelState.panelType === "libraries"
         }
         onClick={() => {
           setActivity("libraries");
