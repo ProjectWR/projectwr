@@ -57,6 +57,8 @@ import { TabsBar } from "./LayoutComponents/TabsBar";
 import { SidePanelContainer } from "./LayoutComponents/SidePanelContainer";
 import driveOrchestrator from "../lib/drive/driveOrchestrator";
 import { listen_for_auth_code } from "../lib/auth/eventlisteners";
+import MobileDockBar from "./LayoutComponents/MobileDockBar";
+import MobileSidePanelDrawer from "./LayoutComponents/MobileSidePanelDrawer";
 import {
   getAccessToken,
   handleInitialLogin,
@@ -556,7 +558,14 @@ const WritingApp = () => {
               exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.2 }}
             >
-              <MainPanel />
+              <div
+                id=" MainPanelContainer"
+                className="grow overflow-hidden relative"
+              >
+                <MainPanel />
+                <MobileSidePanelDrawer />
+              </div>
+              <MobileDockBar />
             </motion.div>
           )}
         </motion.div>

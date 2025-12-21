@@ -65,6 +65,8 @@ const useMainPanel = () => {
         // to the current library root is generally safe/idempotent if handled by store
         setNotesPanelState({ libraryId: rootId, itemId: "root" });
 
+        console.log("activatePanel", panelType, mode, breadcrumbs);
+
         const ytree = getOrInitLibraryYTree(breadcrumbs[0]);
 
         if (breadcrumbs[0] === breadcrumbs[1]) {

@@ -12,9 +12,8 @@ import LibraryDirectoryHeader from "../SIdePanels/LibraryDirectory/LibraryDirect
 const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
   const libraryId = appStore((state) => state.libraryId);
-  const templateId = appStore((state) => state.templateId);
   const activity = appStore((state) => state.activity);
-  const setPanelOpened = appStore((state) => state.setPanelOpened);
+  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
 
   const key = useRef("empty");
 
@@ -45,17 +44,16 @@ const SidePanel = ({}) => {
   return (
     <AnimatePresence mode="wait">
       <div className="w-full h-full z-[49] flex flex-col items-center">
-        {deviceType === "desktop" && (
-          <div
-            id="LibraryDirectoryHeaderContainer"
-            className="h-fit min-h-fit w-full"
-          >
-            <LibraryDirectoryHeader
-              key={`libraryDirectoryHeader`}
-              currentLibraryId={libraryId}
-            />
-          </div>
-        )}
+        <div
+          id="LibraryDirectoryHeaderContainer"
+          className="h-fit min-h-fit w-full"
+        >
+          <LibraryDirectoryHeader
+            key={`libraryDirectoryHeader`}
+            currentLibraryId={libraryId}
+          />
+        </div>
+
         <motion.div
           key={key.current}
           initial={{ y: -10, opacity: 0 }}

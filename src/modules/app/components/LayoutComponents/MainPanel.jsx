@@ -32,6 +32,7 @@ const MainPanel = ({}) => {
   console.log("MainPanel rendering");
 
   const { deviceType } = useDeviceType();
+  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
 
   const {
     saveStateInHistory,
@@ -241,6 +242,7 @@ const MainPanel = ({}) => {
         );
       }
     } else if (panelType === "dictionary") {
+      key.current = "dictionary";
       return <DictionaryPanel />;
     } else if (panelType === "settings") {
       key.current = "settings";
@@ -268,20 +270,43 @@ const MainPanel = ({}) => {
           refreshNotesPanel={refreshNotesPanel}
         />
       </section> */}
-      <div
-        key={key.current}
-        className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
-      >
-        <ErrorBoundary
-          fallback={
-            <div className="w-full h-full flex items-center justify-center">
-              Something went wrong
-            </div>
-          }
+      {isDesktop && (
+        <div
+          key={key.current}
+          className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
         >
-          {renderMainPanel()}
-        </ErrorBoundary>
-      </div>
+          <ErrorBoundary
+            fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                Something went wrong
+              </div>
+            }
+          >
+            {renderMainPanel()}
+          </ErrorBoundary>
+        </div>
+      )}
+
+      {!isDesktop && (
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 20, opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          key={key.current}
+          className="w-full grow min-h-0 basis-0 overflow-hidden z-3 flex flex-col items-center justify-center"
+        >
+          <ErrorBoundary
+            fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                Something went wrong
+              </div>
+            }
+          >
+            {renderMainPanel()}
+          </ErrorBoundary>
+        </motion.div>
+      )}
     </div>
   );
 };
