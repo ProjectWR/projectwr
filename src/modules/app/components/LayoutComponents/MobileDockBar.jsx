@@ -26,7 +26,7 @@ const MobileDockBar = () => {
   };
 
   return (
-    <div className="w-full h-16 bg-appBackgroundAccent border-t border-appLayoutBorder flex flex-row justify-between items-center px-2 pb-safe shrink-0 z-50">
+    <div className="w-full h-16 z-[101] bg-appBackgroundAccent border-t border-appLayoutBorder flex flex-row justify-between items-center px-2 pb-safe shrink-0 z-50">
       <DockButton
         icon="icon-[ion--library-sharp]"
         label="Library"
@@ -59,7 +59,10 @@ const MobileDockBar = () => {
         icon="icon-[material-symbols-light--home]"
         isActive={mainPanelState.panelType === "home"}
         label="Home"
-        onClick={() => activatePanel("home", null, [])}
+        onClick={() => {
+          activatePanel("home", null, []);
+          setPanelOpened(false);
+        }}
       />
       <DockButton
         icon="icon-[material-symbols-light--match-word-rounded]"
@@ -67,6 +70,7 @@ const MobileDockBar = () => {
         isActive={mainPanelState.panelType === "dictionary"}
         onClick={() => {
           activatePanel("dictionary", null, []);
+          setPanelOpened(false);
         }}
       />
       <DockButton
@@ -75,6 +79,7 @@ const MobileDockBar = () => {
         label="Settings"
         onClick={() => {
           activatePanel("settings", null, []);
+          setPanelOpened(false);
         }}
       />
     </div>
