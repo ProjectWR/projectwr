@@ -9,12 +9,10 @@ export const DetailsPanelButtonsShell = ({ children }) => {
     <section
       id="DetailsPanelButtonsShell"
       className={`w-full h-fit flex flex-col gap-2 px-2 pt-1`}
-      style={
-        deviceType === "desktop" && {
-          width: `100%`,
-          maxWidth: `100%`,
-        }
-      }
+      style={{
+        width: `100%`,
+        maxWidth: `100%`,
+      }}
     >
       <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
         Actions

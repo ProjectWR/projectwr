@@ -78,13 +78,11 @@ const HomePanel = () => {
             ${deviceType === "mobile" && "w-full"}   
             ${deviceType === "desktop" && "mt-0 pb-20 px-8 pt-8"}       
           `}
-          style={
-            deviceType === "desktop" && {
-              width: `var(--detailsPanelWidth)`,
-              maxWidth: `100%`,
-              minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-            }
-          }
+          style={{
+            width: `var(--detailsPanelWidth)`,
+            maxWidth: `100%`,
+            minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+          }}
         >
           <div
             id="HomeHeader"
@@ -168,7 +166,6 @@ const HomePanel = () => {
                         let name = "";
 
                         try {
-
                           /**
                            * @type {YTree}
                            */
@@ -204,13 +201,15 @@ const HomePanel = () => {
                               .getMap("library_props")
                               .get("item_properties")["item_title"];
                           }
-                        }
-                        catch (e) {
+                        } catch (e) {
                           return null;
                         }
 
                         return (
-                          <div key={itemIdLibraryId} className="w-full h-fit px-3">
+                          <div
+                            key={itemIdLibraryId}
+                            className="w-full h-fit px-3"
+                          >
                             <RecentlyOpenedItemButton
                               name={name}
                               itemId={itemId}

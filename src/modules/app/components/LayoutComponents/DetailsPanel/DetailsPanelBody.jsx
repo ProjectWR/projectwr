@@ -5,7 +5,12 @@ export const DetailsPanelBody = ({ children, className }) => {
   const { deviceType } = useDeviceType();
 
   return (
-    <div id="DetailsPanelBody" className="grow w-full min-h-0 basis-0 flex flex-row relative">{children}</div>
+    <div
+      id="DetailsPanelBody"
+      className="grow w-full min-h-0 basis-0 flex flex-row relative"
+    >
+      {children}
+    </div>
   );
 };
 
@@ -17,13 +22,11 @@ export const DetailsPanelProperties = ({ children, className }) => {
       <section
         id="DetailsPanelPropertiesBody"
         className={`h-full overflow-y-hidden py-4 px-6 gap-4 relative ${className}`}
-        style={
-          deviceType === "desktop" && {
-            width: `var(--detailsPanelWidth)`,
-            maxWidth: `100%`,
-            minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-          }
-        }
+        style={{
+          width: `var(--detailsPanelWidth)`,
+          maxWidth: `100%`,
+          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+        }}
       >
         <ScrollArea
           overscrollBehavior="none"

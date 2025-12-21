@@ -58,12 +58,10 @@ const DictionaryCreatePanel = ({}) => {
       ${deviceType === "mobile" && "w-full"}   
       ${deviceType === "desktop" && "mt-10"}       
     `}
-      style={
-        deviceType === "desktop" && {
-          width: `var(--detailsPanelWidth)`,
-          minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
-        }
-      }
+      style={{
+        width: `var(--detailsPanelWidth)`,
+        minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
+      }}
     >
       <div
         id="CreateWordHeader"

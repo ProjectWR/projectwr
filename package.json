@@ -32,6 +32,7 @@
     "@tauri-apps/plugin-dialog": "^2.2.0",
     "@tauri-apps/plugin-fs": "^2.0.3",
     "@tauri-apps/plugin-opener": "^2.2.7",
+    "@tauri-apps/plugin-os": "^2.3.2",
     "@tauri-apps/plugin-shell": "^2.2.1",
     "@tauri-apps/plugin-store": "^2.2.0",
     "@tippyjs/react": "^4.2.6",

@@ -186,6 +186,7 @@
     "clipboard-manager:default",
     "shell:default",
     "opener:default",
-    "deep-link:default"
+    "deep-link:default",
+    "os:default"
   ]
 }

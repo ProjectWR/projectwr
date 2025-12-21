@@ -6,6 +6,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { type } from "@tauri-apps/plugin-os";
 import { settingsStore } from "../stores/settingsStore";
 import { useDeviceType } from "../ConfigProviders/DeviceTypeProvider";
 import { appStore } from "../stores/appStore";
@@ -56,7 +57,12 @@ import { TabsBar } from "./LayoutComponents/TabsBar";
 import { SidePanelContainer } from "./LayoutComponents/SidePanelContainer";
 import driveOrchestrator from "../lib/drive/driveOrchestrator";
 import { listen_for_auth_code } from "../lib/auth/eventlisteners";
-import { getAccessToken, handleInitialLogin, handleLoadFrom, saveAuthCode } from "../lib/auth/auth";
+import {
+  getAccessToken,
+  handleInitialLogin,
+  handleLoadFrom,
+  saveAuthCode,
+} from "../lib/auth/auth";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -77,20 +83,11 @@ const WritingApp = () => {
   const setLoading = appStore((state) => state.setLoading);
   const [loadingStage, setLoadingStage] = useState("Loading App");
 
-  const { deviceType } = useDeviceType();
+  const { deviceType, setDeviceType } = useDeviceType();
 
-  const zoom = appStore((state) => state.zoom);
+  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
 
-  const setPanelOpened = appStore((state) => state.setPanelOpened);
-
-  const isMd = appStore((state) => state.isMd);
   const setIsMd = appStore((state) => state.setIsMd);
-
-  const notesPanelWidth = appStore((state) => state.notesPanelWidth);
-  const setNotesPanelWidth = appStore((state) => state.setNotesPanelWidth);
-
-  const notesPanelOpened = appStore((state) => state.notesPanelOpened);
-  const setNotesPanelOpened = appStore((state) => state.setNotesPanelOpened);
 
   const setDefaultSettings = settingsStore((state) => state.setDefaultSettings);
   const setSettings = settingsStore((state) => state.setSettings);
@@ -102,7 +99,7 @@ const WritingApp = () => {
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
-  
+
   useEffect(() => {
     onAuthStateChanged(getAuth(firebaseApp), (user) => {
       if (user) {
@@ -119,6 +116,28 @@ const WritingApp = () => {
     const initializeWritingApp = async () => {
       console.log("Initialize Writing App has been run!");
       setLoading(true);
+      setLoadingStage("Detecting Device");
+
+      try {
+        const osType = await type();
+        console.log("Detected OS:", osType);
+
+        let newDeviceType = "desktop";
+
+        if (osType === "android") {
+          newDeviceType = "android";
+        } else if (osType === "ios") {
+          newDeviceType = "iPhone";
+        } else if (["windows", "macos", "linux"].includes(osType)) {
+          newDeviceType = "desktop";
+        }
+
+        setDeviceType(newDeviceType);
+      } catch (error) {
+        console.warn("Failed to detect OS via Tauri:", error);
+        setDeviceType("desktop");
+      }
+
       setLoadingStage("Loading App");
 
       try {
@@ -217,27 +236,39 @@ const WritingApp = () => {
 
         console.log("Local Libraries: ", localLibraries);
 
-        handleInitialLogin().then(
-          async () => {
+        handleInitialLogin()
+          .then(async () => {
             if (googleDriveFlag) {
-              const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+              const googleDriveManager =
+                driveOrchestrator.getManager("googleDrive");
               if (await googleDriveManager.initDriveSync()) {
-                console.log("INITIATED GOOGLE DRIVE SYNC!")
+                console.log("INITIATED GOOGLE DRIVE SYNC!");
 
                 // start sync for all local ydocs
                 for (const localLibraryId of localLibraries) {
-                  await googleDriveManager.addDocument(localLibraryId, dataManagerSubdocs.getLibrary(localLibraryId), dataManagerSubdocs.getLibrary(localLibraryId)?.clientID, localLibraryId)
-                  await driveOrchestrator.startSync("googleDrive", localLibraryId, 20000)
+                  await googleDriveManager.addDocument(
+                    localLibraryId,
+                    dataManagerSubdocs.getLibrary(localLibraryId),
+                    dataManagerSubdocs.getLibrary(localLibraryId)?.clientID,
+                    localLibraryId
+                  );
+                  await driveOrchestrator.startSync(
+                    "googleDrive",
+                    localLibraryId,
+                    20000
+                  );
                 }
 
-                await driveOrchestrator.startSyncForAllDriveDocs("googleDrive", 20000);
+                await driveOrchestrator.startSyncForAllDriveDocs(
+                  "googleDrive",
+                  20000
+                );
               }
             }
-
-          }
-        ).catch((err) => {
-          console.log(err);
-        });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
         listen_for_auth_code({
           onSucess: async (code) => {
@@ -251,27 +282,38 @@ const WritingApp = () => {
               });
 
               if (googleDriveFlag) {
-                const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+                const googleDriveManager =
+                  driveOrchestrator.getManager("googleDrive");
                 if (await googleDriveManager.initDriveSync()) {
-                  console.log("INITIATED GOOGLE DRIVE SYNC!")
+                  console.log("INITIATED GOOGLE DRIVE SYNC!");
 
                   // start sync for all local ydocs
                   for (const localLibraryId of localLibraries) {
-                    await googleDriveManager.addDocument(localLibraryId, dataManagerSubdocs.getLibrary(localLibraryId), dataManagerSubdocs.getLibrary(localLibraryId)?.clientID, localLibraryId)
-                    await driveOrchestrator.startSync("googleDrive", localLibraryId, 20000)
+                    await googleDriveManager.addDocument(
+                      localLibraryId,
+                      dataManagerSubdocs.getLibrary(localLibraryId),
+                      dataManagerSubdocs.getLibrary(localLibraryId)?.clientID,
+                      localLibraryId
+                    );
+                    await driveOrchestrator.startSync(
+                      "googleDrive",
+                      localLibraryId,
+                      20000
+                    );
                   }
 
-                  await driveOrchestrator.startSyncForAllDriveDocs("googleDrive", 20000);
+                  await driveOrchestrator.startSyncForAllDriveDocs(
+                    "googleDrive",
+                    20000
+                  );
                 }
               }
             }
           },
           onError: (err) => {
             console.log(err);
-
           },
         });
-
 
         if (firebaseFlag) {
           setLoadingStage("Fetching cloud storage");
@@ -309,7 +351,7 @@ const WritingApp = () => {
         // await wait(1000);
         setLoadingStage("Finished Loading");
 
-        return () => { };
+        return () => {};
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -327,8 +369,8 @@ const WritingApp = () => {
     setSettings,
     setLoading,
     setZoom,
-    user,
     wasLocalSetup,
+    setDeviceType,
   ]);
 
   useEffect(() => {
@@ -372,8 +414,9 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-full max-h-full w-full max-w-full bg-transparent font-serif ${!isMaximized && "border"
-            } border-appLayoutBorder overflow-hidden text-appLayoutText`}
+          className={`h-full max-h-full w-full max-w-full bg-transparent font-serif ${
+            !isMaximized && "border"
+          } border-appLayoutBorder overflow-hidden text-appLayoutText`}
         >
           {loading && (
             <motion.div
@@ -388,8 +431,8 @@ const WritingApp = () => {
               >
                 <span
                   className="w-full h-full"
-                // animate={{ rotate: 360 }}
-                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                  // animate={{ rotate: 360 }}
+                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -458,7 +501,7 @@ const WritingApp = () => {
             </motion.div>
           )}
 
-          {!loading && (
+          {!loading && isDesktop && (
             <motion.div
               key="WritingApp"
               id="AppContainer"
@@ -471,7 +514,10 @@ const WritingApp = () => {
               {/* {deviceType === "desktop" && (<ActionBar />)} */}
               <div className="w-full bg-appBackgroundAccent h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
                 <ActionBarLeftSide />
-                <TabsBar isNotesPanelAwake={isNotesPanelAwake} refreshNotesPanel={refreshNotesPanel} />
+                <TabsBar
+                  isNotesPanelAwake={isNotesPanelAwake}
+                  refreshNotesPanel={refreshNotesPanel}
+                />
                 <ActionBarRightSide />
               </div>
 
@@ -495,47 +541,22 @@ const WritingApp = () => {
                     />
                   </>
                 )}
-
-                {deviceType === "mobile" && (
-                  <>
-                    <ActivityBar />
-                    <div id="MobileAppBodyContainer" className="relative grow">
-                      <motion.div
-                        id="SidePanelContainer"
-                        className="absolute h-full order-2 w-full bg-appBackground z-50"
-                        drag="x"
-                        ref={sidePanelScope}
-                        dragConstraints={{ left: -Infinity, right: 0 }}
-                        dragSnapToOrigin={false}
-                        dragElastic={0}
-                        style={{
-                          boxShadow: "0 0 15px hsl(var(--appLayoutShadow))", // Right shadow
-                          clipPath: "inset(0 -15px 0 0)", // Clip the shadow on the bottom
-                        }}
-                        onDragEnd={(event, info) => {
-                          // Use a threshold. In this example, if the final x is greater than -250 (closer to 0),
-                          // we consider that an “open” gesture.
-                          if (info.point.x > 200) {
-                            setPanelOpened(true);
-                            sidePanelAnimate(sidePanelScope.current, { x: 0 });
-                          } else {
-                            setPanelOpened(false);
-                            sidePanelAnimate(sidePanelScope.current, {
-                              x: -500,
-                            });
-                          }
-                        }}
-                        initial={{ x: -500 }}
-                        transition={{ type: "circ", duration: 0.2 }}
-                      >
-                        <SidePanel />
-                      </motion.div>
-                      <MainPanel />
-                    </div>
-                  </>
-                )}
               </div>
               <Footer />
+            </motion.div>
+          )}
+
+          {!loading && !isDesktop && (
+            <motion.div
+              key="WritingApp"
+              id="AppContainer"
+              className="border-appLayoutBorder bg-appBackground h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.2 }}
+            >
+              <MainPanel />
             </motion.div>
           )}
         </motion.div>
