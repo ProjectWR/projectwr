@@ -8,6 +8,8 @@ import { StyledTooltip } from "./StyledTooltip";
 const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const { deviceType } = useDeviceType();
 
+  const isDesktop = deviceType === "desktop";
+
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
@@ -35,16 +37,9 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
         <motion.div
           id="ActivityBarContainer"
           className={`flex shrink-0 gap-px items-center bg-appBackgroundAccent backdrop-blur-2xl   
-          "h-full w-activityBarWidth order-first flex-col border-r"
+          h-full w-activityBarWidth order-first flex-col border-r
            border-appLayoutBorder z-1000 overflow-hidden`}
-          style={{
-            clipPath: "inset(-10px 0 0 0)", // Clip the shadow on the bottom
-          }}
           key={`${showActivityBar}`}
-          initial={{ height: 0 }}
-          animate={{ height: "var(--activityBarHeight)" }}
-          exit={{ height: 0 }}
-          transition={{ duration: 0.1 }}
         >
           <ActivityButton
             onClick={() => {
@@ -72,25 +67,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
             flexValue={"grow-3"}
           />
 
-          {deviceType === "mobile" && (
-            <ActivityButton
-              onClick={() => {
-                if (activity !== "home") {
-                  setActivity("home");
-                }
-
-                setPanelOpened(false);
-              }}
-              label={"Home"}
-              activity={activity}
-              selectedActivity={"home"}
-              deviceType={deviceType}
-              buttonContent={
-                <span className="icon-[material-symbols-light--home]  h-activityBarIconSize w-activityBarIconSize"></span>
-              }
-              flexValue={"grow-1"}
-            />
-          )}
           <ActivityButton
             onClick={() => {
               if (activity !== "search") {

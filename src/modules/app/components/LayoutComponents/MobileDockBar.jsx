@@ -26,14 +26,11 @@ const MobileDockBar = () => {
   };
 
   return (
-    <div className="w-full h-16 z-[101] bg-appBackgroundAccent border-t border-appLayoutBorder flex flex-row justify-between items-center px-2 pb-safe shrink-0 z-50">
+    <div className="w-full h-16 bg-appBackgroundAccent border-t border-appLayoutBorder flex flex-row justify-between items-center px-2 pb-safe shrink-0 z-50">
       <DockButton
         icon="icon-[ion--library-sharp]"
         label="Library"
-        isActive={
-          (panelOpened && activity === "libraries") ||
-          mainPanelState.panelType === "libraries"
-        }
+        isActive={panelOpened && activity === "libraries"}
         onClick={() => {
           setActivity("libraries");
           setPanelOpened(true);
@@ -49,10 +46,17 @@ const MobileDockBar = () => {
       <DockButton
         icon="icon-[material-symbols-light--search]"
         label="Search"
-        isActive={activity === "search"}
+        isActive={panelOpened &&activity === "search"}
         onClick={() => {
           setActivity("search");
           setPanelOpened(true);
+
+          if (
+            mainPanelState.panelType !== "libraries" &&
+            libraryId !== "unselected"
+          ) {
+            activatePanel("libraries", null, [libraryId]);
+          }
         }}
       />
       <DockButton

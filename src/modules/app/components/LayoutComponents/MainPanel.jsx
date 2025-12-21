@@ -32,7 +32,7 @@ const MainPanel = ({}) => {
   console.log("MainPanel rendering");
 
   const { deviceType } = useDeviceType();
-  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
+  const isDesktop = deviceType === "desktop";
 
   const {
     saveStateInHistory,
@@ -315,11 +315,11 @@ export default MainPanel;
 
 const PrependBreadcrumbs = ({ breadcrumbValues, children }) => {
   const { deviceType } = useDeviceType();
-  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
+  const isDesktop = deviceType === "desktop";
 
   return (
     <>
-      {isDesktop && ( 
+      {isDesktop && (
         <section className="w-full h-fit py-[5px] px-3 flex items-center justify-start">
           <Breadcrumbs breadcrumbs={breadcrumbValues} />
         </section>

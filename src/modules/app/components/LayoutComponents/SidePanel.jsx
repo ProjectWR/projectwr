@@ -13,7 +13,7 @@ const SidePanel = ({}) => {
   const { deviceType } = useDeviceType();
   const libraryId = appStore((state) => state.libraryId);
   const activity = appStore((state) => state.activity);
-  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
+  const isDesktop = deviceType === "desktop";
 
   const key = useRef("empty");
 

@@ -87,7 +87,7 @@ const WritingApp = () => {
 
   const { deviceType, setDeviceType } = useDeviceType();
 
-  const isDesktop = ["windows", "macos", "linux"].includes(deviceType);
+  const isDesktop = deviceType === "desktop";
 
   const setIsMd = appStore((state) => state.setIsMd);
 
