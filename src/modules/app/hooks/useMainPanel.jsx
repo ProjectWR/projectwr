@@ -69,7 +69,7 @@ const useMainPanel = () => {
 
         const ytree = getOrInitLibraryYTree(breadcrumbs[0]);
 
-        if (breadcrumbs[0] === breadcrumbs[1]) {
+        if (isAtRoot || breadcrumbs[0] === breadcrumbs[1]) {
           return;
         }
 

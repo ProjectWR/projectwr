@@ -6,19 +6,12 @@ export const DetailsPanelButtonsShell = ({ children }) => {
   const { deviceType } = useDeviceType();
 
   return (
-    <section
-      id="DetailsPanelButtonsShell"
-      className={`w-full h-fit flex flex-col gap-2 px-2 pt-1`}
-      style={{
-        width: `100%`,
-        maxWidth: `100%`,
-      }}
-    >
-      <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+    <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-2 border border-transparent rounded-md overflow-hidden">
+      <h2 className="w-full h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
         Actions
       </h2>
       {children}
-    </section>
+    </div>
   );
 };
 
@@ -35,7 +28,7 @@ export const DetailsPanelButton = ({
       gradientSizeY={10}
       onClick={onClick}
       disabled={loading || disabled}
-      className={`min-h-fit h-fit py-1 border border-appLayoutBorder rounded-lg overflow-hidden`}
+      className={`min-h-fit w-1/2 lg:w-full h-fit py-1 border border-appLayoutBorder rounded-lg overflow-hidden`}
     >
       <AnimatePresence mode="wait">
         <motion.div

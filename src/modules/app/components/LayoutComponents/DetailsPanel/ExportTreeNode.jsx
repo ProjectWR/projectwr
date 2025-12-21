@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "motion/react";
 import useYMap from "../../../hooks/useYMap";
 import { Checkbox } from "@mantine/core";
+import dataManagerSubdocs from "../../../lib/dataSubDoc";
 
 /**
  * ExportTreeNode - Recursive tree node component for export selection
@@ -17,12 +18,17 @@ import { Checkbox } from "@mantine/core";
 const ExportTreeNode = ({
   ytree,
   itemId,
+  libraryId,
   checkboxState,
   onCheckboxChange,
   isDisabled,
   depth = 0,
 }) => {
-  const itemMapRef = useRef(ytree.getNodeValueFromKey(itemId));
+  const itemMapRef = useRef(
+    itemId === "root"
+      ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+      : ytree.getNodeValueFromKey(itemId)
+  );
   const itemMapState = useYMap(itemMapRef.current);
 
   const [nodeChildren, setNodeChildren] = useState(
@@ -31,10 +37,11 @@ const ExportTreeNode = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const itemType = itemMapRef.current.get("type");
+  const itemType =
+    itemId === "root" ? "library" : itemMapRef.current.get("type");
   const hasChildren = nodeChildren && nodeChildren.length > 0;
   const canExpand =
-    (itemType === "section" || itemType === "book") && hasChildren;
+    (itemType === "section" || itemType === "book" || itemType === "library") && hasChildren;
 
   const disabled = isDisabled(itemId);
   const checked = checkboxState[itemId] || false;

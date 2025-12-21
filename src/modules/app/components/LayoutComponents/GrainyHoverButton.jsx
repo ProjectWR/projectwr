@@ -58,7 +58,7 @@ export const GrainyElementButton = ({
         handleMouseMove({ clientX, clientY, currentTarget });
       }}
       onMouseLeave={handleMouseLeave}
-      className={`transition-all ease-out relative duration-200 ${!disabled && "shadow-md hover:shadow-lg"} shadow-appLayoutGentleShadow ${
+      className={`transition-all ease-out relative duration-200 ${!disabled && ""} shadow-appLayoutGentleShadow ${
         active && "bg-appLayoutInverseHover"
       } ${className}`}
       style={{

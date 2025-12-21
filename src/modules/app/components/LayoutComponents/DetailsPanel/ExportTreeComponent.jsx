@@ -15,6 +15,7 @@ import JSZip from "jszip";
 import { AnimatePresence } from "motion/react";
 import { motion } from "motion/react";
 import { ScrollArea } from "@mantine/core";
+import { current } from "immer";
 
 /**
  * ExportTreeComponent - Main wrapper for export tree with checkbox selection
@@ -39,6 +40,9 @@ const ExportTreeComponent = forwardRef(
       (nodeId) => {
         // Walk up the tree to check if any ancestor is selected
         let currentId = nodeId;
+        if (currentId === "root") {
+          return false;
+        }
         let parentId = ytree.getNodeParentFromKey(currentId);
 
         while (parentId && parentId !== "root") {
@@ -64,6 +68,9 @@ const ExportTreeComponent = forwardRef(
 
         // Filter out items whose ancestor is also selected
         return selected.filter((nodeId) => {
+          if (nodeId == "root") {
+            return true;
+          }
           let parentId = ytree.getNodeParentFromKey(nodeId);
 
           while (parentId && parentId !== "root") {
@@ -251,6 +258,7 @@ const ExportTreeComponent = forwardRef(
                   key={itemId}
                   ytree={ytree}
                   itemId={itemId}
+                  libraryId={libraryId}
                   checkboxState={checkboxState}
                   onCheckboxChange={handleCheckboxChange}
                   isDisabled={isDisabled}

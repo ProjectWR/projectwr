@@ -194,9 +194,6 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
 
               {/* Buttons Section - Second Column */}
               <div className="w-full lg:w-1/2">
-                <h2 className="w-fit h-fit px-2 pt-1 pb-2 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
-                  {/* Blank placeholder */}
-                </h2>
                 <DetailsPanelButtonsShell>
                   <DetailsPanelButton
                     onClick={async () => {
@@ -270,7 +267,7 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
             {ytree && (
               <ExportTreeComponent
                 ytree={ytree}
-                itemId={libraryId}
+                itemId={"root"}
                 libraryId={libraryId}
               />
             )}
