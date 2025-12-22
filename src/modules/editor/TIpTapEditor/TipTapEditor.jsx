@@ -247,11 +247,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-              .getLibrary(libraryId)
-              ?.getMap("library_props")
-              ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-              ?.item_title;
+                ?.item_title;
 
         return label;
 
@@ -282,11 +282,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-              .getLibrary(libraryId)
-              ?.getMap("library_props")
-              ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-              ?.item_title;
+                ?.item_title;
 
         const elem = document.createElement("span");
 
@@ -643,21 +643,17 @@ const TiptapEditor = ({
           }
 
           .mention {
-            background-color: #00FF331a;
+            color: #00FFFFb6;
             border-radius: 0.4rem;
             box-decoration-break: clone;
-            padding: 0 0.25rem;
+            cursor: pointer;
           }
 
           .mention:after{
             content: "\u200B";} 
 
           .mention:hover {
-            background-color: #00FF3346;
-          }
-
-          .mention:active {
-            background-color: #00FF33a6;
+            color: #00FFFFFF;
           }
 
           [data-indent='1'] {
@@ -747,13 +743,6 @@ const TiptapEditor = ({
                 editor={editor}
                 toolbarPreferences={toolbarPreferences}
               />
-              <TableOfContentsPanel
-                visible={isTOCPanelAwake}
-                refreshTOCPanel={refreshTOCPanel}
-                keepTOCPanelAwake={keepTOCPanelAwake}
-                editor={editor}
-                toolbarPreferences={toolbarPreferences}
-              />
             </div>
           </>
         )}
@@ -796,14 +785,11 @@ const TiptapEditor = ({
 
         {editor && (
           <BubbleMenu
-            tippyOptions={
-              {
-                duration: 200
-              }
-            }
-            className="h-fit z-[10000] bg-transparent"
+            tippyOptions={{
+              duration: 200,
+            }}
+            className="h-fit p-2 z-[10000] bg-transparent"
             editor={editor}
-
           >
             <div
               id="EditableToolbar"
@@ -812,14 +798,14 @@ const TiptapEditor = ({
                 minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
                 backgroundColor: `${toolbarPreferences.backgroundColor}`,
                 borderColor: `${dividerColor}`,
+                boxShadow: `0px 0px 0.5rem ${paperShadowColor}`,
               }}
               className={`
                 overflow-y-hidden
                 min-w-0 sticky
-                ${isMobile
-                  ? "order-1 w-full"
-                  : "order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]"
-                }
+                z-[10000]
+                order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]
+                
               `}
             >
               <TipTapToolbar
@@ -865,7 +851,6 @@ const TiptapEditor = ({
             />
           </div> */}
 
-
           {editor && (
             <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
               <div
@@ -909,8 +894,14 @@ const TiptapEditor = ({
             }}
           />
         </div>
+        {editor && (
+          <TableOfContentsPanel
+            editor={editor}
+            toolbarPreferences={toolbarPreferences}
+          />
+        )}
       </div>
-    </ContextMenuWrapper >
+    </ContextMenuWrapper>
   );
 };
 
