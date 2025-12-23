@@ -15,6 +15,11 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
   const [headings, setHeadings] = useState([]);
   const [containerHeight, setContainerHeight] = useState(0);
   const [documentHeight, setDocumentHeight] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartY, setDragStartY] = useState(0);
+  const [dragStartScrollTop, setDragStartScrollTop] = useState(0);
 
   // Update headings and calculate positions
   const updateHeadings = useCallback(() => {
@@ -30,6 +35,8 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
 
     setContainerHeight(containerRect.height);
     setDocumentHeight(paperContent.scrollHeight);
+    setScrollTop(editorContainer.scrollTop);
+    setViewportHeight(containerRect.height);
 
     const headingsData = editor.$nodes("heading");
 
@@ -105,21 +112,76 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
     };
   }, [editor, updateHeadings]);
 
+  // Handle thumb dragging
+  const handleThumbMouseDown = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(true);
+      setDragStartY(e.clientY);
+      setDragStartScrollTop(scrollTop);
+    },
+    [scrollTop]
+  );
+
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!isDragging) return;
+
+      const editorContainer = document.getElementById("EditableContainer");
+      if (!editorContainer || documentHeight === 0) return;
+
+      const deltaY = e.clientY - dragStartY;
+      const scrollDelta = (deltaY / containerHeight) * documentHeight;
+      const newScrollTop = Math.max(
+        0,
+        Math.min(
+          documentHeight - viewportHeight,
+          dragStartScrollTop + scrollDelta
+        )
+      );
+
+      editorContainer.scrollTop = newScrollTop;
+    },
+    [
+      isDragging,
+      dragStartY,
+      dragStartScrollTop,
+      containerHeight,
+      documentHeight,
+      viewportHeight,
+    ]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Attach global mouse event listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
   // Calculate POI size based on heading level (H1 = largest, H6 = smallest)
   const getPOISize = (level) => {
     const sizes = {
-      1: 12,
+      1: 16,
       2: 10,
-      3: 8,
-      4: 7,
-      5: 6,
-      6: 5,
+      3: 6,
     };
     return sizes[level] || 6;
   };
 
   return (
-    <div className="w-fit h-full flex flex-col absolute top-1 right-scrollbarWidth">
+    <div className="w-fit h-full flex flex-col absolute top-1 right-1 items-center">
       <div className="h-fit w-fit flex z-[100]">
         {/* Trigger Button */}
         <button
@@ -138,15 +200,41 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
         </button>
       </div>
 
-      {tocPinned && (
-        <div
-          ref={overlayRef}
-          className={`grow w-[30px] z-[90] pointer-events-none
+      <div
+        ref={overlayRef}
+        className={`grow w-[30px] z-[90] pointer-events-none
                     transition-opacity duration-300 opacity-100`}
-        >
-          {/* Minimap track */}
-          <div className="relative w-full h-full pointer-events-auto">
-            {headings.map((h, idx) => {
+      >
+        {/* Minimap track */}
+        <div className="relative w-full h-full pointer-events-auto">
+          {documentHeight > 0 && (
+            <div className="absolute left-1/2 -translate-x-1/2 w-px h-full z-[98] bg-gradient-to-b from-transparent via-appLayoutHighlight/20 to-transparent" />
+          )}
+          {/* Virtual scroll thumb */}
+          {documentHeight > 0 && (
+            <motion.div
+              className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin z-[99] bg-appLayoutHighlight/20 rounded-xl hover:bg-appLayoutHighlight/30 transition-colors cursor-grab active:cursor-grabbing"
+              style={{
+                top: `${(scrollTop / documentHeight) * containerHeight}px`,
+                height: `${
+                  (viewportHeight / documentHeight) * containerHeight
+                }px`,
+              }}
+              initial={false}
+              animate={{
+                top: `${(scrollTop / documentHeight) * containerHeight}px`,
+                height: `${
+                  (viewportHeight / documentHeight) * containerHeight
+                }px`,
+              }}
+              transition={{ duration: 0.1 }}
+              onMouseDown={handleThumbMouseDown}
+            />
+          )}
+
+          {/* POI circles */}
+          {tocPinned &&
+            headings.map((h, idx) => {
               const isHovered = hoveredIndex === idx;
 
               // Scale Y position from document height to container height
@@ -160,7 +248,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
               return (
                 <div
                   key={`${h.pos}-${idx}`}
-                  className="absolute right-1/2 translate-x-1/2 cursor-pointer"
+                  className="absolute right-1/2 z-[99] translate-x-1/2 cursor-pointer"
                   style={{
                     top: `${scaledY}px`,
                   }}
@@ -185,7 +273,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 10 }}
-                        className="absolute right-full ml-2 top-1/2 -translate-y-1/2
+                        className="absolute right-[150%] ml-2 top-1/2 -translate-y-1/2
                                  px-2 py-1 rounded bg-appBackground/90 backdrop-blur-sm
                                  border border-appLayoutBorder shadow-lg whitespace-nowrap
                                  text-appLayoutText text-sm"
@@ -204,9 +292,8 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
                 </div>
               );
             })}
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

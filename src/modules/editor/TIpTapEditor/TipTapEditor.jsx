@@ -712,6 +712,13 @@ const TiptapEditor = ({
             background-color: #0000FFaa;
           }
 
+          .hide-scrollbar::-webkit-scrollbar {
+           -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;     /* Firefox */
+            display: none;
+            scrollbar-gutter: 0;
+          }
+
 
           
         `}
@@ -819,11 +826,11 @@ const TiptapEditor = ({
         <div
           id="EditableContainer"
           className={`h-full w-full max-w-full z-[2] flex justify-start flex-col items-center relative
-           overflow-y-scroll min-h-0 text-neutral-200
+           overflow-y-scroll min-h-0 text-neutral-200 hide-scrollbar
           `}
           style={{
-            paddingLeft: `calc(1.1 * var(--scrollbarWidth))`,
-            paddingRight: `calc(1 * var(--scrollbarWidth))`,
+            scrollbarWidth: 0,
+            scrollbarGutter: 0,
             backgroundColor: backgroundColor,
           }}
         >
