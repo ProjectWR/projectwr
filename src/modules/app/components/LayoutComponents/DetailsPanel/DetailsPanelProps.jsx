@@ -114,12 +114,14 @@ export const DetailsPanelWordCountProp = ({
 // }));
 
 export const DetailsPanelDescriptionProp = ({
-  itemProperties,
-  setItemProperties,
+  description,
+  updateProperties,
   label = "Synopsis",
 }) => {
   const setSearchQuery = appStore((state) => state.setSearchQuery);
   const [selectingError, setSelectingError] = useState("");
+
+  console.log("description in desc prop: ", description);
 
   const editor = useEditor({
     extensions: [
@@ -128,12 +130,9 @@ export const DetailsPanelDescriptionProp = ({
       Highlight,
       ProsemirrorProofreadExtension,
     ],
-    content: itemProperties.item_description,
+    content: description,
     onUpdate: ({ editor }) => {
-      setItemProperties({
-        ...itemProperties,
-        item_description: editor.getJSON(),
-      });
+      updateProperties(editor.getJSON());
     },
     onSelectionUpdate({ editor }) {
       const domSelection = window.getSelection();

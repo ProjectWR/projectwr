@@ -126,7 +126,12 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
           <DetailsPanelProperties>
             <DetailsPanelDescriptionProp
               itemProperties={itemProperties}
-              setItemProperties={setItemProperties}
+              updateProperties={(content) => {
+                setItemProperties({
+                  ...itemProperties,
+                  item_description: content,
+                });
+              }}
             />
             <ExportTreeComponent
               ytree={ytree}

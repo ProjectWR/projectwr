@@ -190,8 +190,13 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
               {/* Description Section - First Column */}
               <div className="w-full lg:w-1/2">
                 <DetailsPanelDescriptionProp
-                  itemProperties={itemProperties}
-                  setItemProperties={setItemProperties}
+                  description={itemProperties.item_description}
+                  updateProperties={(content) => {
+                    setItemProperties({
+                      ...itemProperties,
+                      item_description: content,
+                    });
+                  }}
                 />
               </div>
 

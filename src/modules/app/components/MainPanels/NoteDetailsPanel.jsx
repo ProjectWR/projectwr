@@ -119,7 +119,12 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
           <DetailsPanelProperties>
             <DetailsPanelDescriptionProp
               itemProperties={itemProperties}
-              setItemProperties={setItemProperties}
+              updateProperties={(content) => {
+                setItemProperties({
+                  ...itemProperties,
+                  item_description: content,
+                });
+              }}
               label={"Note"}
             />
           </DetailsPanelProperties>

@@ -188,7 +188,12 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
               <div className="w-full lg:w-1/2">
                 <DetailsPanelDescriptionProp
                   itemProperties={itemProperties}
-                  setItemProperties={setItemProperties}
+                  updateProperties={(content) => {
+                    setItemProperties({
+                      ...itemProperties,
+                      item_description: content,
+                    });
+                  }}
                 />
               </div>
 

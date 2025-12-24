@@ -66,51 +66,7 @@ const DictionaryPanel = () => {
     return allWords.filter((word) => word.toLowerCase().includes(searchTerm));
   }, [wordMap, newWordInput]);
 
-  // Get selected word data
-  const selectedWordData = useMemo(() => {
-    if (!selectedWord || !wordMap) return null;
-    return wordMap[selectedWord];
-  }, [selectedWord, wordMap]);
 
-  // Word properties state for editing
-  const [wordProperties, setWordProperties] = useState({
-    item_description: { type: "doc", content: [] },
-  });
-
-  // Update word properties when selection changes
-  useEffect(() => {
-    if (selectedWordData) {
-      setWordProperties({
-        item_description: selectedWordData.definition || {
-          type: "doc",
-          content: [],
-        },
-      });
-    }
-  }, [selectedWordData]);
-
-  // Auto-save definition changes
-  const prevWordPropertiesRef = useRef(wordProperties);
-  useEffect(() => {
-    if (
-      selectedWord &&
-      selectedWordData &&
-      !equalityDeep(prevWordPropertiesRef.current, wordProperties)
-    ) {
-      // Save after a short delay to avoid saving on every keystroke
-      const timeoutId = setTimeout(() => {
-        dictionaryManager.addOrUpdateWord(
-          selectedWord,
-          wordProperties.item_description,
-          selectedWordData.synonyms || ""
-        );
-      }, 500);
-
-      prevWordPropertiesRef.current = wordProperties;
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [wordProperties, selectedWord, selectedWordData]);
 
   const handleCreateWord = () => {
     const trimmedWord = newWordInput.trim();
@@ -147,7 +103,7 @@ const DictionaryPanel = () => {
               {/* Sidebar - Word List (1/3) */}
               <div className="col-span-1 h-full flex flex-col border-r border-appLayoutBorder">
                 {/* Create Word Input */}
-                <div className="w-full h-fit px-3 py-3 border-b border-appLayoutBorder">
+                <div className="w-full h-fit px-3 pb-2 border-b border-appLayoutBorder">
                   <div className="w-full flex gap-2 items-center">
                     <input
                       type="text"
@@ -188,22 +144,20 @@ const DictionaryPanel = () => {
                       {sortedWords.map((word) => (
                         <div
                           key={word}
-                          className={`relative group flex items-center w-full pr-3 gap-1 h-fit ${
-                            selectedWord === word
-                              ? "bg-appLayoutPressed text-appLayoutHighlight"
-                              : "hover:bg-appLayoutHover text-appLayoutText"
-                          }`}
+                          className={`relative group flex items-center w-full pr-3 gap-1 h-fit ${selectedWord === word
+                            ? "bg-appLayoutPressed text-appLayoutHighlight"
+                            : "hover:bg-appLayoutHover text-appLayoutText"
+                            }`}
                           onMouseEnter={() => setHoveredWord(word)}
                           onMouseLeave={() => setHoveredWord(null)}
                         >
                           <button
                             type="button"
                             onClick={() => handleWordSelect(word)}
-                            className={`w-full px-4 py-1 text-left text-libraryDirectoryPaperNodeFontSize transition-colors duration-100 flex items-center justify-between ${
-                              selectedWord === word
-                                ? "bg-appLayoutPressed text-appLayoutHighlight"
-                                : "hover:bg-appLayoutHover text-appLayoutText"
-                            }`}
+                            className={`w-full px-4 py-1 text-left text-libraryDirectoryPaperNodeFontSize transition-colors duration-100 flex items-center justify-between ${selectedWord === word
+                              ? "bg-appLayoutPressed text-appLayoutHighlight"
+                              : "hover:bg-appLayoutHover text-appLayoutText"
+                              }`}
                           >
                             <span className="truncate h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px  focus:outline-none focus:border-appLayoutGradientHover border-transparent border rounded-sm">
                               {word}
@@ -216,11 +170,10 @@ const DictionaryPanel = () => {
                               e.stopPropagation();
                               handleDeleteWord(word);
                             }}
-                            className={`w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 ${
-                              selectedWord === word
-                                ? "bg-appLayoutPressed text-appLayoutHighlight"
-                                : "hover:bg-appLayoutHover text-appLayoutText"
-                            }`}
+                            className={`w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 ${selectedWord === word
+                              ? "bg-appLayoutPressed text-appLayoutHighlight"
+                              : "hover:bg-appLayoutHover text-appLayoutText"
+                              }`}
                           >
                             <span className="icon-[ph--trash-thin] w-[80%] h-[80%]"></span>
                           </button>
@@ -231,45 +184,8 @@ const DictionaryPanel = () => {
                 </div>
               </div>
 
-              {/* Display Panel - Word Details (2/3) */}
-              <div className="col-span-2 h-full flex flex-col overflow-hidden">
-                {selectedWord && selectedWordData ? (
-                  <div className="w-full h-full flex flex-col">
-                    {/* Word Header */}
-                    <div className="w-full h-fit px-3 py-3 border-b border-appLayoutBorder flex items-center justify-between">
-                      <h3 className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-transparent border rounded-sm">
-                        {selectedWord}
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteWord(selectedWord)}
-                        className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                      >
-                        <span className="icon-[ph--trash-thin] w-full h-full"></span>
-                      </button>
-                    </div>
+              {selectedWord && <WordPropertiesPanel selectedWord={selectedWord} handleDeleteWord={handleDeleteWord} />}
 
-                    {/* Word Definition */}
-                    <div className="grow overflow-y-auto px-3">
-                      <DetailsPanelProperties>
-                        <DetailsPanelDescriptionProp
-                          itemProperties={wordProperties}
-                          setItemProperties={setWordProperties}
-                          label="Definition"
-                        />
-                      </DetailsPanelProperties>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center px-8 py-12">
-                    <p className="text-appLayoutTextMuted text-center text-detailsPanelPropFontSize">
-                      {sortedWords.length === 0
-                        ? "Add a word to get started"
-                        : "Select a word from the list to view and edit its definition"}
-                    </p>
-                  </div>
-                )}
-              </div>
             </div>
           </DetailsPanelProperties>
         </DetailsPanelBody>
@@ -279,3 +195,93 @@ const DictionaryPanel = () => {
 };
 
 export default DictionaryPanel;
+
+const WordPropertiesPanel = ({ selectedWord, handleDeleteWord }) => {
+  const [definition, setDefinition] = useState(dictionaryManager.getWord(selectedWord)?.definition || { type: "doc", content: [] });
+
+  // Load definition when selectedWord changes
+  useEffect(() => {
+    if (selectedWord) {
+      const wordData = dictionaryManager.getWord(selectedWord);
+      console.log("Loading word:", selectedWord, "Data:", wordData);
+      if (wordData && wordData.definition) {
+        setDefinition(wordData.definition);
+      } else {
+        setDefinition({ type: "doc", content: [] });
+      }
+    }
+  }, [selectedWord]);
+
+  return (
+    <div className="col-span-2 h-full flex flex-col overflow-hidden" >
+      {
+        selectedWord ? (
+          <div className="w-full h-full flex flex-col" >
+            {/* Word Header */}
+            < div className="w-full h-fit px-3 pb-2 border-b border-appLayoutBorder flex items-center justify-between" >
+              <h3 className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-transparent border rounded-sm">
+                {selectedWord}
+              </h3>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleDeleteWord(selectedWord)}
+                  className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  <span className="icon-[ph--trash-thin] w-full h-full"></span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    dictionaryManager.addOrUpdateWord(
+                      selectedWord,
+                      definition,
+                      null
+                    )
+                  }
+                  className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  <span className="icon-[material-symbols-light--check-rounded] w-full h-full"></span>
+                </button>
+              </div>
+            </div >
+
+            {/* Word Definition */}
+            < div className="grow overflow-y-auto px-3" >
+              <WordProperties
+                key={selectedWord}
+                selectedWord={selectedWord}
+                definition={definition}
+                setDefinition={setDefinition}
+              />
+            </div >
+          </div >
+        ) : (
+          <div className="w-full h-full flex items-center justify-center px-8 py-12">
+            <p className="text-appLayoutTextMuted text-center text-detailsPanelPropFontSize">
+              {sortedWords.length === 0
+                ? "Add a word to get started"
+                : "Select a word from the list to view and edit its definition"}
+            </p>
+          </div>
+        )}
+    </div >)
+}
+
+const WordProperties = ({ selectedWord, definition, setDefinition }) => {
+  console.log("DEFINITION in WordProperties:", definition);
+
+  return (
+    <DetailsPanelProperties>
+      <DetailsPanelDescriptionProp
+        key={selectedWord}
+        description={definition}
+        updateProperties={(content) => {
+          setDefinition(content);
+          console.log("SET DEFINITION: ", content);
+        }}
+        label="Definition"
+      />
+    </DetailsPanelProperties>
+  );
+};
