@@ -78,24 +78,6 @@ const TiptapUtilityToolbar = ({
         style={{ backgroundColor: `${dividerColor}` }}
       ></div>
       <button
-        className="toolbarButton"
-        style={{
-          height: `calc(${buttonHeight}rem * var(--uiScale))`,
-          borderRadius: `${buttonRadius}rem`,
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
-        }}
-        onClick={() => {
-          if (isTOCPanelAwake) {
-            forceCloseTOCPanel();
-          } else {
-            refreshTOCPanel();
-          }
-        }}
-      >
-        <span className="icon-[carbon--table-of-contents] w-[95%] h-[95%] text-appLayoutText"></span>
-      </button>
-      <button
         className="toolbarButton flex items-center justify-center"
         style={{
           height: `calc(${buttonHeight}rem * var(--uiScale))`,
@@ -133,20 +115,7 @@ const TiptapUtilityToolbar = ({
       >
         <span className="icon-[lsicon--find-filled] w-[75%] h-[75%] text-appLayoutText"></span>
       </button>
-      <button
-        className="toolbarButton flex items-center justify-center"
-        style={{
-          height: `calc(${buttonHeight}rem * var(--uiScale))`,
-          borderRadius: `${buttonRadius}rem`,
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
-        }}
-        onClick={() => {
-          yXmlFragmentToDocx(yXmlFragment);
-        }}
-      >
-        <span className="icon-[mdi--export] w-[75%] h-[75%] text-appLayoutText"></span>
-      </button>
+     
     </div>
   );
 };

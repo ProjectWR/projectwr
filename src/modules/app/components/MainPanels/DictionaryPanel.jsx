@@ -51,10 +51,20 @@ const DictionaryPanel = () => {
     }
   );
 
-  // Get sorted word array
+  // Get sorted and filtered word array
   const sortedWords = useMemo(() => {
-    return Object.keys(wordMap || {}).sort((a, b) => a.localeCompare(b));
-  }, [wordMap]);
+    const allWords = Object.keys(wordMap || {}).sort((a, b) =>
+      a.localeCompare(b)
+    );
+
+    // Filter words based on search input
+    if (!newWordInput.trim()) {
+      return allWords;
+    }
+
+    const searchTerm = newWordInput.toLowerCase();
+    return allWords.filter((word) => word.toLowerCase().includes(searchTerm));
+  }, [wordMap, newWordInput]);
 
   // Get selected word data
   const selectedWordData = useMemo(() => {
@@ -138,7 +148,7 @@ const DictionaryPanel = () => {
               <div className="col-span-1 h-full flex flex-col border-r border-appLayoutBorder">
                 {/* Create Word Input */}
                 <div className="w-full h-fit px-3 py-3 border-b border-appLayoutBorder">
-                  <div className="w-full flex gap-2">
+                  <div className="w-full flex gap-2 items-center">
                     <input
                       type="text"
                       value={newWordInput}
@@ -149,16 +159,16 @@ const DictionaryPanel = () => {
                           handleCreateWord();
                         }
                       }}
-                      placeholder="Add new word..."
-                      className="grow px-3 py-2 text-detailsPanelPropFontSize text-appLayoutText bg-appLayoutInputBackground border border-appLayoutBorder rounded-md focus:outline-none focus:border-appLayoutHighlight transition-colors duration-200"
+                      placeholder="Search or add a word..."
+                      className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-appLayoutBorder border rounded-sm"
                     />
                     <button
                       type="button"
                       onClick={handleCreateWord}
                       disabled={!newWordInput.trim()}
-                      className="w-10 h-10 flex items-center justify-center rounded-md bg-appLayoutPressed hover:bg-appLayoutHighlight text-appBackground disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                      className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                     >
-                      <span className="icon-[material-symbols-light--add-2-rounded] w-6 h-6"></span>
+                      <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
                     </button>
                   </div>
                 </div>
@@ -174,36 +184,45 @@ const DictionaryPanel = () => {
                       </p>
                     </div>
                   ) : (
-                    <div className="w-full h-fit flex flex-col">
+                    <div className={`w-full h-fit`}>
                       {sortedWords.map((word) => (
                         <div
                           key={word}
-                          className="relative group"
+                          className={`relative group flex items-center w-full pr-3 gap-1 h-fit ${
+                            selectedWord === word
+                              ? "bg-appLayoutPressed text-appLayoutHighlight"
+                              : "hover:bg-appLayoutHover text-appLayoutText"
+                          }`}
                           onMouseEnter={() => setHoveredWord(word)}
                           onMouseLeave={() => setHoveredWord(null)}
                         >
                           <button
                             type="button"
                             onClick={() => handleWordSelect(word)}
-                            className={`w-full px-4 py-3 text-left text-detailsPanelPropFontSize transition-colors duration-100 flex items-center justify-between ${
+                            className={`w-full px-4 py-1 text-left text-libraryDirectoryPaperNodeFontSize transition-colors duration-100 flex items-center justify-between ${
                               selectedWord === word
                                 ? "bg-appLayoutPressed text-appLayoutHighlight"
                                 : "hover:bg-appLayoutHover text-appLayoutText"
                             }`}
                           >
-                            <span className="truncate">{word}</span>
-                            {hoveredWord === word && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteWord(word);
-                                }}
-                                className="ml-2 w-6 h-6 flex items-center justify-center rounded hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-red-500 transition-colors duration-100"
-                              >
-                                <span className="icon-[ph--trash-thin] w-5 h-5"></span>
-                              </button>
-                            )}
+                            <span className="truncate h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px  focus:outline-none focus:border-appLayoutGradientHover border-transparent border rounded-sm">
+                              {word}
+                            </span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteWord(word);
+                            }}
+                            className={`w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 ${
+                              selectedWord === word
+                                ? "bg-appLayoutPressed text-appLayoutHighlight"
+                                : "hover:bg-appLayoutHover text-appLayoutText"
+                            }`}
+                          >
+                            <span className="icon-[ph--trash-thin] w-[80%] h-[80%]"></span>
                           </button>
                         </div>
                       ))}
@@ -217,16 +236,16 @@ const DictionaryPanel = () => {
                 {selectedWord && selectedWordData ? (
                   <div className="w-full h-full flex flex-col">
                     {/* Word Header */}
-                    <div className="w-full h-fit px-6 py-4 border-b border-appLayoutBorder flex items-center justify-between">
-                      <h3 className="text-detailsPanelTitleFontSize font-semibold text-appLayoutText">
+                    <div className="w-full h-fit px-3 py-3 border-b border-appLayoutBorder flex items-center justify-between">
+                      <h3 className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-transparent border rounded-sm">
                         {selectedWord}
                       </h3>
                       <button
                         type="button"
                         onClick={() => handleDeleteWord(selectedWord)}
-                        className="w-10 h-10 flex items-center justify-center rounded-md hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-red-500 transition-colors duration-200"
+                        className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                       >
-                        <span className="icon-[ph--trash-thin] w-6 h-6"></span>
+                        <span className="icon-[ph--trash-thin] w-full h-full"></span>
                       </button>
                     </div>
 
