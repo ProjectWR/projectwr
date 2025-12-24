@@ -17,6 +17,7 @@ import {
   DetailsPanelProperties,
 } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
+import { motion, AnimatePresence } from "motion/react";
 
 const DictionaryPanel = () => {
   const [selectedWord, setSelectedWord] = useState(null);
@@ -198,6 +199,7 @@ export default DictionaryPanel;
 
 const WordPropertiesPanel = ({ selectedWord, handleDeleteWord }) => {
   const [definition, setDefinition] = useState(dictionaryManager.getWord(selectedWord)?.definition || { type: "doc", content: [] });
+  const [originalDefinition, setOriginalDefinition] = useState(definition);
 
   // Load definition when selectedWord changes
   useEffect(() => {
@@ -230,24 +232,34 @@ const WordPropertiesPanel = ({ selectedWord, handleDeleteWord }) => {
                 >
                   <span className="icon-[ph--trash-thin] w-full h-full"></span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    dictionaryManager.addOrUpdateWord(
-                      selectedWord,
-                      definition,
-                      null
-                    )
-                  }
-                  className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-                >
-                  <span className="icon-[material-symbols-light--check-rounded] w-full h-full"></span>
-                </button>
+                <AnimatePresence>
+                  {definition !== originalDefinition && (
+                    <motion.button
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "var(--spacing-libraryManagerHeaderButtonSize)" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      type="button"
+                      onClick={() => {
+                        dictionaryManager.addOrUpdateWord(
+                          selectedWord,
+                          definition,
+                          null
+                        )
+                        setOriginalDefinition(definition);
+                      }
+
+                      }
+                      className="w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md bg-transparent hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                    >
+                      <span className="icon-[material-symbols-light--check-rounded] w-full h-full"></span>
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
             </div >
 
             {/* Word Definition */}
-            < div className="grow overflow-y-auto px-3" >
+            <div className="grow overflow-y-auto px-3" >
               <WordProperties
                 key={selectedWord}
                 selectedWord={selectedWord}
@@ -264,7 +276,8 @@ const WordPropertiesPanel = ({ selectedWord, handleDeleteWord }) => {
                 : "Select a word from the list to view and edit its definition"}
             </p>
           </div>
-        )}
+        )
+      }
     </div >)
 }
 
