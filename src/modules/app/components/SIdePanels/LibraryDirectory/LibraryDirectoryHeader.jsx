@@ -21,7 +21,7 @@ import useMainPanel from "../../../hooks/useMainPanel";
 import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 import LibraryDirectoryHeaderButton from "./LibraryDirectoryHeaderButton";
 
-const LibraryDirectoryHeader = ({}) => {
+const LibraryDirectoryHeader = ({ }) => {
   const { deviceType } = useDeviceType();
 
   const appLibraryId = appStore((state) => state.libraryId);
@@ -148,11 +148,10 @@ const LibraryDirectoryHeader = ({}) => {
     <div
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
-      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
-        libraryManagerOpened
-          ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
-          : "border-transparent bg-transparent"
-      }`}
+      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${libraryManagerOpened
+        ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
+        : "border-transparent bg-transparent"
+        }`}
     >
       <div className="h-fit min-h-fit w-full flex items-center justify-center ">
         <div
@@ -223,13 +222,16 @@ const LibraryDirectoryHeader = ({}) => {
                         )
                     )}
                 </div>
-                <div className="h-[0.5px] w-full px-2">
-                  <div className="h-[0.5px] w-full bg-appLayoutBorder"></div>
-                </div>
-                <div className="contextMenuItem" onClick={handleCreateLibrary}>
-                  <span className="icon-[material-symbols-light--add-2-rounded] w-preferencesItemButtonSize h-full"></span>
-                  <span className="text-appLayoutText">Create Library</span>
-                </div>
+               
+                <button className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
+                  onClick={handleCreateLibrary}>
+                  <div
+                    className="h-full w-fit flex items-center justify-center"
+                  >
+                    <span className="icon-[material-symbols-light--add-2-rounded] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                  </div>
+                
+                </button>
               </motion.div>
             </>
           )}

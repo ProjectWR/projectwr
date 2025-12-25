@@ -192,7 +192,7 @@ const LibraryDirectoryHeaderButton = ({
             onMouseLeave={() => onHover(null)}
             transition={{ duration: 0.05 }}
             key={libraryId}
-            className="text-libraryManagerHeaderText h-[2.5rem] text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
+            className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
             onClick={() => onSelect(libraryId)}
           >
             <motion.div
@@ -205,7 +205,7 @@ const LibraryDirectoryHeaderButton = ({
             >
               <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
             </motion.div>
-            <span className="w-fit">{props.item_properties.item_title}</span>
+            <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">{props.item_properties.item_title}</span>
             <motion.div
               animate={{
                 width: isHovered ? "fit-content" : 0,
