@@ -37,10 +37,10 @@ export const DetailsPanelButton = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.1 }}
-          className="w-full h-full flex items-center justify-center px-2 gap-2"
+          className="w-full h-fit flex items-center justify-center px-2 gap-2"
         >
           {loading && (
-            <div className={`relative w-full h-full`}>
+            <div className={`relative w-detailsPanelButtonIconHeight h-detailsPanelButtonIconHeight`}>
               <span
                 className="w-full h-full"
                 // animate={{ rotate: 360 }}
@@ -105,7 +105,7 @@ export const DetailsPanelButton = ({
                 }}
                 className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
               >
-                <span className="icon-[ph--flower-tulip-thin] h-[60%] w-[60%]"></span>
+                <span className="icon-[mingcute--quill-pen-line] h-[60%] w-[60%]"></span>
               </motion.div>
             </div>
           )}
@@ -220,7 +220,7 @@ export const DetailsPanelCenteredButton = ({
                 }}
                 className="absolute w-full h-full top-0 left-0 flex items-center justify-center"
               >
-                <span className="icon-[ph--flower-tulip-thin] h-[60%] w-[60%]"></span>
+                <span className="icon-[mingcute--quill-pen-line] h-[60%] w-[60%]"></span>
               </motion.div>
             </div>
           )}

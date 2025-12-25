@@ -226,10 +226,11 @@ export const DetailsPanelDescriptionProp = ({
           editor={editor}
           variant="subtle"
           classNames={{
-            root: "bg-appBackground h-full border border-appLayoutBorder rounded-lg px-1",
+            root: "bg-appBackground min-h-full h-fit border border-appLayoutBorder rounded-lg px-1 flex flex-col",
+            Typography: "grow h-fit w-full",
             toolbar: "bg-appBackground border-b border-appLayoutBorder",
             content:
-              "bg-appBackground text-appLayoutText h-full max-h-detailsPanelDescriptionInputHeight h-fit min-h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize DetailsPanelDescriptionProp",
+              "bg-appBackground text-appLayoutText min-h-full max-h-detailsPanelDescriptionInputHeight h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize DetailsPanelDescriptionProp",
             controlsGroup: "bg-appBackground gap-1",
             control:
               "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
@@ -240,6 +241,7 @@ export const DetailsPanelDescriptionProp = ({
 
           .DetailsPanelDescriptionProp > .tiptap.ProseMirror {
             padding: 0 0 0 0;
+            height: 100%;
           }
 
           .DetailsPanelDescriptionProp > .spelling-error {

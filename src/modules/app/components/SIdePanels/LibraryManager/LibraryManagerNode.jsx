@@ -356,7 +356,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                   }}
                   className="absolute w-full h-full p-[20%] top-0 left-0"
                 >
-                  <span className="icon-[ph--flower-tulip-thin] h-full w-full"></span>
+                  <span className="icon-[mingcute--quill-pen-line] h-full w-full"></span>
                 </motion.div>
               </div>
 

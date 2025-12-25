@@ -75,7 +75,7 @@ const ActionBar = () => {
             <div className="h-actionBarLogoSize w-actionBarLogoSize">
               <span
                 key="logoButtonDisabled"
-                className="icon-[ph--flower-tulip-thin] w-full h-full  bg-appLayoutText"
+                className="icon-[mingcute--quill-pen-line] w-full h-full  bg-appLayoutText"
               ></span>
             </div>
           </div>

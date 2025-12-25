@@ -200,7 +200,7 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
               {/* Buttons Section - Second Column */}
               <div className="w-full lg:w-1/2">
                 <DetailsPanelButtonsShell>
-                  <DetailsPanelButton
+                  {/* <DetailsPanelButton
                     onClick={async () => {
                       setSyncLoading(true);
 
@@ -221,7 +221,7 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
                     }
                     text={"Synchronize"}
                     loading={syncLoading}
-                  />
+                  /> */}
                   <DetailsPanelButton
                     onClick={async () => {
                       setSaveLoading(true);
