@@ -65,6 +65,7 @@ import {
   handleLoadFrom,
   saveAuthCode,
 } from "../lib/auth/auth";
+import itemLocalStateManager from "../lib/itemLocalState";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -82,6 +83,7 @@ const WritingApp = () => {
   const [wasLocalSetup, setWasLocalSetup] = useState(false);
 
   const loading = appStore((state) => state.loading);
+  const setLibraryId = appStore((state) => state.setLibraryId);
   const setLoading = appStore((state) => state.setLoading);
   const [loadingStage, setLoadingStage] = useState("Loading App");
 
@@ -143,20 +145,6 @@ const WritingApp = () => {
       setLoadingStage("Loading App");
 
       try {
-        setLoadingStage("Loading previous session");
-
-        // if (
-        //   tabs.findIndex((a) =>
-        //     equalityDeep(a, { panelType: "home", mode: null, breadcrumbs: [] })
-        //   ) === -1
-        // ) {
-        //   const newTabs = JSON.parse(JSON.stringify(tabs));
-
-        //   newTabs.push({ panelType: "home", mode: null, breadcrumbs: [] });
-
-        //   setTabs(newTabs);
-        // }
-
         setLoadingStage("Loading settings");
 
         // Load settings
@@ -350,10 +338,23 @@ const WritingApp = () => {
           }
         }
 
+        setLoadingStage("Loading previous session");
+
+        const lastOpenedItem = itemLocalStateManager.fetchLatestOpenedItems(1) ? itemLocalStateManager.fetchLatestOpenedItems(1)[0] : null;
+
+        console.log("last opened item: ", lastOpenedItem, lastOpenedItem.itemIdLibraryId?.split("::")[0]);
+
+        const lastOpenedlibraryId = lastOpenedItem?.itemIdLibraryId?.split("::")[0];
+
+        if (lastOpenedItem && dataManagerSubdocs.getLibrary(lastOpenedlibraryId)) {
+          console.log("Setting last opened library id: ", lastOpenedlibraryId);
+          setLibraryId(lastOpenedlibraryId);
+        }
+
         // await wait(1000);
         setLoadingStage("Finished Loading");
 
-        return () => {};
+        return () => { };
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -416,9 +417,8 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-full max-h-full w-full max-w-full bg-transparent font-serif ${
-            !isMaximized && "border"
-          } border-appLayoutBorder overflow-hidden text-appLayoutText`}
+          className={`h-full max-h-full w-full max-w-full bg-transparent font-serif ${!isMaximized && "border"
+            } border-appLayoutBorder overflow-hidden text-appLayoutText`}
         >
           {loading && (
             <motion.div
@@ -433,8 +433,8 @@ const WritingApp = () => {
               >
                 <span
                   className="w-full h-full"
-                  // animate={{ rotate: 360 }}
-                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                // animate={{ rotate: 360 }}
+                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
