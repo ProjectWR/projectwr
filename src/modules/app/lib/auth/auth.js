@@ -1,5 +1,5 @@
 import axios from "axios";
-import { readTextFile, remove, writeTextFile} from '@tauri-apps/plugin-fs';
+import { readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
 import { delete_access_token, get_access_token, get_auth_code, save_access_token, save_auth_code } from "./invoker";
 import settings from "../../../../config/settings";
 import { CLIENT_ID, CLIENT_SECRET } from "../../../../config/credentials";
@@ -106,6 +106,7 @@ export async function openAuthWindow() {
   url.searchParams.append("scope", SCOPE);
   url.searchParams.append("access_type", "offline");
   url.searchParams.append("response_type", "code");
+  url.searchParams.append("prompt", "consent");
   url.searchParams.append("client_id", CLIENT_ID);
   url.searchParams.append("redirect_uri", REDIRECT_URI);
   url.searchParams.append("include_granted_scopes", "true");
@@ -158,11 +159,10 @@ export async function getAccessTokenFromStorage() {
 
     console.log('new access token found')
     // check if the access token is expired
-    console.log(accessToken, "accessToken");
+    console.log("accessToken", accessToken);
     const lastLogin = parseInt(localStorage.getItem("lastLogin") || "0");
-    console.log("(accessToken.expires_in < Date.now() || Date.now() - lastLogin > 3620)", Date.now(), lastLogin)
-    if ((accessToken.expires_in < lastLogin - Date.now()) && navigator.onLine) {
-      console.log("Access token expired");
+    console.log("(accessToken.expires_in < Date.now() || Date.now() - lastLogin > 3620)", accessToken.expires_in, Date.now() - lastLogin);
+    if ((accessToken.expires_in < Date.now() - lastLogin) && navigator.onLine) {
       accessToken = await refreshAndSaveAccessToken(accessToken.refresh_token);
     }
     return accessToken;
