@@ -10,6 +10,46 @@
 
 @plugin "@iconify/tailwind4";
 
+
+@font-face {
+  font-family: 'NotoSans';
+  src: url('/src/assets/NotoSans.ttf') format('truetype');
+  font-weight: 100 1000;
+  font-style: normal;
+}
+
+.w100 {
+  font-variation-settings: 'wght' 100;
+}
+
+.w200 {
+  font-variation-settings: 'wght' 200;
+}
+
+.w300 {
+  font-variation-settings: 'wght' 300;
+}
+
+
+.w400 {
+  font-variation-settings: 'wght' 400;
+}
+
+.w500 {
+  font-variation-settings: 'wght' 500;
+}
+
+.w600 {
+  font-variation-settings: 'wght' 600;
+}
+
+.w700 {
+  font-variation-settings: 'wght' 700;
+}
+
+.w800 {
+  font-variation-settings: 'wght' 800;
+}
 /* Add this to your global styles or style tag */
 .tippy-box {
   max-width: calc(100vw - 20px) !important;
@@ -285,9 +325,9 @@
     --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 1.8rem);
     --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 1.8rem);
 
-    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 0.9rem);
-    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 0.9rem);
-    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 0.9 rem);
+    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 0.85rem);
+    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 0.85rem);
+    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 0.85rem);
 
     --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.1rem);
     --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 0.9rem);
@@ -715,7 +755,7 @@ input[type="number"] {
 
   .contextMenuContent,
   .contextMenuSubContent {
-    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/90 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-sm shadow-appLayoutGentleShadow font-serif;
+    @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/90 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-sm shadow-appLayoutGentleShadow;
   }
 
   .contextMenuItem,
@@ -736,7 +776,7 @@ input[type="number"] {
   }
 
   .contextMenuSeparator {
-    @apply h-[0.5px] bg-appLayoutBorder ;
+    @apply h-[0.5px] bg-appLayoutBorder;
   }
 
   .rightSlot {

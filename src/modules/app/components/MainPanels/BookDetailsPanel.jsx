@@ -235,7 +235,7 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
                 wrapper:
                   "bg-appBackground overflow-hidden text-detailsPanelPropsFontSize border-none focus:border-none w-full focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200",
                 input:
-                  "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize font-serif min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
+                  "bg-appBackground px-3 pb-3 text-appLayoutText text-detailsPanelPropsFontSize  min-h-[5rem] max-h-detailsPanelDescriptionInputHeight border-none focus:border-none overflow-y-auto",
               }}
               autosize
               name="item_description"

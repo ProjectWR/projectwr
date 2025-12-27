@@ -317,7 +317,7 @@ const LibraryDirectoryHeader = () => {
                 transition={{ duration: 0.2 }}
                 className="w-full overflow-hidden"
               >
-                <div className="h-fit w-full grid grid-cols-1 py-1 font-sans">
+                <div className="h-fit w-full grid grid-cols-1 py-1 ">
                   {sortedLibraryIds &&
                     sortedLibraryIds.map(
                       ([libraryId, props]) =>

@@ -96,7 +96,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
     <>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText font-sans px-1"
+        className="border-b flex w-fit z-1000 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText  px-1"
       >
         <ActionButton
           onClick={() => {
@@ -220,7 +220,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       </ScrollArea>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText font-sans px-1"
+        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText  px-1"
       >
         <NotesPanelOpenButton
           isNotesPanelAwake={isNotesPanelAwake}
@@ -561,7 +561,7 @@ const TabButton = ({
     <div
       ref={dndRef}
       className={`h-[85%] min-h-[85%] w-full flex items-center justify-start gap-1
-          transition-colors duration-200 font-sans rounded-lg
+          transition-colors duration-200  rounded-lg
 
           border
 

@@ -86,7 +86,7 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   return (
     <div
       ref={EditorStylePickerRef}
-      className="relative mb-4 font-serif w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight rounded-md flex flex-col items-center"
+      className="relative mb-4  w-full h-fit border border-appLayoutBorder pt-detailsPanelPropLabelHeight rounded-md flex flex-col items-center"
     >
       <div className="w-[98.5%] h-px bg-appLayoutBorder"></div>
 

@@ -22,7 +22,7 @@ const Start = () => {
     >
       <div id="StartCardContainer" className="container flex flex-col">
         <div id="StartCardHeader" className="flex justify-center items-center">
-          <h1 className="text-6xl font-extralight font-serif">project wr</h1>
+          <h1 className="text-6xl font-extralight ">project wr</h1>
         </div>
 
         <div id="StartCardBody" className="w-full flex justify-center mt-2 ">

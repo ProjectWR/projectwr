@@ -63,7 +63,7 @@ const ActionBar = () => {
     <div
       data-tauri-drag-region
       id="actionBarContainer"
-      className="border-b z-1000 border-appLayoutBorder w-full h-actionBarHeight min-h-actionBarHeight bg-appBackgroundAccent text-appLayoutText font-sans"
+      className="border-b z-1000 border-appLayoutBorder w-full h-actionBarHeight min-h-actionBarHeight bg-appBackgroundAccent text-appLayoutText "
     >
       <div
         data-tauri-drag-region
@@ -501,7 +501,7 @@ export const ActionBarLeftSide = ({}) => {
         width: isMd ? `${barWidth}px` : 0,
         minWidth: `calc(var(--uiScale) * 120px)`,
       }}
-      className="border-b z-1000 border-appLayoutBorder h-full min-h-full bg-appBackgroundAccent text-appLayoutText font-sans"
+      className="border-b z-1000 border-appLayoutBorder h-full min-h-full bg-appBackgroundAccent text-appLayoutText "
     >
       <div
         data-tauri-drag-region
@@ -646,7 +646,7 @@ export const ActionBarRightSide = ({}) => {
       style={{
         width: `${barWidth}px`,
       }}
-      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight bg-appBackgroundAccent min-h-actionBarHeight text-appLayoutText font-sans"
+      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight bg-appBackgroundAccent min-h-actionBarHeight text-appLayoutText "
     >
       <div
         data-tauri-drag-region

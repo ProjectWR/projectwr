@@ -75,7 +75,7 @@ const PaperSettingsPanel = ({ libraryId, ytree, paperId }) => {
           libraryId={libraryId}
         />
 
-        <div className="PaperActionButtons w-full h-fit flex flex-wrap items-center justify-start font-sans gap-4">
+        <div className="PaperActionButtons w-full h-fit flex flex-wrap items-center justify-start  gap-4">
           <PaperActionButton
             onClick={() => {
               console.log("export paper button");

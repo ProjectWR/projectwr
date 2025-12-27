@@ -140,7 +140,7 @@ const HomePanel = () => {
 
           <div
             id="HomeBody"
-            className="h-fit min-h-fit w-full font-sans flex flex-col items-center justify-start mt-6"
+            className="h-fit min-h-fit w-full  flex flex-col items-center justify-start mt-6"
           >
             <AnimatePresence>
               {latestItems.length > 0 && (
@@ -286,7 +286,7 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}
-      className="px-3 py-1 w-full h-fit flex items-center justify-between rounded-md font-sans text-recentlyOpenedNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
+      className="px-3 py-1 w-full h-fit flex items-center justify-between rounded-md  text-recentlyOpenedNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
     >
       <span className="h-fit flex items-center gap-2">
         <motion.span transition={{ duration: 0.2 }}>{name}</motion.span>

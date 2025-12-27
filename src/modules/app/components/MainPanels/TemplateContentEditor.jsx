@@ -444,7 +444,7 @@ const TemplateContentEditor = ({
   if (content === null || content === undefined) return null;
 
   return (
-    <div id="TCEContainer" className="w-full font-sans flex flex-col relative">
+    <div id="TCEContainer" className="w-full  flex flex-col relative">
       <div
         id="TCEHeader"
         className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-1"
