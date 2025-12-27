@@ -11,6 +11,7 @@ import dataManagerSubdocs, {
   getArrayFromYDocMap,
 } from "../../../lib/dataSubDoc";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
+import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 
 const LibraryDirectoryHeaderButton = ({
   libraryId,
@@ -143,9 +144,27 @@ const LibraryDirectoryHeaderButton = ({
         },
       },
       {
-        isDivider: true,
+        label: "Save as archive",
+        icon: (
+          <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          await persistenceManagerForSubdocs.saveArchive(
+            dataManagerSubdocs.getLibrary(libraryId)
+          );
+        }
       },
-
+      {
+        label: "Load from archive",
+        icon: (
+          <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          await persistenceManagerForSubdocs.loadArchive(
+            dataManagerSubdocs.getLibrary(libraryId)
+          );
+        }
+      },
       {
         label: "Delete",
         icon: (
@@ -167,14 +186,14 @@ const LibraryDirectoryHeaderButton = ({
         ${isDragging ? "opacity-20" : ""}
         
         ${(() => {
-          if (!isSelfSelected && isOverCurrent) {
-            return isTopSelected
-              ? "border-t border-b border-b-transparent border-t-appLayoutDirectoryNodeHover"
-              : "border-b border-t border-t-transparent border-b-appLayoutDirectoryNodeHover";
-          } else {
-            return "border-y border-transparent";
-          }
-        })()}
+            if (!isSelfSelected && isOverCurrent) {
+              return isTopSelected
+                ? "border-t border-b border-b-transparent border-t-appLayoutDirectoryNodeHover"
+                : "border-b border-t border-t-transparent border-b-appLayoutDirectoryNodeHover";
+            } else {
+              return "border-y border-transparent";
+            }
+          })()}
       `}
       >
         <AnimatePresence mode="wait">

@@ -7,7 +7,6 @@ import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-import useStoreHistory from "../../../hooks/useStoreHistory";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { exportItem } from "../../../lib/importExport";
@@ -60,6 +59,9 @@ const DirectoryItemNode = ({
   const [isOpened, setIsOpened] = useState(
     itemLocalStateManager.isItemOpened(libraryId, itemId)
   );
+
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState("");
 
   useEffect(() => {
     if (focusedItemId === itemId) {
@@ -128,6 +130,27 @@ const DirectoryItemNode = ({
     activatePanel("libraries", "details", [libraryId, newId]);
     itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
+
+  const onRenameClick = useCallback(() => {
+    setRenameValue(itemMapState.item_properties.item_title);
+    setIsRenaming(true);
+  }, [itemMapState.item_properties.item_title]);
+
+  const handleRenameSave = useCallback(() => {
+    if (renameValue.trim() && renameValue !== itemMapState.item_properties.item_title) {
+      const itemMap = itemMapRef.current;
+      const currentProperties = itemMap.get("item_properties");
+      itemMap.set("item_properties", {
+        ...currentProperties,
+        item_title: renameValue.trim(),
+      });
+    }
+    setIsRenaming(false);
+  }, [renameValue, itemMapState.item_properties.item_title]);
+
+  const handleRenameCancel = useCallback(() => {
+    setIsRenaming(false);
+  }, []);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
@@ -321,6 +344,15 @@ const DirectoryItemNode = ({
         },
 
         {
+          label: "Rename",
+          icon: (
+            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: onRenameClick,
+        },
+
+
+        {
           label: "Create section",
           icon: (
             <span className="icon-[fluent--folder-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -354,10 +386,6 @@ const DirectoryItemNode = ({
         },
 
         {
-          isDivider: true,
-        },
-
-        {
           label: `Export 
           ${itemMapRef.current.get("type") === "section" ? "section" : ""}
           ${itemMapRef.current.get("type") === "book" ? "book" : ""}
@@ -370,10 +398,6 @@ const DirectoryItemNode = ({
             console.log("export section button");
             exportItem(ytree, itemId);
           },
-        },
-
-        {
-          isDivider: true,
         },
 
         {
@@ -392,7 +416,7 @@ const DirectoryItemNode = ({
     if (itemMapRef.current.get("type") === "paper") {
       return [
         {
-          label: "Open",
+          label: "Edit",
           icon: (
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
@@ -416,28 +440,12 @@ const DirectoryItemNode = ({
             }
           },
         },
-        // {
-        //   label: "Edit Paper Settings",
-        //   icon: (
-        //     <span className="icon-[bi--sliders2] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-        //   ),
-        //   action: () => {
-        //     console.log("edit paper editor button");
-        //     if (!(appStoreItemId === itemId && itemMode === "settings")) {
-        //       setItemId(itemId);
-        //       setFocusedItemId(itemId);
-        //       setItemMode("settings");
-        //       if (deviceType === "mobile") {
-        //         setPanelOpened(false);
-        //       }
-
-        //       activatePanel("libraries", "settings", [libraryId, itemId]);
-        //     }
-        //   },
-        // },
-
         {
-          isDivider: true,
+          label: "Rename",
+          icon: (
+            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: onRenameClick,
         },
 
         {
@@ -448,10 +456,6 @@ const DirectoryItemNode = ({
           action: () => {
             exportItem(ytree, itemId);
           },
-        },
-
-        {
-          isDivider: true,
         },
 
         {
@@ -470,7 +474,7 @@ const DirectoryItemNode = ({
     if (itemMapRef.current.get("type") === "note") {
       return [
         {
-          label: "Open",
+          label: "Edit",
           icon: (
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
@@ -496,6 +500,14 @@ const DirectoryItemNode = ({
         },
 
         {
+          label: "Rename",
+          icon: (
+            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: onRenameClick,
+        },
+
+        {
           label: "Export note",
           icon: (
             <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -503,10 +515,6 @@ const DirectoryItemNode = ({
           action: () => {
             exportItem(ytree, itemId);
           },
-        },
-
-        {
-          isDivider: true,
         },
 
         {
@@ -528,6 +536,7 @@ const DirectoryItemNode = ({
     itemMode,
     onCreatePaperClick,
     onCreateSectionClick,
+    onRenameClick,
     panelOpened,
     setItemId,
     setFocusedItemId,
@@ -554,16 +563,16 @@ const DirectoryItemNode = ({
         border-y-transparent
 
         ${(() => {
-          if (!isSelfSelected && !isAncestor && isOverCurrent) {
-            if (areaSelected === "top")
-              return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
-            if (areaSelected === "bottom")
-              return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
-            if (areaSelected === "middle")
-              return "bg-appLayoutDirectoryNodeHover border-y-0";
-          }
-          return "";
-        })()}
+            if (!isSelfSelected && !isAncestor && isOverCurrent) {
+              if (areaSelected === "top")
+                return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
+              if (areaSelected === "bottom")
+                return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
+              if (areaSelected === "middle")
+                return "bg-appLayoutDirectoryNodeHover border-y-0";
+            }
+            return "";
+          })()}
 
           `}
       >
@@ -583,14 +592,14 @@ const DirectoryItemNode = ({
             ${isChildOfRoot && "rounded-l-sm"}
 
             ${(() => {
-              const type = itemMapRef.current.get("type");
-              if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
-              if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
-              if (type === "section")
-                return "h-libraryDirectorySectionNodeHeight ";
-              if (type === "book") return "h-libraryDirectoryBookNodeHeight";
-              return "";
-            })()}
+                const type = itemMapRef.current.get("type");
+                if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+                if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
+                if (type === "section")
+                  return "h-libraryDirectorySectionNodeHeight ";
+                if (type === "book") return "h-libraryDirectoryBookNodeHeight";
+                return "";
+              })()}
 
               transition-colors
               duration-0
@@ -633,9 +642,27 @@ const DirectoryItemNode = ({
                   </div>
 
                   <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                    <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
-                      {itemMapState.item_properties.item_title}
-                    </span>
+                    {isRenaming ? (
+                      <input
+                        type="text"
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleRenameSave();
+                          } else if (e.key === "Escape") {
+                            handleRenameCancel();
+                          }
+                        }}
+                        onBlur={handleRenameSave}
+                        className="w-full bg-appLayoutInputBackground border border-appLayoutBorder rounded px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
+                        {itemMapState.item_properties.item_title}
+                      </span>
+                    )}
                   </div>
                 </button>
               </>
@@ -677,9 +704,27 @@ const DirectoryItemNode = ({
                   </div>
 
                   <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                    <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
-                      {itemMapState.item_properties.item_title}
-                    </span>
+                    {isRenaming ? (
+                      <input
+                        type="text"
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleRenameSave();
+                          } else if (e.key === "Escape") {
+                            handleRenameCancel();
+                          }
+                        }}
+                        onBlur={handleRenameSave}
+                        className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
+                        {itemMapState.item_properties.item_title}
+                      </span>
+                    )}
                   </div>
                 </button>
               </>
@@ -687,40 +732,58 @@ const DirectoryItemNode = ({
 
             {(itemMapRef.current.get("type") === "section" ||
               itemMapRef.current.get("type") === "book") && (
-              <button
-                className={`grow min-w-0 flex items-center justify-start h-full `}
-                onClick={() => {
-                  setFocusedItemId(itemId);
-                  const newOpenedState = !isOpened;
-                  setIsOpened(newOpenedState);
-                  itemLocalStateManager.setItemOpened(
-                    libraryId,
-                    itemId,
-                    newOpenedState
-                  );
-                }}
-              >
-                <motion.span
-                  animate={{ rotate: isOpened ? 90 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`icon-[formkit--right] ${(() => {
-                    const type = itemMapRef.current.get("type");
+                <button
+                  className={`grow min-w-0 flex items-center justify-start h-full `}
+                  onClick={() => {
+                    setFocusedItemId(itemId);
+                    const newOpenedState = !isOpened;
+                    setIsOpened(newOpenedState);
+                    itemLocalStateManager.setItemOpened(
+                      libraryId,
+                      itemId,
+                      newOpenedState
+                    );
+                  }}
+                >
+                  <motion.span
+                    animate={{ rotate: isOpened ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className={`icon-[formkit--right] ${(() => {
+                      const type = itemMapRef.current.get("type");
 
-                    if (type === "section")
-                      return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                    if (type === "book")
-                      return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                    return "";
-                  })()}`}
-                ></motion.span>
+                      if (type === "section")
+                        return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                      if (type === "book")
+                        return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                      return "";
+                    })()}`}
+                  ></motion.span>
 
-                <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                  <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
-                    {itemMapState.item_properties.item_title}
-                  </span>
-                </div>
-              </button>
-            )}
+                  <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
+                    {isRenaming ? (
+                      <input
+                        type="text"
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleRenameSave();
+                          } else if (e.key === "Escape") {
+                            handleRenameCancel();
+                          }
+                        }}
+                        onBlur={handleRenameSave}
+                        className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
+                        {itemMapState.item_properties.item_title}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              )}
           </motion.div>
         </AnimatePresence>
 

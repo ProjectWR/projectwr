@@ -20,8 +20,11 @@ import { setupSearchForLibrary } from "../../../lib/search";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 import LibraryDirectoryHeaderButton from "./LibraryDirectoryHeaderButton";
+import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
+import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
+import { wait } from "lib0/promise";
 
-const LibraryDirectoryHeader = ({ }) => {
+const LibraryDirectoryHeader = () => {
   const { deviceType } = useDeviceType();
 
   const appLibraryId = appStore((state) => state.libraryId);
@@ -144,6 +147,54 @@ const LibraryDirectoryHeader = ({ }) => {
     setLibraryManagerOpened,
   ]);
 
+  const options = useMemo(() => {
+    return [
+      {
+        label: "Edit",
+        icon: (
+          <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          activatePanel("libraries", "details", [appLibraryId]);
+        },
+      },
+      {
+        label: "Save as archive",
+        icon: (
+          <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          await persistenceManagerForSubdocs.saveArchive(
+            dataManagerSubdocs.getLibrary(appLibraryId)
+          );
+        }
+      },
+      {
+        label: "Load from archive",
+        icon: (
+          <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          await persistenceManagerForSubdocs.loadArchive(
+            dataManagerSubdocs.getLibrary(appLibraryId)
+          );
+        }
+      },
+      {
+        label: "Delete",
+        icon: (
+          <span className="icon-[ph--trash-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          console.log("Deleting Library");
+          dataManagerSubdocs.destroyLibrary(appLibraryId);
+
+        }
+      },
+    ];
+
+  }, [appLibraryId])
+
   return (
     <div
       id="LibraryDirectoryHeader"
@@ -155,13 +206,15 @@ const LibraryDirectoryHeader = ({ }) => {
     >
       <div className="h-fit min-h-fit w-full flex items-center justify-center ">
         <div
-          className={`h-fit w-full grow py-2 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
+          className={`h-fit w-full max-w-full py-2 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
-          <p className="max-w-full w-full h-fit  text-nowrap overflow-hidden text-ellipsis text-center">
-            {libraryIdsWithProps.find(
-              (library) => library[0] === appLibraryId
-            )?.[1]?.item_properties?.item_title || "Open a Library"}
-          </p>
+          <ContextMenuWrapper triggerClassname="grow h-fit min-w-0" options={options}>
+            <p className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis text-center">
+              {libraryIdsWithProps.find(
+                (library) => library[0] === appLibraryId
+              )?.[1]?.item_properties?.item_title || "Open a Library"}
+            </p>
+          </ContextMenuWrapper>
 
           {appLibraryId != "unselected" && (
             <button
@@ -222,7 +275,7 @@ const LibraryDirectoryHeader = ({ }) => {
                         )
                     )}
                 </div>
-               
+
                 <button className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
                   onClick={handleCreateLibrary}>
                   <div
@@ -230,7 +283,7 @@ const LibraryDirectoryHeader = ({ }) => {
                   >
                     <span className="icon-[material-symbols-light--add-2-rounded] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
                   </div>
-                
+
                 </button>
               </motion.div>
             </>

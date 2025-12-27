@@ -731,11 +731,10 @@ const OptionsButton = ({
       ref={buttonContainerRef}
       className={`relative w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mr-1 rounded-full 
                   text-appLayoutText
-                  ${
-                    isOpened
-                      ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
-                      : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
-                  }
+                  ${isOpened
+          ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
+          : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
+        }
 
                   flex items-center justify-center
 
@@ -762,21 +761,18 @@ const OptionsButton = ({
             transition={{ ease: "easeOut", duration: 0.1 }}
             className={`absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
-                       ${
-                         shouldDropdownGoUp
-                           ? `                      
-                              ${
-                                origin === "topRight" &&
-                                "origin-bottom-right right-0"
-                              } 
+                       ${shouldDropdownGoUp
+                ? `                      
+                              ${origin === "topRight" &&
+                "origin-bottom-right right-0"
+                } 
                               ${origin === "topMiddle" && "origin-bottom"}`
-                           : `                       
-                              ${
-                                origin === "topRight" &&
-                                "origin-top-right right-0"
-                              } 
+                : `                       
+                              ${origin === "topRight" &&
+                "origin-top-right right-0"
+                } 
                               ${origin === "topMiddle" && "origin-top"}`
-                       }
+              }
 
                        `}
           >

@@ -202,8 +202,8 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
 
               {/* Word Count and Status Section - Second Column */}
               <div className="w-full lg:w-1/2 flex flex-col gap-3">
-                <h2 className="w-fit h-fit px-2 pt-1 pb-2 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
-                  {/* Blank placeholder */}
+                <h2 className="w-fit h-fit px-2 pt-1  flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+                  &nbsp;
                 </h2>
                 <DetailsPanelWordCountProp
                   currentWordCount={wordCount}
