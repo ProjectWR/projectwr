@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDrag, useDrop } from "react-dnd";
 import { AnimatePresence, motion } from "motion/react";
@@ -24,6 +24,8 @@ const LibraryDirectoryHeaderButton = ({
 
   const [isTopSelected, setIsTopSelected] = useState(false);
   const [isSelfSelected, setIsSelfSelected] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState("");
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "LIBRARY",
@@ -132,6 +134,28 @@ const LibraryDirectoryHeaderButton = ({
 
   drag(drop(ref));
 
+  const onRenameClick = useCallback(() => {
+    setRenameValue(props.item_properties.item_title);
+    setIsRenaming(true);
+  }, [props.item_properties.item_title]);
+
+  const handleRenameSave = useCallback(() => {
+    if (renameValue.trim() && renameValue !== props.item_properties.item_title) {
+      const libraryYdoc = dataManagerSubdocs.getLibrary(libraryId);
+      const libraryProps = libraryYdoc.getMap("library_props");
+      const currentProperties = libraryProps.get("item_properties");
+      libraryProps.set("item_properties", {
+        ...currentProperties,
+        item_title: renameValue.trim(),
+      });
+    }
+    setIsRenaming(false);
+  }, [renameValue, props.item_properties.item_title, libraryId]);
+
+  const handleRenameCancel = useCallback(() => {
+    setIsRenaming(false);
+  }, [onRenameClick]);
+
   const options = useMemo(() => {
     return [
       {
@@ -142,6 +166,13 @@ const LibraryDirectoryHeaderButton = ({
         action: () => {
           onSelect(libraryId);
         },
+      },
+      {
+        label: "Rename",
+        icon: (
+          <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: onRenameClick,
       },
       {
         label: "Save as archive",
@@ -175,7 +206,7 @@ const LibraryDirectoryHeaderButton = ({
         },
       },
     ];
-  }, []);
+  }, [onRenameClick, libraryId, onSelect]);
 
   return (
     <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>
@@ -224,7 +255,25 @@ const LibraryDirectoryHeaderButton = ({
             >
               <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
             </motion.div>
-            <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">{props.item_properties.item_title}</span>
+            {isRenaming ? (
+              <input
+                type="text"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleRenameSave();
+                  } else if (e.key === "Escape") {
+                    handleRenameCancel();
+                  }
+                }}
+                onBlur={handleRenameSave}
+                className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
+                autoFocus
+              />
+            ) : (
+              <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">{props.item_properties.item_title}</span>
+            )}
             <motion.div
               animate={{
                 width: isHovered ? "fit-content" : 0,

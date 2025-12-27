@@ -374,6 +374,8 @@ const WritingApp = () => {
     setZoom,
     wasLocalSetup,
     setDeviceType,
+    setLibraryId,
+    user,
   ]);
 
   useEffect(() => {

@@ -34,6 +34,8 @@ const LibraryDirectoryHeader = () => {
   const { activatePanel } = useMainPanel();
 
   const [libraryHovered, setLibraryHovered] = useState(null);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState("");
 
   const libraryDropdownRef = useRef(null);
   const [libraryDropdownHeight, setLibraryDropdownHeight] = useState(0);
@@ -147,6 +149,33 @@ const LibraryDirectoryHeader = () => {
     setLibraryManagerOpened,
   ]);
 
+  const onRenameClick = useCallback(() => {
+    const currentTitle = libraryIdsWithProps.find(
+      (library) => library[0] === appLibraryId
+    )?.[1]?.item_properties?.item_title || "";
+    setRenameValue(currentTitle);
+    setIsRenaming(true);
+  }, [appLibraryId, libraryIdsWithProps]);
+
+  const handleRenameSave = useCallback(() => {
+    if (renameValue.trim() && renameValue !== libraryIdsWithProps.find(
+      (library) => library[0] === appLibraryId
+    )?.[1]?.item_properties?.item_title) {
+      const libraryYdoc = dataManagerSubdocs.getLibrary(appLibraryId);
+      const libraryProps = libraryYdoc.getMap("library_props");
+      const currentProperties = libraryProps.get("item_properties");
+      libraryProps.set("item_properties", {
+        ...currentProperties,
+        item_title: renameValue.trim(),
+      });
+    }
+    setIsRenaming(false);
+  }, [renameValue, appLibraryId, libraryIdsWithProps]);
+
+  const handleRenameCancel = useCallback(() => {
+    setIsRenaming(false);
+  }, []);
+
   const options = useMemo(() => {
     return [
       {
@@ -157,6 +186,13 @@ const LibraryDirectoryHeader = () => {
         action: () => {
           activatePanel("libraries", "details", [appLibraryId]);
         },
+      },
+      {
+        label: "Rename",
+        icon: (
+          <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: onRenameClick,
       },
       {
         label: "Save as archive",
@@ -193,7 +229,7 @@ const LibraryDirectoryHeader = () => {
       },
     ];
 
-  }, [appLibraryId])
+  }, [appLibraryId, onRenameClick])
 
   return (
     <div
@@ -209,11 +245,29 @@ const LibraryDirectoryHeader = () => {
           className={`h-fit w-full max-w-full py-2 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
           <ContextMenuWrapper triggerClassname="grow h-fit min-w-0" options={options}>
-            <p className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis text-center">
-              {libraryIdsWithProps.find(
-                (library) => library[0] === appLibraryId
-              )?.[1]?.item_properties?.item_title || "Open a Library"}
-            </p>
+            {isRenaming ? (
+              <input
+                type="text"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleRenameSave();
+                  } else if (e.key === "Escape") {
+                    handleRenameCancel();
+                  }
+                }}
+                onBlur={handleRenameSave}
+                className="w-full bg-appLayoutInputBackground px-1 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
+                autoFocus
+              />
+            ) : (
+              <p className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis text-center">
+                {libraryIdsWithProps.find(
+                  (library) => library[0] === appLibraryId
+                )?.[1]?.item_properties?.item_title || "Open a Library"}
+              </p>
+            )}
           </ContextMenuWrapper>
 
           {appLibraryId != "unselected" && (
