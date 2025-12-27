@@ -168,13 +168,6 @@ const LibraryDirectoryHeaderButton = ({
         },
       },
       {
-        label: "Rename",
-        icon: (
-          <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-        ),
-        action: onRenameClick,
-      },
-      {
         label: "Save as archive",
         icon: (
           <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -195,6 +188,17 @@ const LibraryDirectoryHeaderButton = ({
             dataManagerSubdocs.getLibrary(libraryId)
           );
         }
+      },
+      {
+        isDivider: true
+      },
+
+      {
+        label: "Rename",
+        icon: (
+          <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: onRenameClick,
       },
       {
         label: "Delete",

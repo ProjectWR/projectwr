@@ -344,15 +344,6 @@ const DirectoryItemNode = ({
         },
 
         {
-          label: "Rename",
-          icon: (
-            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-          ),
-          action: onRenameClick,
-        },
-
-
-        {
           label: "Create section",
           icon: (
             <span className="icon-[fluent--folder-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -401,6 +392,18 @@ const DirectoryItemNode = ({
         },
 
         {
+          isDivider: true
+        },
+
+        {
+          label: "Rename",
+          icon: (
+            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: onRenameClick,
+        },
+
+        {
           label: "Delete",
           icon: (
             <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -440,13 +443,6 @@ const DirectoryItemNode = ({
             }
           },
         },
-        {
-          label: "Rename",
-          icon: (
-            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-          ),
-          action: onRenameClick,
-        },
 
         {
           label: "Export paper",
@@ -456,6 +452,18 @@ const DirectoryItemNode = ({
           action: () => {
             exportItem(ytree, itemId);
           },
+        },
+
+        {
+          isDivider: true
+        },
+
+        {
+          label: "Rename",
+          icon: (
+            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: onRenameClick,
         },
 
         {
@@ -500,14 +508,6 @@ const DirectoryItemNode = ({
         },
 
         {
-          label: "Rename",
-          icon: (
-            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
-          ),
-          action: onRenameClick,
-        },
-
-        {
           label: "Export note",
           icon: (
             <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
@@ -515,6 +515,18 @@ const DirectoryItemNode = ({
           action: () => {
             exportItem(ytree, itemId);
           },
+        },
+
+        {
+          isDivider: true
+        },
+
+        {
+          label: "Rename",
+          icon: (
+            <span className="icon-[fluent--rename-a-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+          ),
+          action: onRenameClick,
         },
 
         {
