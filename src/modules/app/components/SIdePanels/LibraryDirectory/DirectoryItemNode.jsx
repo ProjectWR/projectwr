@@ -8,8 +8,10 @@ import { AnimatePresence, motion } from "motion/react";
 import itemLocalStateManager from "../../../lib/itemLocalState";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
+import DialogWrapper from "../../LayoutComponents/DialogWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { exportItem } from "../../../lib/importExport";
+import { Checkbox } from "@mantine/core";
 
 /**
  *
@@ -41,6 +43,9 @@ const DirectoryItemNode = ({
 
   const { activatePanel } = useMainPanel();
 
+  const deleteConfirmDontAskAgain = appStore((state) => state.deleteConfirmDontAskAgain);
+  const setDeleteConfirmDontAskAgain = appStore((state) => state.setDeleteConfirmDontAskAgain);
+
   const dndRef = useRef(null);
 
   // Get the node value map and determine its type.
@@ -62,6 +67,12 @@ const DirectoryItemNode = ({
 
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState("");
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState({
+    open: false,
+    itemId: null,
+    itemType: null,
+    itemTitle: null,
+  });
 
   useEffect(() => {
     if (focusedItemId === itemId) {
@@ -410,7 +421,18 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             console.log("delete item button");
-            dataManagerSubdocs.deleteItem(ytree, itemId);
+            if (deleteConfirmDontAskAgain) {
+              // Skip confirmation dialog and delete directly
+              dataManagerSubdocs.deleteItem(ytree, itemId);
+            } else {
+              // Show confirmation dialog
+              setDeleteConfirmDialog({
+                open: true,
+                itemId: itemId,
+                itemType: itemMapRef.current.get("type"),
+                itemTitle: itemMapState.item_properties.item_title,
+              });
+            }
           },
         },
       ];
@@ -473,7 +495,18 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             console.log("delete paper button");
-            dataManagerSubdocs.deleteItem(ytree, itemId);
+            if (deleteConfirmDontAskAgain) {
+              // Skip confirmation dialog and delete directly
+              dataManagerSubdocs.deleteItem(ytree, itemId);
+            } else {
+              // Show confirmation dialog
+              setDeleteConfirmDialog({
+                open: true,
+                itemId: itemId,
+                itemType: itemMapRef.current.get("type"),
+                itemTitle: itemMapState.item_properties.item_title,
+              });
+            }
           },
         },
       ];
@@ -536,7 +569,18 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             console.log("delete note button");
-            dataManagerSubdocs.deleteItem(ytree, itemId);
+            if (deleteConfirmDontAskAgain) {
+              // Skip confirmation dialog and delete directly
+              dataManagerSubdocs.deleteItem(ytree, itemId);
+            } else {
+              // Show confirmation dialog
+              setDeleteConfirmDialog({
+                open: true,
+                itemId: itemId,
+                itemType: itemMapRef.current.get("type"),
+                itemTitle: itemMapState.item_properties.item_title,
+              });
+            }
           },
         },
       ];
@@ -853,6 +897,71 @@ const DirectoryItemNode = ({
               )}
           </motion.div>
         </AnimatePresence>
+
+        <DialogWrapper
+          open={deleteConfirmDialog.open && deleteConfirmDialog.itemId === itemId}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteConfirmDialog({
+                open: false,
+                itemId: null,
+                itemType: null,
+                itemTitle: null,
+              });
+            }
+          }}
+          title="Delete Item"
+          description={`Are you sure you want to delete "${deleteConfirmDialog.itemTitle}"? This action cannot be undone.`}
+          onSubmit={() => {
+            dataManagerSubdocs.deleteItem(ytree, itemId);
+            setDeleteConfirmDialog({
+              open: false,
+              itemId: null,
+              itemType: null,
+              itemTitle: null,
+            });
+          }}
+          submitLabel="Delete"
+          destructive={true}
+          options={[
+            {
+              checked: deleteConfirmDontAskAgain,
+              label: "Don't ask again",
+              onChange: (e) =>
+                setDeleteConfirmDontAskAgain(e.target.checked),
+            }
+          ]}
+        >
+          {/* <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                checked={deleteConfirmDontAskAgain}
+                onChange={(e) => setDeleteConfirmDontAskAgain(e.target.checked)}
+                variant="outline"
+                iconColor="var(--appLayoutText)"
+                styles={{
+                  input: {
+                    borderColor:
+                      deleteConfirmDontAskAgain ? "var(--appLayoutText)" : undefined,
+                  },
+                }}
+                classNames={{
+                  root: "w-4 h-4 cursor-pointer",
+                  body: "w-full h-full",
+                  inner: "w-full h-full",
+                  input: "w-full h-full bg-transparent border-appLayoutInverseHover",
+                  icon: "bg-appLayoutBorder border-appLayoutBorder",
+                }}
+              />
+              <label
+                htmlFor="dontAskAgain"
+                className="text-sm text-appLayoutText cursor-pointer"
+              >
+                Don't ask again
+              </label>
+            </div>
+          </div> */}
+        </DialogWrapper>
       </div>
     </ContextMenuWrapper>
   );

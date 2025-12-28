@@ -50,6 +50,7 @@
 .w800 {
   font-variation-settings: 'wght' 800;
 }
+
 /* Add this to your global styles or style tag */
 .tippy-box {
   max-width: calc(100vw - 20px) !important;
@@ -282,6 +283,7 @@
     --preferencesItemFontSize: calc(var(--uiScale) * 1rem);
 
     --libraryDirectoryHeaderHeight: calc(var(--uiScale) * 4.5rem);
+    --libraryDirectoryHeaderDropdownMaxHeight: calc(var(--uiScale) * 20rem);
 
     --activityBarWidth: calc(var(--uiScale) * 2.8rem);
     --activityBarHeight: calc(var(--uiScale) * 3.3rem);
@@ -609,6 +611,7 @@
   --spacing-authButtonSize: var(--authButtonSize);
   --spacing-actionBarButtonIconSize: var(--actionBarButtonIconSize);
   --spacing-libraryDirectoryHeaderHeight: var(--libraryDirectoryHeaderHeight);
+  --spacing-libraryDirectoryHeaderDropdownMaxHeight: var(--libraryDirectoryHeaderDropdownMaxHeight);
   --spacing-detailsPanelWidth: var(--detailsPanelWidth);
   --spacing-homePanelHeaderHeight: var(--homePanelHeaderHeight);
   --spacing-userPlanDisplayHeight: var(--userPlanDisplayHeight);
@@ -790,4 +793,6 @@ input[type="number"] {
   [data-disabled] .rightSlot {
     @apply text-appLayoutText;
   }
+
+  
 }

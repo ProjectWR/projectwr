@@ -155,6 +155,29 @@ class DriveManager {
         return true;
     }
 
+    async deleteDocument(docId) {
+        const state = this.ydocs.get(docId);
+        if (!state) {
+            console.warn(`Document ${docId} not found in local documents`);
+            return;
+        }
+
+        // Stop sync for this document
+        this.stopSync(docId);
+
+        // Delete the document folder and all its contents from Google Drive
+        try {
+            await this.provider.deleteFolder(state.folderId);
+            console.log(`Deleted document folder for ${docId} from Google Drive`);
+        } catch (error) {
+            console.error(`Error deleting document folder for ${docId}:`, error);
+        }
+
+        // Remove from local documents map
+        this.ydocs.delete(docId);
+        console.log(`Removed document ${docId} from local documents`);
+    }
+
     // Check if state vector represents an empty document
     isZeroVector(vector) {
         if (!vector) return true;

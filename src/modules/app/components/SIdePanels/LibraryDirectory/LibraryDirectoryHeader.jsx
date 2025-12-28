@@ -23,6 +23,7 @@ import LibraryDirectoryHeaderButton from "./LibraryDirectoryHeaderButton";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 import { wait } from "lib0/promise";
+import { ScrollArea } from "@mantine/core";
 
 const LibraryDirectoryHeader = () => {
   const { deviceType } = useDeviceType();
@@ -262,11 +263,11 @@ const LibraryDirectoryHeader = () => {
                   }
                 }}
                 onBlur={handleRenameSave}
-                className="w-full bg-appLayoutInputBackground px-1 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
+                className="w-full bg-appLayoutInputBackground pr-1 pl-2 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
                 autoFocus
               />
             ) : (
-              <p className="max-w-full w-full h-fit text-nowrap overflow-hidden text-ellipsis text-center">
+              <p className="max-w-full w-full h-fit text-nowrap pl-1 overflow-hidden text-ellipsis text-center">
                 {libraryIdsWithProps.find(
                   (library) => library[0] === appLibraryId
                 )?.[1]?.item_properties?.item_title || "Open a Library"}
@@ -317,7 +318,14 @@ const LibraryDirectoryHeader = () => {
                 transition={{ duration: 0.2 }}
                 className="w-full overflow-hidden"
               >
-                <div className="h-fit w-full grid grid-cols-1 py-1 ">
+                <ScrollArea
+                  classNames={{
+                    root: "h-fit min-h-0 w-full",
+                    scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
+                    thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover opacity-70`,
+                    content: `h-fit w-full max-h-libraryDirectoryHeaderDropdownMaxHeight grid grid-cols-1 py-1`,
+                  }}>
+
                   {sortedLibraryIds &&
                     sortedLibraryIds.map(
                       ([libraryId, props]) =>
@@ -332,7 +340,10 @@ const LibraryDirectoryHeader = () => {
                           />
                         )
                     )}
-                </div>
+
+                </ScrollArea>
+
+
 
                 <button className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
                   onClick={handleCreateLibrary}>

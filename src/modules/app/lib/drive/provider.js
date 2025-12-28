@@ -10,7 +10,7 @@ export const googleDriveProvider = {
         }
         return;
     },
-    
+
     // New function to list all folders in the root "YjsDocuments" folder
     listFoldersInFolder: async (folderId = "CalamusApp") => {
         const token = oauthStore.getState()?.accessTokenState;
@@ -164,6 +164,27 @@ export const googleDriveProvider = {
         } catch (error) {
             console.error("Error downloading file:", error.response?.data || error.message);
             return null;
+        }
+    },
+
+    deleteFolder: async (folderId) => {
+        const token = oauthStore.getState()?.accessTokenState;
+        if (!token) return null;
+
+        try {
+            await axios.delete(
+                `https://www.googleapis.com/drive/v3/files/${folderId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            return true;
+        } catch (error) {
+            console.error("Error deleting folder:", error.response?.data || error.message);
+            return false;
         }
     }
 };

@@ -127,4 +127,9 @@ export const appStore = create((set) => ({
   setTocPinned: (tocPinned) => {
     return set({ tocPinned: tocPinned });
   },
+
+  deleteConfirmDontAskAgain: false,
+  setDeleteConfirmDontAskAgain: (deleteConfirmDontAskAgain) => {
+    return set({ deleteConfirmDontAskAgain: deleteConfirmDontAskAgain });
+  },
 }));
