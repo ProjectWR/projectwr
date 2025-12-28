@@ -70,13 +70,13 @@ const MentionList = forwardRef((props, ref) => {
               key={index}
               onClick={() => selectItem(index)}
             >
-              {item.label && <span className="pt-[3px]">{item.label}</span>}
+              {item.label && <span className="">{item.label}</span>}
             </button>
           );
         })
       ) : (
         <div className="contextMenuLabel ">
-          <span className="pt-[3px]">No result</span>
+          <span className="">No result</span>
         </div>
       )}
     </div>

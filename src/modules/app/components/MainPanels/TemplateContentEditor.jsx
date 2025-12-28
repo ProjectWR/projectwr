@@ -33,7 +33,7 @@ const FontInput = ({ value, onChange }) => {
             className="contextMenuItem"
             onClick={() => onChange(font.family)}
           >
-            <span className="pt-[3px]" style={{ fontFamily: font.family }}>
+            <span className="" style={{ fontFamily: font.family }}>
               {font.family}
             </span>
           </DropdownMenu.Item>

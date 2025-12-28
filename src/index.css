@@ -325,9 +325,9 @@
     --libraryDirectoryPaperNodeHeight: calc(var(--uiScale) * 1.8rem);
     --libraryDirectorySectionNodeHeight: calc(var(--uiScale) * 1.8rem);
 
-    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 0.85rem);
-    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 0.85rem);
-    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 0.85rem);
+    --libraryDirectoryBookNodeFontSize: calc(var(--uiScale) * 0.8rem);
+    --libraryDirectoryPaperNodeFontSize: calc(var(--uiScale) * 0.8rem);
+    --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 0.8rem);
 
     --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.1rem);
     --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 0.9rem);
@@ -345,9 +345,9 @@
     --loadingSpinnerSize: calc(var(--uiScale) * 12rem);
 
     --optionsDropdownWidth: calc(var(--uiScale) * 14rem);
-    --optionsDropdownOptionHeight: calc(var(--uiScale) * 2rem);
-    --optionsDropdownOptionFont: calc(var(--uiScale) * 0.9rem);
-    --optionsDropdownIconHeight: calc(var(--uiScale) * 1.3rem);
+    --optionsDropdownOptionHeight: calc(var(--uiScale) * 1.7rem);
+    --optionsDropdownOptionFont: calc(var(--uiScale) * 0.8rem);
+    --optionsDropdownIconHeight: calc(var(--uiScale) * 1.1rem);
 
     --userPlanDisplayHeight: calc(var(--uiScale) * 3rem);
 
@@ -762,7 +762,7 @@ input[type="number"] {
   .contextMenuCheckboxItem,
   .contextMenuRadioItem,
   .contextMenuSubTrigger {
-    @apply text-optionsDropdownOptionFont w-full text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+    @apply text-optionsDropdownOptionFont w-full text-appLayoutText hover:bg-appLayoutInverseHover rounded-sm flex items-center h-optionsDropdownOptionHeight px-2 justify-start gap-2 relative select-none outline-none;
   }
 
   .contextMenuItem[data-disabled],
@@ -772,7 +772,7 @@ input[type="number"] {
   }
 
   .contextMenuLabel {
-    @apply text-optionsDropdownOptionFont text-appLayoutTextMuted rounded-sm flex items-center h-optionsDropdownOptionHeight py-1 px-2 justify-start gap-2 relative select-none outline-none;
+    @apply text-optionsDropdownOptionFont text-appLayoutTextMuted rounded-sm flex items-center h-optionsDropdownOptionHeight px-2 justify-start gap-2 relative select-none outline-none;
   }
 
   .contextMenuSeparator {

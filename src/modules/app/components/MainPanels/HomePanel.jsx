@@ -86,7 +86,7 @@ const HomePanel = () => {
         >
           <div
             id="HomeHeader"
-            className={`h-fit min-h-fit w-full flex flex-col items-start
+            className={`h-fit min-h-fit w-full flex flex-col items-center
             ${deviceType === "desktop" && "px-6"}
           `}
           >
@@ -94,11 +94,11 @@ const HomePanel = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ bounce: 0 }}
-              className="text-homePanelHeaderFontSize select-none pointer-events-none"
+              className="text-homePanelHeaderFontSize select-none pointer-events-none w100"
             >
-              Calamus
+              Calamus Writer
             </motion.h1>
-            {latestItems.length === 0 && (
+            {/* {latestItems.length === 0 && (
               <>
                 <motion.p
                   initial={{ opacity: 0 }}
@@ -135,7 +135,7 @@ const HomePanel = () => {
                 &nbsp;
                 <q>A subtitle goes here</q>
               </motion.p>
-            )}
+            )} */}
           </div>
 
           <div

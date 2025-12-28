@@ -42,7 +42,7 @@ const ContextMenuWrapper = ({ children, triggerClassname = "w-full h-full", opti
             return (
               <ContextMenu.Label key={label} className="contextMenuLabel">
                 {icon}
-                <span className="pt-[3px]"> {label}</span>
+                <span className=""> {label}</span>
               </ContextMenu.Label>
             );
           }
@@ -54,7 +54,7 @@ const ContextMenuWrapper = ({ children, triggerClassname = "w-full h-full", opti
               onClick={action}
             >
               {icon}
-              <span className="pt-[3px]"> {label}</span>
+              <span className=""> {label}</span>
             </ContextMenu.Item>
           );
         })}

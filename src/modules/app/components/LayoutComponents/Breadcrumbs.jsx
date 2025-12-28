@@ -72,7 +72,7 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
                     className={`contextMenuItem`}
                     onClick={action}
                   >
-                    <span className="pt-[3px]"> {label}</span>
+                    <span className=""> {label}</span>
                   </DropdownMenu.Item>
                 );
               })}
