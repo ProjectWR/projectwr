@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { Tooltip } from "@mantine/core";
 import { StyledTooltip } from "./StyledTooltip";
+import { useEffect, useState } from "react";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const { deviceType } = useDeviceType();
@@ -12,6 +14,8 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
 
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
+
+
 
   const {
     saveStateInHistory,
@@ -31,6 +35,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
 
   const sideBarOpened = appStore((state) => state.sideBarOpened);
 
+
   return (
     <AnimatePresence mode="wait">
       {showActivityBar && sideBarOpened && (
@@ -38,7 +43,8 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
           id="ActivityBarContainer"
           className={`flex shrink-0 gap-px items-center bg-appBackgroundAccent backdrop-blur-2xl   
           h-full w-activityBarWidth order-first flex-col border-r
-           border-appLayoutBorder z-1000 overflow-hidden`}
+           border-appLayoutBorder z-1000 overflow-hidden
+           `}
           key={`${showActivityBar}`}
         >
           <ActivityButton
@@ -206,19 +212,17 @@ const ActivityButton = ({
         exit={{ opacity: toggleButton ? 0 : 1 }}
         transition={{ duration: 0.15 }}
         className={`relative z-1000
-        ${
-          deviceType === "mobile"
+        ${deviceType === "mobile"
             ? `h-full ${flexValue}`
             : "w-full h-activityButtonHeight"
-        } 
+          } 
 
         flex items-center justify-center
      
-        ${
-          selectedActivity === activity
+        ${selectedActivity === activity
             ? "text-activityButtonIconHighlight bg-appLayoutPressed/50 z-1000 "
             : "text-appLayoutTextMuted hover:text-appLayoutText"
-        }
+          }
        
         ${className}
       `}
@@ -233,11 +237,10 @@ const ActivityButton = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className={`absolute ${
-                deviceType === "mobile"
-                  ? "h-px w-full top-0"
-                  : "w-px h-full left-full top-0"
-              } bg-activitySelectLine`}
+              className={`absolute ${deviceType === "mobile"
+                ? "h-px w-full top-0"
+                : "w-px h-full left-full top-0"
+                } bg-activitySelectLine`}
             />
           )}
         </AnimatePresence>

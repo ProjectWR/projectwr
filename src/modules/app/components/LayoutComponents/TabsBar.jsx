@@ -11,6 +11,7 @@ import { appStore } from "../../stores/appStore";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { ActionButton } from "./ActionBar";
 import { StyledTooltip } from "./StyledTooltip";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   /**
@@ -31,6 +32,8 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   const isMd = appStore((state) => state.isMd);
 
   const [overflow, setOverflow] = useState(false);
+
+  const [isMaximized, setIsMaximized] = useState(false);
 
   const {
     saveStateInHistory,
@@ -92,11 +95,30 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const updateMaximized = async () => {
+      const x = await getCurrentWindow().isMaximized();
+
+      setIsMaximized(x);
+    };
+
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      updateMaximized();
+    });
+
+    updateMaximized();
+
+    return () => {
+      unlisten.then((unlistenFn) => unlistenFn());
+    };
+  }, []);
+
   return (
     <>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText  px-1"
+        className={`border-b flex w-fit z-1000 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText  px-1
+          `}
       >
         <ActionButton
           onClick={() => {
@@ -168,13 +190,13 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
         type="hover"
         id="TabsScrollArea"
         classNames={{
-          root: `grow basis-0 min-w-0 h-full min-h-full ${
-            overflow && "border-x border-appLayoutBorder"
-          }`,
+          root: `grow basis-0 min-w-0 h-full min-h-full ${overflow && "border-x border-appLayoutBorder"
+            }
+            `,
           scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
           thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
           viewport: `h-full w-full`,
-          content: `h-full w-full`,
+          content: `h-full w-full bg-appBackgroundAccent`,
         }}
       >
         <div
@@ -190,8 +212,8 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
                   key={
                     breadcrumbs.length >= 1
                       ? breadcrumbs[0] +
-                        "-" +
-                        breadcrumbs[breadcrumbs.length - 1]
+                      "-" +
+                      breadcrumbs[breadcrumbs.length - 1]
                       : panelType
                   }
                   initial={{ opacity: 0, width: 0 }}
@@ -220,7 +242,8 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       </ScrollArea>
       <div
         data-tauri-drag-region
-        className="border-b flex w-fit z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText  px-1"
+        className={`border-b flex w-fit min-w-0 z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText bg-appBackgroundAccent  px-1
+          `}
       >
         <NotesPanelOpenButton
           isNotesPanelAwake={isNotesPanelAwake}
@@ -562,6 +585,7 @@ const TabButton = ({
       ref={dndRef}
       className={`h-[85%] min-h-[85%] w-full flex items-center justify-start gap-1
           transition-colors duration-200  rounded-lg
+          
 
           border
 
@@ -569,23 +593,20 @@ const TabButton = ({
 
           ${(!isOverCurrent || (isOverCurrent && areaSelected === "")) && ""}
           
-          ${
-            isOverCurrent &&
-            areaSelected === "left" &&
-            `border-r-appLayoutBorder border-l-appLayoutHighlight`
-          }
+          ${isOverCurrent &&
+        areaSelected === "left" &&
+        `border-r-appLayoutBorder border-l-appLayoutHighlight`
+        }
           
-          ${
-            isOverCurrent &&
-            areaSelected === "right" &&
-            `border-l-appLayoutBorder border-r-appLayoutHighlight`
-          }
+          ${isOverCurrent &&
+        areaSelected === "right" &&
+        `border-l-appLayoutBorder border-r-appLayoutHighlight`
+        }
          
-          ${
-            tabIsSelected
-              ? "border-appLayoutBorder bg-appBackground"
-              : "border-transparent hover:bg-appLayoutInverseHover "
-          }
+          ${tabIsSelected
+          ? "border-appLayoutBorder bg-appBackground"
+          : "border-transparent hover:bg-appLayoutInverseHover "
+        }
         `}
     >
       <button
@@ -618,11 +639,10 @@ const TabButton = ({
               );
             }
           }}
-          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${
-            !tabIsSelected
-              ? "hover:bg-appBackgroundAccent"
-              : "hover:bg-appLayoutInverseHover"
-          }`}
+          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${!tabIsSelected
+            ? "hover:bg-appBackgroundAccent"
+            : "hover:bg-appLayoutInverseHover"
+            }`}
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
@@ -706,10 +726,9 @@ const UnusedSpace = ({ offset = false }) => {
         height: "100%",
       }}
       className={`
-        ${
-          isOverCurrent && isHovering
-            ? ` border-l border-l-appLayoutHighlight`
-            : ""
+        ${isOverCurrent && isHovering
+          ? ` border-l border-l-appLayoutHighlight`
+          : ""
         }
 
         

@@ -273,11 +273,11 @@
 
     --scrollbarWidthThin: calc(var(--uiScale) * 0.5rem);
 
-    --footerHeight: calc(var(--uiScale) * 1.3rem);
-    --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
-    --ZoomIconSize: calc(var(--uiScale) * 1.2rem);
+    --footerHeight: calc(var(--uiScale) * 1rem);
+    --ZoomButtonWidth: calc(var(--uiScale) * 1.5rem);
+    --ZoomIconSize: calc(var(--uiScale) * 1 rem);
     --ZoomDisplayWidth: calc(var(--uiScale) * 3.5rem);
-    --ZoomDisplayFontSize: calc(var(--uiScale) * 0.9rem);
+    --ZoomDisplayFontSize: calc(var(--uiScale) * 0.7rem);
     --preferencesItemHeight: calc(var(--uiScale) * 3rem);
     --preferencesItemButtonSize: calc(var(--uiScale) * 2rem);
     --preferencesItemFontSize: calc(var(--uiScale) * 1rem);
@@ -420,11 +420,11 @@
 
     --scrollbarWidthThin: calc(var(--uiScale) * 0.5rem);
 
-    --footerHeight: calc(var(--uiScale) * 1.3rem);
+    --footerHeight: calc(var(--uiScale) * 1rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 2.5rem);
     --ZoomIconSize: calc(var(--uiScale) * 1.2rem);
     --ZoomDisplayWidth: calc(var(--uiScale) * 3.5rem);
-    --ZoomDisplayFontSize: calc(var(--uiScale) * 0.9rem);
+    --ZoomDisplayFontSize: calc(var(--uiScale) * 0.7rem);
     --preferencesItemHeight: calc(var(--uiScale) * 3rem);
     --preferencesItemButtonSize: calc(var(--uiScale) * 2rem);
     --preferencesItemFontSize: calc(var(--uiScale) * 1rem);

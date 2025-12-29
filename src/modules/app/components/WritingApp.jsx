@@ -419,8 +419,9 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-full max-h-full w-full max-w-full bg-transparent font-[NotoSans] w400 ${!isMaximized && "border"
-            } border-appLayoutBorder overflow-hidden text-appLayoutText`}
+          className={`h-full max-h-full min-h-full w-full min-w-full box-border max-w-full bg-transparent font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
+            ${!isMaximized && "border border-appLayoutBorder"}
+            `}
         >
           {loading && (
             <motion.div
@@ -509,14 +510,14 @@ const WritingApp = () => {
             <motion.div
               key="WritingApp"
               id="AppContainer"
-              className="border-appLayoutBorder bg-transparent h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
+              className="border-none bg-transparent h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.2 }}
             >
               {/* {deviceType === "desktop" && (<ActionBar />)} */}
-              <div className="w-full bg-appBackgroundAccent h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
+              <div className="w-full bg-transparent h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
                 <ActionBarLeftSide />
                 <TabsBar
                   isNotesPanelAwake={isNotesPanelAwake}

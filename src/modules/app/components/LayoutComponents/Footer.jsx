@@ -2,6 +2,8 @@ import { round } from "lib0/math";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import useZoom from "../../hooks/useZoom";
 import { appStore } from "../../stores/appStore";
+import { useEffect, useState } from "react";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const Footer = () => {
   const { deviceType } = useDeviceType();
@@ -10,10 +12,32 @@ const Footer = () => {
 
   const { zoomIn, zoomOut } = useZoom();
 
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const updateMaximized = async () => {
+      const x = await getCurrentWindow().isMaximized();
+
+      setIsMaximized(x);
+    };
+
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      updateMaximized();
+    });
+
+    updateMaximized();
+
+    return () => {
+      unlisten.then((unlistenFn) => unlistenFn());
+    };
+  }, []);
+
+
   return (
     <div
       id="FooterContainer"
-      className="border-y bg-appBackgroundAccent basis-0 border-appLayoutBorder w-full h-footerHeight min-h-footerHeight grow-0 flex flex-row justify-end "
+      className={`border-y bg-appBackgroundAccent basis-0 border-appLayoutBorder w-full h-footerHeight min-h-footerHeight grow-0 flex flex-row justify-end 
+        `}
     >
       <div className="ZoomContainer w-fit h-full px-1 flex flex-row items-center">
         <button

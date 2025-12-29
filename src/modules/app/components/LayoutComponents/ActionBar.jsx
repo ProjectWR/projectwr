@@ -252,9 +252,8 @@ export const ActionButton = ({
   return (
     <div className="h-full py-1 w-fit">
       <button
-        className={`h-full px-1 w-fit ${
-          !disabled && "hover:bg-appLayoutInverseHover"
-        } rounded-md flex items-center justify-center ${className}`}
+        className={`h-full px-1 w-fit ${!disabled && "hover:bg-appLayoutInverseHover"
+          } rounded-md flex items-center justify-center ${className}`}
         onClick={onClick}
         disabled={disabled}
       >
@@ -272,11 +271,10 @@ const WindowButton = ({
 }) => {
   return (
     <button
-      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${
-        destructive
-          ? "hover:bg-appLayoutDestruct"
-          : "hover:bg-appLayoutInverseHover"
-      } ${className}`}
+      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${destructive
+        ? "hover:bg-appLayoutDestruct"
+        : "hover:bg-appLayoutInverseHover"
+        } ${className}`}
       onClick={onClick}
     >
       {buttonContent}
@@ -368,15 +366,15 @@ const SearchBar = () => {
                 const item_properties =
                   result.id === result.libraryId
                     ? dataManagerSubdocs
-                        .getLibrary(result.libraryId)
-                        .getMap("library_props")
-                        .get("item_properties")
+                      .getLibrary(result.libraryId)
+                      .getMap("library_props")
+                      .get("item_properties")
                     : dataManagerSubdocs
-                        .getLibrary(result.libraryId)
-                        .getMap("library_directory")
-                        .get(result.id)
-                        .get("value")
-                        .get("item_properties");
+                      .getLibrary(result.libraryId)
+                      .getMap("library_directory")
+                      .get(result.id)
+                      .get("value")
+                      .get("item_properties");
 
                 return (
                   <HoverListButton
@@ -449,7 +447,7 @@ const SearchBar = () => {
   );
 };
 
-export const ActionBarLeftSide = ({}) => {
+export const ActionBarLeftSide = ({ }) => {
   const zoom = appStore((state) => state.zoom);
   const isMd = appStore((state) => state.isMd);
 
@@ -468,6 +466,8 @@ export const ActionBarLeftSide = ({}) => {
   const { activatePanel } = useMainPanel();
 
   const [barWidth, setBarWidth] = useState(zoom * 240);
+
+  const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
     const target = document.getElementById("ActivityBarAndSidePanelContainer");
@@ -493,6 +493,24 @@ export const ActionBarLeftSide = ({}) => {
     };
   }, [zoom]);
 
+  useEffect(() => {
+    const updateMaximized = async () => {
+      const x = await getCurrentWindow().isMaximized();
+
+      setIsMaximized(x);
+    };
+
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      updateMaximized();
+    });
+
+    updateMaximized();
+
+    return () => {
+      unlisten.then((unlistenFn) => unlistenFn());
+    };
+  }, []);
+
   return (
     <div
       data-tauri-drag-region
@@ -501,7 +519,8 @@ export const ActionBarLeftSide = ({}) => {
         width: isMd ? `${barWidth}px` : 0,
         minWidth: `calc(var(--uiScale) * 120px)`,
       }}
-      className="border-b z-1000 border-appLayoutBorder h-full min-h-full bg-appBackgroundAccent text-appLayoutText "
+      className={`border-b z-1000 border-appLayoutBorder h-full min-h-full bg-appBackgroundAccent text-appLayoutText 
+        `}
     >
       <div
         data-tauri-drag-region
@@ -578,7 +597,7 @@ export const ActionBarLeftSide = ({}) => {
   );
 };
 
-export const ActionBarRightSide = ({}) => {
+export const ActionBarRightSide = ({ }) => {
   const zoom = appStore((state) => state.zoom);
   const { deviceType } = useDeviceType();
   const appWindow = getCurrentWindow();
@@ -639,6 +658,7 @@ export const ActionBarRightSide = ({}) => {
       unlisten.then((unlistenFn) => unlistenFn());
     };
   }, []);
+
   return (
     <div
       data-tauri-drag-region
@@ -646,7 +666,8 @@ export const ActionBarRightSide = ({}) => {
       style={{
         width: `${barWidth}px`,
       }}
-      className="border-b z-1000 border-appLayoutBorder h-actionBarHeight bg-appBackgroundAccent min-h-actionBarHeight text-appLayoutText "
+      className={`border-b z-1000 border-appLayoutBorder h-actionBarHeight overflow-hidden bg-appBackgroundAccent min-h-actionBarHeight text-appLayoutText 
+        `}
     >
       <div
         data-tauri-drag-region

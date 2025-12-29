@@ -5,6 +5,7 @@ import { AnimatePresence, useAnimate, motion } from "motion/react";
 import { max, min } from "lib0/math";
 import ActivityBar from "./ActivityBar";
 import SidePanel from "./SidePanel";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 export const SidePanelContainer = ({ loading }) => {
   const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer({ time: 500 });
@@ -19,6 +20,9 @@ export const SidePanelContainer = ({ loading }) => {
 
   const [sidePanelSliderPos, setSidePanelSliderPos] = useState(sidePanelWidth);
   const [sidePanelSliderActive, setSidePanelSliderActive] = useState(false);
+
+  const [isMaximized, setIsMaximized] = useState(false);
+
 
   const handleDrag = useCallback(
     (event, info) => {
@@ -85,6 +89,24 @@ export const SidePanelContainer = ({ loading }) => {
   useEffect(() => {
     if (!isMd) refreshPanel();
   }, [isMd, refreshPanel]);
+
+  useEffect(() => {
+    const updateMaximized = async () => {
+      const x = await getCurrentWindow().isMaximized();
+
+      setIsMaximized(x);
+    };
+
+    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
+      updateMaximized();
+    });
+
+    updateMaximized();
+
+    return () => {
+      unlisten.then((unlistenFn) => unlistenFn());
+    };
+  }, []);
 
   return (
     <div
