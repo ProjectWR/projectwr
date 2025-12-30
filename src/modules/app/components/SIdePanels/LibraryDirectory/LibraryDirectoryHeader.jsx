@@ -258,7 +258,7 @@ const LibraryDirectoryHeader = () => {
       },
     ];
 
-  }, [appLibraryId, onRenameClick, deleteConfirmDontAskAgain, userProfile, deleteFromDrive, libraryIdsWithProps])
+  }, [appLibraryId, onRenameClick, activatePanel, libraryIdsWithProps])
 
   return (
     <div

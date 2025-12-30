@@ -104,6 +104,9 @@ const WritingApp = () => {
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
 
+  const setDriveSyncLoading = appStore((state) => state.setDriveSyncLoading);
+
+
   useEffect(() => {
     onAuthStateChanged(getAuth(firebaseApp), (user) => {
       if (user) {
@@ -229,6 +232,8 @@ const WritingApp = () => {
         handleInitialLogin()
           .then(async () => {
             if (googleDriveFlag) {
+              setDriveSyncLoading(true);
+
               const googleDriveManager =
                 driveOrchestrator.getManager("googleDrive");
               if (await googleDriveManager.initDriveSync()) {
@@ -254,6 +259,9 @@ const WritingApp = () => {
                   20000
                 );
               }
+
+              setDriveSyncLoading(false);
+
             }
           })
           .catch((err) => {
@@ -272,6 +280,7 @@ const WritingApp = () => {
               });
 
               if (googleDriveFlag) {
+                setDriveSyncLoading(true);
                 const googleDriveManager =
                   driveOrchestrator.getManager("googleDrive");
                 if (await googleDriveManager.initDriveSync()) {
@@ -297,6 +306,8 @@ const WritingApp = () => {
                     20000
                   );
                 }
+
+                setDriveSyncLoading(false);
               }
             }
           },
@@ -376,6 +387,7 @@ const WritingApp = () => {
     setDeviceType,
     setLibraryId,
     user,
+    setDriveSyncLoading
   ]);
 
   useEffect(() => {

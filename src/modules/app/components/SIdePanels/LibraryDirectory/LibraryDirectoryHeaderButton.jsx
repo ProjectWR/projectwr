@@ -233,7 +233,7 @@ const LibraryDirectoryHeaderButton = ({
         }
       },
     ];
-  }, [onRenameClick, libraryId, onSelect, deleteConfirmDontAskAgain, userProfile, deleteFromDrive, props.item_properties.item_title]);
+  }, [onRenameClick, libraryId, onSelect, props.item_properties.item_title]);
 
   return (
     <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>

@@ -20,6 +20,7 @@ import useMainPanel from "../../hooks/useMainPanel";
 import { YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { StyledTooltip } from "./StyledTooltip";
+import { oauthStore } from "../../stores/oauthStore";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
@@ -599,6 +600,9 @@ export const ActionBarLeftSide = ({ }) => {
 
 export const ActionBarRightSide = ({ }) => {
   const zoom = appStore((state) => state.zoom);
+  const driveSyncLoading = appStore((state) => state.driveSyncLoading);
+  const userProfile = oauthStore((state) => state.userProfile);
+
   const { deviceType } = useDeviceType();
   const appWindow = getCurrentWindow();
 
@@ -671,7 +675,7 @@ export const ActionBarRightSide = ({ }) => {
     >
       <div
         data-tauri-drag-region
-        id="actionBar"
+        id="actionBarRightSide"
         className="w-full h-full flex justify-end gap-1 items-center relative"
       >
         <div className="w-px min-w-px h-full py-2">
@@ -679,7 +683,31 @@ export const ActionBarRightSide = ({ }) => {
         </div>
         <div className="grow"></div>
         <div className="h-full w-fit flex items-center gap-1">
-          <div className="h-full w-fit pl-1 flex items-center gap-1">
+          <div className="h-full w-fit pl-1 flex items-center ">
+            {userProfile && <ActionButton
+              onClick={() => {
+                activatePanel("settings", null, []);
+              }}
+              className={`${false && "bg-appLayoutPressed"}  ${driveSyncLoading ? "bg-yellow-800/20" : "bg-green-800/20"}`}
+              disabled={true}
+            >
+              <StyledTooltip label="Settings" position="bottom">
+                <div className={`h-full w-actionBarButtonIconSize relative`}>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                    key="settingsButton"
+                    className={`icon-[logos--google-drive] w-[75%] h-[75%] ${driveSyncLoading ? "left-[50%] -translate-x-1/2 top-px" : "left-[50%] -translate-x-1/2 top-[50%] -translate-y-1/2"} absolute`}
+                  ></motion.span>
+                  {
+                    driveSyncLoading &&
+                    <span className="icon-[eos-icons--three-dots-loading] absolute w-full h-full bottom-1 translate-y-1/2 left-[50%] -translate-x-1/2"></span>
+                  }
+                </div>
+              </StyledTooltip>
+            </ActionButton>}
             <ActionButton
               onClick={() => {
                 activatePanel("settings", null, []);

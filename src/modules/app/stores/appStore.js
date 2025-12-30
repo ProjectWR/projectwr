@@ -132,4 +132,9 @@ export const appStore = create((set) => ({
   setDeleteConfirmDontAskAgain: (deleteConfirmDontAskAgain) => {
     return set({ deleteConfirmDontAskAgain: deleteConfirmDontAskAgain });
   },
+
+  driveSyncLoading: false,
+  setDriveSyncLoading: (driveSyncLoading) => {
+    return set({ driveSyncLoading: driveSyncLoading });
+  },
 }));
