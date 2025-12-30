@@ -258,10 +258,27 @@ const WritingApp = () => {
                   "googleDrive",
                   20000
                 );
+
+                dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
+                  if (action === "set") {
+                    await googleDriveManager.addDocument(
+                      key,
+                      dataManagerSubdocs.getLibrary(key),
+                      dataManagerSubdocs.getLibrary(key)?.clientID,
+                      key
+                    );
+
+                    driveOrchestrator.startSync(
+                      "googleDrive",
+                      key,
+                      20000
+                    );
+                  }
+                });
+
+                setDriveSyncLoading(false);
+
               }
-
-              setDriveSyncLoading(false);
-
             }
           })
           .catch((err) => {
@@ -305,6 +322,23 @@ const WritingApp = () => {
                     "googleDrive",
                     20000
                   );
+
+                  dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
+                    if (action === "set") {
+                      await googleDriveManager.addDocument(
+                        key,
+                        dataManagerSubdocs.getLibrary(key),
+                        dataManagerSubdocs.getLibrary(key)?.clientID,
+                        key
+                      );
+
+                      driveOrchestrator.startSync(
+                        "googleDrive",
+                        key,
+                        20000
+                      );
+                    }
+                  });
                 }
 
                 setDriveSyncLoading(false);
