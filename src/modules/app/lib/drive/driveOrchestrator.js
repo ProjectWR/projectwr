@@ -48,7 +48,7 @@ class DriveOrchestrator {
                 await dataManagerSubdocs.initLibrary(docId);
                 ydoc = dataManagerSubdocs.getLibrary(docId);
 
-                console.log("ydoc iin startSyncForAllDriveDocs", ydoc);
+                console.log("ydoc in startSyncForAllDriveDocs", ydoc);
 
                 await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(
                     ydoc

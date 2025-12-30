@@ -12,6 +12,10 @@ import dataManagerSubdocs, {
 } from "../../../lib/dataSubDoc";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
+import DialogWrapper from "../../LayoutComponents/DialogWrapper";
+import driveOrchestrator from "../../../lib/drive/driveOrchestrator";
+import { oauthStore } from "../../../stores/oauthStore";
+import { appStore } from "../../../stores/appStore";
 
 const LibraryDirectoryHeaderButton = ({
   libraryId,
@@ -26,6 +30,19 @@ const LibraryDirectoryHeaderButton = ({
   const [isSelfSelected, setIsSelfSelected] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState("");
+
+  const deleteConfirmDontAskAgain = appStore((state) => state.deleteConfirmDontAskAgain);
+  const setDeleteConfirmDontAskAgain = appStore((state) => state.setDeleteConfirmDontAskAgain);
+
+  const userProfile = oauthStore((state) => state.userProfile);
+
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState({
+    open: false,
+    libraryId: null,
+    libraryTitle: null,
+  });
+
+  const [deleteFromDrive, setDeleteFromDrive] = useState(false);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "LIBRARY",
@@ -205,12 +222,18 @@ const LibraryDirectoryHeaderButton = ({
         icon: (
           <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
         ),
-        action: () => {
-          dataManagerSubdocs.destroyLibrary(libraryId);
-        },
+        action: async () => {
+          // Show confirmation dialog
+          setDeleteConfirmDialog({
+            open: true,
+            libraryId: libraryId,
+            libraryTitle: props.item_properties.item_title,
+          });
+
+        }
       },
     ];
-  }, [onRenameClick, libraryId, onSelect]);
+  }, [onRenameClick, libraryId, onSelect, deleteConfirmDontAskAgain, userProfile, deleteFromDrive, props.item_properties.item_title]);
 
   return (
     <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>
@@ -291,6 +314,50 @@ const LibraryDirectoryHeaderButton = ({
           </motion.div>
         </AnimatePresence>
       </div>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              libraryId: null,
+              libraryTitle: null,
+            });
+          }
+        }}
+        title="Delete Library"
+        description={`Are you sure you want to delete "${deleteConfirmDialog.libraryTitle}"? This action cannot be undone.`}
+        onSubmit={async () => {
+          console.log("Deleting Library", deleteConfirmDialog.libraryId);
+          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(deleteConfirmDialog.libraryId);
+          await persistenceManagerForSubdocs.closeConnectionForYDoc(deleteConfirmDialog.libraryId);
+          await dataManagerSubdocs.destroyLibrary(deleteConfirmDialog.libraryId);
+
+          console.log("userProfile:", userProfile, deleteFromDrive);
+          if (userProfile && deleteFromDrive) {
+            console.log("Deleting from Drive too");
+            const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+            googleDriveManager.stopSync(deleteConfirmDialog.libraryId);
+            googleDriveManager.deleteDocument(deleteConfirmDialog.libraryId);
+          }
+          setDeleteConfirmDialog({
+            open: false,
+            libraryId: null,
+            libraryTitle: null,
+          });
+        }}
+        submitLabel="Delete"
+        destructive={true}
+        options={[
+          ...(userProfile ? [{
+            checked: deleteFromDrive,
+            label: "Delete from drive",
+            onChange: (e) =>
+              setDeleteFromDrive(e.target.checked),
+          }] : []),
+        ]}
+      />
     </ContextMenuWrapper>
   );
 };

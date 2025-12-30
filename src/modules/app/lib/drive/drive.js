@@ -36,6 +36,7 @@ class DriveManager {
     async addDocument(docId, ydoc, clientId, folderName) {
         const folderId = await this.setupDocumentFolder(docId, folderName);
         this.ydocs.set(docId, { ydoc, clientId, folderId });
+        console.log("Added document to DriveManager:", docId, folderId);
         return folderId;
     }
 
@@ -156,6 +157,7 @@ class DriveManager {
     }
 
     async deleteDocument(docId) {
+        console.log("DriveManager: Deleting document", docId, this.ydocs);
         const state = this.ydocs.get(docId);
         if (!state) {
             console.warn(`Document ${docId} not found in local documents`);

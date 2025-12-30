@@ -24,6 +24,9 @@ import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 import { wait } from "lib0/promise";
 import { ScrollArea } from "@mantine/core";
+import DialogWrapper from "../../LayoutComponents/DialogWrapper";
+import driveOrchestrator from "../../../lib/drive/driveOrchestrator";
+import { oauthStore } from "../../../stores/oauthStore";
 
 const LibraryDirectoryHeader = () => {
   const { deviceType } = useDeviceType();
@@ -45,6 +48,19 @@ const LibraryDirectoryHeader = () => {
   const setLibraryManagerOpened = appStore(
     (state) => state.setLibraryManagerOpened
   );
+
+  const deleteConfirmDontAskAgain = appStore((state) => state.deleteConfirmDontAskAgain);
+  const setDeleteConfirmDontAskAgain = appStore((state) => state.setDeleteConfirmDontAskAgain);
+
+  const userProfile = oauthStore((state) => state.userProfile);
+
+  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState({
+    open: false,
+    libraryId: null,
+    libraryTitle: null,
+  });
+
+  const [deleteFromDrive, setDeleteFromDrive] = useState(false);
 
   const prevLibraryIdsWithPropsRef = useRef(null);
 
@@ -228,13 +244,21 @@ const LibraryDirectoryHeader = () => {
         ),
         action: async () => {
           console.log("Deleting Library");
-          dataManagerSubdocs.destroyLibrary(appLibraryId);
+          // Show confirmation dialog
+          const libraryTitle = libraryIdsWithProps.find(
+            (library) => library[0] === appLibraryId
+          )?.[1]?.item_properties?.item_title || "Library";
+          setDeleteConfirmDialog({
+            open: true,
+            libraryId: appLibraryId,
+            libraryTitle: libraryTitle,
+          });
 
         }
       },
     ];
 
-  }, [appLibraryId, onRenameClick])
+  }, [appLibraryId, onRenameClick, deleteConfirmDontAskAgain, userProfile, deleteFromDrive, libraryIdsWithProps])
 
   return (
     <div
@@ -359,6 +383,50 @@ const LibraryDirectoryHeader = () => {
           )}
         </motion.div>
       </AnimatePresence>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              libraryId: null,
+              libraryTitle: null,
+            });
+          }
+        }}
+        title="Delete Library"
+        description={`Are you sure you want to delete "${deleteConfirmDialog.libraryTitle}"? This action cannot be undone.`}
+        onSubmit={async () => {
+          console.log("Deleting Library", deleteConfirmDialog.libraryId);
+          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(deleteConfirmDialog.libraryId);
+          await persistenceManagerForSubdocs.closeConnectionForYDoc(deleteConfirmDialog.libraryId);
+          await dataManagerSubdocs.destroyLibrary(deleteConfirmDialog.libraryId);
+
+          console.log("userProfile:", userProfile, deleteFromDrive);
+          if (userProfile && deleteFromDrive) {
+            console.log("Deleting from Drive too");
+            const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+            googleDriveManager.stopSync(deleteConfirmDialog.libraryId);
+            googleDriveManager.deleteDocument(deleteConfirmDialog.libraryId);
+          }
+          setDeleteConfirmDialog({
+            open: false,
+            libraryId: null,
+            libraryTitle: null,
+          });
+        }}
+        submitLabel="Delete"
+        destructive={true}
+        options={[
+          ...(userProfile ? [{
+            checked: deleteFromDrive,
+            label: "Delete from drive",
+            onChange: (e) =>
+              setDeleteFromDrive(e.target.checked),
+          }] : []),
+        ]}
+      />
     </div>
   );
 };

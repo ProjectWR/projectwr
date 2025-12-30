@@ -58,15 +58,23 @@ class PersistenceManagerForSubdocs {
     });
 
     console.log("finished wait for sync to finish!");
-    
+
     console.log("after sync finished: ", ydoc.toJSON());
 
     return true;
   }
 
-  async closeConnectionForYDoc(ydoc) {
-    await this.indexeddbProviderMap.get(ydoc.guid).destroy();
-    await this.indexeddbProviderMap.delete(ydoc.guid);
+  async closeConnectionForYDoc(uuid) {
+    try {
+      await this.indexeddbProviderMap.get(uuid).destroy();
+      await this.indexeddbProviderMap.delete(uuid);
+    }
+    catch (error) {
+      console.error("Error closing connection for YDoc, proceeding to next step anyway: ", error);
+      return;
+    }
+    return;
+
   }
 
   async closeAllConnections() {
@@ -80,12 +88,21 @@ class PersistenceManagerForSubdocs {
     this.indexeddbProviderMap.forEach((idb) => idb.clearData());
   }
 
-  clearLocalPersistenceForYDoc(ydoc) {
-    if (!this.indexeddbProviderMap) {
-      throw new Error("No Map");
-    }
+  clearLocalPersistenceForYDoc(uuid) {
+    try {
+      if (!this.indexeddbProviderMap) {
+        throw new Error("No Map");
+      }
 
-    this.indexeddbProviderMap.get(ydoc.guid).clearData();
+      this.indexeddbProviderMap.get(uuid).clearData();
+      window.indexedDB.deleteDatabase(uuid);
+    }
+    catch (error) {
+      console.error("Error clearing local persistence for YDoc, proceeding to next step anyway: ", error);
+      return;
+    }
+    return;
+
   }
 
   async clearAllPersistence() {

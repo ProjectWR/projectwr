@@ -44,8 +44,6 @@ const DialogWrapper = ({
             )}
 
             {options.map((option, index) => {
-              console.log("Dialog Option: ", option);
-
               return (
                 <div key={option.label} className="flex items-center justify-start gap-2 z-[10002] px-4 pb-2">
                   <Checkbox
@@ -90,6 +88,7 @@ const DialogWrapper = ({
                   className={`h-full flex items-center justify-center w-fit px-2 pt-px rounded-sm text-appLayoutHighlight text-optionsDropdownOptionFont  
                       ${destructive ? 'bg-appLayoutDestruct/50 hover:bg-appLayoutDestruct/80' : 'hover:bg-appLayoutInverseHover'}
                       `}
+                  onClick={onSubmit}
                 >
                   {submitLabel || 'OK'}
                 </button>
