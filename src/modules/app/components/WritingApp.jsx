@@ -236,6 +236,25 @@ const WritingApp = () => {
 
               const googleDriveManager =
                 driveOrchestrator.getManager("googleDrive");
+
+              dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
+                if (action === "set") {
+                  await googleDriveManager.addDocument(
+                    key,
+                    dataManagerSubdocs.getLibrary(key),
+                    dataManagerSubdocs.getLibrary(key)?.clientID,
+                    key
+                  );
+
+                  driveOrchestrator.startSync(
+                    "googleDrive",
+                    key,
+                    20000
+                  );
+                }
+              });
+
+
               if (await googleDriveManager.initDriveSync()) {
                 console.log("INITIATED GOOGLE DRIVE SYNC!");
 
@@ -259,22 +278,6 @@ const WritingApp = () => {
                   20000
                 );
 
-                dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
-                  if (action === "set") {
-                    await googleDriveManager.addDocument(
-                      key,
-                      dataManagerSubdocs.getLibrary(key),
-                      dataManagerSubdocs.getLibrary(key)?.clientID,
-                      key
-                    );
-
-                    driveOrchestrator.startSync(
-                      "googleDrive",
-                      key,
-                      20000
-                    );
-                  }
-                });
 
                 setDriveSyncLoading(false);
 
@@ -300,8 +303,26 @@ const WritingApp = () => {
                 setDriveSyncLoading(true);
                 const googleDriveManager =
                   driveOrchestrator.getManager("googleDrive");
+                  
                 if (await googleDriveManager.initDriveSync()) {
                   console.log("INITIATED GOOGLE DRIVE SYNC!");
+
+                  dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
+                    if (action === "set") {
+                      await googleDriveManager.addDocument(
+                        key,
+                        dataManagerSubdocs.getLibrary(key),
+                        dataManagerSubdocs.getLibrary(key)?.clientID,
+                        key
+                      );
+
+                      driveOrchestrator.startSync(
+                        "googleDrive",
+                        key,
+                        20000
+                      );
+                    }
+                  });
 
                   // start sync for all local ydocs
                   for (const localLibraryId of localLibraries) {
@@ -323,22 +344,7 @@ const WritingApp = () => {
                     20000
                   );
 
-                  dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
-                    if (action === "set") {
-                      await googleDriveManager.addDocument(
-                        key,
-                        dataManagerSubdocs.getLibrary(key),
-                        dataManagerSubdocs.getLibrary(key)?.clientID,
-                        key
-                      );
 
-                      driveOrchestrator.startSync(
-                        "googleDrive",
-                        key,
-                        20000
-                      );
-                    }
-                  });
                 }
 
                 setDriveSyncLoading(false);
