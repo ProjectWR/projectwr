@@ -50,6 +50,11 @@ const TiptapDesktopDefaultPreferences = {
     blockquoteBorderWidth: 0.2,
     blockquotePadding: 2,
     blockquoteBorderColor: "#525252",
+    borderImageSource: "",
+    borderImageSlice: "",
+    borderImageWidth: "",
+    borderImageOutset: "",
+    borderImageRepeat: "",
   },
   toolbarPreferences: {
     toolbarHeight: 2.2,
@@ -124,6 +129,11 @@ const TiptapMobileDefaultPreferences = {
     blockquoteBorderWidth: 0.2,
     blockquotePadding: 2,
     blockquoteBorderColor: "#262626",
+    borderImageSource: "",
+    borderImageSlice: "",
+    borderImageWidth: "",
+    borderImageOutset: "",
+    borderImageRepeat: "",
   },
   toolbarPreferences: {
     toolbarHeight: 2.8,

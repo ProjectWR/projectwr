@@ -180,6 +180,11 @@ const TiptapEditor = ({
     blockquoteBorderWidth,
     blockquotePadding,
     blockquoteBorderColor,
+    borderImageSource,
+    borderImageSlice,
+    borderImageWidth,
+    borderImageOutset,
+    borderImageRepeat,
   } = paperPreferences;
 
   const { dividerColor } = toolbarPreferences;
@@ -247,11 +252,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-                .getLibrary(libraryId)
-                ?.getMap("library_props")
-                ?.toJSON().item_properties.item_title
+              .getLibrary(libraryId)
+              ?.getMap("library_props")
+              ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                ?.item_title;
+              ?.item_title;
 
         return label;
 
@@ -282,11 +287,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-                .getLibrary(libraryId)
-                ?.getMap("library_props")
-                ?.toJSON().item_properties.item_title
+              .getLibrary(libraryId)
+              ?.getMap("library_props")
+              ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                ?.item_title;
+              ?.item_title;
 
         const elem = document.createElement("span");
 
@@ -891,13 +896,20 @@ const TiptapEditor = ({
               borderRightWidth: `${paperBorderWidth}px`,
               borderBottomWidth: `0`,
               borderLeftWidth: `${paperBorderWidth}px`,
-              borderTopColor: `${paperBorderColor}`,
-              borderLeftColor: `${paperBorderColor}`,
-              borderRightColor: `${paperBorderColor}`,
+              borderTopColor: `transparent`,
+              borderLeftColor: `transparent`,
+              borderRightColor: `transparent`,
               marginTop: `calc(${gapTop}rem * var(--uiScale))`,
               borderTopRightRadius: `${roundRadius}rem`,
               borderTopLeftRadius: `${roundRadius}rem`,
-              boxShadow: `0px 0px ${paperShadow}rem ${paperShadowColor}`,
+              boxShadow: `0px 0px 0rem 0`,
+              ...(borderImageSource && {
+                borderImageSource: `url(${borderImageSource})`,
+                borderImageSlice: borderImageSlice,
+                borderImageWidth: borderImageWidth,
+                borderImageOutset: borderImageOutset,
+                borderImageRepeat: "stretch round",
+              }),
             }}
           />
         </div>
