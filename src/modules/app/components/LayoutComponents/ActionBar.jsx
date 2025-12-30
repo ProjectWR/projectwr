@@ -683,7 +683,7 @@ export const ActionBarRightSide = ({ }) => {
         </div>
         <div className="grow"></div>
         <div className="h-full w-fit flex items-center gap-1">
-          <div className="h-full w-fit pl-1 flex items-center ">
+          <div className="h-full w-fit pl-1 flex items-center gap-1">
             {userProfile && <ActionButton
               onClick={() => {
                 activatePanel("settings", null, []);
@@ -691,7 +691,7 @@ export const ActionBarRightSide = ({ }) => {
               className={`${false && "bg-appLayoutPressed"}  ${driveSyncLoading ? "bg-yellow-800/20" : "bg-green-800/20"}`}
               disabled={true}
             >
-              <StyledTooltip label="Settings" position="bottom">
+              <StyledTooltip label={driveSyncLoading ? "Initializing..." : "Active"} position="bottom">
                 <div className={`h-full w-actionBarButtonIconSize relative`}>
                   <motion.span
                     initial={{ opacity: 0 }}
