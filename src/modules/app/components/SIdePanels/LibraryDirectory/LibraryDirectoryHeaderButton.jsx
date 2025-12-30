@@ -30,9 +30,8 @@ const LibraryDirectoryHeaderButton = ({
   const [isSelfSelected, setIsSelfSelected] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState("");
+  const driveSyncLoading = appStore((state) => state.driveSyncLoading);
 
-  const deleteConfirmDontAskAgain = appStore((state) => state.deleteConfirmDontAskAgain);
-  const setDeleteConfirmDontAskAgain = appStore((state) => state.setDeleteConfirmDontAskAgain);
 
   const userProfile = oauthStore((state) => state.userProfile);
 
@@ -350,7 +349,7 @@ const LibraryDirectoryHeaderButton = ({
         submitLabel="Delete"
         destructive={true}
         options={[
-          ...(userProfile ? [{
+          ...(userProfile && !driveSyncLoading ? [{
             checked: deleteFromDrive,
             label: "Delete from drive",
             onChange: (e) =>

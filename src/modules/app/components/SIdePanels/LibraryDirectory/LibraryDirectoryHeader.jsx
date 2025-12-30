@@ -49,8 +49,8 @@ const LibraryDirectoryHeader = () => {
     (state) => state.setLibraryManagerOpened
   );
 
-  const deleteConfirmDontAskAgain = appStore((state) => state.deleteConfirmDontAskAgain);
-  const setDeleteConfirmDontAskAgain = appStore((state) => state.setDeleteConfirmDontAskAgain);
+  const driveSyncLoading = appStore((state) => state.driveSyncLoading);
+
 
   const userProfile = oauthStore((state) => state.userProfile);
 
@@ -371,11 +371,13 @@ const LibraryDirectoryHeader = () => {
 
                 <button className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
                   onClick={handleCreateLibrary}>
-                  <div
-                    className="h-full w-fit flex items-center justify-center"
-                  >
-                    <span className="icon-[material-symbols-light--add-2-rounded] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
-                  </div>
+                  <StyledTooltip label={`Create Library`} position="bottom">
+                    <div
+                      className="h-full w-fit flex items-center justify-center"
+                    >
+                      <span className="icon-[material-symbols-light--add-2-rounded] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                    </div>
+                  </StyledTooltip>
 
                 </button>
               </motion.div>
@@ -419,7 +421,7 @@ const LibraryDirectoryHeader = () => {
         submitLabel="Delete"
         destructive={true}
         options={[
-          ...(userProfile ? [{
+          ...(userProfile && !driveSyncLoading ? [{
             checked: deleteFromDrive,
             label: "Delete from drive",
             onChange: (e) =>
