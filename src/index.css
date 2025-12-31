@@ -275,9 +275,9 @@
 
     --footerHeight: calc(var(--uiScale) * 1rem);
     --ZoomButtonWidth: calc(var(--uiScale) * 1.5rem);
-    --ZoomIconSize: calc(var(--uiScale) * 1 rem);
-    --ZoomDisplayWidth: calc(var(--uiScale) * 3.5rem);
-    --ZoomDisplayFontSize: calc(var(--uiScale) * 0.7rem);
+    --ZoomIconSize: calc(var(--uiScale) * 1rem);
+    --ZoomDisplayWidth: calc(var(--uiScale) * 2rem);
+    --ZoomDisplayFontSize: calc(var(--uiScale) * 0.65rem);
     --preferencesItemHeight: calc(var(--uiScale) * 3rem);
     --preferencesItemButtonSize: calc(var(--uiScale) * 2rem);
     --preferencesItemFontSize: calc(var(--uiScale) * 1rem);

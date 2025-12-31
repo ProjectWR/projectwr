@@ -252,24 +252,24 @@ const BorderImageSliceInput = ({ value, onChange, borderImageSource }) => {
 
 // Add this helper component (place it at the top of GroupEditor, before the return statement)
 const NumberOrPercentInput = ({ value, onChange }) => {
-  // Determine active type based on value suffix; default to "rem"
+  // Determine active type based on value suffix; default to "px"
   const initialActive =
-    typeof value === "string" && value.trim().endsWith("%") ? "%" : "rem";
+    typeof value === "string" && value.trim().endsWith("%") ? "%" : "px";
   // Remove unit from value if present
-  const extractNumber = (val) => String(val).replace(/(rem|%)/, "");
+  const extractNumber = (val) => String(val).replace(/(px|%)/, "");
 
   const [active, setActive] = useState(initialActive);
-  const [remValue, setRemValue] = useState(
-    initialActive === "rem" ? extractNumber(value) : ""
+  const [pxValue, setPxValue] = useState(
+    initialActive === "px" ? extractNumber(value) : ""
   );
   const [percentValue, setPercentValue] = useState(
     initialActive === "%" ? extractNumber(value) : ""
   );
 
-  const handleRemChange = (e) => {
-    setActive("rem");
-    setRemValue(e.target.value);
-    onChange(e.target.value + "rem");
+  const handlePxChange = (e) => {
+    setActive("px");
+    setPxValue(e.target.value);
+    onChange(e.target.value + "px");
   };
 
   const handlePercentChange = (e) => {
@@ -281,17 +281,17 @@ const NumberOrPercentInput = ({ value, onChange }) => {
   return (
     <div className="h-full flex gap-2 items-center ">
       <input
-        id="rem-input"
+        id="px-input"
         type="number"
-        value={remValue}
-        onChange={handleRemChange}
+        value={pxValue}
+        onChange={handlePxChange}
         min="0"
         onClick={() => {
-          setActive("rem");
+          setActive("px");
         }}
-        placeholder="rem"
+        placeholder="px"
         className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[4rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
-          active !== "rem"
+          active !== "px"
             ? "bg-appBackgroundAccent text-appLayoutBorder"
             : "bg-appBackground"
         }`}
@@ -338,7 +338,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
   const validateField = (key, value, fieldConfig) => {
     let error = "";
     if (fieldConfig.type === "numberOrPercent") {
-      const numberValue = String(value).replace(/(rem|%)/, "");
+      const numberValue = String(value).replace(/(px|%)/, "");
       if (!value || numberValue <= 0) {
         error = "Must be a valid number";
       }

@@ -39,21 +39,21 @@ const Footer = () => {
       className={`border-y bg-appBackgroundAccent basis-0 border-appLayoutBorder w-full h-footerHeight min-h-footerHeight grow-0 flex flex-row justify-end 
         `}
     >
-      <div className="ZoomContainer w-fit h-full px-1 flex flex-row items-center">
-        <button
-          className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center  border-appLayoutBorder hover:bg-appLayoutInverseHover"
-          onClick={zoomIn}
-        >
-          <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
-        </button>
-        <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md select-none">
-          {zoom && `${round(zoom * 100)}%`}
-        </div>
+      <div className="ZoomContainer w-fit h-full flex flex-row items-center">
         <button
           className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center    border-appLayoutBorder  hover:bg-appLayoutInverseHover"
           onClick={zoomOut}
         >
           <span className="icon-[material-symbols-light--remove-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
+        </button>
+        <div className="zoomDisplay text-ZoomDisplayFontSize w-ZoomDisplayWidth h-full pb-px flex items-center justify-center rounded-md select-none">
+          {zoom && `${round(zoom * 100)}%`}
+        </div>
+        <button
+          className="zoomInButton w-ZoomButtonWidth h-full flex items-center justify-center  border-appLayoutBorder hover:bg-appLayoutInverseHover"
+          onClick={zoomIn}
+        >
+          <span className="icon-[material-symbols-light--add-rounded] w-ZoomIconSize h-ZoomIconSize"></span>
         </button>
       </div>
     </div>

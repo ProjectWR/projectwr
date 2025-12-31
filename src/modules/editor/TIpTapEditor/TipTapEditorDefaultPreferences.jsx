@@ -1,54 +1,54 @@
 // Separate default preferences for desktop
 const TiptapDesktopDefaultPreferences = {
   paperPreferences: {
-    width: '55rem',
-    gapTop: 2,
-    paddingTop: 5, // Updated from marginTop
-    paddingLeft: 6, // Updated from marginLeft
-    paddingRight: 6, // Updated from marginRight
-    paddingBottom: 70, // Updated from marginBottom
+    width: '880px',
+    gapTop: 32,
+    paddingTop: 80, // Updated from marginTop
+    paddingLeft: 96, // Updated from marginLeft
+    paddingRight: 96, // Updated from marginRight
+    paddingBottom: 1120, // Updated from marginBottom
     font: "serif",
-    fontSize: 1.25,
-    lineHeight: 1.75,
+    fontSize: 20,
+    lineHeight: 28,
     marginBottom: 0,
     backgroundColor: "#121212",
 
     paperBorderWidth: 1,
     paperBorderColor: "#525252",
     paperColor: "#171717",
-    roundRadius: 0.5,
+    roundRadius: 8,
     paperShadow: 0.5,
     paperShadowColor: "#000000AA",
 
-    h1FontSize: 1.25 * 2,
-    h1LineHeight: 1.75 * 2,
-    h1MarginBottom: 1.75,
+    h1FontSize: 40,
+    h1LineHeight: 56,
+    h1MarginBottom: 28,
 
-    h2FontSize: 1.25 * 1.5,
-    h2LineHeight: 1.75 * 1.5,
-    h2MarginBottom: 1.75 * 0.75,
+    h2FontSize: 30,
+    h2LineHeight: 42,
+    h2MarginBottom: 21,
 
-    h3FontSize: 1.25 * 1.3,
-    h3LineHeight: 1.75 * 1.3,
-    h3MarginBottom: 1.75 * 0.65,
+    h3FontSize: 26,
+    h3LineHeight: 36.4,
+    h3MarginBottom: 18.2,
 
-    h4FontSize: 1.25 * 1.2,
-    h4LineHeight: 1.75 * 1.2,
-    h4MarginBottom: 1.75 * 0.55,
+    h4FontSize: 24,
+    h4LineHeight: 33.6,
+    h4MarginBottom: 15.4,
 
-    h5FontSize: 1.25 * 1.1,
-    h5LineHeight: 1.75 * 1.1,
-    h5MarginBottom: 1.75 * 0.45,
+    h5FontSize: 22,
+    h5LineHeight: 30.8,
+    h5MarginBottom: 12.65,
 
-    listPaddingLeft: 1,
-    listMarginTop: 0.25,
-    listMarginBottom: 1.25,
-    hrMarginTop: 2,
-    hrMarginBottom: 2,
+    listPaddingLeft: 16,
+    listMarginTop: 4,
+    listMarginBottom: 20,
+    hrMarginTop: 32,
+    hrMarginBottom: 32,
     hrBorderColor: "#525252",
 
-    blockquoteBorderWidth: 0.2,
-    blockquotePadding: 2,
+    blockquoteBorderWidth: 3.2,
+    blockquotePadding: 32,
     blockquoteBorderColor: "#525252",
     borderImageSource: "",
     borderImageSlice: "",
@@ -84,13 +84,13 @@ const TiptapMobileDefaultPreferences = {
   paperPreferences: {
     width: `100%`,
     gapTop: 0,
-    paddingTop: 1.2, // Updated from marginTop
-    paddingLeft: 1.2, // Updated from marginLeft
-    paddingRight: 1.2, // Updated from marginRight
-    paddingBottom: 12, // Updated from marginBottom
+    paddingTop: 19.2, // Updated from marginTop
+    paddingLeft: 19.2, // Updated from marginLeft
+    paddingRight: 19.2, // Updated from marginRight
+    paddingBottom: 192, // Updated from marginBottom
     font: "serif",
-    fontSize: 1.1,
-    lineHeight: 1.5,
+    fontSize: 17.6,
+    lineHeight: 24,
     backgroundColor: "#171717",
     paperBorderWidth: 0,
     paperColor: "#171717",
@@ -99,35 +99,35 @@ const TiptapMobileDefaultPreferences = {
     paperShadow: "none",
     paperShadowColor: "#000",
 
-    h1FontSize: 1.1 * 2,
-    h1LineHeight: 1.5 * 2,
-    h1MarginBottom: 1.5,
+    h1FontSize: 35.2,
+    h1LineHeight: 48,
+    h1MarginBottom: 24,
 
-    h2FontSize: 1.1 * 1.5,
-    h2LineHeight: 1.5 * 1.5,
-    h2MarginBottom: 1.5 * 0.75,
+    h2FontSize: 26.4,
+    h2LineHeight: 36,
+    h2MarginBottom: 18,
 
-    h3FontSize: 1.1 * 1.3,
-    h3LineHeight: 1.5 * 1.3,
-    h3MarginBottom: 1.5 * 0.65,
+    h3FontSize: 22.88,
+    h3LineHeight: 31.2,
+    h3MarginBottom: 15.6,
 
-    h4FontSize: 1.1 * 1.2,
-    h4LineHeight: 1.5 * 1.2,
-    h4MarginBottom: 1.5 * 0.55,
+    h4FontSize: 21.12,
+    h4LineHeight: 28.8,
+    h4MarginBottom: 13.2,
 
-    h5FontSize: 1.1 * 1.1,
-    h5LineHeight: 1.5 * 1.1,
-    h5MarginBottom: 1.5 * 0.45,
+    h5FontSize: 19.36,
+    h5LineHeight: 26.4,
+    h5MarginBottom: 10.8,
 
-    listPaddingLeft: 1,
-    listMarginTop: 1.25,
-    listMarginBottom: 1.25,
-    hrMarginTop: 2,
-    hrMarginBottom: 2,
+    listPaddingLeft: 16,
+    listMarginTop: 20,
+    listMarginBottom: 20,
+    hrMarginTop: 32,
+    hrMarginBottom: 32,
     hrBorderColor: "white",
 
-    blockquoteBorderWidth: 0.2,
-    blockquotePadding: 2,
+    blockquoteBorderWidth: 3.2,
+    blockquotePadding: 32,
     blockquoteBorderColor: "#262626",
     borderImageSource: "",
     borderImageSlice: "",

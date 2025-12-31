@@ -554,64 +554,120 @@ const TiptapEditor = ({
             pointer-events: auto !important;
           }
 
+          #EditableContainer {
+            background-color: ${backgroundColor};
+          }
+
+          #EditableUtilityToolbarWrapper {
+            height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+          }
+
+          #EditableUtilityToolbar {
+            height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            min-height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            background-color: ${toolbarPreferences.backgroundColor};
+            border-color: ${dividerColor};
+          }
+
+          #EditableToolbar {
+            height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            min-height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            background-color: ${toolbarPreferences.backgroundColor};
+            border-color: ${dividerColor};
+            box-shadow: 0px 0px 0.5px ${paperShadowColor};
+          }
+
+          #FloatingMenuToolbar {
+            height: calc(var(--uiScale) * ${lineHeight}px);
+          }
+
+          #PaperEditorContent {
+            width: ${width.endsWith("%") ? width : `calc(${width}px * var(--uiScale))`};
+            max-width: 100%;
+            background-color: ${paperColor};
+            border-top-width: ${paperBorderWidth}px;
+            border-right-width: ${paperBorderWidth}px;
+            border-bottom-width: 0;
+            border-left-width: ${paperBorderWidth}px;
+            border-top-color: transparent;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            margin-top: calc(${gapTop}px * var(--uiScale));
+            border-top-right-radius: ${roundRadius}px;
+            border-top-left-radius: ${roundRadius}px;
+            box-shadow: 0px 0px 0rem 0;
+            
+            ${borderImageSource ? `
+            border-image-source: url(${borderImageSource});
+            border-image-slice: ${borderImageSlice};
+            border-image-width: ${borderImageWidth}px;
+            border-image-outset: ${borderImageOutset}px;
+            border-image-repeat: stretch round;
+            ` : ''}
+          }
+
           .EditorStyles .tiptap {
             pointer-events: auto !important;
-            min-height: calc(20rem * var(--uiScale));
-            padding: calc(${paddingTop}rem * var(--uiScale))
-                     calc(${paddingRight}rem * var(--uiScale))
-                     calc(${paddingBottom}rem / var(--uiScale))
-                     calc(${paddingLeft}rem * var(--uiScale));
+            min-height: calc(320px * var(--uiScale));
+            padding: calc(${paddingTop}px * var(--uiScale))
+                     calc(${paddingRight}px * var(--uiScale))
+                     calc(${paddingBottom}px / var(--uiScale))
+                     calc(${paddingLeft}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
 
           .EditorStyles h1 {
-            font-size: calc(${h1FontSize}rem * var(--uiScale));
-            line-height: calc(${h1LineHeight}rem * var(--uiScale));
-            margin-bottom: calc(${h1MarginBottom}rem * var(--uiScale));
+            font-size: calc(${h1FontSize}px * var(--uiScale));
+            line-height: calc(${h1LineHeight}px * var(--uiScale));
+            margin-bottom: calc(${h1MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
+
           .EditorStyles h2 {
-            font-size: calc(${h2FontSize}rem * var(--uiScale));
-            line-height: calc(${h2LineHeight}rem * var(--uiScale));
-            margin-bottom: calc(${h2MarginBottom}rem * var(--uiScale));
+            font-size: calc(${h2FontSize}px * var(--uiScale));
+            line-height: calc(${h2LineHeight}px * var(--uiScale));
+            margin-bottom: calc(${h2MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
+
           .EditorStyles h3 {
-            font-size: calc(${h3FontSize}rem * var(--uiScale));
-            line-height: calc(${h3LineHeight}rem * var(--uiScale));
-            margin-bottom: calc(${h3MarginBottom}rem * var(--uiScale));
+            font-size: calc(${h3FontSize}px * var(--uiScale));
+            line-height: calc(${h3LineHeight}px * var(--uiScale));
+            margin-bottom: calc(${h3MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
+
           .EditorStyles h4 {
-            font-size: calc(${h4FontSize}rem * var(--uiScale));
-            line-height: calc(${h4LineHeight}rem * var(--uiScale));
-            margin-bottom: calc(${h4MarginBottom}rem * var(--uiScale));
+            font-size: calc(${h4FontSize}px * var(--uiScale));
+            line-height: calc(${h4LineHeight}px * var(--uiScale));
+            margin-bottom: calc(${h4MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
+
           .EditorStyles h5 {
-            font-size: calc(${h5FontSize}rem * var(--uiScale));
-            line-height: calc(${h5LineHeight}rem * var(--uiScale));
-            margin-bottom: calc(${h5MarginBottom}rem * var(--uiScale));
+            font-size: calc(${h5FontSize}px * var(--uiScale));
+            line-height: calc(${h5LineHeight}px * var(--uiScale));
+            margin-bottom: calc(${h5MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
 
           .EditorStyles p {
-            font-size: calc(${fontSize}rem * var(--uiScale));
-            line-height: calc(${lineHeight}rem * var(--uiScale));
-            margin-bottom: calc(${marginBottom}rem * var(--uiScale));
+            font-size: calc(${fontSize}px * var(--uiScale));
+            line-height: calc(${lineHeight}px * var(--uiScale));
+            margin-bottom: calc(${marginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
             margin: 0;
           }
 
           .EditorStyles {
-            font-size: calc(${fontSize}rem * var(--uiScale));
-            line-height: calc(${lineHeight}rem * var(--uiScale));
+            font-size: calc(${fontSize}px * var(--uiScale));
+            line-height: calc(${lineHeight}px * var(--uiScale));
           }
 
           .EditorStyles ol,
           .EditorStyles ul {
-            padding-left: calc(${listPaddingLeft}rem * var(--uiScale));
-            margin: calc(${listMarginTop}rem * var(--uiScale)) 1rem calc(${listMarginBottom}rem * var(--uiScale)) 0.4rem;
+            padding-left: calc(${listPaddingLeft}px * var(--uiScale));
+            margin: calc(${listMarginTop}px * var(--uiScale)) 1rem calc(${listMarginBottom}px * var(--uiScale)) 0.4rem;
           }
 
           .EditorStyles ul {
@@ -624,13 +680,13 @@ const TiptapEditor = ({
 
           .EditorStyles hr {
             cursor: pointer;
-            margin: calc(${hrMarginTop}rem * var(--uiScale)) 0 calc(${hrMarginBottom}rem * var(--uiScale)) 0;
+            margin: calc(${hrMarginTop}px * var(--uiScale)) 0 calc(${hrMarginBottom}px * var(--uiScale)) 0;
             border-top: 1px solid ${hrBorderColor};
           }
 
           .EditorStyles blockquote {
-            padding-left: ${blockquotePadding}rem;
-            border-left: ${blockquoteBorderWidth}rem solid ${blockquoteBorderColor};
+            padding-left: ${blockquotePadding}px;
+            border-left: ${blockquoteBorderWidth}px solid ${blockquoteBorderColor};
           }
 
           .spelling-error {
@@ -655,29 +711,29 @@ const TiptapEditor = ({
           }
 
           .mention:after{
-            content: "\u200B";} 
+            content: "\u200B";
+          }
 
           .mention:hover {
             color: #00FFFFFF;
           }
 
           [data-indent='1'] {
-            padding-left: calc(1 * 3rem);
+            padding-left: calc(1 * 48px);
           }
 
           [data-indent='2'] {
-            padding-left: calc(2 * 3rem);
-          }
-          
-          [data-indent='3'] {
-            padding-left: calc(3 * 3rem);
-          }
-          
-          [data-indent='4'] {
-            padding-left: calc(4 * 3rem);
+            padding-left: calc(2 * 48px);
           }
 
-          
+          [data-indent='3'] {
+            padding-left: calc(3 * 48px);
+          }
+
+          [data-indent='4'] {
+            padding-left: calc(4 * 48px);
+          }
+
           .ProseMirror-focused {
             /* Color of the virtual cursor */
             --prosemirror-virtual-cursor-color: white;
@@ -724,8 +780,6 @@ const TiptapEditor = ({
             scrollbar-gutter: 0;
           }
 
-
-          
         `}
         </style>
 
@@ -767,12 +821,6 @@ const TiptapEditor = ({
             <div
               id="EditableUtilityToolbar"
               className="w-fit rounded-lg border shadow-sm shadow-appLayoutGentleShadow"
-              style={{
-                height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                backgroundColor: `${toolbarPreferences.backgroundColor}`,
-                borderColor: `${dividerColor}`,
-              }}
             >
               <TiptapUtilityToolbar
                 editor={editor}
@@ -805,19 +853,11 @@ const TiptapEditor = ({
           >
             <div
               id="EditableToolbar"
-              style={{
-                height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                minHeight: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
-                backgroundColor: `${toolbarPreferences.backgroundColor}`,
-                borderColor: `${dividerColor}`,
-                boxShadow: `0px 0px 0.5rem ${paperShadowColor}`,
-              }}
               className={`
                 overflow-y-hidden
                 min-w-0 sticky
                 z-[10000]
                 order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]
-                
               `}
             >
               <TipTapToolbar
@@ -833,11 +873,6 @@ const TiptapEditor = ({
           className={`h-full w-full max-w-full z-[2] flex justify-start flex-col items-center relative
            overflow-y-scroll min-h-0 text-neutral-200 hide-scrollbar
           `}
-          style={{
-            scrollbarWidth: 0,
-            scrollbarGutter: 0,
-            backgroundColor: backgroundColor,
-          }}
         >
           {/* <div
             id="EditableToolbar"
@@ -867,9 +902,6 @@ const TiptapEditor = ({
             <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
               <div
                 id="FloatingMenuToolbar"
-                style={{
-                  height: `calc(var(--uiScale) * ${lineHeight}rem)`,
-                }}
                 className="h-full w-fit bg-transparent border-transparent min-w-0"
               >
                 <TiptapFloatingToolbar
@@ -884,33 +916,7 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             id="PaperEditorContent"
-            className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200
-                  `}
-            style={{
-              width: width.endsWith("%")
-                ? `${width}`
-                : `calc(${width} * var(--uiScale))`,
-              maxWidth: "100%",
-              backgroundColor: `${paperColor}`,
-              borderTopWidth: `${paperBorderWidth}px`,
-              borderRightWidth: `${paperBorderWidth}px`,
-              borderBottomWidth: `0`,
-              borderLeftWidth: `${paperBorderWidth}px`,
-              borderTopColor: `transparent`,
-              borderLeftColor: `transparent`,
-              borderRightColor: `transparent`,
-              marginTop: `calc(${gapTop}rem * var(--uiScale))`,
-              borderTopRightRadius: `${roundRadius}rem`,
-              borderTopLeftRadius: `${roundRadius}rem`,
-              boxShadow: `0px 0px 0rem 0`,
-              ...(borderImageSource && {
-                borderImageSource: `url(${borderImageSource})`,
-                borderImageSlice: borderImageSlice,
-                borderImageWidth: borderImageWidth,
-                borderImageOutset: borderImageOutset,
-                borderImageRepeat: "stretch round",
-              }),
-            }}
+            className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200`}
           />
         </div>
         {editor && (
