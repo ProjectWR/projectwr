@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { appStore } from "../../app/stores/appStore";
 
-export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
+export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverflows }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const overlayRef = useRef(null);
@@ -185,9 +185,8 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
       <div className="h-fit w-fit flex z-[100]">
         {/* Trigger Button */}
         <button
-          className={`rounded-lg transition-all duration-200 ${
-            tocPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
-          }`}
+          className={`rounded-lg transition-all duration-200 ${tocPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
+            }`}
           style={{
             height: `calc(${buttonHeight}px * var(--uiScale))`,
             borderRadius: `${buttonRadius}px`,
@@ -207,25 +206,23 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
       >
         {/* Minimap track */}
         <div className="relative w-full h-full pointer-events-auto">
-          {documentHeight > 0 && (
+          {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
             <div className="absolute left-1/2 -translate-x-1/2 w-px h-full z-[98] bg-gradient-to-b from-transparent via-appLayoutHighlight/20 to-transparent" />
           )}
           {/* Virtual scroll thumb */}
-          {documentHeight > 0 && (
+          {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
             <motion.div
               className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin z-[99] bg-appLayoutHighlight/20 rounded-xl hover:bg-appLayoutHighlight/30 transition-colors cursor-grab active:cursor-grabbing"
               style={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
-                height: `${
-                  (viewportHeight / documentHeight) * containerHeight
-                }px`,
+                height: `${(viewportHeight / documentHeight) * containerHeight
+                  }px`,
               }}
               initial={false}
               animate={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
-                height: `${
-                  (viewportHeight / documentHeight) * containerHeight
-                }px`,
+                height: `${(viewportHeight / documentHeight) * containerHeight
+                  }px`,
               }}
               transition={{ duration: 0.1 }}
               onMouseDown={handleThumbMouseDown}

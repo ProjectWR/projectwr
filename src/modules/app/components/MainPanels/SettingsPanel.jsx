@@ -748,9 +748,9 @@ const SettingsPanel = () => {
 
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
-                      <button className="text-preferencesItemFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
+                      <div className="text-preferencesItemFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
                         {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
-                      </button>
+                      </div>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content
                       style={{ opacity: 1 }}

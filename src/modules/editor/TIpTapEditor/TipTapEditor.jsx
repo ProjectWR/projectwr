@@ -612,7 +612,7 @@ const TiptapEditor = ({
             pointer-events: auto !important;
             padding: calc(${paddingTop}px * var(--uiScale))
                      calc(${paddingRight}px * var(--uiScale))
-                     0
+                     50%
                      calc(${paddingLeft}px * var(--uiScale));
             font-family: ${font}, serif ;
           }
@@ -922,7 +922,7 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             id="PaperEditorContent"
-            className={`h-fit min-h-full outline-none focus:outline-none z-1 transition-all duration-200`}
+            className={`h-fit grow outline-none focus:outline-none z-1 transition-all duration-200`}
           />
         </div>
         {editor && (
