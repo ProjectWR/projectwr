@@ -85,8 +85,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
             <div
               className={`h-fit p-1 px-1 bg-appBackground z-30 bg-opacity-100 flex items-center flex-col rounded-[0.2rem] shadow-2xl shadow-appLayoutGentleShadow`}
               style={{
-                minWidth: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
-                width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+                minWidth: `calc(${textFormatButtonWidth}px * var(--uiScale))`,
+                width: `calc(${textFormatButtonWidth}px * var(--uiScale))`,
                 border: `1px solid ${dividerColor}`,
               }}
             >
@@ -143,8 +143,8 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
         >
           <button
             style={{
-              minWidth: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
-              width: `calc(${textFormatButtonWidth}rem * var(--uiScale))`,
+              minWidth: `calc(${textFormatButtonWidth}px * var(--uiScale))`,
+              width: `calc(${textFormatButtonWidth}px * var(--uiScale))`,
             }}
             className={`h-full px-[0.35rem] toolbarButton rounded-[0.35rem] `}
             onClick={() => setIsOpened(!isOpened)}
@@ -180,7 +180,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
+          style={{ fontSize: `calc(${toolbarFontSize}px * var(--uiScale))` }}
         >
           Heading 1
         </p>
@@ -190,7 +190,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
+          style={{ fontSize: `calc(${toolbarFontSize}px * var(--uiScale))` }}
         >
           Heading 2
         </p>
@@ -200,7 +200,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
+          style={{ fontSize: `calc(${toolbarFontSize}px * var(--uiScale))` }}
         >
           Heading 3
         </p>
@@ -210,7 +210,7 @@ const ReturnPlainElementForFormat = ({ format, toolbarFontSize }) => {
       return (
         <p
           className="min-w-fit w-fit"
-          style={{ fontSize: `calc(${toolbarFontSize}rem * var(--uiScale))` }}
+          style={{ fontSize: `calc(${toolbarFontSize}px * var(--uiScale))` }}
         >
           Normal Text
         </p>

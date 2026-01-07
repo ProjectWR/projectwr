@@ -62,8 +62,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive("heading", { level: 1 })
             ? pressedColor
             : "",
@@ -75,8 +75,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive("heading", { level: 2 })
             ? pressedColor
             : "",
@@ -88,8 +88,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive("heading", { level: 3 })
             ? pressedColor
             : "",
@@ -101,8 +101,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive("bulletList") ? pressedColor : "",
         }}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -112,8 +112,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive("orderedList") ? pressedColor : "",
         }}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -123,8 +123,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive({ textAlign: "left" })
             ? pressedColor
             : "",
@@ -136,8 +136,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive({ textAlign: "center" })
             ? pressedColor
             : "",
@@ -149,8 +149,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive({ textAlign: "right" })
             ? pressedColor
             : "",
@@ -162,8 +162,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive({ textAlign: "justify" })
             ? pressedColor
             : "",
@@ -175,8 +175,8 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
         style={{
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           backgroundColor: editor.isActive("horizontalRule")
             ? pressedColor
             : "",

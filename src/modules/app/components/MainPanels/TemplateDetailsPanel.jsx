@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../stores/appStore";
-import TipTapEditor from "../../../editor/TipTapEditor/TipTapEditor";
 import templateManager from "../../lib/templates";
 import { equalityDeep, equalityFlat } from "lib0/function";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";

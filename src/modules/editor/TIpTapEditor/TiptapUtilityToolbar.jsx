@@ -52,10 +52,10 @@ const TiptapUtilityToolbar = ({
       <button
         className="toolbarButton shrink-0"
         style={{
-          height: `calc(${buttonHeight}rem * var(--uiScale))`,
-          borderRadius: `${buttonRadius}rem`,
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          height: `calc(${buttonHeight}px * var(--uiScale))`,
+          borderRadius: `${buttonRadius}px`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
         }}
         onClick={() => editor.commands.undo()}
       >
@@ -64,10 +64,10 @@ const TiptapUtilityToolbar = ({
       <button
         className="toolbarButton"
         style={{
-          height: `calc(${buttonHeight}rem * var(--uiScale))`,
-          borderRadius: `${buttonRadius}rem`,
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          height: `calc(${buttonHeight}px * var(--uiScale))`,
+          borderRadius: `${buttonRadius}px`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
         }}
         onClick={() => editor.commands.redo()}
       >
@@ -80,10 +80,10 @@ const TiptapUtilityToolbar = ({
       <button
         className="toolbarButton flex items-center justify-center"
         style={{
-          height: `calc(${buttonHeight}rem * var(--uiScale))`,
-          borderRadius: `${buttonRadius}rem`,
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          height: `calc(${buttonHeight}px * var(--uiScale))`,
+          borderRadius: `${buttonRadius}px`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
         }}
         onClick={() => {
           if (isStatsPanelAwake) {
@@ -99,10 +99,10 @@ const TiptapUtilityToolbar = ({
       <button
         className="toolbarButton flex items-center justify-center"
         style={{
-          height: `calc(${buttonHeight}rem * var(--uiScale))`,
-          borderRadius: `${buttonRadius}rem`,
-          width: `calc(${buttonWidth}rem * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+          height: `calc(${buttonHeight}px * var(--uiScale))`,
+          borderRadius: `${buttonRadius}px`,
+          width: `calc(${buttonWidth}px * var(--uiScale))`,
+          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
         }}
         onClick={() => {
           if (isSearchReplacePanelAwake) {
@@ -115,7 +115,7 @@ const TiptapUtilityToolbar = ({
       >
         <span className="icon-[lsicon--find-filled] w-[75%] h-[75%] text-appLayoutText"></span>
       </button>
-     
+
     </div>
   );
 };

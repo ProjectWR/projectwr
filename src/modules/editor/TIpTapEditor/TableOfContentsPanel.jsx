@@ -189,10 +189,10 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences }) => {
             tocPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
           }`}
           style={{
-            height: `calc(${buttonHeight}rem * var(--uiScale))`,
-            borderRadius: `${buttonRadius}rem`,
-            width: `calc(${buttonWidth}rem * var(--uiScale))`,
-            minWidth: `calc(${buttonWidth}rem * var(--uiScale))`,
+            height: `calc(${buttonHeight}px * var(--uiScale))`,
+            borderRadius: `${buttonRadius}px`,
+            width: `calc(${buttonWidth}px * var(--uiScale))`,
+            minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
           }}
           onClick={() => setTocPinned(!tocPinned)}
         >

@@ -189,6 +189,8 @@ const TiptapEditor = ({
 
   const { dividerColor } = toolbarPreferences;
 
+  console.log("Editor Preferences: ", editorPreferences);
+
   const extensions = useRef([
     Document,
     Paragraph,
@@ -556,6 +558,7 @@ const TiptapEditor = ({
 
           #EditableContainer {
             background-color: ${backgroundColor};
+            padding-top: calc(${gapTop}px * var(--uiScale));
           }
 
           #EditableUtilityToolbarWrapper {
@@ -582,17 +585,16 @@ const TiptapEditor = ({
           }
 
           #PaperEditorContent {
-            width: ${width.endsWith("%") ? width : `calc(${width}px * var(--uiScale))`};
+            width: ${width};
             max-width: 100%;
             background-color: ${paperColor};
             border-top-width: ${paperBorderWidth}px;
             border-right-width: ${paperBorderWidth}px;
             border-bottom-width: 0;
             border-left-width: ${paperBorderWidth}px;
-            border-top-color: transparent;
-            border-left-color: transparent;
-            border-right-color: transparent;
-            margin-top: calc(${gapTop}px * var(--uiScale));
+            border-top-color: ${paperBorderColor};
+            border-left-color: ${paperBorderColor};
+            border-right-color: ${paperBorderColor};
             border-top-right-radius: ${roundRadius}px;
             border-top-left-radius: ${roundRadius}px;
             box-shadow: 0px 0px 0rem 0;
@@ -604,16 +606,20 @@ const TiptapEditor = ({
             border-image-outset: ${borderImageOutset}px;
             border-image-repeat: stretch round;
             ` : ''}
+
+            height: fit-content !important;
+
+            pointer-events: auto !important;
+            padding: calc(${paddingTop}px * var(--uiScale))
+                     calc(${paddingRight}px * var(--uiScale))
+                     0
+                     calc(${paddingLeft}px * var(--uiScale));
+            font-family: ${font}, serif ;
           }
 
           .EditorStyles .tiptap {
-            pointer-events: auto !important;
-            min-height: calc(320px * var(--uiScale));
-            padding: calc(${paddingTop}px * var(--uiScale))
-                     calc(${paddingRight}px * var(--uiScale))
-                     calc(${paddingBottom}px / var(--uiScale))
-                     calc(${paddingLeft}px * var(--uiScale));
-            font-family: ${font}, serif ;
+            min-height: 100%;
+            height: fit-content;
           }
 
           .EditorStyles h1 {
@@ -916,7 +922,7 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             id="PaperEditorContent"
-            className={`h-fit outline-none focus:outline-none z-1 transition-all duration-200`}
+            className={`h-fit min-h-full outline-none focus:outline-none z-1 transition-all duration-200`}
           />
         </div>
         {editor && (

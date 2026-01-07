@@ -41,7 +41,6 @@ const { desktopDefaultPreferences, mobileDefaultPreferences } =
  */
 const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const { deviceType } = useDeviceType();
-  const isMd = appStore((state) => state.isMd);
 
   const isMobile = deviceType === "mobile";
 
@@ -50,14 +49,8 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
-
-  const appStoreItemId = appStore((state) => state.appStoreItemId);
-  const setItemMode = appStore((state) => state.setItemMode);
-  const { activatePanel } = useMainPanel();
-  const itemMode = appStore((state) => state.itemMode);
 
   const [templateFromFile, setTemplateFromFile] = useState(null);
 
@@ -71,7 +64,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     return isMobile
       ? templateFromFile?.template_content.mobileDefaultPreferences
       : templateFromFile?.template_content.desktopDefaultPreferences;
-  }, [templateFromFile, isMobile, paperId]);
+  }, [templateFromFile, isMobile, paperId, libraryId]);
 
   useEffect(() => {
     const callback = async () => {
@@ -92,14 +85,16 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
       }
     };
 
+    itemLocalStateManager.on(libraryId, paperId, callback);
     templateManager.addCallback(callback);
 
     callback();
 
     return () => {
+      itemLocalStateManager.off(libraryId, paperId, callback);
       templateManager.removeCallback(callback);
     };
-  }, [paperId]);
+  }, [paperId, libraryId]);
 
   useEffect(() => {
     if (deviceType === "mobile") {

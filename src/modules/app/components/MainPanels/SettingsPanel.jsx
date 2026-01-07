@@ -152,7 +152,7 @@ const SettingsPanel = () => {
       template_editor: "TipTapEditor",
       template_content: TipTapEditorDefaultPreferences,
     };
-    templateManager.createTemplate("New Template", templateProps);
+    templateManager.createTemplate("New Template #" + Object.keys(templates).length, templateProps);
   };
 
   return (
@@ -609,7 +609,7 @@ const SettingsPanel = () => {
                         <div className="w-full h-full flex items-center gap-2 justify-between">
                           <p
                             style={{ fontFamily: font.family }}
-                            className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
+                            className="text-libraryManagerHeaderText text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
                           >
                             {font.family}
                           </p>
@@ -632,7 +632,7 @@ const SettingsPanel = () => {
                     return (
                       <HoverListItem disabled={true} key={image.id}>
                         <div className="w-full h-full flex items-center gap-2 justify-between">
-                          <p className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                          <p className="text-libraryManagerHeaderText text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
                             {image.fileName}
                           </p>
                           <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
@@ -654,7 +654,7 @@ const SettingsPanel = () => {
                     return (
                       <HoverListItem disabled={true} key={templateId}>
                         <div className="w-full h-full flex items-center gap-2 justify-between">
-                          <p className="text-detailsPanelPropsFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                          <p className="text-libraryManagerHeaderText text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
                             {templateId}
                           </p>
                           <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
@@ -679,7 +679,7 @@ const SettingsPanel = () => {
                           <button
                             className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
                             onClick={async () => {
-
+                              await templateManager.deleteTemplate(templateId);
                             }}
                           >
                             <span className="icon-[typcn--delete] w-full h-full"></span>

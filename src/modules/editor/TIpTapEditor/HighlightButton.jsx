@@ -72,8 +72,8 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
           <div
             className={`p-1 bg-background z-30 bg-opacity-100  fixed items-center grid grid-cols-3 gap-[0.125rem] rounded-[0.2rem]`}
             style={{
-              width: `${buttonWidth * 3.4}rem`,
-              height: `${buttonHeight * 3.6}rem`,
+              width: `${buttonWidth * 3.4}px`,
+              height: `${buttonHeight * 3.6}px`,
               border: `1px solid ${dividerColor}`,
               backgroundColor: backgroundColor,
             }}
@@ -81,8 +81,8 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
             {colors.map((color) => (
               <button
                 style={{
-                  height: `${buttonHeight}rem`,
-                  width: `${buttonWidth}rem`,
+                  height: `${buttonHeight}px`,
+                  width: `${buttonWidth}px`,
                 }}
                 key={color}
                 className="w-full h-full toolbarButton p-1"
@@ -102,8 +102,8 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
 
             <button
               style={{
-                height: `${buttonHeight}rem`,
-                width: `${buttonWidth}rem`,
+                height: `${buttonHeight}px`,
+                width: `${buttonWidth}px`,
               }}
               className="toolbarButton"
               reversed
@@ -118,7 +118,7 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
         }>
         <div className="w-fit h-fit flex items-center justify-center border-appLayoutBorder">
           <button
-            style={{ height: `${buttonHeight}rem`, width: `${buttonWidth}rem` }}
+            style={{ height: `${buttonHeight}px`, width: `${buttonWidth}px` }}
             className={`px-[0.35rem] py-[0.3rem] toolbarButton rounded-[0.35rem]`}
             onClick={() => setIsOpened(!isOpened)}
           >
@@ -129,7 +129,7 @@ const HighlightButton = ({ editor, toolbarPreferences }) => {
           </button>
 
           <button
-            style={{ height: `${buttonHeight}rem`, width: `${buttonWidth}rem` }}
+            style={{ height: `${buttonHeight}px`, width: `${buttonWidth}px` }}
             className={`py-px rounded-[0.3rem] toolbarButton`}
             onClick={() =>
               editor
