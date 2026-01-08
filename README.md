@@ -2,10 +2,10 @@ Todo list:
 
 Core Functionality
 - ~~Search Panel - Global search across all libraries/papers~~ need to scope it to library
-- Custom Dictionary - Finish the dictionary feature (I see DictionaryCreatePanel and DictionaryDetailsPanel exist)
-- Delete Buttons - Add delete functionality where missing (items, notes, libraries, etc.)
-- Context Menus - Right-click menus for common actions throughout the app
-- Import/Export DOCX - Reliable document format conversion
+- ~~Custom Dictionary - Finish the dictionary feature~~
+- ~~Delete Buttons - Add delete functionality where missing (items, notes, libraries, etc.)~~
+- ~~Context Menus - Right-click menus for common actions throughout the app~~
+- Import/~~Export~~ DOCX - Reliable document format conversion
 - Proofreader Ignore List - Custom words to ignore in grammar checking
 
 Polish & UX
@@ -22,33 +22,33 @@ Production Readiness
 - Error Boundaries - Ensure all critical components have error handling
 - Performance Optimization - Profile and optimize slow operations
 - Large document handling
-- Search indexing
-- Sync operations
+- ~~Search indexing~~
+- ~~Drive Sync operations~~
 
 Settings Page Completion
 - ~~Theme selector (already done)~~
 - ~~Fonts (already done)~~
 - ~~Zoom selector (already done)~~
-- Auth/OAuth (exists)
+- ~~Auth/OAuth (exists)~~
 - Keyboard shortcuts customization
 - Language/locale settings
 - Auto-save interval
 - Backup settings (local backup location, frequency)
 - Privacy settings (telemetry, crash reports)
 - Editor preferences (spell check, grammar check, auto-capitalize)
-- Appearance (accent colors, custom themes)
+- ~~Appearance (accent colors, custom themes)~~
 - Sync preferences (conflict resolution, sync frequency)
 - Advanced (developer mode, reset settings, clear cache)
 
 Editor Enhancements
-- Border Image Options - Add border/frame customization for editor templates
+- ~~Border Image Options - Add border/frame customization for editor templates~~
 - Background Images - Custom backgrounds for papers/templates
 - Template Editor Polish - Finish template customization UI
 - Focus Mode - Distraction-free writing mode
 - Find & Replace - Global find/replace (you have search currently)
 
 Productivity Features
-- Word & Character Counter - Real-time stats (already done per README)
+- ~~Word & Character Counter - Real-time stats~~
 - Readability Analysis - Flesch-Kincaid, etc.
 - Productivity Tracker - Writing streak, daily word count, session time
 - Writing Goals - Daily/project word count targets
@@ -63,7 +63,7 @@ UX Improvements
 - Completion Status - Track progress for items
 
 Data Management
-- Import/Export to ZIP - Package entire library with assets
+- Import/~~Export~~ to ZIP - Package entire library with assets
 - Backup Reminders - Prompt users to backup regularly
 - Version History - Local document versioning
 
