@@ -1,69 +1,104 @@
-# TODO
+Todo list:
 
-- ~~Replace all text boxes with a mini editor, or atleast make them fit to content when its typed~~
-- ~~Remove history buttons in app shell~~
-- ~~breadcrumbs~~
-- ~~details panel buttons should be restyled and modularized~~
-- ~~toolbar buttons active state~~
-- ~~breadcrumbs~~
-- ~~upgraded to tailwind v4~~
-- ~~make local state self correcting~~
-- ~~templates should be stored as files~~
-- ~~fix item local state to have library Id and item Id in key name~~
-- Add context menus where it is appropriate
-- ~~Add tabs~~
-- Settings page needs to be finished
-  - ~~theme selector (currently dark or light mode)~~
-  - ~~fonts~~
-  - auth
-  - ~~zoom selector~~
-- ~~Finish editor styles integration~~
-- add delete buttons
-- themes
-- add word and character counter
-  - readability analysis and all those scores
-- ~~make side panel transient when small screen~~
-- ~~Add linking~~
-- ~~Tabbed Writing Format~~
-- ~~Grammarly/language tool/etc. integration~~
-- import export to formats, from file directory to zip file
-- google drive and one drive sync
-- Completion Status for each item
-- ~~IMPORTANT: change internal structure of yjs ordered tree~~
-- disappearing toolbar / top bar
-- dictionary
-- number untitled 
-- tooltips
-- subtitle rotation
-- ~~add + button for notes in notes panel~~
+Core Functionality
+ ~~Search Panel - Global search across all libraries/papers~~ need to scope it to library
+ Custom Dictionary - Finish the dictionary feature (I see DictionaryCreatePanel and DictionaryDetailsPanel exist)
+ Delete Buttons - Add delete functionality where missing (items, notes, libraries, etc.)
+ Context Menus - Right-click menus for common actions throughout the app
+ Import/Export DOCX - Reliable document format conversion
+ Proofreader Ignore List - Custom words to ignore in grammar checking
 
-Final Checklist before first release:
-- MAJOR:
-  - search panel
-  - import and export to docx
-  - proofreader ignore list
-  - ~~sync to google drive~~
-  - auto updating
-  - code signing
-  - tooltips
-  - loading indicators and warnings
-  
-- MINOR:
-  - drag handle - maybe
-  - remember scroll for each paper
-  - find and replace, for ~~paper~~ and global
-  - polish all editor side panels
-  - template editor
-  - ~~word and character counter~~
-  - productivity tracker
-  - website finalizing
-  - keyboard shortcuts
-  - focus mode in editor
-- 
-- FUTURE:
-- ~~Notes~~
-- Timelines
-- Mind maps (importable from xMind and Freemind and scrapple)
-- import notes from onenote and google keep
-- Search and Replace (only have search right now)
-- mark sections with time stamp (in universe time stamp)
+Polish & UX
+ Loading Indicators - Show progress for file operations, sync, etc.
+ Warning Messages - Unsaved changes, destructive actions, errors
+ Tooltips - Add comprehensive tooltips throughout the UI
+ Keyboard Shortcuts - Define and implement customizable key bindings
+ Keyboard shortcuts settings panel
+ Display shortcuts in context menus/tooltips
+
+Production Readiness
+ Auto-Updating - Implement Tauri updater plugin (@tauri-apps/plugin-updater)
+ Code Signing - Sign the app for Windows/macOS
+ Error Boundaries - Ensure all critical components have error handling
+ Performance Optimization - Profile and optimize slow operations
+ Large document handling
+ Search indexing
+ Sync operations
+
+Settings Page Completion
+ ~~Theme selector (already done)~~
+ ~~Fonts (already done)~~
+ ~~Zoom selector (already done)~~
+ Auth/OAuth (exists)
+ Keyboard shortcuts customization
+ Language/locale settings
+ Auto-save interval
+ Backup settings (local backup location, frequency)
+ Privacy settings (telemetry, crash reports)
+ Editor preferences (spell check, grammar check, auto-capitalize)
+ Appearance (accent colors, custom themes)
+ Sync preferences (conflict resolution, sync frequency)
+ Advanced (developer mode, reset settings, clear cache)
+
+Editor Enhancements
+ Border Image Options - Add border/frame customization for editor templates
+ Background Images - Custom backgrounds for papers/templates
+ Template Editor Polish - Finish template customization UI
+ Focus Mode - Distraction-free writing mode
+ Find & Replace - Global find/replace (you have search currently)
+
+Productivity Features
+ Word & Character Counter - Real-time stats (already done per README)
+ Readability Analysis - Flesch-Kincaid, etc.
+ Productivity Tracker - Writing streak, daily word count, session time
+ Writing Goals - Daily/project word count targets
+ Session Statistics - Time tracking, words per session
+
+UX Improvements
+ Disappearing Toolbar - Auto-hide top bar
+ Subtitle Rotation - (from your README)
+ Number Untitled Documents - Auto-name "Untitled 1", "Untitled 2", etc.
+ Remember Scroll Position - Per paper scroll memory
+ Drag Handle - For reordering (maybe)
+ Completion Status - Track progress for items
+
+Data Management
+ Import/Export to ZIP - Package entire library with assets
+ Backup Reminders - Prompt users to backup regularly
+ Version History - Local document versioning
+
+Advanced Features
+ Timelines - Visual timeline editor
+ Mind Maps - Import from xMind, Freemind, Scapple
+ Import from OneNote/Google Keep
+ In-Universe Timestamps - Mark sections with story time
+ Plot Diagrams - Visual story structure
+
+Marketing & Distribution
+ Website Finalization - Landing page, documentation
+ Tutorial/Onboarding - First-time user experience
+ Help Documentation - In-app help system
+ Sample Project - Demo library with example content
+ Video Tutorials - YouTube embed or walkthrough
+
+Modern UX
+ Command Palette - Quick actions (Cmd+K style)
+ Spotlight Search - Fast global search with previews
+ Collaborative Cursors - Show other users (if multi-user)
+
+Performance
+ Virtual Scrolling - For large lists (libraries with 1000+ papers)
+ Lazy Loading - Load papers/notes on demand
+ Web Workers - Offload search indexing, export operations
+ Optimistic UI - Instant feedback before sync completes
+ Debounced Auto-save - Smart saving that doesn't freeze UI
+ Database Optimization - Index frequently queried fields
+ Memory Management - Properly cleanup when switching documents
+
+🛠️ TECHNICAL DEBT
+ Unit Tests - Critical business logic
+ E2E Tests - Key user flows (create library, write paper, export)
+ Accessibility - ARIA labels, keyboard navigation, screen reader support
+ Localization - i18n framework (even if just English initially)
+ Logging & Analytics - Track errors, usage patterns (privacy-respecting)
+ Migration System - For future database schema changes
