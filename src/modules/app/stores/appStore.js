@@ -128,6 +128,11 @@ export const appStore = create((set) => ({
     return set({ tocPinned: tocPinned });
   },
 
+  statsPinned: true,
+  setStatsPinned: (statsPinned) => {
+    return set({ statsPinned: statsPinned });
+  },
+
   deleteConfirmDontAskAgain: false,
   setDeleteConfirmDontAskAgain: (deleteConfirmDontAskAgain) => {
     return set({ deleteConfirmDontAskAgain: deleteConfirmDontAskAgain });

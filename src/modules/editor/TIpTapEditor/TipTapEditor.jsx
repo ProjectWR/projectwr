@@ -808,13 +808,6 @@ const TiptapEditor = ({
               id="EditorSidePanelsContainer"
               className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-1 justify-center items-center"
             >
-              <StatisticsPanel
-                visible={isStatsPanelAwake}
-                refreshStatsPanel={refreshStatsPanel}
-                keepStatsPanelAwake={keepStatsPanelAwake}
-                editor={editor}
-                toolbarPreferences={toolbarPreferences}
-              />
             </div>
           </>
         )}
@@ -927,6 +920,12 @@ const TiptapEditor = ({
         </div>
         {editor && (
           <TableOfContentsPanel
+            editor={editor}
+            toolbarPreferences={toolbarPreferences}
+          />
+        )}
+        {editor && (
+          <StatisticsPanel
             editor={editor}
             toolbarPreferences={toolbarPreferences}
           />

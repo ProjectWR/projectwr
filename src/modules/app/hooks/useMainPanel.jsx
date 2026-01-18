@@ -15,6 +15,12 @@ const useMainPanel = () => {
    */
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
   const setMainPanelState = mainPanelStore((state) => state.setMainPanelState);
+  const setSplitMode = mainPanelStore((state) => state.setSplitMode);
+  const setSplitPanelState = mainPanelStore((state) => state.setSplitPanelState);
+  const splitRatio = mainPanelStore((state) => state.splitRatio);
+  const setSplitRatio = mainPanelStore((state) => state.setSplitRatio);
+
+
 
   // App Store Setters
   const setFocusedItem = appStore((state) => state.setFocusedItem);
@@ -95,7 +101,36 @@ const useMainPanel = () => {
     ]
   );
 
-  return { mainPanelState, activatePanel };
+
+  const activateSplitPanel = useCallback(
+    async (panelType, mode, breadcrumbs, orientation) => {
+      setSplitMode(orientation);
+
+      if (splitRatio === null) {
+        setSplitRatio(0.5);
+      }
+
+      const newState = {
+
+        panelType: panelType,
+        mode: mode,
+        breadcrumbs: breadcrumbs,
+      };
+
+      setSplitPanelState(newState);
+    }, [setSplitMode, setSplitPanelState, setSplitRatio, splitRatio]
+  );
+
+  const deactivateSplitPanel = useCallback(
+    async () => {
+      setSplitMode("none");
+      setSplitRatio(null);
+      setSplitPanelState(null);
+
+    }, [setSplitMode, setSplitPanelState, setSplitRatio]
+  )
+
+  return { mainPanelState, activatePanel, activateSplitPanel, deactivateSplitPanel };
 };
 
 export default useMainPanel;

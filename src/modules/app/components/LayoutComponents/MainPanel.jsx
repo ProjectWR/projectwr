@@ -28,7 +28,7 @@ import { equalityDeep } from "lib0/function";
 import { getOrInitLibraryYTree } from "../../lib/ytree";
 import DictionaryPanel from "../MainPanels/DictionaryPanel";
 
-const MainPanel = ({}) => {
+const MainPanel = ({main = true}) => {
   console.log("MainPanel rendering");
 
   const { deviceType } = useDeviceType();
@@ -49,6 +49,9 @@ const MainPanel = ({}) => {
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
+
+  const splitMode = mainPanelStore((state) => state.splitMode);
+  const splitPanelState = mainPanelStore((state) => state.splitPanelState);
 
   const { mainPanelState, activatePanel } = useMainPanel();
 
@@ -78,7 +81,7 @@ const MainPanel = ({}) => {
   }, [libraryId]);
 
   const renderMainPanel = useCallback(() => {
-    const { panelType, mode, breadcrumbs } = mainPanelState;
+    const { panelType, mode, breadcrumbs } = splitMode == 'none' || main ? mainPanelState : splitPanelState;
 
     const isAtRoot = breadcrumbs.length === 1;
 
@@ -262,7 +265,7 @@ const MainPanel = ({}) => {
   ]);
 
   return (
-    <div className="grow min-w-0 basis-0 h-full bg-appBackground overflow-hidden z-3 flex flex-col items-center justify-center">
+    <div className="w-full min-w-0 basis-0 h-full bg-appBackground overflow-hidden z-3 flex flex-col items-center justify-center">
       {/* <section className="w-full h-actionBarHeight min-h-actionBarHeight flex">
         <TabsBar /> 
         <NotesPanelOpenButton

@@ -29,6 +29,8 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
 
   const setTabs = mainPanelStore((state) => state.setTabs);
 
+  const splitPanelState = mainPanelStore((state) => state.splitPanelState);
+
   const isMd = appStore((state) => state.isMd);
 
   const [overflow, setOverflow] = useState(false);
@@ -44,7 +46,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
     clearFuture,
   } = useStoreHistory();
 
-  const { activatePanel } = useMainPanel();
+  const { activatePanel, activateSplitPanel, deactivateSplitPanel } = useMainPanel();
 
   useEffect(() => {
     const newState = JSON.parse(JSON.stringify(mainPanelState));
@@ -242,9 +244,18 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       </ScrollArea>
       <div
         data-tauri-drag-region
-        className={`border-b flex w-fit min-w-0 z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText bg-appBackgroundAccent  px-1
+        className={`border-b flex items-center w-fit min-w-0 z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText bg-appBackgroundAccent  px-1
           `}
       >
+        {splitPanelState && (
+          <TabButton
+            panelType={splitPanelState.panelType}
+            mode={splitPanelState.mode}
+            breadcrumbs={splitPanelState.breadcrumbs}
+            isRemoveAvailable={true}
+            splitPanelTab={true}
+          />
+        )}
         <NotesPanelOpenButton
           isNotesPanelAwake={isNotesPanelAwake}
           refreshNotesPanel={refreshNotesPanel}
@@ -259,6 +270,7 @@ const TabButton = ({
   mode,
   breadcrumbs,
   isRemoveAvailable = true,
+  splitPanelTab = false,
 }) => {
   const dndRef = useRef(null);
 
@@ -269,6 +281,9 @@ const TabButton = ({
   const setTemplateId = appStore((state) => state.setTemplateId);
 
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
+  const { deactivateSplitPanel } = useMainPanel();
+
+  const splitMode = mainPanelStore((state) => state.splitMode);
 
   /**
    * @type {Array<MainPanelState>}
@@ -564,6 +579,14 @@ const TabButton = ({
       );
       setLabel("Home");
     }
+
+    if (splitPanelTab && splitMode == 'x') {
+      setIcon(<span className="icon-[material-symbols-light--split-scene-left-outline] w-full h-full mb-0.5"></span>)
+    }
+
+    if (splitPanelTab && splitMode == 'y') {
+      setIcon(<span className="icon-[material-symbols-light--split-scene-down-outline] w-full h-full mb-0.5"></span>)
+    }
   }, [panelType, breadcrumbs]);
 
   const tabIsSelected = useMemo(() => {
@@ -622,6 +645,11 @@ const TabButton = ({
       {isRemoveAvailable && (
         <button
           onClick={() => {
+            if (splitPanelTab) {
+              deactivateSplitPanel();
+              return;
+            }
+
             const newTabs = JSON.parse(JSON.stringify(tabs));
             const tabIndex = tabs.findIndex((x) =>
               equalityDeep(x, { panelType, mode, breadcrumbs })

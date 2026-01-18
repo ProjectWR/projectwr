@@ -66,6 +66,7 @@ import {
   saveAuthCode,
 } from "../lib/auth/auth";
 import itemLocalStateManager from "../lib/itemLocalState";
+import { MainPanelFrame } from "./LayoutComponents/MainPanelFrame";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -588,7 +589,7 @@ const WritingApp = () => {
                   <>
                     <SidePanelContainer loading={loading} />
 
-                    <MainPanel />
+                    <MainPanelFrame />
 
                     <DetailsPanelNotesPanel
                       isNotesPanelAwake={isNotesPanelAwake}

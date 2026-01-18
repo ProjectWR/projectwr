@@ -86,25 +86,6 @@ const TiptapUtilityToolbar = ({
           minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
         }}
         onClick={() => {
-          if (isStatsPanelAwake) {
-            forceCloseStatsPanel();
-          } else {
-            keepStatsPanelAwake();
-            refreshStatsPanel();
-          }
-        }}
-      >
-        <span className="icon-[nimbus--stats] w-[75%] h-[75%] text-appLayoutText"></span>
-      </button>
-      <button
-        className="toolbarButton flex items-center justify-center"
-        style={{
-          height: `calc(${buttonHeight}px * var(--uiScale))`,
-          borderRadius: `${buttonRadius}px`,
-          width: `calc(${buttonWidth}px * var(--uiScale))`,
-          minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
-        }}
-        onClick={() => {
           if (isSearchReplacePanelAwake) {
             forceCloseSearchReplacePanel();
           } else {

@@ -37,7 +37,7 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
             >
               <button
                 onClick={action}
-                className="w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText"
+                className="w-fit max-w-breadcrumbItemMaxWidth text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText"
               >
                 {label}
               </button>
@@ -53,7 +53,7 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
         >
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <button className="w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+              <button className="w-fit max-w-breadcrumbItemMaxWidth text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
                 ...
               </button>
             </DropdownMenu.Trigger>
@@ -90,7 +90,7 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
             >
               <button
                 onClick={action}
-                className={`w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis ${
+                className={`w-fit max-w-breadcrumbItemMaxWidth text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis ${
                   index === breadcrumbsRight.length - 1
                     ? "text-appLayoutText"
                     : "text-appLayoutTextMuted"
@@ -118,7 +118,7 @@ export const Breadcrumbs = ({ breadcrumbs = [] }) => {
           >
             <button
               onClick={action}
-              className={`w-fit max-w-breadcrumbItemMaxWidth text-breadcrumbFontSize text-nowrap overflow-x-hidden overflow-ellipsis ${
+              className={`w-fit max-w-breadcrumbItemMaxWidth text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis ${
                 index === breadcrumbs.length - 1
                   ? "text-appLayoutText"
                   : "text-appLayoutTextMuted"

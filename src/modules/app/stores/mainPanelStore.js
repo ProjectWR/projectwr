@@ -1,3 +1,4 @@
+import { split } from "postcss/lib/list";
 import { create } from "zustand";
 
 /**
@@ -40,5 +41,20 @@ export const mainPanelStore = create((set) => ({
     tabs: [],
     setTabs: (tabs) => {
         return set({ tabs: tabs })
-    }
+    },
+
+    splitMode: "x",
+    setSplitMode: (splitMode) => {
+        return set({ splitMode: splitMode })
+    },
+
+    splitPanelState: { panelType: "home", mode: null, breadcrumbs: [] },
+    setSplitPanelState: (splitPanelState) => {
+        return set({ splitPanelState: splitPanelState })
+    },
+
+    splitRatio: 0.5,
+    setSplitRatio: (splitRatio) => {
+        return set({ splitRatio: splitRatio });
+    },
 }))
