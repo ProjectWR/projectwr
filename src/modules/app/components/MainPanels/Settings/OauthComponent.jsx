@@ -28,7 +28,7 @@ export const OauthComponent = ({}) => {
   return (
     <ListShell className={`h-full w-full min-w-0 bg-appBackgroundAccent`}>
       <HoverListHeader className={"gap-4"}>
-        <span>Drive Sync</span>
+        <span>Drive Backup</span>
       </HoverListHeader>
 
       <HoverListDivider />
@@ -116,11 +116,11 @@ export const OauthComponent = ({}) => {
                   onClick={() => {
                     handleLogout();
                   }}
-                  className={`h-full w-full p-2 text-appLayoutTextMuted border border-appLayoutBorder rounded-lg overflow-hidden flex items-center`}
+                  className={`h-full w-full p-2 text-appLayoutText border border-appLayoutBorder rounded-lg overflow-hidden flex items-center`}
                 >
                   <span className="h-fit grow min-w-0">
                     {" "}
-                    Log out of Google Drive Sync
+                    Log out of Google Drive
                   </span>
                   <span className="icon-[ion--exit-outline] w-[2rem] h-[2rem]"></span>
                 </GrainyElementButton>

@@ -23,6 +23,16 @@ export const DetailsPanelButton = ({
   disabled = false,
 }) => {
   return (
+    <button
+      onClick={onClick}
+      disabled={loading || disabled}
+      className="min-h-fit flex gap-2 items-center text-libraryDirectoryBookNodeFontSize p-2 rounded-lg border border-appLayoutBorder hover:bg-appLayoutInverseHover bg-transparent"
+    >
+      {loading && (<span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>)} <div className="w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize">{icon}</div> {text}
+    </button>
+  )
+
+  return (
     <GrainyElementButton
       gradientSize={100}
       gradientSizeY={10}
@@ -43,8 +53,8 @@ export const DetailsPanelButton = ({
             <div className={`relative w-detailsPanelButtonIconHeight h-detailsPanelButtonIconHeight`}>
               <span
                 className="w-full h-full"
-                // animate={{ rotate: 360 }}
-                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+              // animate={{ rotate: 360 }}
+              // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -158,8 +168,8 @@ export const DetailsPanelCenteredButton = ({
             <div className={`relative w-full h-full`}>
               <span
                 className="w-full h-full"
-                // animate={{ rotate: 360 }}
-                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+              // animate={{ rotate: 360 }}
+              // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
