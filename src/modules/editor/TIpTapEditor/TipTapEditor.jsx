@@ -584,7 +584,7 @@ const TiptapEditor = ({
             height: calc(var(--uiScale) * ${lineHeight}px);
           }
 
-          #PaperEditorContent {
+          #PaperEditorContent > div.tiptap.ProseMirror {
             width: ${width};
             max-width: 100%;
             background-color: ${paperColor};
@@ -915,7 +915,7 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             id="PaperEditorContent"
-            className={`h-fit grow outline-none focus:outline-none z-1 transition-all duration-200`}
+            className={`h-full w-full grow flex justify-center outline-none focus:outline-none z-1 transition-all duration-200`}
           />
         </div>
         {editor && (
