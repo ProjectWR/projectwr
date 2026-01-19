@@ -217,7 +217,7 @@ export const DetailsPanelDescriptionProp = ({
 
   return (
     <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-2 border border-transparent rounded-md overflow-hidden">
-      <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+      <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center  text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
         {label}
       </h2>
       <ContextMenuWrapper options={options} triggerClassname="w-full grow">
@@ -229,10 +229,10 @@ export const DetailsPanelDescriptionProp = ({
             Typography: "grow h-fit w-full",
             toolbar: "bg-appBackground border-b border-appLayoutBorder",
             content:
-              "bg-appBackground text-appLayoutText max-h-detailsPanelDescriptionInputHeight h-fit overflow-y-scroll px-3 py-3 text-detailsPanelPropFontSize DetailsPanelDescriptionProp",
+              "bg-appBackground text-appLayoutText max-h-detailsPanelDescriptionInputHeight h-fit overflow-y-scroll px-3 py-3 text-libraryDirectoryBookNodeFontSize DetailsPanelDescriptionProp",
             controlsGroup: "bg-appBackground gap-1",
             control:
-              "bg-appBackground border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
+              "bg-appBackground size-libraryDirectoryBookNodeHeight border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
           }}
         >
           <style>
@@ -251,21 +251,19 @@ export const DetailsPanelDescriptionProp = ({
           }
 
           .DetailsPanelDescriptionProp > .tiptap.ProseMirror > h1 {
-            font-size: calc(var(--uiScale) * 2rem);
-            line-height: calc(var(--uiScale) * 2rem);
-            padding-bottom: calc(var(--uiScale) * 0.5rem);
-            margin-bottom: calc(var(--uiScale) * 1rem);
-            font-family: serif;
+            font-size: calc(var(--uiScale) * 1.5rem);
+            line-height: calc(var(--uiScale) * 1.5rem);
+            padding-bottom: calc(var(--uiScale) * 0.25rem);
+            margin-bottom: calc(var(--uiScale) * 0.5rem);
             border-bottom: 1px solid hsl(var(--appLayoutBorder));
 
           }
 
           .DetailsPanelDescriptionProp > .tiptap.ProseMirror > h2 {
-            font-size: calc(var(--uiScale) * 1.5rem);
-            line-height: calc(var(--uiScale) * 1.5rem);
-            padding-bottom: calc(var(--uiScale) * 0.25rem);
-            margin-bottom: calc(var(--uiScale) * 0.5rem);
-            font-family: serif;
+            font-size: calc(var(--uiScale) * 1rem);
+            line-height: calc(var(--uiScale) * 1rem);
+            padding-bottom: calc(var(--uiScale) * 0.1rem);
+            margin-bottom: calc(var(--uiScale) * 0.25rem);
             border-bottom: 1px solid hsl(var(--appLayoutBorder));
 
           }

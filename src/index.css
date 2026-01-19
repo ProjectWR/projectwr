@@ -300,8 +300,8 @@
     --detailsPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
     --detailsPanelHeaderTwoHeight: calc(var(--uiScale) * 3rem);
     --detailsPanelHeaderTwoFontSize: calc(var(--uiScale) * 1.5rem);
-    --detailsPanelPropsFontSize: calc(var(--uiScale) * 1.2rem);
-    --detailsPanelPropLabelFontSize: calc(var(--uiScale) * 1.15rem);
+    --detailsPanelPropsFontSize: calc(var(--uiScale) * 0.9rem);
+    --detailsPanelPropLabelFontSize: calc(var(--uiScale) * 1rem);
     --detailsPanelPropLabelHeight: calc(var(--uiScale) * 2.4rem);
     --detailsPanelSaveButtonFontSize: calc(var(--uiScale) * 1.2rem);
     --detailsPanelDescriptionInputHeight: calc(var(--uiScale) * 15rem);

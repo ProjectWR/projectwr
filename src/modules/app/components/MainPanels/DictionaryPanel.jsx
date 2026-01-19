@@ -146,7 +146,7 @@ const DictionaryPanel = () => {
                         <div
                           key={word}
                           className={`relative group flex items-center w-full pr-3 gap-1 h-fit ${selectedWord === word
-                            ? "bg-appLayoutPressed text-appLayoutHighlight"
+                            ? "bg-appLayoutPressed/50 text-appLayoutHighlight"
                             : "hover:bg-appLayoutHover text-appLayoutText"
                             }`}
                           onMouseEnter={() => setHoveredWord(word)}
@@ -156,7 +156,7 @@ const DictionaryPanel = () => {
                             type="button"
                             onClick={() => handleWordSelect(word)}
                             className={`w-full px-4 py-1 text-left text-libraryDirectoryPaperNodeFontSize transition-colors duration-100 flex items-center justify-between ${selectedWord === word
-                              ? "bg-appLayoutPressed text-appLayoutHighlight"
+                              ? "text-appLayoutHighlight"
                               : "hover:bg-appLayoutHover text-appLayoutText"
                               }`}
                           >
@@ -172,7 +172,7 @@ const DictionaryPanel = () => {
                               handleDeleteWord(word);
                             }}
                             className={`w-libraryManagerHeaderButtonSize text-appLayoutHighlight  h-libraryManagerHeaderButtonSize  flex items-center justify-center rounded-md hover:bg-appLayoutInverseHover disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 ${selectedWord === word
-                              ? "bg-appLayoutPressed text-appLayoutHighlight"
+                              ? "text-appLayoutHighlight"
                               : "hover:bg-appLayoutHover text-appLayoutText"
                               }`}
                           >
@@ -220,7 +220,7 @@ const WordPropertiesPanel = ({ selectedWord, handleDeleteWord }) => {
         selectedWord ? (
           <div className="w-full h-full flex flex-col" >
             {/* Word Header */}
-            < div className="w-full h-fit px-3 pb-2 border-b border-appLayoutBorder flex items-center justify-between" >
+            <div className="w-full h-fit px-3 pb-2 border-b border-appLayoutBorder flex items-center justify-between" >
               <h3 className="h-fit min-h-fit text-libraryDirectoryPaperNodeFontSize w-full px-2 py-px bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-transparent border rounded-sm">
                 {selectedWord}
               </h3>
@@ -285,16 +285,14 @@ const WordProperties = ({ selectedWord, definition, setDefinition }) => {
   console.log("DEFINITION in WordProperties:", definition);
 
   return (
-    <DetailsPanelProperties>
-      <DetailsPanelDescriptionProp
-        key={selectedWord}
-        description={definition}
-        updateProperties={(content) => {
-          setDefinition(content);
-          console.log("SET DEFINITION: ", content);
-        }}
-        label="Definition"
-      />
-    </DetailsPanelProperties>
+    <DetailsPanelDescriptionProp
+      key={selectedWord}
+      description={definition}
+      updateProperties={(content) => {
+        setDefinition(content);
+        console.log("SET DEFINITION: ", content);
+      }}
+      label="Definition"
+    />
   );
 };
