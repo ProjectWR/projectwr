@@ -11,7 +11,7 @@ export const DetailsPanelNameInput = ({
                     focus:bg-appLayoutInputBackground  focus:outline-none ${
                       unsavedChangesExist ? "rounded-lg" : ""
                     }
-                     px-3 pb-1 transition-colors duration-200 ${className}`}
+                     px-3 transition-colors duration-200 ${className}`}
       name={name}
       onChange={onChange}
       value={value}

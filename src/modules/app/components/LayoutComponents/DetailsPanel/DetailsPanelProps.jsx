@@ -30,8 +30,8 @@ export const DetailsPanelStatusProp = ({
   };
   return (
     <div className="w-full h-fit">
-      <div className="w-full h-[3rem] px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
-        <h2 className="w-fit h-fit px-2 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+      <div className="w-full h-fit px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
+        <h2 className="w-fit h-fit px-2 flex text-nowrap   justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
           Book Status
         </h2>
         {progress_values.map((progress) => {
@@ -57,7 +57,13 @@ export const DetailsPanelStatusProp = ({
               </span>
               {selected && (
                 <motion.div
-                  className="absolute h-full w-full top-0 left-0 z-[1] border border-appLayoutText bg-appLayoutHighlight rounded-md shadow-none shadow-appLayoutShadow"
+                  className={`absolute h-full w-full top-0 left-0 z-[1] 
+                               rounded-md shadow-none shadow-appLayoutShadow 
+                              ${progress.label == 'Drafting' ? 'bg-appLayoutHighlight/75' : ''}
+                              ${progress.label == 'Editing' ? 'bg-yellow-500/75' : ''}
+                              ${progress.label == 'Done' ? 'bg-green-500/65' : ''}
+
+                              `}
                   layoutId="statusBackground"
                   id="statusBackground"
                 ></motion.div>
@@ -77,8 +83,8 @@ export const DetailsPanelWordCountProp = ({
 }) => {
   return (
     <div className="w-full h-fit">
-      <div className="w-full h-[3rem] px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
-        <h2 className="w-fit h-fit px-2 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+      <div className="w-full h-fit px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
+        <h2 className="w-fit h-fit px-2 text-nowrap flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
           Word Count
         </h2>
         <span className="grow basis-0 h-fit px-2 flex justify-center items-center text-detailsPanelPropLabelFontSize text-appLayoutText">
@@ -91,7 +97,7 @@ export const DetailsPanelWordCountProp = ({
           value={itemProperties.item_goal}
           name={"item_goal"}
           onChange={onChange}
-          className="grow basis-0 h-fit px-2 text-center focus:outline-none rounded-md text-detailsPanelPropLabelFontSize text-appLayoutTextMuted focus:text-appLayoutText focus:bg-appLayoutInputBackground transition-colors duration-200"
+          className="grow basis-0 min-w-0 h-fit px-2 text-center focus:outline-none rounded-md text-detailsPanelPropLabelFontSize text-appLayoutTextMuted focus:text-appLayoutText focus:bg-appLayoutInputBackground transition-colors duration-200"
         />
       </div>
     </div>

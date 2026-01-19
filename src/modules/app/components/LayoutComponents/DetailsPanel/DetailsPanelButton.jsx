@@ -26,7 +26,7 @@ export const DetailsPanelButton = ({
     <button
       onClick={onClick}
       disabled={loading || disabled}
-      className="min-h-fit flex gap-2 items-center text-libraryDirectoryBookNodeFontSize p-2 px-3 rounded-lg border border-appLayoutBorder hover:bg-appLayoutInverseHover bg-transparent"
+      className="min-h-fit flex gap-2 items-center text-libraryDirectoryBookNodeFontSize p-2 px-3 rounded-lg border border-appLayoutBorder hover:bg-appLayoutInverseHover bg-transparent transition-colors duration-200"
     >
       {loading && (<span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>)} <div className="w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize">{icon}</div> {text}
     </button>

@@ -297,7 +297,7 @@
     --homePanelSubtitleFontSize: calc(var(--uiScale) * 1.5rem);
 
     --detailsPanelHeaderHeight: calc(var(--uiScale) * 2.18rem);
-    --detailsPanelNameFontSize: calc(var(--uiScale) * 1.5rem);
+    --detailsPanelNameFontSize: calc(var(--uiScale) * 1.2rem);
     --detailsPanelHeaderTwoHeight: calc(var(--uiScale) * 3rem);
     --detailsPanelHeaderTwoFontSize: calc(var(--uiScale) * 1.5rem);
     --detailsPanelPropsFontSize: calc(var(--uiScale) * 0.9rem);
@@ -379,6 +379,8 @@
     --noteCardFontSizeOne: calc(var(--uiScale) * 1.25rem);
     --noteCardFontSizeTwo: calc(var(--uiScale) * 1.1rem);
     --noteCardFontSizeThree: calc(var(--uiScale) * 0.9rem);
+
+    --oauthAvatarSize: calc(var(--uiScale) * 5.5rem);
 
     --noteCardHeight: calc(var(--uiScale) * 20rem);
     --noteCardHeaderHeight: calc(var(--uiScale) * 1.5rem);
@@ -655,6 +657,7 @@
   --spacing-scrollbarWidthThin: var(--scrollbarWidthThin);
   --spacing-noteCardHeaderHeight: var(--noteCardHeaderHeight);
   --spacing-tabsDeleteIconSize: var(--tabsDeleteIconSize);
+  --spacing-oauthAvatarSize: var(--oauthAvatarSize);
 
   --text-activityBarFontSize: var(--activityBarFontSize);
   --text-libraryManagerHeaderText: var(--libraryManagerHeaderText);
@@ -794,5 +797,5 @@ input[type="number"] {
     @apply text-appLayoutText;
   }
 
-  
+
 }

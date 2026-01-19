@@ -15,7 +15,7 @@ import {
   ListShell,
 } from "../../LayoutComponents/HoverListShell";
 
-export const OauthComponent = ({}) => {
+export const OauthComponent = ({ }) => {
   const { deviceType } = useDeviceType();
 
   const userProfile = oauthStore((state) => state.userProfile);
@@ -33,17 +33,17 @@ export const OauthComponent = ({}) => {
 
       <HoverListDivider />
 
-      <section className="flex gap-2 w-full h-fit px-2">
-        <div className="h-full w-1/2 flex flex-col items-center justify-center gap-2">
-          <div className="h-[75%] w-full flex flex-col items-center justify-center gap-2">
+      <section className="flex items-start gap-2 w-full h-fit px-2">
+        <div className="h-fit grow flex flex-col items-center justify-center gap-2">
+          <div className="h-fit py-3 w-full flex flex-col items-center justify-center gap-2">
             <AnimatePresence>
               {loggedIn && (
                 <>
                   <div className="w-fit h-fit flex items-center justify-center gap-3">
-                    <div className="h-[5.5rem] w-[5.5rem] flex items-center justify-center">
+                    <div className="h-oauthAvatarSize w-oauthAvatarSize flex items-center justify-center">
                       <span className="icon-[logos--google-drive] w-[80%] h-[80%]"></span>
                     </div>
-                    <div className="h-[5.5rem] w-[5.5rem] flex items-center justify-center">
+                    <div className="h-oauthAvatarSize w-oauthAvatarSize flex items-center justify-center">
                       <Avatar
                         src={userProfile?.picture ?? ""}
                         size="90%"
@@ -58,7 +58,7 @@ export const OauthComponent = ({}) => {
               )}
               {!loggedIn && (
                 <>
-                  <div className="h-[5.5rem] w-[5.5rem] flex items-center justify-center">
+                  <div className="h-oauthAvatarSize w-oauthAvatarSize flex items-center justify-center">
                     <Avatar src={""} size="85%" name={"default"} />
                   </div>
                   <span className="w-full text-center">Not logged in</span>
@@ -68,7 +68,7 @@ export const OauthComponent = ({}) => {
           </div>
         </div>
 
-        <div className="h-fit py-2 w-1/2 flex flex-col gap-2">
+        <div className="h-fit py-2 grow flex flex-col gap-2">
           {" "}
           <AnimatePresence>
             {!loggedIn && (
@@ -106,11 +106,17 @@ export const OauthComponent = ({}) => {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `100%` }}
                 exit={{ opacity: 0, width: 0 }}
-                style={{
-                  height: `3rem`,
-                }}
+                className="h-full flex flex-col justify-end items-start"
               >
-                <GrainyElementButton
+                <button
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                  className="p-2 flex w-fit items-center gap-2 text-appLayoutText border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 hover:bg-appLayoutInverseHover transition-colors duration-200">
+                  <span className="icon-[ion--exit-outline]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+                  Log out of Google Drive
+                </button>
+                {/* <GrainyElementButton
                   gradientSize={100}
                   gradientSizeY={10}
                   onClick={() => {
@@ -122,13 +128,10 @@ export const OauthComponent = ({}) => {
                     {" "}
                     Log out of Google Drive
                   </span>
-                  <span className="icon-[ion--exit-outline] w-[2rem] h-[2rem]"></span>
-                </GrainyElementButton>
+                </GrainyElementButton> */}
               </motion.div>
             )}
           </AnimatePresence>
-          <div className="h-[3rem] w-full"></div>
-          <div className="h-[3rem] w-full"></div>
         </div>
       </section>
     </ListShell>
