@@ -78,7 +78,7 @@ class DriveManager {
 
             // 5. Check if there are actual changes
             if (!this.areStateVectorsEqual(cloudVector, localVector)) {
-                console.log("CHANGES DETECTED FOR, UPLOADING!: ", docId);
+                console.log("CHANGES DETECTED FOR UPLOADING!: ", docId);
                 const localDiff = Y.encodeStateAsUpdate(ydoc, cloudVector);
                 await this.uploadUpdate(folderId, clientId, localDiff);
             } else {
