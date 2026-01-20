@@ -26,7 +26,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
     if (!editor) return;
 
     const editorContainer = document.getElementById("EditableContainer");
-    const paperContent = document.getElementById("PaperEditorContent");
+    const paperContent = document.querySelector("#PaperEditorContent > div.tiptap.ProseMirror")
 
     if (!editorContainer || !paperContent) return;
 
@@ -181,7 +181,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
   };
 
   return (
-    <div className="w-fit h-full flex flex-col absolute top-1 right-1 items-center">
+    <div className="w-fit h-full flex flex-col absolute top-0 right-0 items-center">
       <div className="h-fit w-fit flex z-[100]">
         {/* Trigger Button */}
         <button
@@ -201,7 +201,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
 
       <div
         ref={overlayRef}
-        className={`grow w-[30px] z-[90] pointer-events-none
+        className={`grow min-h-0 basis-0 w-[30px] z-[90] pointer-events-none
                     transition-opacity duration-300 opacity-100`}
       >
         {/* Minimap track */}
@@ -212,7 +212,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
           {/* Virtual scroll thumb */}
           {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
             <motion.div
-              className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin z-[99] bg-appLayoutHighlight/20 rounded-xl hover:bg-appLayoutHighlight/30 transition-colors cursor-grab active:cursor-grabbing"
+              className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin min-h-5 z-[99] bg-appLayoutHighlight/20 rounded-xl hover:bg-appLayoutHighlight/30 transition-colors cursor-grab active:cursor-grabbing"
               style={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
                 height: `${(viewportHeight / documentHeight) * containerHeight

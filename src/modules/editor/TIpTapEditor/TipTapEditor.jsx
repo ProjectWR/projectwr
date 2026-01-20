@@ -915,7 +915,7 @@ const TiptapEditor = ({
             spellCheck={false}
             editor={editor}
             id="PaperEditorContent"
-            className={`h-full w-full grow flex justify-center outline-none focus:outline-none z-1 transition-all duration-200`}
+            className={`h-fit w-full grow flex justify-center outline-none focus:outline-none z-1 transition-all duration-200`}
           />
         </div>
         {editor && (
