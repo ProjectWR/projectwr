@@ -1,6 +1,6 @@
 import { appStore } from "../../app/stores/appStore";
 
-export const StatisticsPanel = ({ editor, toolbarPreferences }) => {
+export const StatisticsPanel = ({ mode, editor, toolbarPreferences }) => {
 
   const statsPinned = appStore((state) => state.statsPinned);
   const setStatsPinned = appStore((state) => state.setStatsPinned);
@@ -34,9 +34,9 @@ export const StatisticsPanel = ({ editor, toolbarPreferences }) => {
         {statsPinned && (
           <div className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted flex gap-3 items-end pl-2 pb-1 leading-none">
             <span>Words</span>
-            <span>{editor.storage.characterCount.words()}</span>
+            <span>{mode == 'editPaper' ? editor.storage.characterCount.words() : ''} {mode == 'previewTemplate' ? '8987998' : ''}</span>
             <span className="ml-2">Characters</span>
-            <span>{editor.storage.characterCount.characters()}</span>
+            <span>{mode == 'editPaper' ? editor.storage.characterCount.characters() : ''} {mode == 'previewTemplate' ? '81987998' : ''}</span>
           </div>
 
 

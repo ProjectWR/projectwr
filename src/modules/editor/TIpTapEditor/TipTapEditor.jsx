@@ -795,13 +795,13 @@ const TiptapEditor = ({
               id="EditorTopPanelsContainer"
               className="absolute top-0 left-0 -translate-y-full w-full z-[3] h-[20rem] flex gap-1 justify-center items-center"
             >
-              <SearchReplacePanel
+              {mode == 'editPaper' && <SearchReplacePanel
                 visible={isSearchReplacePanelAwake}
                 refreshSearchReplacePanel={refreshSearchReplacePanel}
                 keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
                 editor={editor}
                 toolbarPreferences={toolbarPreferences}
-              />
+              />}
             </div>
 
             <div
@@ -926,6 +926,7 @@ const TiptapEditor = ({
         )}
         {editor && (
           <StatisticsPanel
+            mode={mode}
             editor={editor}
             toolbarPreferences={toolbarPreferences}
           />

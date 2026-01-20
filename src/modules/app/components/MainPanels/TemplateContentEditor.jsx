@@ -11,6 +11,8 @@ import {
 import { DropdownMenu } from "radix-ui";
 import { useFonts } from "../../hooks/useFonts";
 import { useImages } from "../../hooks/useImages";
+import { ScrollArea } from "@mantine/core";
+import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 
 const FontInput = ({ value, onChange }) => {
   const fonts = useFonts();
@@ -18,13 +20,13 @@ const FontInput = ({ value, onChange }) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <button style={{fontFamily: value}} className="w-fit text-templateDetailsPanelPreferenceInputFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+        <button style={{ fontFamily: value }} className="w-templateDetailsPreferenceInputWidth border-appLayoutBorder border py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
           {value || "Select Font"}
         </button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content
+      {fonts && fonts.length > 0 && <DropdownMenu.Content
         style={{ opacity: 1 }}
-        className="contextMenuContent z-[1100] max-h-  overflow-y-scroll"
+        className="contextMenuContent z-[1100] max-h-detailsPanelDescriptionInputHeight overflow-y-scroll"
         sideOffset={5}
         align="center"
       >
@@ -39,7 +41,7 @@ const FontInput = ({ value, onChange }) => {
             </span>
           </DropdownMenu.Item>
         ))}
-      </DropdownMenu.Content>
+      </DropdownMenu.Content>}
     </DropdownMenu.Root>
   );
 };
@@ -50,14 +52,14 @@ const ImageInput = ({ value, onChange }) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <button className="w-fit text-templateDetailsPanelPreferenceInputFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+        <button className="w-templateDetailsPreferenceInputWidth border border-appLayoutBorder py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
           {value ? (
             <div className="flex items-center gap-2">
               <img src={value} alt="Selected" className="w-4 h-4 object-cover rounded" />
               <span>Selected Image</span>
             </div>
           ) : (
-            "Select Image"
+            "Select"
           )}
         </button>
       </DropdownMenu.Trigger>
@@ -147,7 +149,7 @@ const BorderImageSliceInput = ({ value, onChange, borderImageSource }) => {
       <div ref={headerRef} className="w-full h-full rounded-lg">
         <button
           onClick={() => setIsOpened(!isOpened)}
-          className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+          className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
         >
           {value || "Edit Slice"}
         </button>
@@ -290,11 +292,10 @@ const NumberOrPercentInput = ({ value, onChange }) => {
           setActive("px");
         }}
         placeholder="px"
-        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-[4rem] px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
-          active !== "px"
-            ? "bg-appBackgroundAccent text-appLayoutBorder"
-            : "bg-appBackground"
-        }`}
+        className={`appearance-none text-libraryDirectoryBookNodeFontSize h-full mr-auto w-[4rem] px-3 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${active !== "px"
+          ? "bg-appBackgroundAccent text-appLayoutBorder"
+          : "bg-appBackground"
+          }`}
       />
       <input
         id="percent-input"
@@ -307,11 +308,10 @@ const NumberOrPercentInput = ({ value, onChange }) => {
           setActive("%");
         }}
         placeholder="%"
-        className={`appearance-none text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth px-3 pb-1 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${
-          active !== "%"
-            ? "bg-appBackgroundAccent text-appLayoutBorder"
-            : "bg-appBackground"
-        }`}
+        className={`appearance-none text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth px-3 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${active !== "%"
+          ? "bg-appBackgroundAccent text-appLayoutBorder"
+          : "bg-appBackground"
+          }`}
       />
     </div>
   );
@@ -371,23 +371,20 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <label
-                  htmlFor={`input-${key}`}
-                  className="text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
-
-                <div className="h-px grow bg-appLayoutBorder"></div>
-
                 <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
-                  <div className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
+                  <div className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
                     <ColorPicker
                       color={data[key]}
                       onChangeComplete={(color) => handleChange(key, color)}
                     />
                   </div>
                 </div>
+                <label
+                  htmlFor={`input-${key}`}
+                  className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
               </div>
             </div>
           );
@@ -397,27 +394,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
 
-                <div className="h-px grow bg-appLayoutBorder"></div>
-
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
 
                 <div className="w-fit h-full">
                   <input
@@ -425,9 +402,28 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                     type={fieldConfig.type === "number" ? "number" : "text"}
                     value={data[key]}
                     onChange={(e) => handleChange(key, e.target.value)}
-                    className="text-templateDetailsPanelPreferenceInputFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 pb-1 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+                    className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
                   />
                 </div>
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
               </div>
             </div>
           );
@@ -438,26 +434,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
 
-                <div className="h-px grow bg-appLayoutBorder"></div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
 
                 <div className="w-fit h-full flex items-center">
                   <NumberOrPercentInput
@@ -465,6 +442,25 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                     onChange={(val) => handleChange(key, val)}
                   />
                 </div>
+
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           );
@@ -474,26 +470,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
 
-                <div className="h-px grow bg-appLayoutBorder"></div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
 
                 <div className="w-fit h-full flex items-center">
                   <FontInput
@@ -501,6 +478,26 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                     onChange={(val) => handleChange(key, val)}
                   />
                 </div>
+
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           );
@@ -510,26 +507,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
 
-                <div className="h-px grow bg-appLayoutBorder"></div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
 
                 <div className="w-fit h-full flex items-center">
                   <ImageInput
@@ -537,6 +515,26 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                     onChange={(val) => handleChange(key, val)}
                   />
                 </div>
+
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           );
@@ -546,27 +544,6 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-templateDetailsPanelPreferenceFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
-
-                <div className="h-px grow bg-appLayoutBorder"></div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 pb-1 text-sm mt-1 text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-
                 <div className="w-fit h-full flex items-center">
                   <BorderImageSliceInput
                     value={data[key]}
@@ -574,6 +551,26 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                     borderImageSource={data.borderImageSource}
                   />
                 </div>
+
+                <label
+                  htmlFor={`input-${key}`}
+                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                >
+                  {fieldConfig.label}
+                </label>
+
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ width: 0 }}
+                      animate={{ width: "fit-content" }}
+                      exit={{ width: 0 }}
+                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           );
@@ -724,12 +721,12 @@ const TemplateContentEditor = ({
   if (content === null || content === undefined) return null;
 
   return (
-    <div id="TCEContainer" className="w-full  flex flex-col relative">
+    <div id="TCEContainer" className="w-full h-full p-3 flex flex-col relative">
       <div
         id="TCEHeader"
         className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-1"
       >
-        <div className="TCEDevice bg-transparent z-[51] backdrop-blur-xl shadow-md shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-transparent z-[51] backdrop-blur-xl shadow-sm shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Desktop
           </div>
@@ -768,7 +765,7 @@ const TemplateContentEditor = ({
             </button>
           </div>
         </div>
-        <div className="TCEDevice bg-transparent backdrop-blur-xl shadow-md shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-transparent backdrop-blur-xl shadow-sm shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Mobile
           </div>
@@ -807,19 +804,44 @@ const TemplateContentEditor = ({
         </div>
       </div>
 
-      <div id="TCEBody w-full h-fit mt-1 z-0">
-        <AnimatePresence mode="wait">
-          <motion.div
+      <div className="flex gap-3 w-full grow min-h-0 ">
+        <ScrollArea
+          overscrollBehavior="none"
+          scrollbars="y"
+          type="hover"
+          classNames={{
+            root: `w-fit h-full max-h-full p-0 border border-appLayoutBorder rounded-lg shadow-sm shadow-appLayoutGentleShadow`,
+            scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidth opacity-70`,
+            thumb: `bg-appLayoutBorder rounded-l-full hover:bg-appLayoutInverseHover! z-[50]`,
+            content:
+              "h-full max-h-full w-fit flex flex-col items-center py-4 justify-start gap-3",
+          }}
+        >
+          <div id="TCEBody w-fit h-fit mt-1 z-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={groupSelected}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.1 }}
+                className="grid grid-cols-1 py-1 gap-y-2 gap-x-0"
+              >
+                {returnGroupEditor()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+
+        <div className="h-full grow basis-0 min-w-0 border border-appLayoutBorder rounded-lg overflow-hidden shadow-sm shadow-appLayoutGentleShadow">
+          <TipTapEditor
             key={groupSelected}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.1 }}
-            className="grid grid-cols-1 py-1 gap-y-2 gap-x-0"
-          >
-            {returnGroupEditor()}
-          </motion.div>
-        </AnimatePresence>
+            setHeaderOpened={true}
+            mode={"previewTemplate"}
+            preferences={content.desktopDefaultPreferences}
+          />
+        </div>
+
       </div>
     </div>
   );
@@ -886,7 +908,7 @@ const ColorPicker = ({ color, onChangeComplete }) => {
             }}
             className="absolute z-99 bg-appBackground text-appLayoutText rounded-lg shadow-md h-fit w-fit"
           >
-          
+
           </motion.div>
         )}
       </AnimatePresence>

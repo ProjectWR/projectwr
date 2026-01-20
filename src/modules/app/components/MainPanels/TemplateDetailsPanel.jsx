@@ -152,7 +152,6 @@ const TemplateDetailsPanel = ({ templateId }) => {
       <DetailsPanelDivider />
 
       <DetailsPanelBody>
-        <DetailsPanelProperties >
           {templateFromFile && newTemplate && (
             <TemplateContentEditor
               newTemplate={newTemplate ? newTemplate : null}
@@ -160,7 +159,6 @@ const TemplateDetailsPanel = ({ templateId }) => {
               setTemplateValid={setTemplateValid}
             />
           )}
-        </DetailsPanelProperties>
       </DetailsPanelBody>
     </DetailsPanel>
   );
