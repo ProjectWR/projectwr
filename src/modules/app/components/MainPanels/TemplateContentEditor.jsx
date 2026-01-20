@@ -13,6 +13,9 @@ import { useFonts } from "../../hooks/useFonts";
 import { useImages } from "../../hooks/useImages";
 import { ScrollArea } from "@mantine/core";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
+import { Sketch } from '@uiw/react-color';
+import fontManager from "../../lib/font";
+import imageManager from "../../lib/image";
 
 const FontInput = ({ value, onChange }) => {
   const fonts = useFonts();
@@ -24,11 +27,11 @@ const FontInput = ({ value, onChange }) => {
           {value || "Select Font"}
         </button>
       </DropdownMenu.Trigger>
-      {fonts && fonts.length > 0 && <DropdownMenu.Content
+      <DropdownMenu.Content
         style={{ opacity: 1 }}
-        className="contextMenuContent z-[1100] max-h-detailsPanelDescriptionInputHeight overflow-y-scroll"
-        sideOffset={5}
-        align="center"
+        className="contextMenuContent z-[1100] max-h-detailsPanelDescriptionInputHeight overflow-y-auto"
+        align="start"
+
       >
         {fonts.map((font, index) => (
           <DropdownMenu.Item
@@ -41,7 +44,13 @@ const FontInput = ({ value, onChange }) => {
             </span>
           </DropdownMenu.Item>
         ))}
-      </DropdownMenu.Content>}
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => fontManager.addFont()}
+        >
+          <span>Add Font</span>
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
 };
@@ -66,8 +75,7 @@ const ImageInput = ({ value, onChange }) => {
       <DropdownMenu.Content
         style={{ opacity: 1 }}
         className="contextMenuContent z-[1100] max-h-60 overflow-y-scroll"
-        sideOffset={5}
-        align="center"
+        align="start"
       >
         {images.map((image, index) => (
           <DropdownMenu.Item
@@ -81,6 +89,12 @@ const ImageInput = ({ value, onChange }) => {
             </div>
           </DropdownMenu.Item>
         ))}
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => imageManager.addImage()}
+        >
+          <span>Add Image</span>
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
@@ -356,8 +370,8 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
             <div key={key} className="flex items-center justify-center">
               <div className="px-4 w-full flex flex-col gap-1">
                 <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
-                    <div className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
+                  <div className="w-fit bg-appBackground h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-lg">
+                    <div className="text-libraryDirectoryBookNodeFontSize  h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
                       <ColorPicker
                         color={data[key]}
                         onChangeComplete={(color) => handleChange(key, color)}
@@ -855,8 +869,6 @@ const TemplateContentEditor = ({
 export default TemplateContentEditor;
 
 const ColorPicker = ({ color, onChangeComplete }) => {
-  const { deviceType } = useDeviceType();
-
   const [currentColor, setCurrentColor] = useState(color);
   const [isOpened, setIsOpened] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
@@ -868,26 +880,32 @@ const ColorPicker = ({ color, onChangeComplete }) => {
   });
 
   useEffect(() => {
+    setCurrentColor(color);
+  }, [color]);
+
+  useEffect(() => {
     if (isOpened && headerRef.current && dropdownRef.current) {
       const headerRect = headerRef.current.getBoundingClientRect();
       const dropdownHeight = dropdownRef.current.offsetHeight;
       const dropdownWidth = dropdownRef.current.offsetWidth;
       const viewportHeight = window.innerHeight;
 
-      console.log(
-        "Header rect: ",
-        headerRect.top,
-        headerRect.bottom,
-        headerRect.left,
-        headerRect.right
-      );
-
       let top = headerRef.current.offsetHeight;
       let left = 0;
 
-      setDropdownPosition({ top: top, left: left });
+      // Adjust position if dropdown would go off-screen
+      if (headerRect.bottom + dropdownHeight > viewportHeight) {
+        top = -dropdownHeight;
+      }
+
+      setDropdownPosition({ top, left });
     }
   }, [isOpened]);
+
+  const handleColorChange = (color) => {
+    setCurrentColor(color.hex);
+    onChangeComplete(color.hex);
+  };
 
   return (
     <div className="relative grow h-full rounded-lg" ref={innerRef}>
@@ -911,9 +929,12 @@ const ColorPicker = ({ color, onChangeComplete }) => {
               top: dropdownPosition.top,
               left: dropdownPosition.left,
             }}
-            className="absolute z-99 bg-appBackground text-appLayoutText rounded-lg shadow-md h-fit w-fit"
+            className="absolute z-[1200] bg-appBackground text-appLayoutText rounded-lg shadow-lg"
           >
-
+            <Sketch
+              color={currentColor}
+              onChange={handleColorChange}
+            />
           </motion.div>
         )}
       </AnimatePresence>
