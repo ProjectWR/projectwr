@@ -338,15 +338,15 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
   const validateField = (key, value, fieldConfig) => {
     let error = "";
     if (fieldConfig.type === "numberOrPercent") {
-      const numberValue = String(value).replace(/(px|%)/, "");
-      if (!value || numberValue <= 0) {
-        error = "Must be a valid number";
+      const numberValue = parseFloat(String(value).replace(/(px|%)/, ""));
+      if (isNaN(numberValue) || numberValue < fieldConfig.min || numberValue > fieldConfig.max) {
+        error = `Must be between ${fieldConfig.min} and ${fieldConfig.max}`;
       }
     }
 
     if (fieldConfig.type === "number") {
-      if (value === "" || isNaN(Number(value)) || Number(value) <= 0) {
-        error = "Must be a valid number";
+      if (value === "" || isNaN(Number(value)) || Number(value) < fieldConfig.min || Number(value) > fieldConfig.max) {
+        error = `Must be between ${fieldConfig.min} and ${fieldConfig.max}`;
       }
     }
     if (fieldConfig.type === "color") {
@@ -370,21 +370,35 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
         if (fieldConfig.type === "color") {
           return (
             <div key={key} className="flex items-center justify-center">
-              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
-                  <div className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
-                    <ColorPicker
-                      color={data[key]}
-                      onChangeComplete={(color) => handleChange(key, color)}
-                    />
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-r-lg">
+                    <div className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
+                      <ColorPicker
+                        color={data[key]}
+                        onChangeComplete={(color) => handleChange(key, color)}
+                      />
+                    </div>
                   </div>
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
                 </div>
-                <label
-                  htmlFor={`input-${key}`}
-                  className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           );
@@ -393,37 +407,38 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
         if (fieldConfig.type === "number" || fieldConfig.type === "text") {
           return (
             <div key={key} className="flex items-center justify-center">
-              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-
-
-                <div className="w-fit h-full">
-                  <input
-                    id={`input-${key}`}
-                    type={fieldConfig.type === "number" ? "number" : "text"}
-                    value={data[key]}
-                    onChange={(e) => handleChange(key, e.target.value)}
-                    className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
-                  />
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full">
+                    <input
+                      id={`input-${key}`}
+                      type={fieldConfig.type === "number" ? "number" : "text"}
+                      value={data[key]}
+                      onChange={(e) => handleChange(key, e.target.value)}
+                      min={fieldConfig.type === "number" ? fieldConfig.min : undefined}
+                      max={fieldConfig.type === "number" ? fieldConfig.max : undefined}
+                      className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+                    />
+                  </div>
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
                 </div>
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
                 <AnimatePresence>
                   {errors[key] && (
                     <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
                     >
                       {errors[key]}
                     </motion.p>
                   )}
                 </AnimatePresence>
-
               </div>
             </div>
           );
@@ -433,29 +448,29 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
         if (fieldConfig.type === "numberOrPercent") {
           return (
             <div key={key} className="flex items-center justify-center">
-              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center">
+                    <NumberOrPercentInput
+                      value={data[key]}
+                      onChange={(val) => handleChange(key, val)}
+                    />
+                  </div>
 
-
-                <div className="w-fit h-full flex items-center">
-                  <NumberOrPercentInput
-                    value={data[key]}
-                    onChange={(val) => handleChange(key, val)}
-                  />
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
                 </div>
-
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
                 <AnimatePresence>
                   {errors[key] && (
                     <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
                     >
                       {errors[key]}
                     </motion.p>
@@ -469,30 +484,29 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
         if (fieldConfig.type === "font") {
           return (
             <div key={key} className="flex items-center justify-center">
-              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center">
+                    <FontInput
+                      value={data[key]}
+                      onChange={(val) => handleChange(key, val)}
+                    />
+                  </div>
 
-
-                <div className="w-fit h-full flex items-center">
-                  <FontInput
-                    value={data[key]}
-                    onChange={(val) => handleChange(key, val)}
-                  />
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
                 </div>
-
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
-
                 <AnimatePresence>
                   {errors[key] && (
                     <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
                     >
                       {errors[key]}
                     </motion.p>
@@ -506,30 +520,29 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
         if (fieldConfig.type === "image") {
           return (
             <div key={key} className="flex items-center justify-center">
-              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center">
+                    <ImageInput
+                      value={data[key]}
+                      onChange={(val) => handleChange(key, val)}
+                    />
+                  </div>
 
-
-                <div className="w-fit h-full flex items-center">
-                  <ImageInput
-                    value={data[key]}
-                    onChange={(val) => handleChange(key, val)}
-                  />
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
                 </div>
-
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
-
                 <AnimatePresence>
                   {errors[key] && (
                     <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
                     >
                       {errors[key]}
                     </motion.p>
@@ -543,29 +556,30 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
         if (fieldConfig.type === "borderImageSlice") {
           return (
             <div key={key} className="flex items-center justify-center">
-              <div className="h-templateDetailsPreferenceInputHeight px-4 w-full flex gap-2 flex-row items-center">
-                <div className="w-fit h-full flex items-center">
-                  <BorderImageSliceInput
-                    value={data[key]}
-                    onChange={(val) => handleChange(key, val)}
-                    borderImageSource={data.borderImageSource}
-                  />
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center">
+                    <BorderImageSliceInput
+                      value={data[key]}
+                      onChange={(val) => handleChange(key, val)}
+                      borderImageSource={data.borderImageSource}
+                    />
+                  </div>
+
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
                 </div>
-
-                <label
-                  htmlFor={`input-${key}`}
-                  className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                >
-                  {fieldConfig.label}
-                </label>
-
                 <AnimatePresence>
                   {errors[key] && (
                     <motion.p
-                      initial={{ width: 0 }}
-                      animate={{ width: "fit-content" }}
-                      exit={{ width: 0 }}
-                      className="text-red-500 text-sm mt-1 text-nowrap overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
                     >
                       {errors[key]}
                     </motion.p>
