@@ -721,7 +721,7 @@ const TemplateContentEditor = ({
   if (content === null || content === undefined) return null;
 
   return (
-    <div id="TCEContainer" className="w-full h-full p-3 flex flex-col relative">
+    <div id="TCEContainer" className="w-full h-full p-2 flex flex-col relative">
       <div
         id="TCEHeader"
         className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-1"
@@ -804,7 +804,7 @@ const TemplateContentEditor = ({
         </div>
       </div>
 
-      <div className="flex gap-3 w-full grow min-h-0 ">
+      <div className="flex gap-2 w-full grow min-h-0 ">
         <ScrollArea
           overscrollBehavior="none"
           scrollbars="y"
