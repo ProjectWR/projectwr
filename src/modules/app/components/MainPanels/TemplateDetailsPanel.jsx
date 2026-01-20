@@ -15,7 +15,7 @@ import TemplateContentEditor from "./TemplateContentEditor";
 import DetailsPanel from "../LayoutComponents/DetailsPanel/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
-import { DetailsPanelBody } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
+import { DetailsPanelBody, DetailsPanelProperties } from "../LayoutComponents/DetailsPanel/DetailsPanelBody";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import useMainPanel from "../../hooks/useMainPanel";
 import { DetailsPanelButtonOnClick } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
@@ -152,22 +152,15 @@ const TemplateDetailsPanel = ({ templateId }) => {
       <DetailsPanelDivider />
 
       <DetailsPanelBody>
-        <div className="w-full grow min-h-0 border border-appLayoutBorder bg-appBackgroundAccent rounded-md">
-          <div
-            className="h-full w-full min-h-0 pr-1 py-4 overflow-y-scroll"
-            style={{
-              paddingLeft: `calc(0.25rem + var(--scrollbarWidth))`,
-            }}
-          >
-            {templateFromFile && newTemplate && (
-              <TemplateContentEditor
-                newTemplate={newTemplate ? newTemplate : null}
-                setNewTemplate={setNewTemplate}
-                setTemplateValid={setTemplateValid}
-              />
-            )}
-          </div>
-        </div>
+        <DetailsPanelProperties >
+          {templateFromFile && newTemplate && (
+            <TemplateContentEditor
+              newTemplate={newTemplate ? newTemplate : null}
+              setNewTemplate={setNewTemplate}
+              setTemplateValid={setTemplateValid}
+            />
+          )}
+        </DetailsPanelProperties>
       </DetailsPanelBody>
     </DetailsPanel>
   );

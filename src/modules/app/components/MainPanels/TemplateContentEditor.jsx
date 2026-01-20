@@ -729,7 +729,7 @@ const TemplateContentEditor = ({
         id="TCEHeader"
         className="w-full h-fit min-h-fit flex flex-col md:flex-row gap-2 mb-2 sticky top-0 z-1"
       >
-        <div className="TCEDevice bg-transparent backdrop-blur-xl shadow-md shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
+        <div className="TCEDevice bg-transparent z-[51] backdrop-blur-xl shadow-md shadow-appLayoutGentleShadow grow basis-0 h-fit flex flex-col items-center justify-center rounded-lg border border-appLayoutBorder">
           <div className="TCEDevice h-fit py-1 px-2 w-full flex items-center justify-start text-md text-appLayoutTextMuted">
             Desktop
           </div>
