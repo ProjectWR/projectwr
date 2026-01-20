@@ -253,66 +253,43 @@ const BorderImageSliceInput = ({ value, onChange, borderImageSource }) => {
 };
 
 // Add this helper component (place it at the top of GroupEditor, before the return statement)
-const NumberOrPercentInput = ({ value, onChange }) => {
-  // Determine active type based on value suffix; default to "px"
-  const initialActive =
-    typeof value === "string" && value.trim().endsWith("%") ? "%" : "px";
-  // Remove unit from value if present
+const NumberOrPercentInput = ({ value, onChange, fieldConfig }) => {
+  const initialUnit = typeof value === "string" && value.trim().endsWith("%") ? "%" : "px";
   const extractNumber = (val) => String(val).replace(/(px|%)/, "");
 
-  const [active, setActive] = useState(initialActive);
-  const [pxValue, setPxValue] = useState(
-    initialActive === "px" ? extractNumber(value) : ""
-  );
-  const [percentValue, setPercentValue] = useState(
-    initialActive === "%" ? extractNumber(value) : ""
-  );
+  const [unit, setUnit] = useState(initialUnit);
+  const [numberValue, setNumberValue] = useState(extractNumber(value));
 
-  const handlePxChange = (e) => {
-    setActive("px");
-    setPxValue(e.target.value);
-    onChange(e.target.value + "px");
+  const min = unit === "%" ? 10 : fieldConfig.min;
+  const max = unit === "%" ? 100 : fieldConfig.max;
+
+  const handleNumberChange = (e) => {
+    setNumberValue(e.target.value);
+    onChange(e.target.value + unit);
   };
 
-  const handlePercentChange = (e) => {
-    setActive("%");
-    setPercentValue(e.target.value);
-    onChange(e.target.value + "%");
+  const toggleUnit = () => {
+    const newUnit = unit === "px" ? "%" : "px";
+    setUnit(newUnit);
+    onChange(numberValue + newUnit);
   };
 
   return (
-    <div className="h-full flex gap-2 items-center ">
+    <div className="h-full flex gap-2 items-center">
       <input
-        id="px-input"
         type="number"
-        value={pxValue}
-        onChange={handlePxChange}
-        min="0"
-        onClick={() => {
-          setActive("px");
-        }}
-        placeholder="px"
-        className={`appearance-none text-libraryDirectoryBookNodeFontSize h-full mr-auto w-[4rem] px-3 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${active !== "px"
-          ? "bg-appBackgroundAccent text-appLayoutBorder"
-          : "bg-appBackground"
-          }`}
+        value={numberValue}
+        onChange={handleNumberChange}
+        min={min}
+        max={max}
+        className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
       />
-      <input
-        id="percent-input"
-        type="number"
-        value={percentValue}
-        onChange={handlePercentChange}
-        min="0"
-        max="100"
-        onClick={() => {
-          setActive("%");
-        }}
-        placeholder="%"
-        className={`appearance-none text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth px-3 focus:outline-none transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder ${active !== "%"
-          ? "bg-appBackgroundAccent text-appLayoutBorder"
-          : "bg-appBackground"
-          }`}
-      />
+      <button
+        onClick={toggleUnit}
+        className="text-libraryDirectoryBookNodeFontSize h-full px-2 bg-appBackground border border-appLayoutBorder rounded-lg hover:bg-appLayoutHover"
+      >
+        {unit}
+      </button>
     </div>
   );
 };
@@ -339,8 +316,15 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
     let error = "";
     if (fieldConfig.type === "numberOrPercent") {
       const numberValue = parseFloat(String(value).replace(/(px|%)/, ""));
-      if (isNaN(numberValue) || numberValue < fieldConfig.min || numberValue > fieldConfig.max) {
-        error = `Must be between ${fieldConfig.min} and ${fieldConfig.max}`;
+      const isPercent = String(value).trim().endsWith("%");
+      if (isPercent) {
+        if (isNaN(numberValue) || numberValue < 10 || numberValue > 100) {
+          error = `Must be between 10% and 100%`;
+        }
+      } else {
+        if (isNaN(numberValue) || numberValue < fieldConfig.min || numberValue > fieldConfig.max) {
+          error = `Must be between ${fieldConfig.min} and ${fieldConfig.max}`;
+        }
       }
     }
 
@@ -408,7 +392,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                <div className="h-templateDetailsPreferenceInputHeight flex flex-row items-center">
                   <div className="w-fit h-full">
                     <input
                       id={`input-${key}`}
@@ -420,9 +404,15 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                       className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
                     />
                   </div>
+
+                  <span
+                    className="text-libraryDirectoryBookNodeFontSize h-full ml-1 text-appLayoutTextMuted flex items-center bg-appBackground  rounded-lg"
+                  >
+                    px
+                  </span>
                   <label
                     htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                    className="px-0 text-libraryDirectoryBookNodeFontSize ml-2 w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
                   >
                     {fieldConfig.label}
                   </label>
@@ -454,6 +444,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                     <NumberOrPercentInput
                       value={data[key]}
                       onChange={(val) => handleChange(key, val)}
+                      fieldConfig={fieldConfig}
                     />
                   </div>
 
