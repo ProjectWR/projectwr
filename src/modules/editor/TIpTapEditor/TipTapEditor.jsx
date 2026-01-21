@@ -139,10 +139,12 @@ const TiptapEditor = ({
     paddingRight, // Updated from marginRight
     paddingBottom, // Updated from marginBottom
     font,
+    fontColor,
     fontSize,
     lineHeight,
     marginBottom,
     backgroundColor,
+    backgroundImage,
     paperBorderWidth,
     paperColor,
     paperBorderColor,
@@ -558,6 +560,10 @@ const TiptapEditor = ({
 
           #EditableContainer {
             background-color: ${backgroundColor};
+            ${backgroundImage ? `background-image: url(${backgroundImage});` : ''}
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             padding-top: calc(${gapTop}px * var(--uiScale));
           }
 
@@ -585,16 +591,15 @@ const TiptapEditor = ({
           }
 
           #PaperEditorContent > div.tiptap.ProseMirror {
-            width: ${width};
+            width: calc(max(500px, ${width}));
             max-width: 100%;
             background-color: ${paperColor};
-            border-top-width: ${paperBorderWidth}px;
-            border-right-width: ${paperBorderWidth}px;
+            border-top-width: ${paperBorderWidth}px!important;
+            border-right-width: ${paperBorderWidth}px!important;
             border-bottom-width: 0;
             border-left-width: ${paperBorderWidth}px;
-            border-top-color: ${paperBorderColor};
-            border-left-color: ${paperBorderColor};
-            border-right-color: ${paperBorderColor};
+            border-color: red!important;
+            border-style: solid!important;
             border-top-right-radius: ${roundRadius}px;
             border-top-left-radius: ${roundRadius}px;
             box-shadow: 0px 0px 0rem 0;
@@ -627,6 +632,7 @@ const TiptapEditor = ({
             line-height: calc(${h1LineHeight}px * var(--uiScale));
             margin-bottom: calc(${h1MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
+            color: ${fontColor};
           }
 
           .EditorStyles h2 {
@@ -634,6 +640,7 @@ const TiptapEditor = ({
             line-height: calc(${h2LineHeight}px * var(--uiScale));
             margin-bottom: calc(${h2MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
+            color: ${fontColor};
           }
 
           .EditorStyles h3 {
@@ -641,6 +648,7 @@ const TiptapEditor = ({
             line-height: calc(${h3LineHeight}px * var(--uiScale));
             margin-bottom: calc(${h3MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
+            color: ${fontColor};
           }
 
           .EditorStyles h4 {
@@ -648,6 +656,7 @@ const TiptapEditor = ({
             line-height: calc(${h4LineHeight}px * var(--uiScale));
             margin-bottom: calc(${h4MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
+            color: ${fontColor};
           }
 
           .EditorStyles h5 {
@@ -655,6 +664,7 @@ const TiptapEditor = ({
             line-height: calc(${h5LineHeight}px * var(--uiScale));
             margin-bottom: calc(${h5MarginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
+            color: ${fontColor};
           }
 
           .EditorStyles p {
@@ -662,12 +672,14 @@ const TiptapEditor = ({
             line-height: calc(${lineHeight}px * var(--uiScale));
             margin-bottom: calc(${marginBottom}px * var(--uiScale));
             font-family: ${font}, serif ;
+            color: ${fontColor};
             margin: 0;
           }
 
           .EditorStyles {
             font-size: calc(${fontSize}px * var(--uiScale));
             line-height: calc(${lineHeight}px * var(--uiScale));
+            color: ${fontColor};
           }
 
           .EditorStyles ol,

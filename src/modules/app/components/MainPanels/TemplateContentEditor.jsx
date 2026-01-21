@@ -46,6 +46,110 @@ const FontInput = ({ value, onChange }) => {
         ))}
         <DropdownMenu.Item
           className="contextMenuItem"
+          onClick={() => onChange("Arial, Helvetica, sans-serif")}
+        >
+          <span style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+            Arial
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Arial Black, Gadget, sans-serif")}
+        >
+          <span style={{ fontFamily: "Arial Black, Gadget, sans-serif" }}>
+            Arial Black
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Comic Sans MS, cursive")}
+        >
+          <span style={{ fontFamily: "Comic Sans MS, cursive" }}>
+            Comic Sans MS
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Courier New, monospace")}
+        >
+          <span style={{ fontFamily: "Courier New, monospace" }}>
+            Courier New
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Georgia, serif")}
+        >
+          <span style={{ fontFamily: "Georgia, serif" }}>
+            Georgia
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Impact, Charcoal, sans-serif")}
+        >
+          <span style={{ fontFamily: "Impact, Charcoal, sans-serif" }}>
+            Impact
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Lucida Console, Monaco, monospace")}
+        >
+          <span style={{ fontFamily: "Lucida Console, Monaco, monospace" }}>
+            Lucida Console
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Lucida Sans Unicode, Lucida Grande, sans-serif")}
+        >
+          <span style={{ fontFamily: "Lucida Sans Unicode, Lucida Grande, sans-serif" }}>
+            Lucida Sans Unicode
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Palatino Linotype, Book Antiqua, Palatino, serif")}
+        >
+          <span style={{ fontFamily: "Palatino Linotype, Book Antiqua, Palatino, serif" }}>
+            Palatino Linotype
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Tahoma, Geneva, sans-serif")}
+        >
+          <span style={{ fontFamily: "Tahoma, Geneva, sans-serif" }}>
+            Tahoma
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Times New Roman, Times, serif")}
+        >
+          <span style={{ fontFamily: "Times New Roman, Times, serif" }}>
+            Times New Roman
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Trebuchet MS, Helvetica, sans-serif")}
+        >
+          <span style={{ fontFamily: "Trebuchet MS, Helvetica, sans-serif" }}>
+            Trebuchet MS
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange("Verdana, Geneva, sans-serif")}
+        >
+          <span style={{ fontFamily: "Verdana, Geneva, sans-serif" }}>
+            Verdana
+          </span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
           onClick={() => fontManager.addFont()}
         >
           <span>Add Font</span>
@@ -89,6 +193,12 @@ const ImageInput = ({ value, onChange }) => {
             </div>
           </DropdownMenu.Item>
         ))}
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange(null)}
+        >
+          <span>Clear Image</span>
+        </DropdownMenu.Item>
         <DropdownMenu.Item
           className="contextMenuItem"
           onClick={() => imageManager.addImage()}
