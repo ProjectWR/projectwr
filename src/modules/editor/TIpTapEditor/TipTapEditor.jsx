@@ -44,8 +44,10 @@ import loremIpsum from "../lorem";
 import ProsemirrorProofreadExtension from "./Extensions/ProsemirrorProofreadExtension";
 import ProsemirrorVirtualCursor from "./Extensions/ProsemirrorVirtualCursorExtension";
 import dictionaryManager from "../../app/lib/dictionary";
+import imageManager from "../../app/lib/image";
 import { wait } from "lib0/promise";
 import { appStore } from "../../app/stores/appStore";
+import { useImages } from "../../app/hooks/useImages";
 import ContextMenuWrapper from "../../app/components/LayoutComponents/ContextMenuWrapper";
 import { Indent } from "./Extensions/indent";
 import suggestion from "./Extensions/MentionExtension/suggestion";
@@ -189,7 +191,35 @@ const TiptapEditor = ({
     borderImageRepeat,
   } = paperPreferences;
 
-  const { dividerColor } = toolbarPreferences;
+  const {
+    dividerColor,
+    borderColor,
+    iconColor,
+    fontColor: toolbarFontColor,
+  } = toolbarPreferences;
+
+  useImages(); // Subscribe to image changes
+
+  // Resolve image IDs to URLs
+  const resolvedBackgroundImage = useMemo(() => {
+    if (!backgroundImage) return null;
+    if (
+      backgroundImage.startsWith("blob:") ||
+      backgroundImage.startsWith("http")
+    )
+      return backgroundImage;
+    return imageManager.getImageUrl(backgroundImage);
+  }, [backgroundImage]);
+
+  const resolvedBorderImageSource = useMemo(() => {
+    if (!borderImageSource) return null;
+    if (
+      borderImageSource.startsWith("blob:") ||
+      borderImageSource.startsWith("http")
+    )
+      return borderImageSource;
+    return imageManager.getImageUrl(borderImageSource);
+  }, [borderImageSource]);
 
   console.log("Editor Preferences: ", editorPreferences);
 
@@ -256,11 +286,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-              .getLibrary(libraryId)
-              ?.getMap("library_props")
-              ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-              ?.item_title;
+                ?.item_title;
 
         return label;
 
@@ -291,11 +321,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-              .getLibrary(libraryId)
-              ?.getMap("library_props")
-              ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-              ?.item_title;
+                ?.item_title;
 
         const elem = document.createElement("span");
 
@@ -560,7 +590,11 @@ const TiptapEditor = ({
 
           #EditableContainer {
             background-color: ${backgroundColor};
-            ${backgroundImage ? `background-image: url(${backgroundImage});` : ''}
+            ${
+              resolvedBackgroundImage
+                ? `background-image: url(${resolvedBackgroundImage});`
+                : ""
+            }
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -568,22 +602,44 @@ const TiptapEditor = ({
           }
 
           #EditableUtilityToolbarWrapper {
-            height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            height: calc(${
+              toolbarPreferences.toolbarHeight
+            }px * var(--uiScale));
           }
 
           #EditableUtilityToolbar {
-            height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
-            min-height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            height: calc(${
+              toolbarPreferences.toolbarHeight
+            }px * var(--uiScale));
+            min-height: calc(${
+              toolbarPreferences.toolbarHeight
+            }px * var(--uiScale));
             background-color: ${toolbarPreferences.backgroundColor};
-            border-color: ${dividerColor};
+            border-color: ${borderColor};
+            color: ${toolbarFontColor};
+          }
+
+          #EditableUtilityToolbar span[class^="icon-"], 
+          #EditableUtilityToolbar span[class*=" icon-"] {
+            background-color: ${iconColor};
           }
 
           #EditableToolbar {
-            height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
-            min-height: calc(${toolbarPreferences.toolbarHeight}px * var(--uiScale));
+            height: calc(${
+              toolbarPreferences.toolbarHeight
+            }px * var(--uiScale));
+            min-height: calc(${
+              toolbarPreferences.toolbarHeight
+            }px * var(--uiScale));
             background-color: ${toolbarPreferences.backgroundColor};
-            border-color: ${dividerColor};
+            border-color: ${borderColor};
             box-shadow: 0px 0px 0.5px ${paperShadowColor};
+            color: ${toolbarFontColor};
+          }
+
+          #EditableToolbar span[class^="icon-"], 
+          #EditableToolbar span[class*=" icon-"] {
+            background-color: ${iconColor};
           }
 
           #FloatingMenuToolbar {
@@ -598,19 +654,23 @@ const TiptapEditor = ({
             border-right-width: ${paperBorderWidth}px!important;
             border-bottom-width: 0;
             border-left-width: ${paperBorderWidth}px;
-            border-color: red!important;
+            border-color: ${paperBorderColor}!important;
             border-style: solid!important;
             border-top-right-radius: ${roundRadius}px;
             border-top-left-radius: ${roundRadius}px;
             box-shadow: 0px 0px 0rem 0;
             
-            ${borderImageSource ? `
-            border-image-source: url(${borderImageSource});
+            ${
+              resolvedBorderImageSource
+                ? `
+            border-image-source: url(${resolvedBorderImageSource});
             border-image-slice: ${borderImageSlice};
             border-image-width: ${borderImageWidth}px;
             border-image-outset: ${borderImageOutset}px;
             border-image-repeat: stretch round;
-            ` : ''}
+            `
+                : ""
+            }
 
             height: fit-content !important;
 
@@ -807,20 +867,21 @@ const TiptapEditor = ({
               id="EditorTopPanelsContainer"
               className="absolute top-0 left-0 -translate-y-full w-full z-[3] h-[20rem] flex gap-1 justify-center items-center"
             >
-              {mode == 'editPaper' && <SearchReplacePanel
-                visible={isSearchReplacePanelAwake}
-                refreshSearchReplacePanel={refreshSearchReplacePanel}
-                keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
-                editor={editor}
-                toolbarPreferences={toolbarPreferences}
-              />}
+              {mode == "editPaper" && (
+                <SearchReplacePanel
+                  visible={isSearchReplacePanelAwake}
+                  refreshSearchReplacePanel={refreshSearchReplacePanel}
+                  keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                />
+              )}
             </div>
 
             <div
               id="EditorSidePanelsContainer"
               className="absolute top-0 right-0 translate-x-full w-[20rem] z-[3] h-full flex flex-col gap-1 justify-center items-center"
-            >
-            </div>
+            ></div>
           </>
         )}
 

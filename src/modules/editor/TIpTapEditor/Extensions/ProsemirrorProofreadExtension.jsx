@@ -10,6 +10,7 @@ import createProofreadPlugin, { spellcheckkey } from "./createProofreadPlugin";
 import dictionaryManager from "../../../app/lib/dictionary";
 import {
   binary,
+  binaryInlined,
   BinaryModule,
   Dialect,
   LocalLinter,
@@ -20,8 +21,10 @@ import { appStore } from "../../../app/stores/appStore";
 
 let lexer = new Tokenizr();
 
-let linter = new LocalLinter({
-  binary: new BinaryModule("/src/assets/harper_wasm_bg.wasm"),
+const baseUrl = window.location.origin;
+
+let linter = new WorkerLinter({
+  binary: binaryInlined,
   dialect: Dialect.British,
 });
 
@@ -161,12 +164,12 @@ const ProsemirrorProofreadExtension = Extension.create({
     return {
       forceSpellcheck:
         () =>
-        ({ tr, dispatch }) => {
-          if (dispatch) {
-            tr.setMeta("forceProofread", true);
-          }
-          return true;
-        },
+          ({ tr, dispatch }) => {
+            if (dispatch) {
+              tr.setMeta("forceProofread", true);
+            }
+            return true;
+          },
     };
   },
 });

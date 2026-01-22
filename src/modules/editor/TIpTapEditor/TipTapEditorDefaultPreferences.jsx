@@ -1,7 +1,7 @@
 // Separate default preferences for desktop
 const TiptapDesktopDefaultPreferences = {
   paperPreferences: {
-    width: '880px',
+    width: "880px",
     gapTop: 32,
     paddingTop: 80, // Updated from marginTop
     paddingLeft: 96, // Updated from marginLeft
@@ -73,7 +73,10 @@ const TiptapDesktopDefaultPreferences = {
     buttonGap: 4,
     backgroundColor: "#171717",
     buttonColor: "#171717",
+    borderColor: "#262626",
     dividerColor: "#262626",
+    iconColor: "#a3a3a3",
+    fontColor: "#a3a3a3",
     hoverColor: "#121212",
     pressedColor: "#080808",
   },
@@ -147,7 +150,10 @@ const TiptapMobileDefaultPreferences = {
     buttonWidth: 3,
     backgroundColor: "#171717",
     buttonColor: "#171717",
+    borderColor: "#232323",
     dividerColor: "#232323",
+    iconColor: "#a3a3a3",
+    fontColor: "#a3a3a3",
     textFormatButtonWidth: 10,
     hoverColor: "#121212",
     pressedColor: "#080808",

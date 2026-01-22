@@ -1,6 +1,13 @@
-import { open } from '@tauri-apps/plugin-dialog';
-import { readFile, writeFile, exists, mkdir, remove, readDir } from '@tauri-apps/plugin-fs';
-import { appDataDir, join } from '@tauri-apps/api/path';
+import { open } from "@tauri-apps/plugin-dialog";
+import {
+  readFile,
+  writeFile,
+  exists,
+  mkdir,
+  remove,
+  readDir,
+} from "@tauri-apps/plugin-fs";
+import { appDataDir, join } from "@tauri-apps/api/path";
 
 /** @type {ImageManager} */
 let imageInstance;
@@ -8,7 +15,9 @@ let imageInstance;
 class ImageManager {
   constructor() {
     if (imageInstance) {
-      throw new Error('Use ImageManager.getInstance() to get the singleton instance.');
+      throw new Error(
+        "Use ImageManager.getInstance() to get the singleton instance."
+      );
     }
 
     this.images = new Map();
@@ -18,17 +27,18 @@ class ImageManager {
 
   static getInstance() {
     if (!imageInstance) {
-      throw new Error('ImageManager instance not initialized. Call init() first.');
+      throw new Error(
+        "ImageManager instance not initialized. Call init() first."
+      );
     }
     return imageInstance;
   }
 
   async init() {
     const appDataDirPath = await appDataDir();
-    this.imagesDir = await join(appDataDirPath, 'images');
+    this.imagesDir = await join(appDataDirPath, "images");
     await mkdir(this.imagesDir, { recursive: true });
     await this.loadImagesOnInit();
-    imageInstance = this;
   }
 
   async loadImagesOnInit() {
@@ -39,11 +49,11 @@ class ImageManager {
         if (!file.isFile) continue;
 
         const fileName = file.name;
-        const parts = fileName.split('.');
+        const parts = fileName.split(".");
         if (parts.length < 2) continue;
 
         const extension = parts.pop().toLowerCase();
-        const name = parts.join('.');
+        const name = parts.join(".");
         const mimeType = this.getMimeType(extension);
         if (!mimeType) continue;
 
@@ -57,22 +67,22 @@ class ImageManager {
           url,
           mimeType,
           name,
-          extension
+          extension,
         });
       }
     } catch (error) {
-      console.error('Error loading images:', error);
+      console.error("Error loading images:", error);
     }
   }
 
   getMimeType(extension) {
     const types = {
-      png: 'image/png',
-      jpg: 'image/jpeg',
-      jpeg: 'image/jpeg',
-      gif: 'image/gif',
-      webp: 'image/webp',
-      svg: 'image/svg+xml'
+      png: "image/png",
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      gif: "image/gif",
+      webp: "image/webp",
+      svg: "image/svg+xml",
     };
     return types[extension] || null;
   }
@@ -86,28 +96,29 @@ class ImageManager {
     try {
       const selected = await open({
         multiple: false,
-        filters: [{
-          name: 'Images',
-          extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg']
-        }]
+        filters: [
+          {
+            name: "Images",
+            extensions: ["png", "jpg", "jpeg", "gif", "webp", "svg"],
+          },
+        ],
       });
 
       if (!selected) return;
 
       const imageBuffer = await readFile(selected);
-      const originalFileName = selected.split('\\').pop();
-      const parts = originalFileName.split('.');
-      if (parts.length < 2) throw new Error('Invalid image file name');
+      const originalFileName = selected.split("\\").pop();
+      const parts = originalFileName.split(".");
+      if (parts.length < 2) throw new Error("Invalid image file name");
 
       const extension = parts.pop().toLowerCase();
-      const originalName = parts.join('.');
+      const originalName = parts.join(".");
       const mimeType = this.getMimeType(extension);
 
-      if (!mimeType) throw new Error('Unsupported image format');
+      if (!mimeType) throw new Error("Unsupported image format");
 
-      // Get filename from user
-      let fileName = "sdasfsas";
-      if (!fileName) return null;
+      // Use the original filename
+      let fileName = originalFileName;
 
       // Handle conflicts
       let counter = 1;
@@ -125,34 +136,34 @@ class ImageManager {
         fileName,
         url,
         mimeType,
-        name: fileName.split('.').slice(0, -1).join('.'),
+        name: fileName.split(".").slice(0, -1).join("."),
         extension,
-        originalFileName
+        originalFileName,
       };
 
       this.images.set(fileName, imageData);
-      this.triggerCallbacks('added', imageData);
+      this.triggerCallbacks("added", imageData);
 
       return imageData;
     } catch (error) {
-      console.error('Error adding image:', error);
+      console.error("Error adding image:", error);
       throw error;
     }
   }
 
   async promptFileName(defaultName, extension) {
-    const newName = await prompt('Enter image name:', {
-      title: 'Save Image As',
-      defaultInput: defaultName
+    const newName = await prompt("Enter image name:", {
+      title: "Save Image As",
+      defaultInput: defaultName,
     });
 
     if (!newName) return null;
 
     // Sanitize filename
     const sanitized = newName
-      .replace(/[/\\?%*:|"<>]/g, '-')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .replace(/[/\\?%*:|"<>]/g, "-")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
       .trim();
 
     return `${sanitized}.${extension}`;
@@ -168,11 +179,11 @@ class ImageManager {
       URL.revokeObjectURL(imageData.url);
 
       this.images.delete(id);
-      this.triggerCallbacks('removed', imageData);
+      this.triggerCallbacks("removed", imageData);
 
       return true;
     } catch (error) {
-      console.error('Error deleting image:', error);
+      console.error("Error deleting image:", error);
       throw error;
     }
   }
@@ -181,13 +192,22 @@ class ImageManager {
     return Array.from(this.images.values());
   }
 
+  getImageById(id) {
+    return this.images.get(id);
+  }
+
+  getImageUrl(id) {
+    const image = this.images.get(id);
+    return image ? image.url : null;
+  }
+
   registerCallback(callback) {
     this.callbacks.add(callback);
     return () => this.callbacks.delete(callback);
   }
 
   triggerCallbacks(eventType, imageData) {
-    this.callbacks.forEach(callback => callback(eventType, imageData));
+    this.callbacks.forEach((callback) => callback(eventType, imageData));
   }
 
   async cleanup() {

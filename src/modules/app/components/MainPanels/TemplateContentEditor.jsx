@@ -13,9 +13,10 @@ import { useFonts } from "../../hooks/useFonts";
 import { useImages } from "../../hooks/useImages";
 import { ScrollArea } from "@mantine/core";
 import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
-import { Sketch } from '@uiw/react-color';
+import { Sketch } from "@uiw/react-color";
 import fontManager from "../../lib/font";
 import imageManager from "../../lib/image";
+import BorderImageSliceModal from "./Templates/BorderImageSliceModal";
 
 const FontInput = ({ value, onChange }) => {
   const fonts = useFonts();
@@ -23,7 +24,10 @@ const FontInput = ({ value, onChange }) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <button style={{ fontFamily: value }} className="w-templateDetailsPreferenceInputWidth border-appLayoutBorder border py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+        <button
+          style={{ fontFamily: value }}
+          className="w-templateDetailsPreferenceInputWidth border-appLayoutBorder border py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText"
+        >
           {value || "Select Font"}
         </button>
       </DropdownMenu.Trigger>
@@ -31,7 +35,6 @@ const FontInput = ({ value, onChange }) => {
         style={{ opacity: 1 }}
         className="contextMenuContent z-[1100] max-h-detailsPanelDescriptionInputHeight overflow-y-auto"
         align="start"
-
       >
         {fonts.map((font, index) => (
           <DropdownMenu.Item
@@ -80,9 +83,7 @@ const FontInput = ({ value, onChange }) => {
           className="contextMenuItem"
           onClick={() => onChange("Georgia, serif")}
         >
-          <span style={{ fontFamily: "Georgia, serif" }}>
-            Georgia
-          </span>
+          <span style={{ fontFamily: "Georgia, serif" }}>Georgia</span>
         </DropdownMenu.Item>
         <DropdownMenu.Item
           className="contextMenuItem"
@@ -102,17 +103,29 @@ const FontInput = ({ value, onChange }) => {
         </DropdownMenu.Item>
         <DropdownMenu.Item
           className="contextMenuItem"
-          onClick={() => onChange("Lucida Sans Unicode, Lucida Grande, sans-serif")}
+          onClick={() =>
+            onChange("Lucida Sans Unicode, Lucida Grande, sans-serif")
+          }
         >
-          <span style={{ fontFamily: "Lucida Sans Unicode, Lucida Grande, sans-serif" }}>
+          <span
+            style={{
+              fontFamily: "Lucida Sans Unicode, Lucida Grande, sans-serif",
+            }}
+          >
             Lucida Sans Unicode
           </span>
         </DropdownMenu.Item>
         <DropdownMenu.Item
           className="contextMenuItem"
-          onClick={() => onChange("Palatino Linotype, Book Antiqua, Palatino, serif")}
+          onClick={() =>
+            onChange("Palatino Linotype, Book Antiqua, Palatino, serif")
+          }
         >
-          <span style={{ fontFamily: "Palatino Linotype, Book Antiqua, Palatino, serif" }}>
+          <span
+            style={{
+              fontFamily: "Palatino Linotype, Book Antiqua, Palatino, serif",
+            }}
+          >
             Palatino Linotype
           </span>
         </DropdownMenu.Item>
@@ -162,14 +175,42 @@ const FontInput = ({ value, onChange }) => {
 const ImageInput = ({ value, onChange }) => {
   const images = useImages();
 
+  // Resolve the value to a URL if it's an ID
+  const displayUrl = React.useMemo(() => {
+    if (!value) return null;
+
+    // If value is already a URL (blob: or http:), use it directly (backward compatibility)
+    if (
+      typeof value === "string" &&
+      (value.startsWith("blob:") || value.startsWith("http"))
+    ) {
+      return value;
+    }
+
+    // Otherwise, treat it as an ID and resolve to URL
+    return imageManager.getImageUrl(value);
+  }, [value]); // Re-resolve when value changes
+
+  // Find the image name for display
+  const imageName = React.useMemo(() => {
+    if (!value) return null;
+
+    const image = images.find((img) => img.id === value || img.url === value);
+    return image ? image.name : "Selected Image";
+  }, [value, images]);
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <button className="w-templateDetailsPreferenceInputWidth border border-appLayoutBorder py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
-          {value ? (
+          {displayUrl ? (
             <div className="flex items-center gap-2">
-              <img src={value} alt="Selected" className="w-4 h-4 object-cover rounded" />
-              <span>Selected Image</span>
+              <img
+                src={displayUrl}
+                alt="Selected"
+                className="w-4 h-4 object-cover rounded"
+              />
+              <span>{imageName}</span>
             </div>
           ) : (
             "Select"
@@ -185,10 +226,14 @@ const ImageInput = ({ value, onChange }) => {
           <DropdownMenu.Item
             key={`${image.id}-${index}`}
             className="contextMenuItem"
-            onClick={() => onChange(image.url)}
+            onClick={() => onChange(image.id)} // Store ID instead of URL
           >
             <div className="flex items-center gap-2">
-              <img src={image.url} alt={image.name} className="w-6 h-6 object-cover rounded" />
+              <img
+                src={image.url}
+                alt={image.name}
+                className="w-6 h-6 object-cover rounded"
+              />
               <span>{image.name}</span>
             </div>
           </DropdownMenu.Item>
@@ -210,175 +255,34 @@ const ImageInput = ({ value, onChange }) => {
   );
 };
 
-// BorderImageSliceInput component for editing border-image-slice values
+// BorderImageSliceInput component - opens modal for editing border-image-slice values
 const BorderImageSliceInput = ({ value, onChange, borderImageSource }) => {
-  const [isOpened, setIsOpened] = useState(false);
-  const [sliceValues, setSliceValues] = useState({ top: 0, right: 0, bottom: 0, left: 0, fill: false });
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-
-  const headerRef = useRef(null);
-  const dropdownRef = useRef(null);
-  const innerRef = useOuterClick(() => {
-    setIsOpened(false);
-  });
-
-  // Parse the value on mount or when value changes
-  useEffect(() => {
-    if (value) {
-      const parts = value.split(' ');
-      const fill = parts.includes('fill');
-      const numbers = parts.filter(p => p !== 'fill').map(n => parseInt(n) || 0);
-      setSliceValues({
-        top: numbers[0] || 0,
-        right: numbers[1] || numbers[0] || 0,
-        bottom: numbers[2] || numbers[0] || 0,
-        left: numbers[3] || numbers[1] || numbers[0] || 0,
-        fill
-      });
-    }
-  }, [value]);
-
-  useEffect(() => {
-    if (isOpened && headerRef.current && dropdownRef.current) {
-      const headerRect = headerRef.current.getBoundingClientRect();
-      const dropdownHeight = dropdownRef.current.offsetHeight;
-      const dropdownWidth = dropdownRef.current.offsetWidth;
-      const viewportHeight = window.innerHeight;
-
-      let top = headerRef.current.offsetHeight;
-      let left = 0;
-
-      // Adjust position if dropdown would go off-screen
-      if (headerRect.bottom + dropdownHeight > viewportHeight) {
-        top = -dropdownHeight;
-      }
-
-      setDropdownPosition({ top, left });
-    }
-  }, [isOpened]);
-
-  const handleSave = () => {
-    const { top, right, bottom, left, fill } = sliceValues;
-    const sliceStr = [top, right, bottom, left].join(' ') + (fill ? ' fill' : '');
-    onChange(sliceStr);
-    setIsOpened(false);
-  };
-
-  const updateSliceValue = (key, val) => {
-    setSliceValues(prev => ({ ...prev, [key]: val }));
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="relative grow h-full rounded-lg" ref={innerRef}>
-      <div ref={headerRef} className="w-full h-full rounded-lg">
-        <button
-          onClick={() => setIsOpened(!isOpened)}
-          className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
-        >
-          {value || "Edit Slice"}
-        </button>
-      </div>
+    <>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder hover:border-appLayoutHighlight"
+      >
+        {value || "Edit Slice"}
+      </button>
 
-      <AnimatePresence>
-        {isOpened && (
-          <motion.div
-            ref={dropdownRef}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.1 }}
-            style={{
-              top: dropdownPosition.top,
-              left: dropdownPosition.left,
-            }}
-            className="absolute z-[1200] bg-appBackground border border-appLayoutBorder rounded-lg shadow-lg p-4 w-80"
-          >
-            <h4 className="text-sm font-semibold mb-3">Border Image Slice Editor</h4>
-
-            {borderImageSource && (
-              <div className="mb-3">
-                <img src={borderImageSource} alt="Border Image" className="max-w-full max-h-20 border rounded" />
-              </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div>
-                <label className="block text-xs mb-1">Top</label>
-                <input
-                  type="number"
-                  value={sliceValues.top}
-                  onChange={(e) => updateSliceValue('top', parseInt(e.target.value) || 0)}
-                  className="w-full px-2 py-1 text-sm border rounded"
-                  min="0"
-                />
-              </div>
-              <div>
-                <label className="block text-xs mb-1">Right</label>
-                <input
-                  type="number"
-                  value={sliceValues.right}
-                  onChange={(e) => updateSliceValue('right', parseInt(e.target.value) || 0)}
-                  className="w-full px-2 py-1 text-sm border rounded"
-                  min="0"
-                />
-              </div>
-              <div>
-                <label className="block text-xs mb-1">Bottom</label>
-                <input
-                  type="number"
-                  value={sliceValues.bottom}
-                  onChange={(e) => updateSliceValue('bottom', parseInt(e.target.value) || 0)}
-                  className="w-full px-2 py-1 text-sm border rounded"
-                  min="0"
-                />
-              </div>
-              <div>
-                <label className="block text-xs mb-1">Left</label>
-                <input
-                  type="number"
-                  value={sliceValues.left}
-                  onChange={(e) => updateSliceValue('left', parseInt(e.target.value) || 0)}
-                  className="w-full px-2 py-1 text-sm border rounded"
-                  min="0"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center mb-3">
-              <input
-                type="checkbox"
-                id="fill"
-                checked={sliceValues.fill}
-                onChange={(e) => updateSliceValue('fill', e.target.checked)}
-                className="mr-2"
-              />
-              <label htmlFor="fill" className="text-xs">Fill center</label>
-            </div>
-
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setIsOpened(false)}
-                className="px-3 py-1 text-xs border rounded hover:bg-appLayoutHover"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Apply
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+      <BorderImageSliceModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        value={value}
+        onChange={onChange}
+        borderImageSource={borderImageSource}
+      />
+    </>
   );
 };
 
 // Add this helper component (place it at the top of GroupEditor, before the return statement)
 const NumberOrPercentInput = ({ value, onChange, fieldConfig }) => {
-  const initialUnit = typeof value === "string" && value.trim().endsWith("%") ? "%" : "px";
+  const initialUnit =
+    typeof value === "string" && value.trim().endsWith("%") ? "%" : "px";
   const extractNumber = (val) => String(val).replace(/(px|%)/, "");
 
   const [unit, setUnit] = useState(initialUnit);
@@ -446,14 +350,23 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           error = `Must be between 10% and 100%`;
         }
       } else {
-        if (isNaN(numberValue) || numberValue < fieldConfig.min || numberValue > fieldConfig.max) {
+        if (
+          isNaN(numberValue) ||
+          numberValue < fieldConfig.min ||
+          numberValue > fieldConfig.max
+        ) {
           error = `Must be between ${fieldConfig.min} and ${fieldConfig.max}`;
         }
       }
     }
 
     if (fieldConfig.type === "number") {
-      if (value === "" || isNaN(Number(value)) || Number(value) < fieldConfig.min || Number(value) > fieldConfig.max) {
+      if (
+        value === "" ||
+        isNaN(Number(value)) ||
+        Number(value) < fieldConfig.min ||
+        Number(value) > fieldConfig.max
+      ) {
         error = `Must be between ${fieldConfig.min} and ${fieldConfig.max}`;
       }
     }
@@ -523,15 +436,21 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                       type={fieldConfig.type === "number" ? "number" : "text"}
                       value={data[key]}
                       onChange={(e) => handleChange(key, e.target.value)}
-                      min={fieldConfig.type === "number" ? fieldConfig.min : undefined}
-                      max={fieldConfig.type === "number" ? fieldConfig.max : undefined}
+                      min={
+                        fieldConfig.type === "number"
+                          ? fieldConfig.min
+                          : undefined
+                      }
+                      max={
+                        fieldConfig.type === "number"
+                          ? fieldConfig.max
+                          : undefined
+                      }
                       className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
                     />
                   </div>
 
-                  <span
-                    className="text-libraryDirectoryBookNodeFontSize h-full ml-1 text-appLayoutTextMuted flex items-center bg-appBackground  rounded-lg"
-                  >
+                  <span className="text-libraryDirectoryBookNodeFontSize h-full ml-1 text-appLayoutTextMuted flex items-center bg-appBackground  rounded-lg">
                     px
                   </span>
                   <label
@@ -970,7 +889,6 @@ const TemplateContentEditor = ({
             preferences={content.desktopDefaultPreferences}
           />
         </div>
-
       </div>
     </div>
   );
@@ -1041,10 +959,7 @@ const ColorPicker = ({ color, onChangeComplete }) => {
             }}
             className="absolute z-[1200] bg-appBackground text-appLayoutText rounded-lg shadow-lg"
           >
-            <Sketch
-              color={currentColor}
-              onChange={handleColorChange}
-            />
+            <Sketch color={currentColor} onChange={handleColorChange} />
           </motion.div>
         )}
       </AnimatePresence>

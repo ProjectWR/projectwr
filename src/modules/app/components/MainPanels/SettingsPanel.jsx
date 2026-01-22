@@ -130,8 +130,6 @@ const SettingsPanel = () => {
     }
   }, []);
 
-
-
   useEffect(() => {
     const callback = async () => {
       const newTemplates = await templateManager.getTemplates();
@@ -152,7 +150,10 @@ const SettingsPanel = () => {
       template_editor: "TipTapEditor",
       template_content: TipTapEditorDefaultPreferences,
     };
-    templateManager.createTemplate("New Template #" + Object.keys(templates).length, templateProps);
+    templateManager.createTemplate(
+      "New Template #" + Object.keys(templates).length,
+      templateProps
+    );
   };
 
   return (
@@ -186,7 +187,7 @@ const SettingsPanel = () => {
 
               <Fieldset
                 variant="unstyled"
-                legend="Log in to Tulip Writer"
+                legend="Log in to Sylvanite"
                 classNames={{
                   legend:
                     "text-3xl pb-1 px-2 mx-auto font-light text-appLayoutText",
@@ -547,10 +548,11 @@ const SettingsPanel = () => {
                 <button
                   className={`
                   hover:text-appLayoutText
-                  ${fontImageToggle === "font"
+                  ${
+                    fontImageToggle === "font"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
-                    } `}
+                  } `}
                   onClick={() => setFontImageToggle("font")}
                 >
                   Fonts
@@ -559,10 +561,11 @@ const SettingsPanel = () => {
                 <button
                   className={`
                   hover:text-appLayoutText
-                  ${fontImageToggle === "image"
+                  ${
+                    fontImageToggle === "image"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
-                    } `}
+                  } `}
                   onClick={() => setFontImageToggle("image")}
                 >
                   Images
@@ -571,10 +574,11 @@ const SettingsPanel = () => {
                 <button
                   className={`
                   hover:text-appLayoutText
-                  ${fontImageToggle === "templates"
+                  ${
+                    fontImageToggle === "templates"
                       ? "text-appLayoutText"
                       : "text-appLayoutTextMuted"
-                    } `}
+                  } `}
                   onClick={() => setFontImageToggle("templates")}
                 >
                   Editor Styles
@@ -710,8 +714,9 @@ const SettingsPanel = () => {
               </div>
               <div
                 id="PreferencesBody"
-                className={`grow basis-0 w-full flex flex-col gap-2 items-center justify-start py-1 px-1                 ${deviceType === "desktop" && "px-6"
-                  }
+                className={`grow basis-0 w-full flex flex-col gap-2 items-center justify-start py-1 px-1                 ${
+                  deviceType === "desktop" && "px-6"
+                }
               `}
               >
                 <div className="w-full h-preferencesItemHeight flex gap-2 items-center justify-between">
@@ -749,7 +754,11 @@ const SettingsPanel = () => {
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                       <div className="text-preferencesItemFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
-                        {theme === "dark" ? "Dark" : theme === "light" ? "Light" : "System"}
+                        {theme === "dark"
+                          ? "Dark"
+                          : theme === "light"
+                          ? "Light"
+                          : "System"}
                       </div>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content
