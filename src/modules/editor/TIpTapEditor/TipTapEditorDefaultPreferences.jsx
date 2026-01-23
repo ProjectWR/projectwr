@@ -79,6 +79,7 @@ const TiptapDesktopDefaultPreferences = {
     fontColor: "#a3a3a3",
     hoverColor: "#121212",
     pressedColor: "#080808",
+    scrollbarThumbColor: "#676767"
   },
 };
 
@@ -157,6 +158,7 @@ const TiptapMobileDefaultPreferences = {
     textFormatButtonWidth: 10,
     hoverColor: "#121212",
     pressedColor: "#080808",
+    scrollbarThumbColor: "#121212"
   },
 };
 

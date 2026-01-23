@@ -538,6 +538,12 @@ export const desktopToolbarConfig = {
     category: "colors",
     description: "Button pressed color",
   },
+  scrollbarThumbColor: {
+    type: "color",
+    label: "Scroll Thumb Color",
+    category: "colors",
+    description: "Scroll thumb color",
+  },
 };
 
 export const mobilePaperConfig = { ...desktopPaperConfig };

@@ -207,12 +207,13 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
         {/* Minimap track */}
         <div className="relative w-full h-full pointer-events-auto">
           {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
-            <div className="absolute left-1/2 -translate-x-1/2 w-px h-full z-[98] bg-gradient-to-b from-transparent via-appLayoutHighlight/20 to-transparent" />
+            <div id="TOCVirtualScrollTrack" className="absolute left-1/2 -translate-x-1/2 w-px h-full z-[98] " />
           )}
           {/* Virtual scroll thumb */}
           {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
             <motion.div
-              className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin min-h-5 z-[99] bg-appLayoutHighlight/20 rounded-xl hover:bg-appLayoutHighlight/30 transition-colors cursor-grab active:cursor-grabbing"
+              id="TOCVirtualScrollThumb"
+              className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin min-h-5 z-[99] rounded-xl  transition-colors cursor-grab active:cursor-grabbing"
               style={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
                 height: `${(viewportHeight / documentHeight) * containerHeight
@@ -245,9 +246,10 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
               return (
                 <div
                   key={`${h.pos}-${idx}`}
-                  className="absolute right-1/2 z-[99] translate-x-1/2 cursor-pointer"
+                  className=" absolute z-[99] translate-x-1/2 cursor-pointer"
                   style={{
                     top: `${scaledY}px`,
+                    right: `calc(50% + 20px * var(--uiScale))`,
                   }}
                   onMouseEnter={() => setHoveredIndex(idx)}
                   onMouseLeave={() => setHoveredIndex(null)}
@@ -255,7 +257,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
                 >
                   {/* POI Circle */}
                   <motion.div
-                    className="rounded-full bg-appLayoutHighlight/70 hover:bg-appLayoutHighlight transition-all"
+                    className="TOCPOI rounded-full transition-all"
                     style={{
                       width: `${poiSize}px`,
                       height: `${poiSize}px`,

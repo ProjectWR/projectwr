@@ -16,6 +16,7 @@ export const StatisticsPanel = ({ mode, editor, toolbarPreferences }) => {
     buttonRadius,
     backgroundColor,
     buttonColor,
+    iconColor,
     dividerColor,
     fontSize,
     textFormatButtonWidth,
@@ -27,14 +28,17 @@ export const StatisticsPanel = ({ mode, editor, toolbarPreferences }) => {
 
   return (
     <div
-      className="w-fit h-fit flex absolute bottom-1 left-1 items-end"
+      style={{
+        backgroundColor: statsPinned ? backgroundColor : 'transparent',
+        borderColor: statsPinned ? borderColor : 'transparent'
+      }}
+      className="w-fit h-fit pl-1 pr-3 py-1 flex absolute bottom-0 left-0 z-[90] items-end border-t border-r rounded-tr-lg "
     >
-      <div className="h-fit w-fit flex z-[100]">
+      <div className="h-fit w-fit flex z-[100] ">
         {/* Trigger Button */}
         <button
-          className={`rounded-lg transition-all duration-200 ${
-            statsPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
-          }`}
+          className={`rounded-lg transition-all duration-200 ${statsPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
+            }`}
           style={{
             height: `calc(${buttonHeight}px * var(--uiScale) * 0.75)`,
             borderRadius: `${buttonRadius}px`,
@@ -48,18 +52,22 @@ export const StatisticsPanel = ({ mode, editor, toolbarPreferences }) => {
       </div>
 
       <div
-        className={`grow w-[200px] z-[90] pointer-events-none
+        className={`w-fit min-w-0 z-[90] pointer-events-none 
                     transition-opacity duration-300 opacity-100`}
       >
         {/* Statistics content */}
         {statsPinned && (
-          <div className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted flex gap-3 items-end pl-2 pb-1 leading-none">
-            <span>Words</span>
+          <div
+            style={{
+              color: iconColor
+            }}
+            className="text-libraryDirectoryBookNodeFontSize flex gap-3 items-end pl-2 pb-1 leading-none">
+            <span>Words:</span>
             <span>
               {mode == "editPaper" ? editor.storage.characterCount.words() : ""}{" "}
               {mode == "previewTemplate" ? "8987998" : ""}
             </span>
-            <span className="ml-2">Characters</span>
+            <span className="ml-1">Characters:</span>
             <span>
               {mode == "editPaper"
                 ? editor.storage.characterCount.characters()

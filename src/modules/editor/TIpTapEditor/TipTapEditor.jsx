@@ -191,12 +191,15 @@ const TiptapEditor = ({
     borderImageRepeat,
   } = paperPreferences;
 
+
   const {
     dividerColor,
     borderColor,
     iconColor,
+    scrollbarThumbColor,
     fontColor: toolbarFontColor,
   } = toolbarPreferences;
+
 
   useImages(); // Subscribe to image changes
 
@@ -286,11 +289,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-                .getLibrary(libraryId)
-                ?.getMap("library_props")
-                ?.toJSON().item_properties.item_title
+              .getLibrary(libraryId)
+              ?.getMap("library_props")
+              ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                ?.item_title;
+              ?.item_title;
 
         return label;
 
@@ -321,11 +324,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-                .getLibrary(libraryId)
-                ?.getMap("library_props")
-                ?.toJSON().item_properties.item_title
+              .getLibrary(libraryId)
+              ?.getMap("library_props")
+              ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                ?.item_title;
+              ?.item_title;
 
         const elem = document.createElement("span");
 
@@ -590,10 +593,9 @@ const TiptapEditor = ({
 
           #EditableContainer {
             background-color: ${backgroundColor};
-            ${
-              resolvedBackgroundImage
-                ? `background-image: url(${resolvedBackgroundImage});`
-                : ""
+            ${resolvedBackgroundImage
+              ? `background-image: url(${resolvedBackgroundImage});`
+              : ""
             }
             background-size: cover;
             background-position: center;
@@ -602,17 +604,14 @@ const TiptapEditor = ({
           }
 
           #EditableUtilityToolbarWrapper {
-            height: calc(${
-              toolbarPreferences.toolbarHeight
+            height: calc(${toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
           }
 
           #EditableUtilityToolbar {
-            height: calc(${
-              toolbarPreferences.toolbarHeight
+            height: calc(${toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
-            min-height: calc(${
-              toolbarPreferences.toolbarHeight
+            min-height: calc(${toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
             background-color: ${toolbarPreferences.backgroundColor};
             border-color: ${borderColor};
@@ -625,11 +624,9 @@ const TiptapEditor = ({
           }
 
           #EditableToolbar {
-            height: calc(${
-              toolbarPreferences.toolbarHeight
+            height: calc(${toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
-            min-height: calc(${
-              toolbarPreferences.toolbarHeight
+            min-height: calc(${toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
             background-color: ${toolbarPreferences.backgroundColor};
             border-color: ${borderColor};
@@ -644,6 +641,26 @@ const TiptapEditor = ({
 
           #FloatingMenuToolbar {
             height: calc(var(--uiScale) * ${lineHeight}px);
+          }
+            
+          .TOCPOI {
+            background-color: ${iconColor}DD;
+          }
+
+          .TOCPOI:hover {
+            background-color: ${iconColor}FF;
+          }
+
+          #TOCVirtualScrollThumb {
+            background-color: ${scrollbarThumbColor}AA;
+          }
+
+          #TOCVirtualScrollThumb:hover {
+            background-color: ${scrollbarThumbColor}FF;
+          }
+
+          #TOCVirtualScrollTrack {
+            background-image: linear-gradient(to bottom, transparent, ${scrollbarThumbColor} 50%, transparent)
           }
 
           #PaperEditorContent > div.tiptap.ProseMirror {
@@ -660,16 +677,15 @@ const TiptapEditor = ({
             border-top-left-radius: ${roundRadius}px;
             box-shadow: 0px 0px 0rem 0;
             
-            ${
-              resolvedBorderImageSource
-                ? `
+            ${resolvedBorderImageSource
+              ? `
             border-image-source: url(${resolvedBorderImageSource});
             border-image-slice: ${borderImageSlice};
             border-image-width: ${borderImageWidth}px;
             border-image-outset: ${borderImageOutset}px;
             border-image-repeat: stretch round;
             `
-                : ""
+              : ""
             }
 
             height: fit-content !important;
