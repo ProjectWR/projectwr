@@ -852,13 +852,13 @@ const TemplateContentEditor = ({
         </div>
       </div>
 
-      <div className="flex gap-2 w-full grow min-h-0 ">
+      <div className="flex gap-0 w-full grow min-h-0 ">
         <ScrollArea
           overscrollBehavior="none"
           scrollbars="y"
           type="hover"
           classNames={{
-            root: `w-fit h-full max-h-full p-0 border border-appLayoutBorder rounded-lg shadow-sm shadow-appLayoutGentleShadow`,
+            root: `w-fit h-full max-h-full p-0 border border-appLayoutBorder rounded-l-lg shadow-sm shadow-appLayoutGentleShadow`,
             scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidth opacity-70`,
             thumb: `bg-appLayoutBorder rounded-l-full hover:bg-appLayoutInverseHover! z-[50]`,
             content:
@@ -881,7 +881,7 @@ const TemplateContentEditor = ({
           </div>
         </ScrollArea>
 
-        <div className="h-full grow basis-0 min-w-0 border border-appLayoutBorder rounded-lg overflow-hidden shadow-sm shadow-appLayoutGentleShadow">
+        <div className="h-full grow basis-0 min-w-0 border-r border-y border-appLayoutBorder rounded-r-lg overflow-hidden shadow-sm shadow-appLayoutGentleShadow">
           <TipTapEditor
             key={groupSelected}
             setHeaderOpened={true}
