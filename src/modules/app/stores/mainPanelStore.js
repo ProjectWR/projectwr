@@ -8,7 +8,7 @@ import { create } from "zustand";
  * @property {string} panelType - The current panel type (e.g., "home").
  * @property {*} mode - The current mode of the panel (can be null or specific mode).
  * @property {Array} breadcrumbs - An array of breadcrumb strings representing the navigation path.
- * 
+ *
  * @typedef {Array<MainPanelState>} tabs
  *
  * @typedef {Object} MainPanelStore
@@ -24,37 +24,37 @@ import { create } from "zustand";
  * });
  */
 export const mainPanelStore = create((set) => ({
-    mainPanelState: { panelType: "home", mode: null, breadcrumbs: [] },
-    setMainPanelState: (mainPanelState) => {
-        return set({ mainPanelState: mainPanelState })
-    },
+  mainPanelState: { panelType: "home", mode: null, breadcrumbs: [] },
+  setMainPanelState: (mainPanelState) => {
+    return set({ mainPanelState: mainPanelState });
+  },
 
-    /**
-     * Sets the list of tabs in the main panel store.
-     * @param {tabs} tabs - The list of tabs to set.
-     * @example
-     * mainPanelStore.setTabs([
-     *     { panelType: "home", mode: null, breadcrumbs: [] },
-     *     { panelType: "settings", mode: "edit", breadcrumbs: ["home", "settings"] }
-     * ])
-     */
-    tabs: [],
-    setTabs: (tabs) => {
-        return set({ tabs: tabs })
-    },
+  /**
+   * Sets the list of tabs in the main panel store.
+   * @param {tabs} tabs - The list of tabs to set.
+   * @example
+   * mainPanelStore.setTabs([
+   *     { panelType: "home", mode: null, breadcrumbs: [] },
+   *     { panelType: "settings", mode: "edit", breadcrumbs: ["home", "settings"] }
+   * ])
+   */
+  tabs: [],
+  setTabs: (tabs) => {
+    return set({ tabs: tabs });
+  },
 
-    splitMode: "x",
-    setSplitMode: (splitMode) => {
-        return set({ splitMode: splitMode })
-    },
+  splitMode: 'none',
+  setSplitMode: (splitMode) => {
+    return set({ splitMode: splitMode });
+  },
 
-    splitPanelState: { panelType: "home", mode: null, breadcrumbs: [] },
-    setSplitPanelState: (splitPanelState) => {
-        return set({ splitPanelState: splitPanelState })
-    },
+  splitPanelState: null,
+  setSplitPanelState: (splitPanelState) => {
+    return set({ splitPanelState: splitPanelState });
+  },
 
-    splitRatio: 0.5,
-    setSplitRatio: (splitRatio) => {
-        return set({ splitRatio: splitRatio });
-    },
-}))
+  splitRatio: 0.5,
+  setSplitRatio: (splitRatio) => {
+    return set({ splitRatio: splitRatio });
+  },
+}));

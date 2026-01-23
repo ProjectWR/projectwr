@@ -29,8 +29,6 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
 
   const setTabs = mainPanelStore((state) => state.setTabs);
 
-  const splitPanelState = mainPanelStore((state) => state.splitPanelState);
-
   const isMd = appStore((state) => state.isMd);
 
   const [overflow, setOverflow] = useState(false);
@@ -247,15 +245,6 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
         className={`border-b flex items-center w-fit min-w-0 z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText bg-appBackgroundAccent  px-1
           `}
       >
-        {splitPanelState && (
-          <TabButton
-            panelType={splitPanelState.panelType}
-            mode={splitPanelState.mode}
-            breadcrumbs={splitPanelState.breadcrumbs}
-            isRemoveAvailable={true}
-            splitPanelTab={true}
-          />
-        )}
         <NotesPanelOpenButton
           isNotesPanelAwake={isNotesPanelAwake}
           refreshNotesPanel={refreshNotesPanel}
@@ -265,9 +254,10 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   );
 };
 
-const TabButton = ({
+export const TabButton = ({
   panelType,
   mode,
+  splitTab = false,
   breadcrumbs,
   isRemoveAvailable = true,
   splitPanelTab = false,
@@ -629,6 +619,11 @@ const TabButton = ({
           ${tabIsSelected
           ? "border-appLayoutBorder bg-appBackground"
           : "border-transparent hover:bg-appLayoutInverseHover "
+        }
+
+        ${splitTab ? 
+          "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
+          : ""
         }
         `}
     >

@@ -32,7 +32,6 @@ const LibraryDirectoryHeaderButton = ({
   const [renameValue, setRenameValue] = useState("");
   const driveSyncLoading = appStore((state) => state.driveSyncLoading);
 
-
   const userProfile = oauthStore((state) => state.userProfile);
 
   const [deleteConfirmDialog, setDeleteConfirmDialog] = useState({
@@ -44,10 +43,16 @@ const LibraryDirectoryHeaderButton = ({
   const [deleteFromDrive, setDeleteFromDrive] = useState(false);
 
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "LIBRARY",
+    type: "ITEM",
     item: {
       id: libraryId,
       type: "library",
+      appItemType: "libraries",
+      tabProps: {
+        panelType: "libraries",
+        mode: "details",
+        breadcrumbs: [libraryId],
+      },
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -55,7 +60,7 @@ const LibraryDirectoryHeaderButton = ({
   }));
 
   const [{ isOverCurrent }, drop] = useDrop({
-    accept: "LIBRARY",
+    accept: "ITEM",
     hover: (draggedItem, monitor) => {
       if (!ref.current) {
         return;
@@ -67,6 +72,8 @@ const LibraryDirectoryHeaderButton = ({
       }
 
       setIsSelfSelected(false);
+
+      if (draggedItem.type !== "library") return;
 
       // Determine rectangle on screen
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
@@ -111,12 +118,12 @@ const LibraryDirectoryHeaderButton = ({
       if (isTopSelected) {
         const previousOrderIndex = getPreviousOrderIndex(
           libraryId,
-          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap)
+          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap),
         );
 
         const orderIndex = insertBetween(
           previousOrderIndex,
-          libraryPropsMapRef.get("order_index")
+          libraryPropsMapRef.get("order_index"),
         );
 
         dataManagerSubdocs
@@ -128,12 +135,12 @@ const LibraryDirectoryHeaderButton = ({
       if (!isTopSelected) {
         const nextOrderIndex = getNextOrderIndex(
           libraryId,
-          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap)
+          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap),
         );
 
         const orderIndex = insertBetween(
           libraryPropsMapRef.get("order_index"),
-          nextOrderIndex
+          nextOrderIndex,
         );
 
         dataManagerSubdocs
@@ -156,7 +163,10 @@ const LibraryDirectoryHeaderButton = ({
   }, [props.item_properties.item_title]);
 
   const handleRenameSave = useCallback(() => {
-    if (renameValue.trim() && renameValue !== props.item_properties.item_title) {
+    if (
+      renameValue.trim() &&
+      renameValue !== props.item_properties.item_title
+    ) {
       const libraryYdoc = dataManagerSubdocs.getLibrary(libraryId);
       const libraryProps = libraryYdoc.getMap("library_props");
       const currentProperties = libraryProps.get("item_properties");
@@ -190,9 +200,9 @@ const LibraryDirectoryHeaderButton = ({
         ),
         action: async () => {
           await persistenceManagerForSubdocs.saveArchive(
-            dataManagerSubdocs.getLibrary(libraryId)
+            dataManagerSubdocs.getLibrary(libraryId),
           );
-        }
+        },
       },
       {
         label: "Load from archive",
@@ -201,12 +211,12 @@ const LibraryDirectoryHeaderButton = ({
         ),
         action: async () => {
           await persistenceManagerForSubdocs.loadArchive(
-            dataManagerSubdocs.getLibrary(libraryId)
+            dataManagerSubdocs.getLibrary(libraryId),
           );
-        }
+        },
       },
       {
-        isDivider: true
+        isDivider: true,
       },
 
       {
@@ -228,8 +238,7 @@ const LibraryDirectoryHeaderButton = ({
             libraryId: libraryId,
             libraryTitle: props.item_properties.item_title,
           });
-
-        }
+        },
       },
     ];
   }, [onRenameClick, libraryId, onSelect, props.item_properties.item_title]);
@@ -243,14 +252,14 @@ const LibraryDirectoryHeaderButton = ({
         ${isDragging ? "opacity-20" : ""}
         
         ${(() => {
-            if (!isSelfSelected && isOverCurrent) {
-              return isTopSelected
-                ? "border-t border-b border-b-transparent border-t-appLayoutDirectoryNodeHover"
-                : "border-b border-t border-t-transparent border-b-appLayoutDirectoryNodeHover";
-            } else {
-              return "border-y border-transparent";
-            }
-          })()}
+          if (!isSelfSelected && isOverCurrent) {
+            return isTopSelected
+              ? "border-t border-b border-b-transparent border-t-appLayoutDirectoryNodeHover"
+              : "border-b border-t border-t-transparent border-b-appLayoutDirectoryNodeHover";
+          } else {
+            return "border-y border-transparent";
+          }
+        })()}
       `}
       >
         <AnimatePresence mode="wait">
@@ -298,7 +307,9 @@ const LibraryDirectoryHeaderButton = ({
                 autoFocus
               />
             ) : (
-              <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">{props.item_properties.item_title}</span>
+              <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">
+                {props.item_properties.item_title}
+              </span>
             )}
             <motion.div
               animate={{
@@ -329,14 +340,21 @@ const LibraryDirectoryHeaderButton = ({
         description={`Are you sure you want to delete "${deleteConfirmDialog.libraryTitle}"? This action cannot be undone.`}
         onSubmit={async () => {
           console.log("Deleting Library", deleteConfirmDialog.libraryId);
-          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(deleteConfirmDialog.libraryId);
-          await persistenceManagerForSubdocs.closeConnectionForYDoc(deleteConfirmDialog.libraryId);
-          await dataManagerSubdocs.destroyLibrary(deleteConfirmDialog.libraryId);
+          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(
+            deleteConfirmDialog.libraryId,
+          );
+          await persistenceManagerForSubdocs.closeConnectionForYDoc(
+            deleteConfirmDialog.libraryId,
+          );
+          await dataManagerSubdocs.destroyLibrary(
+            deleteConfirmDialog.libraryId,
+          );
 
           console.log("userProfile:", userProfile, deleteFromDrive);
           if (userProfile && deleteFromDrive) {
             console.log("Deleting from Drive too");
-            const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+            const googleDriveManager =
+              driveOrchestrator.getManager("googleDrive");
             googleDriveManager.stopSync(deleteConfirmDialog.libraryId);
             googleDriveManager.deleteDocument(deleteConfirmDialog.libraryId);
           }
@@ -349,12 +367,15 @@ const LibraryDirectoryHeaderButton = ({
         submitLabel="Delete"
         destructive={true}
         options={[
-          ...(userProfile && !driveSyncLoading ? [{
-            checked: deleteFromDrive,
-            label: "Delete from drive",
-            onChange: (e) =>
-              setDeleteFromDrive(e.target.checked),
-          }] : []),
+          ...(userProfile && !driveSyncLoading
+            ? [
+                {
+                  checked: deleteFromDrive,
+                  label: "Delete from drive",
+                  onChange: (e) => setDeleteFromDrive(e.target.checked),
+                },
+              ]
+            : []),
         ]}
       />
     </ContextMenuWrapper>
