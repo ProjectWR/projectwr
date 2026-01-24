@@ -115,7 +115,7 @@ const FourSidedValueModal = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 z-[2000] flex items-center justify-center"
+            className="fixed inset-0 bg-black/50 z-2000 flex items-center justify-center"
           />
 
           {/* Modal */}
@@ -125,7 +125,7 @@ const FourSidedValueModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed z-[2001] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-appBackground border border-appLayoutBorder rounded-lg shadow-2xl p-6 w-[600px] max-w-[90vw] max-h-[90vh] overflow-y-auto"
+            className="fixed z-2001 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-appBackground border border-appLayoutBorder rounded-lg shadow-2xl p-6 w-[600px] max-w-[90vw] max-h-[90vh] overflow-y-auto"
           >
             <h2 className="text-xl font-semibold mb-2 text-appLayoutText">
               {title}
@@ -267,6 +267,17 @@ const FourSidedValueModal = ({
       )}
     </AnimatePresence>
   );
+};
+
+FourSidedValueModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  borderImageSource: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  showFill: PropTypes.bool,
 };
 
 export default FourSidedValueModal;

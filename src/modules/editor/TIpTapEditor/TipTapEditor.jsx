@@ -186,8 +186,14 @@ const TiptapEditor = ({
     blockquoteBorderWidth,
     blockquotePadding,
     blockquoteBorderColor,
-    borderImageSource,
-    borderImageSlice,
+    borderImageTopLeft,
+    borderImageTop,
+    borderImageTopRight,
+    borderImageRight,
+    borderImageBottomRight,
+    borderImageBottom,
+    borderImageBottomLeft,
+    borderImageLeft,
     borderImageWidth,
     borderImageOutset,
     borderImageRepeat,
@@ -217,15 +223,34 @@ const TiptapEditor = ({
     return imageManager.getImageUrl(backgroundImage);
   }, [backgroundImage]);
 
-  const resolvedBorderImageSource = useMemo(() => {
-    if (!borderImageSource) return null;
-    if (
-      borderImageSource.startsWith("blob:") ||
-      borderImageSource.startsWith("http")
-    )
-      return borderImageSource;
-    return imageManager.getImageUrl(borderImageSource);
-  }, [borderImageSource]);
+  // Resolve border image IDs to URLs
+  const resolvedBorderImages = useMemo(() => {
+    const resolve = (img) => {
+      if (!img) return null;
+      if (img.startsWith("blob:") || img.startsWith("http")) return img;
+      return imageManager.getImageUrl(img);
+    };
+
+    return {
+      topLeft: resolve(borderImageTopLeft),
+      top: resolve(borderImageTop),
+      topRight: resolve(borderImageTopRight),
+      right: resolve(borderImageRight),
+      bottomRight: resolve(borderImageBottomRight),
+      bottom: resolve(borderImageBottom),
+      bottomLeft: resolve(borderImageBottomLeft),
+      left: resolve(borderImageLeft),
+    };
+  }, [
+    borderImageTopLeft,
+    borderImageTop,
+    borderImageTopRight,
+    borderImageRight,
+    borderImageBottomRight,
+    borderImageBottom,
+    borderImageBottomLeft,
+    borderImageLeft,
+  ]);
 
   console.log("Editor Preferences: ", editorPreferences);
 
@@ -672,6 +697,195 @@ const TiptapEditor = ({
             background-image: linear-gradient(to bottom, transparent, ${scrollbarThumbColor} 50%, transparent)
           }
 
+          .paper-border {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+          }
+
+          .paper-border-top-left {
+            top: -${String(borderImageOutset).split(" ")[0] || 0}px;
+            left: -${
+              String(borderImageOutset).split(" ")[3] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            width: ${
+              String(borderImageWidth).split(" ")[3] ||
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            height: ${String(borderImageWidth).split(" ")[0] || 0}px;
+            background-image: url(${resolvedBorderImages.topLeft});
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+
+          .paper-border-top {
+            top: -${String(borderImageOutset).split(" ")[0] || 0}px;
+            left: 0;
+            right: 0;
+            height: ${String(borderImageWidth).split(" ")[0] || 0}px;
+            background-image: url(${resolvedBorderImages.top});
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
+            }-x;
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
+            };
+            background-position: top;
+          }
+
+          .paper-border-top-right {
+            top: -${String(borderImageOutset).split(" ")[0] || 0}px;
+            right: -${
+              String(borderImageOutset).split(" ")[1] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            width: ${
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            height: ${String(borderImageWidth).split(" ")[0] || 0}px;
+            background-image: url(${resolvedBorderImages.topRight});
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+
+          .paper-border-right {
+            top: 0;
+            bottom: 0;
+            right: -${
+              String(borderImageOutset).split(" ")[1] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            width: ${
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            background-image: url(${resolvedBorderImages.right});
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
+            }-y;
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
+            };
+            background-position: right;
+          }
+
+          .paper-border-bottom-right {
+            bottom: -${
+              String(borderImageOutset).split(" ")[2] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            right: -${
+              String(borderImageOutset).split(" ")[1] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            width: ${
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            height: ${
+              String(borderImageWidth).split(" ")[2] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            background-image: url(${resolvedBorderImages.bottomRight});
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+
+          .paper-border-bottom {
+            bottom: -${
+              String(borderImageOutset).split(" ")[2] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            left: 0;
+            right: 0;
+            height: ${
+              String(borderImageWidth).split(" ")[2] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            background-image: url(${resolvedBorderImages.bottom});
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
+            }-x;
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
+            };
+            background-position: bottom;
+          }
+
+          .paper-border-bottom-left {
+            bottom: -${
+              String(borderImageOutset).split(" ")[2] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            left: -${
+              String(borderImageOutset).split(" ")[3] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            width: ${
+              String(borderImageWidth).split(" ")[3] ||
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            height: ${
+              String(borderImageWidth).split(" ")[2] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            background-image: url(${resolvedBorderImages.bottomLeft});
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+
+          .paper-border-left {
+            top: 0;
+            bottom: 0;
+            left: -${
+              String(borderImageOutset).split(" ")[3] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
+            }px;
+            width: ${
+              String(borderImageWidth).split(" ")[3] ||
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
+            }px;
+            background-image: url(${resolvedBorderImages.left});
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
+            }-y;
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
+            };
+            background-position: left;
+          }
+
           #PaperEditorContent > div.tiptap.ProseMirror {
             width: calc(max(500px, ${width}));
             max-width: 100%;
@@ -703,17 +917,6 @@ const TiptapEditor = ({
             border-top-left-radius: ${roundRadius}px;
             box-shadow: 0px 0px 0rem 0;
             
-            ${
-              resolvedBorderImageSource
-                ? `
-            border-image-source: url(${resolvedBorderImageSource});
-            border-image-slice: ${borderImageSlice};
-            border-image-width: ${borderImageWidth};
-            border-image-outset: ${borderImageOutset};
-            border-image-repeat: ${borderImageRepeat || "stretch"};
-            `
-                : ""
-            }
 
             height: fit-content !important;
 
@@ -1028,12 +1231,27 @@ const TiptapEditor = ({
             </FloatingMenu>
           )}
 
-          <EditorContent
-            spellCheck={false}
-            editor={editor}
-            id="PaperEditorContent"
-            className={`h-fit w-full grow flex justify-center outline-none focus:outline-none z-1 transition-all duration-200`}
-          />
+          <div className="PaperContentContainer h-fit w-full grow flex flex-col items-center outline-none focus:outline-none z-1 transition-all duration-200">
+            <div
+              id="PaperContentWrapper"
+              className="relative h-fit grow w-fit transition-all duration-200 flex flex-col"
+            >
+              <div className="paper-border paper-border-top-left" />
+              <div className="paper-border paper-border-top" />
+              <div className="paper-border paper-border-top-right" />
+              <div className="paper-border paper-border-right" />
+              <div className="paper-border paper-border-bottom-right" />
+              <div className="paper-border paper-border-bottom" />
+              <div className="paper-border paper-border-bottom-left" />
+              <div className="paper-border paper-border-left" />
+              <EditorContent
+                spellCheck={false}
+                editor={editor}
+                id="PaperEditorContent"
+                className={`h-fit w-fit grow flex justify-center outline-none focus:outline-none z-1 transition-all duration-200`}
+              />
+            </div>
+          </div>
         </div>
         {editor && (
           <TableOfContentsPanel
