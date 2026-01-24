@@ -16,7 +16,7 @@ import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 import { Sketch } from "@uiw/react-color";
 import fontManager from "../../lib/font";
 import imageManager from "../../lib/image";
-import BorderImageSliceModal from "./Templates/BorderImageSliceModal";
+import FourSidedValueModal from "./Templates/FourSidedValueModal";
 
 const FontInput = ({ value, onChange }) => {
   const fonts = useFonts();
@@ -255,8 +255,47 @@ const ImageInput = ({ value, onChange }) => {
   );
 };
 
-// BorderImageSliceInput component - opens modal for editing border-image-slice values
-const BorderImageSliceInput = ({ value, onChange, borderImageSource }) => {
+const SelectInput = ({ value, onChange, options }) => {
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <button className="w-templateDetailsPreferenceInputWidth border border-appLayoutBorder py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+          {value || "Select Option"}
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        style={{ opacity: 1 }}
+        className="contextMenuContent z-[1100] max-h-60 overflow-y-scroll"
+        align="start"
+      >
+        {options.map((option, index) => (
+          <DropdownMenu.Item
+            key={`${option}-${index}`}
+            className="contextMenuItem"
+            onClick={() => onChange(option)}
+          >
+            <span>{option}</span>
+          </DropdownMenu.Item>
+        ))}
+        {options.length === 0 && (
+          <DropdownMenu.Item className="contextMenuItem" disabled>
+            <span>No options available</span>
+          </DropdownMenu.Item>
+        )}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+};
+
+// Generic input for 4-sided values (slice, width, outset)
+const FourSidedValueInput = ({
+  value,
+  onChange,
+  borderImageSource,
+  label,
+  description,
+  showFill,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -265,15 +304,18 @@ const BorderImageSliceInput = ({ value, onChange, borderImageSource }) => {
         onClick={() => setIsModalOpen(true)}
         className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder hover:border-appLayoutHighlight"
       >
-        {value || "Edit Slice"}
+        {value || "Edit Values"}
       </button>
 
-      <BorderImageSliceModal
+      <FourSidedValueModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         value={value}
         onChange={onChange}
         borderImageSource={borderImageSource}
+        title={`Edit ${label}`}
+        description={description}
+        showFill={showFill}
       />
     </>
   );
@@ -587,16 +629,56 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
           );
         }
 
-        if (fieldConfig.type === "borderImageSlice") {
+        if (fieldConfig.type === "fourSidedValue") {
           return (
             <div key={key} className="flex items-center justify-center">
               <div className="px-4 w-full flex flex-col gap-1">
                 <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
                   <div className="w-fit h-full flex items-center">
-                    <BorderImageSliceInput
+                    <FourSidedValueInput
                       value={data[key]}
                       onChange={(val) => handleChange(key, val)}
                       borderImageSource={data.borderImageSource}
+                      label={fieldConfig.label}
+                      description={fieldConfig.description}
+                      showFill={fieldConfig.showFill}
+                    />
+                  </div>
+
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
+                </div>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          );
+        }
+
+        if (fieldConfig.type === "select") {
+          return (
+            <div key={key} className="flex items-center justify-center">
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center">
+                    <SelectInput
+                      value={data[key]}
+                      onChange={(val) => handleChange(key, val)}
+                      options={fieldConfig.options || []}
                     />
                   </div>
 
@@ -661,7 +743,7 @@ const TemplateContentEditor = ({
       desktopPaperValid,
       desktopToolbarValid,
       mobilePaperValid,
-      mobileToolbarValid
+      mobileToolbarValid,
     );
     if (
       desktopPaperValid &&
@@ -697,7 +779,7 @@ const TemplateContentEditor = ({
         },
       }));
     },
-    [newTemplate, setNewTemplate]
+    [newTemplate, setNewTemplate],
   );
 
   const returnGroupEditor = useCallback(() => {
@@ -711,7 +793,7 @@ const TemplateContentEditor = ({
             handleGroupChange(
               "desktopDefaultPreferences",
               "paperPreferences",
-              newData
+              newData,
             )
           }
         />
@@ -726,7 +808,7 @@ const TemplateContentEditor = ({
             handleGroupChange(
               "desktopDefaultPreferences",
               "toolbarPreferences",
-              newData
+              newData,
             )
           }
         />
@@ -741,7 +823,7 @@ const TemplateContentEditor = ({
             handleGroupChange(
               "mobileDefaultPreferences",
               "paperPreferences",
-              newData
+              newData,
             )
           }
         />
@@ -756,7 +838,7 @@ const TemplateContentEditor = ({
             handleGroupChange(
               "mobileDefaultPreferences",
               "toolbarPreferences",
-              newData
+              newData,
             )
           }
         />

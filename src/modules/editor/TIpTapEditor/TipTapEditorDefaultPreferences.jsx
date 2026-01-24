@@ -13,7 +13,7 @@ const TiptapDesktopDefaultPreferences = {
     marginBottom: 0,
     backgroundColor: "#121212",
 
-    paperBorderWidth: 1,
+    paperBorderWidth: "1 1 0 1  ",
     paperBorderColor: "#525252",
     paperColor: "#171717",
     roundRadius: 8,

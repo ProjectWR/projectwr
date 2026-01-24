@@ -67,6 +67,7 @@ import {
 } from "../lib/auth/auth";
 import itemLocalStateManager from "../lib/itemLocalState";
 import { MainPanelFrame } from "./LayoutComponents/MainPanelFrame";
+import { getCurrent } from "@tauri-apps/plugin-deep-link";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -304,7 +305,7 @@ const WritingApp = () => {
                 setDriveSyncLoading(true);
                 const googleDriveManager =
                   driveOrchestrator.getManager("googleDrive");
-                  
+
                 if (await googleDriveManager.initDriveSync()) {
                   console.log("INITIATED GOOGLE DRIVE SYNC!");
 
@@ -466,13 +467,28 @@ const WritingApp = () => {
     };
   }, [setIsMd]);
 
+  useEffect(() => {
+    const callback = async () => {
+      if (!document.fullscreenElement) {
+        await getCurrentWindow().setDecorations(false);
+      }
+    }
+
+    document.addEventListener("fullscreenchange", callback);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", callback);
+    }
+
+  }, [])
+
   // Render loading screen if loading is true
   return (
     <DndProvider backend={HTML5Backend}>
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-full max-h-full min-h-full w-full min-w-full box-border max-w-full bg-transparent font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
+          className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
             ${!isMaximized && "border border-appLayoutBorder"}
             `}
         >

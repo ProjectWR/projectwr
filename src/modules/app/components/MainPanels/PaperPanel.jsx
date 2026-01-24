@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
@@ -30,6 +31,9 @@ import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/Details
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { Popover, PopoverDropdown, Text } from "@mantine/core";
 import { EditorStylePickerButton } from "../LayoutComponents/DetailsPanel/EditorStylePickerButton";
+import { useFullscreen } from "@mantine/hooks";
+import { useViewportSize } from '@mantine/hooks';
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
   TipTapEditorDefaultPreferences;
@@ -41,6 +45,10 @@ const { desktopDefaultPreferences, mobileDefaultPreferences } =
  */
 const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const { deviceType } = useDeviceType();
+
+  const { ref, toggle, fullscreen } = useFullscreen();
+  const { height, width } = useViewportSize();
+  console.log("Viewport: ", height, width);
 
   const isMobile = deviceType === "mobile";
 
@@ -70,16 +78,16 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     const callback = async () => {
       try {
         const templateJSON = await templateManager.getTemplate(
-          itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId)
+          itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId),
         );
         setTemplateFromFile(templateJSON);
       } catch (e) {
         console.error(
           `Error finding template with name ${itemLocalStateManager.getPaperEditorTemplate(
             libraryId,
-            paperId
+            paperId,
           )}:`,
-          e
+          e,
         );
         setTemplateFromFile(null);
       }
@@ -146,7 +154,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     });
   };
 
-
   return (
     <DetailsPanel>
       <form
@@ -159,20 +166,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
         className={formClassName}
       >
         <DetailsPanelHeader>
-          {deviceType === "mobile" && (
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
-             order-first
-          `}
-              onClick={() => {
-                setPanelOpened(true);
-                setItemId("unselected");
-              }}
-            >
-              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-          )}
-
           <Popover
             offset={{ mainAxis: 6, crossAxis: 5 }}
             classNames={{
@@ -203,7 +196,17 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 
           <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
 
-          <DetailsPanelButtonPlaceHolder />
+          <DetailsPanelButtonOnClick
+            exist={true}
+            onClick={async () => {
+              await getCurrentWindow().setDecorations(true);
+              await getCurrentWindow().setFullscreen(!fullscreen)
+              await toggle();
+            }}
+            icon={
+              <span className="icon-[bi--collection-fill] w-9/12 h-9/12"></span>
+            }
+          />
           {/* <motion.div
             animate={{
               width:
@@ -240,7 +243,8 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
         <DetailsPanelBody>
           <motion.div
             id="PaperBody"
-            className="grow h-full  min-w-0 minbasis-0"
+            ref={ref}
+            className="grow h-full min-h-0 min-w-0 minbasis-0"
           >
             <TipTapEditor
               key={paperId}
