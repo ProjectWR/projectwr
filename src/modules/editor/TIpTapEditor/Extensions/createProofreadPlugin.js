@@ -339,7 +339,7 @@ function getDefaultCustomText(node) {
         if (child.isText) {
             textContent += child.text;
         } else if (child.type.name === 'mention') {
-            textContent += `${child.attrs.label}`
+            textContent += `$${child.attrs.label}$`
         } else if (child.isInline) {
             textContent += `$${getDefaultCustomText(child)}$`;
         } else {
