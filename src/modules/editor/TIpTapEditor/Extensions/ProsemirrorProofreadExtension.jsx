@@ -28,72 +28,68 @@ let linter = new WorkerLinter({
   dialect: Dialect.British,
 });
 
-
-
 const spellCheckStore = createSpellCheckEnabledStore(() => {
   true;
 });
 
 const generateProofreadErrors = async (input) => {
   const response = { matches: [] };
-  // lexer.input(input);
+  const delimiter = "\x1F";
+
+  // 1. Build Prefix Sum Array (PSA) for offset mapping
+  // psa[i] is the "real offset" (ProseMirror distance) for char input[i]
+  const psa = new Array(input.length + 1);
+  psa[0] = 0;
+  let inDelimited = false;
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+    let isDelimitedChar = false;
+    if (char === delimiter) {
+      inDelimited = !inDelimited;
+      isDelimitedChar = true;
+    } else if (inDelimited) {
+      isDelimitedChar = true;
+    }
+    psa[i + 1] = psa[i] + (isDelimitedChar ? 0 : 1);
+  }
 
   console.log("PRROFREADING INPUT: ", `-${input}-`);
 
-  // Trim the input to check for leading spaces
-  const trimmedInput = input.trimStart();
-
-  // Check if the first non-space character is alphabetic
-  if (/[a-zA-Z]/.test(trimmedInput[0])) {
-    // Find the index of the first non-space character
-    const firstNonSpaceIndex = input.length - trimmedInput.length;
-
-    // Capitalize the first alphabetic character
-    input =
-      input.substring(0, firstNonSpaceIndex) +
-      trimmedInput[0].toUpperCase() +
-      input.substring(firstNonSpaceIndex + 1);
-  }
-
+  // 2. Lint the input (content inside delimiters serves as context)
   const lints = await linter.lint(input);
 
   for (const lint of lints) {
-    //  console.log(lint.to_json());
+    const start = lint.span().start;
+    const end = lint.span().end;
 
-    const replacements = [];
+    // 4. Map offsets and filter out errors inside delimited sections
+    const realFrom = psa[start];
+    const realTo = psa[end];
+    const realLen = realTo - realFrom;
 
-    for (const suggestion of lint.suggestions()) {
-      //  console.log("Suggestions: ", suggestion.to_json());
-      const innerValue = JSON.parse(suggestion.to_json())["inner"];
-      //  console.log("INNER VALUE: ", innerValue);
-      if (innerValue && innerValue["ReplaceWith"]) {
-        //    console.log("Inner value replace with: ", innerValue["ReplaceWith"]);
-        replacements.push(innerValue["ReplaceWith"].join(""));
+    if (realLen > 0) {
+      const replacements = [];
+      for (const suggestion of lint.suggestions()) {
+        const innerValue = JSON.parse(suggestion.to_json())["inner"];
+        if (innerValue && innerValue["ReplaceWith"]) {
+          replacements.push(innerValue["ReplaceWith"].join(""));
+        }
       }
-    }
 
-    if (lint.lint_kind() === "Spelling") {
+      const typeName =
+        lint.lint_kind() === "Spelling" ? "UnknownWord" : "GrammarError";
+
       response.matches.push({
-        offset: lint.span().start,
-        length: lint.span().len(),
+        offset: realFrom,
+        length: realLen,
         message: lint.message(),
-        type: { typeName: "UnknownWord" },
-        replacements: replacements,
-      });
-    } else {
-      response.matches.push({
-        offset: lint.span().start,
-        length: lint.span().len(),
-        message: lint.message(),
-        type: { typeName: "GrammarError" },
-        replacements: replacements,
+        type: { typeName },
+        replacements,
       });
     }
   }
 
-
   return response;
-
 };
 
 const ProsemirrorProofreadExtension = Extension.create({
@@ -103,7 +99,7 @@ const ProsemirrorProofreadExtension = Extension.create({
         2000, // Debounce time in ms
         generateProofreadErrors, // function to call proofreading service
         createSuggestionBox,
-        spellCheckStore // Reactive store to toggle spell checking
+        spellCheckStore, // Reactive store to toggle spell checking
       ),
     ];
   },
@@ -112,12 +108,12 @@ const ProsemirrorProofreadExtension = Extension.create({
     return {
       forceSpellcheck:
         () =>
-          ({ tr, dispatch }) => {
-            if (dispatch) {
-              tr.setMeta("forceProofread", true);
-            }
-            return true;
-          },
+        ({ tr, dispatch }) => {
+          if (dispatch) {
+            tr.setMeta("forceProofread", true);
+          }
+          return true;
+        },
     };
   },
 });
@@ -216,7 +212,7 @@ function createSuggestionBox({
           container.style.transform = "translateY(-10px)";
           setTimeout(
             () => appStore.setState({ proofreadContextItems: [] }),
-            300
+            300,
           );
         },
       });
