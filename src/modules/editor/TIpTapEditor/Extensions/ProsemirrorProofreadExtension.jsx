@@ -43,14 +43,23 @@ const generateProofreadErrors = async (input) => {
   let inDelimited = false;
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
-    let isDelimitedChar = false;
     if (char === delimiter) {
-      inDelimited = !inDelimited;
-      isDelimitedChar = true;
+      if (!inDelimited) {
+        // Opening delimiter: count the entire section as 1 distance
+        psa[i + 1] = psa[i] + 1;
+        inDelimited = true;
+      } else {
+        // Closing delimiter: already counted, no increment
+        psa[i + 1] = psa[i];
+        inDelimited = false;
+      }
     } else if (inDelimited) {
-      isDelimitedChar = true;
+      // Inside delimited section: no increment
+      psa[i + 1] = psa[i];
+    } else {
+      // Normal character: increment by 1
+      psa[i + 1] = psa[i] + 1;
     }
-    psa[i + 1] = psa[i] + (isDelimitedChar ? 0 : 1);
   }
 
   console.log("PRROFREADING INPUT: ", `-${input}-`);
