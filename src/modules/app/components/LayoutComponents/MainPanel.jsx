@@ -28,7 +28,7 @@ import { equalityDeep } from "lib0/function";
 import { getOrInitLibraryYTree } from "../../lib/ytree";
 import DictionaryPanel from "../MainPanels/DictionaryPanel";
 
-const MainPanel = ({main = true}) => {
+const MainPanel = ({ main = true }) => {
   console.log("MainPanel rendering");
 
   const { deviceType } = useDeviceType();
@@ -217,10 +217,7 @@ const MainPanel = ({main = true}) => {
       const breadcrumbValues = [
         {
           label: "Your Editor Styles",
-          action: () => {
-            setActivity("templates");
-            setPanelOpened(true);
-          },
+          action: () => {},
         },
         {
           label: rootId,

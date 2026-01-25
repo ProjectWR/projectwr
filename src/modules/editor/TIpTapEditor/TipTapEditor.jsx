@@ -638,7 +638,7 @@ const TiptapEditor = ({
           }
 
           #EditorContainer {
-           
+            background-color: ${backgroundColor};
             ${resolvedBackgroundImage
               ? `background-image: url(${resolvedBackgroundImage});`
               : ""

@@ -58,6 +58,8 @@ import templateManager from "../../lib/templates";
 import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
 import useMainPanel from "../../hooks/useMainPanel";
 import { DropdownMenu } from "radix-ui";
+import videoManager from "../../lib/video";
+import { useVideos } from "../../hooks/useVideos";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -98,9 +100,13 @@ const SettingsPanel = () => {
   const images = useImages();
   console.log("images: ", images);
 
+  const videos = useVideos();
+  console.log("videos: ", videos);
+
   const [templates, setTemplates] = useState({});
 
   const settings = settingsStore((state) => state.settings);
+  const setSettings = settingsStore((state) => state.setSettings);
 
   const [isLogoutLoading, setIsLogoutLoading] = useState(false);
 
@@ -565,7 +571,7 @@ const SettingsPanel = () => {
                         <motion.span
                           animate={{
                             rotate: !mediaDropdownOpened ? 0 : -90,
-                          } }
+                          }}
                           className="icon-[formkit--left] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted group-hover:text-appLayoutText transition-colors duration-100"
                         ></motion.span>
                       </p>
@@ -573,7 +579,7 @@ const SettingsPanel = () => {
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Content
                     style={{ opacity: 1 }}
-                    className="contextMenuContent z-[1100] max-h-[20rem] overflow-y-auto"
+                    className="contextMenuContent z-1100 max-h-80 overflow-y-auto"
                     sideOffset={5}
                     align="start"
                   >
@@ -592,6 +598,15 @@ const SettingsPanel = () => {
                     >
                       <span className="text-appLayoutText">Images</span>
                       {fontImageToggle === "image" && (
+                        <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                      )}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      className="contextMenuItem"
+                      onClick={() => setFontImageToggle("videos")}
+                    >
+                      <span className="text-appLayoutText">Videos</span>
+                      {fontImageToggle === "videos" && (
                         <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
                       )}
                     </DropdownMenu.Item>
@@ -616,6 +631,10 @@ const SettingsPanel = () => {
 
                     if (fontImageToggle === "image") {
                       await imageManager.addImage();
+                    }
+
+                    if (fontImageToggle === "videos") {
+                      await videoManager.addVideo();
                     }
 
                     if (fontImageToggle === "templates") {
@@ -667,6 +686,28 @@ const SettingsPanel = () => {
                             className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
                             onClick={async () => {
                               await imageManager.deleteImage(image.id);
+                            }}
+                          >
+                            <span className="icon-[typcn--delete] w-full h-full"></span>
+                          </button>
+                        </div>
+                      </HoverListItem>
+                    );
+                  })}
+
+                {fontImageToggle === "videos" &&
+                  videos.map((video) => {
+                    return (
+                      <HoverListItem disabled={true} key={video.id}>
+                        <div className="w-full h-full flex items-center gap-2 justify-between">
+                          <p className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                            {video.fileName}
+                          </p>
+                          <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
+                          <button
+                            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                            onClick={async () => {
+                              await videoManager.deleteVideo(video.id);
                             }}
                           >
                             <span className="icon-[typcn--delete] w-full h-full"></span>

@@ -295,9 +295,6 @@ export const TabButton = ({
       setLibraryId(breadcrumbs[0]);
     }
 
-    if (panelType === "templates") {
-      setActivity("templates");
-    }
 
     activatePanel(panelType, mode, breadcrumbs);
   }, [panelType, mode, breadcrumbs, activatePanel, setActivity, setLibraryId]);
