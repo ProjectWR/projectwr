@@ -243,6 +243,12 @@ export const desktopPaperConfig = {
     category: "background",
     description: "Image behind the paper",
   },
+  backgroundVideo: {
+    type: "video",
+    label: "Background Video",
+    category: "background",
+    description: "Video behind the paper",
+  },
   paperColor: {
     type: "color",
     label: "Paper Color",

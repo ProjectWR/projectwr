@@ -16,7 +16,9 @@ import TipTapEditor from "../../../editor/TIpTapEditor/TipTapEditor";
 import { Sketch } from "@uiw/react-color";
 import fontManager from "../../lib/font";
 import imageManager from "../../lib/image";
+import videoManager from "../../lib/video";
 import FourSidedValueModal from "./Templates/FourSidedValueModal";
+import { useVideos } from "../../hooks/useVideos";
 
 const FontInput = ({ value, onChange }) => {
   const fonts = useFonts();
@@ -249,6 +251,79 @@ const ImageInput = ({ value, onChange }) => {
           onClick={() => imageManager.addImage()}
         >
           <span>Add Image</span>
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+};
+
+const VideoInput = ({ value, onChange }) => {
+  const videos = useVideos();
+
+  // Resolve the value to a URL if it's an ID
+  const displayUrl = React.useMemo(() => {
+    if (!value) return null;
+
+    if (
+      typeof value === "string" &&
+      (value.startsWith("blob:") || value.startsWith("http"))
+    ) {
+      return value;
+    }
+
+    return videoManager.getVideoUrl(value);
+  }, [value]);
+
+  // Find the video name for display
+  const videoName = React.useMemo(() => {
+    if (!value) return null;
+
+    const video = videos.find((v) => v.id === value || v.url === value);
+    return video ? video.name : "Selected Video";
+  }, [value, videos]);
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <button className="w-templateDetailsPreferenceInputWidth border border-appLayoutBorder py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
+          {displayUrl ? (
+            <div className="flex items-center gap-2 px-2">
+              <span className="icon-[material-symbols--video-library-outline] w-4 h-4 flex-shrink-0" />
+              <span className="truncate">{videoName}</span>
+            </div>
+          ) : (
+            "Select"
+          )}
+        </button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        style={{ opacity: 1 }}
+        className="contextMenuContent z-[1100] max-h-60 overflow-y-scroll"
+        align="start"
+      >
+        {videos.map((video, index) => (
+          <DropdownMenu.Item
+            key={`${video.id}-${index}`}
+            className="contextMenuItem"
+            onClick={() => onChange(video.id)}
+          >
+            <div className="flex items-center gap-2">
+              <span className="icon-[material-symbols--video-file-outline] w-5 h-5" />
+              <span>{video.name}</span>
+            </div>
+          </DropdownMenu.Item>
+        ))}
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => onChange(null)}
+        >
+          <span>Clear Video</span>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item
+          className="contextMenuItem"
+          onClick={() => videoManager.addVideo()}
+        >
+          <span>Add Video</span>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -564,6 +639,42 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                 <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
                   <div className="w-fit h-full flex items-center">
                     <FontInput
+                      value={data[key]}
+                      onChange={(val) => handleChange(key, val)}
+                    />
+                  </div>
+
+                  <label
+                    htmlFor={`input-${key}`}
+                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                  >
+                    {fieldConfig.label}
+                  </label>
+                </div>
+                <AnimatePresence>
+                  {errors[key] && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-red-500 text-sm text-nowrap overflow-hidden"
+                    >
+                      {errors[key]}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          );
+        }
+
+        if (fieldConfig.type === "video") {
+          return (
+            <div key={key} className="flex items-center justify-center">
+              <div className="px-4 w-full flex flex-col gap-1">
+                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                  <div className="w-fit h-full flex items-center">
+                    <VideoInput
                       value={data[key]}
                       onChange={(val) => handleChange(key, val)}
                     />

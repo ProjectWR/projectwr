@@ -269,15 +269,5 @@ const FourSidedValueModal = ({
   );
 };
 
-FourSidedValueModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  borderImageSource: PropTypes.string,
-  title: PropTypes.string,
-  description: PropTypes.string,
-  showFill: PropTypes.bool,
-};
 
 export default FourSidedValueModal;

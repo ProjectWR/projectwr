@@ -46,6 +46,7 @@ import { useDebouncedCallback } from "@mantine/hooks";
 import templateManager from "../lib/templates";
 import useMainPanel from "../hooks/useMainPanel";
 import imageManager from "../lib/image";
+import videoManager from "../lib/video";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
 import { DetailsPanelNotesPanel } from "./LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
@@ -107,7 +108,6 @@ const WritingApp = () => {
   const setUser = appStore((state) => state.setUser);
 
   const setDriveSyncLoading = appStore((state) => state.setDriveSyncLoading);
-
 
   useEffect(() => {
     onAuthStateChanged(getAuth(firebaseApp), (user) => {
@@ -176,6 +176,8 @@ const WritingApp = () => {
 
         await imageManager.init();
 
+        await videoManager.init();
+
         setLoadingStage("Loading templates");
 
         await templateManager.initialize();
@@ -239,23 +241,20 @@ const WritingApp = () => {
               const googleDriveManager =
                 driveOrchestrator.getManager("googleDrive");
 
-              dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
-                if (action === "set") {
-                  await googleDriveManager.addDocument(
-                    key,
-                    dataManagerSubdocs.getLibrary(key),
-                    dataManagerSubdocs.getLibrary(key)?.clientID,
-                    key
-                  );
+              dataManagerSubdocs.addLibraryYDocMapCallback(
+                async (action, key, value) => {
+                  if (action === "set") {
+                    await googleDriveManager.addDocument(
+                      key,
+                      dataManagerSubdocs.getLibrary(key),
+                      dataManagerSubdocs.getLibrary(key)?.clientID,
+                      key,
+                    );
 
-                  driveOrchestrator.startSync(
-                    "googleDrive",
-                    key,
-                    20000
-                  );
-                }
-              });
-
+                    driveOrchestrator.startSync("googleDrive", key, 20000);
+                  }
+                },
+              );
 
               if (await googleDriveManager.initDriveSync()) {
                 console.log("INITIATED GOOGLE DRIVE SYNC!");
@@ -266,23 +265,21 @@ const WritingApp = () => {
                     localLibraryId,
                     dataManagerSubdocs.getLibrary(localLibraryId),
                     dataManagerSubdocs.getLibrary(localLibraryId)?.clientID,
-                    localLibraryId
+                    localLibraryId,
                   );
                   await driveOrchestrator.startSync(
                     "googleDrive",
                     localLibraryId,
-                    20000
+                    20000,
                   );
                 }
 
                 await driveOrchestrator.startSyncForAllDriveDocs(
                   "googleDrive",
-                  20000
+                  20000,
                 );
 
-
                 setDriveSyncLoading(false);
-
               }
             }
           })
@@ -309,22 +306,20 @@ const WritingApp = () => {
                 if (await googleDriveManager.initDriveSync()) {
                   console.log("INITIATED GOOGLE DRIVE SYNC!");
 
-                  dataManagerSubdocs.addLibraryYDocMapCallback(async (action, key, value) => {
-                    if (action === "set") {
-                      await googleDriveManager.addDocument(
-                        key,
-                        dataManagerSubdocs.getLibrary(key),
-                        dataManagerSubdocs.getLibrary(key)?.clientID,
-                        key
-                      );
+                  dataManagerSubdocs.addLibraryYDocMapCallback(
+                    async (action, key, value) => {
+                      if (action === "set") {
+                        await googleDriveManager.addDocument(
+                          key,
+                          dataManagerSubdocs.getLibrary(key),
+                          dataManagerSubdocs.getLibrary(key)?.clientID,
+                          key,
+                        );
 
-                      driveOrchestrator.startSync(
-                        "googleDrive",
-                        key,
-                        20000
-                      );
-                    }
-                  });
+                        driveOrchestrator.startSync("googleDrive", key, 20000);
+                      }
+                    },
+                  );
 
                   // start sync for all local ydocs
                   for (const localLibraryId of localLibraries) {
@@ -332,21 +327,19 @@ const WritingApp = () => {
                       localLibraryId,
                       dataManagerSubdocs.getLibrary(localLibraryId),
                       dataManagerSubdocs.getLibrary(localLibraryId)?.clientID,
-                      localLibraryId
+                      localLibraryId,
                     );
                     await driveOrchestrator.startSync(
                       "googleDrive",
                       localLibraryId,
-                      20000
+                      20000,
                     );
                   }
 
                   await driveOrchestrator.startSyncForAllDriveDocs(
                     "googleDrive",
-                    20000
+                    20000,
                   );
-
-
                 }
 
                 setDriveSyncLoading(false);
@@ -364,7 +357,7 @@ const WritingApp = () => {
           console.log("path: ", `users/${user.uid}/docs/`);
 
           const querySnapshot = await getDocs(
-            collection(getFirestore(firebaseApp), `users/${user.uid}/docs/`)
+            collection(getFirestore(firebaseApp), `users/${user.uid}/docs/`),
           );
 
           const documentNames = querySnapshot.docs.map((doc) => doc.id);
@@ -381,7 +374,7 @@ const WritingApp = () => {
               console.log("ydoc", ydoc);
 
               await persistenceManagerForSubdocs.initLocalPersistenceForYDoc(
-                ydoc
+                ydoc,
               );
             }
 
@@ -393,13 +386,23 @@ const WritingApp = () => {
 
         setLoadingStage("Loading previous session");
 
-        const lastOpenedItem = itemLocalStateManager.fetchLatestOpenedItems(1) ? itemLocalStateManager.fetchLatestOpenedItems(1)[0] : null;
+        const lastOpenedItem = itemLocalStateManager.fetchLatestOpenedItems(1)
+          ? itemLocalStateManager.fetchLatestOpenedItems(1)[0]
+          : null;
 
-        console.log("last opened item: ", lastOpenedItem, lastOpenedItem.itemIdLibraryId?.split("::")[0]);
+        console.log(
+          "last opened item: ",
+          lastOpenedItem,
+          lastOpenedItem.itemIdLibraryId?.split("::")[0],
+        );
 
-        const lastOpenedlibraryId = lastOpenedItem?.itemIdLibraryId?.split("::")[0];
+        const lastOpenedlibraryId =
+          lastOpenedItem?.itemIdLibraryId?.split("::")[0];
 
-        if (lastOpenedItem && dataManagerSubdocs.getLibrary(lastOpenedlibraryId)) {
+        if (
+          lastOpenedItem &&
+          dataManagerSubdocs.getLibrary(lastOpenedlibraryId)
+        ) {
           console.log("Setting last opened library id: ", lastOpenedlibraryId);
           setLibraryId(lastOpenedlibraryId);
         }
@@ -407,7 +410,7 @@ const WritingApp = () => {
         // await wait(1000);
         setLoadingStage("Finished Loading");
 
-        return () => { };
+        return () => {};
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -429,7 +432,7 @@ const WritingApp = () => {
     setDeviceType,
     setLibraryId,
     user,
-    setDriveSyncLoading
+    setDriveSyncLoading,
   ]);
 
   useEffect(() => {
@@ -439,7 +442,7 @@ const WritingApp = () => {
         sidePanelScope.current,
         { x: panelOpened ? 0 : -500 },
         { ease: "circInOut" },
-        { duration: 0.2 }
+        { duration: 0.2 },
       );
     }
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
@@ -472,15 +475,14 @@ const WritingApp = () => {
       if (!document.fullscreenElement) {
         await getCurrentWindow().setDecorations(false);
       }
-    }
+    };
 
     document.addEventListener("fullscreenchange", callback);
 
     return () => {
       document.removeEventListener("fullscreenchange", callback);
-    }
-
-  }, [])
+    };
+  }, []);
 
   // Render loading screen if loading is true
   return (
@@ -488,7 +490,7 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
+          className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-white dark:bg-black font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
             ${!isMaximized && "border border-appLayoutBorder"}
             `}
         >
@@ -505,8 +507,8 @@ const WritingApp = () => {
               >
                 <span
                   className="w-full h-full"
-                // animate={{ rotate: 360 }}
-                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                  // animate={{ rotate: 360 }}
+                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
