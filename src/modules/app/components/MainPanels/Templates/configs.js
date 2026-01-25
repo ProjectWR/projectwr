@@ -237,6 +237,14 @@ export const desktopPaperConfig = {
     category: "background",
     description: "Color behind the paper",
   },
+  backgroundColorOpacity: {
+    type: "number",
+    label: "Background Opacity %",
+    min: 0,
+    max: 100,
+    category: "background",
+    description: "Opacity of the background color",
+  },
   backgroundImage: {
     type: "image",
     label: "Background Image",
@@ -262,6 +270,14 @@ export const desktopPaperConfig = {
     max: 100,
     category: "background",
     description: "Opacity of the paper color",
+  },
+  paperBlur: {
+    type: "number",
+    label: "Paper Blur",
+    min: 0,
+    max: 100,
+    category: "background",
+    description: "Frosted glass blur amount",
   },
 
   // ─── Borders & Decorations ───────────────────────────────────

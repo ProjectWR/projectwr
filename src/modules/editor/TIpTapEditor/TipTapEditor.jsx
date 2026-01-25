@@ -149,11 +149,13 @@ const TiptapEditor = ({
     lineHeight,
     marginBottom,
     backgroundColor,
+    backgroundColorOpacity,
     backgroundImage,
     backgroundVideo,
     paperBorderWidth,
     paperColor,
     paperColorOpacity,
+    paperBlur,
     paperBorderColor,
     roundRadius,
     paperShadow,
@@ -331,11 +333,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-              .getLibrary(libraryId)
-              ?.getMap("library_props")
-              ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-              ?.item_title;
+                ?.item_title;
 
         return label;
 
@@ -366,11 +368,11 @@ const TiptapEditor = ({
         const label =
           libraryId === id
             ? dataManagerSubdocs
-              .getLibrary(libraryId)
-              ?.getMap("library_props")
-              ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
             : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-              ?.item_title;
+                ?.item_title;
 
         const elem = document.createElement("span");
 
@@ -638,10 +640,13 @@ const TiptapEditor = ({
           }
 
           #EditorContainer {
-            background-color: ${backgroundColor};
-            ${resolvedBackgroundImage
-              ? `background-image: url(${resolvedBackgroundImage});`
-              : ""
+            background-color: color-mix(in srgb, ${backgroundColor} ${
+            backgroundColorOpacity !== undefined ? backgroundColorOpacity : 100
+          }%, transparent);
+            ${
+              resolvedBackgroundImage
+                ? `background-image: url(${resolvedBackgroundImage});`
+                : ""
             }
             background-size: ${backgroundSize || "auto"};
             background-position: ${backgroundPosition || "center"};
@@ -649,14 +654,17 @@ const TiptapEditor = ({
           }
 
           #EditableUtilityToolbarWrapper {
-            height: calc(${toolbarPreferences.toolbarHeight
+            height: calc(${
+              toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
           }
 
           #EditableUtilityToolbar {
-            height: calc(${toolbarPreferences.toolbarHeight
+            height: calc(${
+              toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
-            min-height: calc(${toolbarPreferences.toolbarHeight
+            min-height: calc(${
+              toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
             background-color: ${toolbarPreferences.backgroundColor};
             border-color: ${borderColor};
@@ -669,9 +677,11 @@ const TiptapEditor = ({
           }
 
           #EditableToolbar {
-            height: calc(${toolbarPreferences.toolbarHeight
+            height: calc(${
+              toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
-            min-height: calc(${toolbarPreferences.toolbarHeight
+            min-height: calc(${
+              toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
             background-color: ${toolbarPreferences.backgroundColor};
             border-color: ${borderColor};
@@ -716,14 +726,16 @@ const TiptapEditor = ({
 
           .paper-border-top-left {
             top: -${String(borderImageOutset).split(" ")[0] || 0}px;
-            left: -${String(borderImageOutset).split(" ")[3] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            left: -${
+              String(borderImageOutset).split(" ")[3] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            width: ${String(borderImageWidth).split(" ")[3] ||
-            String(borderImageWidth).split(" ")[1] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            width: ${
+              String(borderImageWidth).split(" ")[3] ||
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             height: ${String(borderImageWidth).split(" ")[0] || 0}px;
             background-image: url(${resolvedBorderImages.topLeft});
@@ -737,24 +749,28 @@ const TiptapEditor = ({
             right: 0;
             height: ${String(borderImageWidth).split(" ")[0] || 0}px;
             background-image: url(${resolvedBorderImages.top});
-            background-repeat: ${borderImageRepeat === "stretch"
-              ? "no-repeat"
-              : borderImageRepeat || "repeat"
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
             }-x;
-            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
             };
             background-position: top;
           }
 
           .paper-border-top-right {
             top: -${String(borderImageOutset).split(" ")[0] || 0}px;
-            right: -${String(borderImageOutset).split(" ")[1] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            right: -${
+              String(borderImageOutset).split(" ")[1] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            width: ${String(borderImageWidth).split(" ")[1] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            width: ${
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             height: ${String(borderImageWidth).split(" ")[0] || 0}px;
             background-image: url(${resolvedBorderImages.topRight});
@@ -763,43 +779,52 @@ const TiptapEditor = ({
           }
 
           .paper-border-right {
-            top: calc(-${String(borderImageOutset).split(" ")[0] || 0}px + ${String(borderImageWidth).split(" ")[0] || 0
-            }px);
+            top: calc(-${String(borderImageOutset).split(" ")[0] || 0}px + ${
+            String(borderImageWidth).split(" ")[0] || 0
+          }px);
             bottom: 0;
-            right: -${String(borderImageOutset).split(" ")[1] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            right: -${
+              String(borderImageOutset).split(" ")[1] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            width: ${String(borderImageWidth).split(" ")[1] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            width: ${
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             background-image: url(${resolvedBorderImages.right});
-            background-repeat: ${borderImageRepeat === "stretch"
-              ? "no-repeat"
-              : borderImageRepeat || "repeat"
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
             }-y;
-            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
             };
             background-position: top;
           }
 
           .paper-border-bottom-right {
-            bottom: -${String(borderImageOutset).split(" ")[2] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            bottom: -${
+              String(borderImageOutset).split(" ")[2] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            right: -${String(borderImageOutset).split(" ")[1] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            right: -${
+              String(borderImageOutset).split(" ")[1] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            width: ${String(borderImageWidth).split(" ")[1] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            width: ${
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
-            height: ${String(borderImageWidth).split(" ")[2] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            height: ${
+              String(borderImageWidth).split(" ")[2] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             background-image: url(${resolvedBorderImages.bottomRight});
             background-size: 100% 100%;
@@ -807,43 +832,51 @@ const TiptapEditor = ({
           }
 
           .paper-border-bottom {
-            bottom: -${String(borderImageOutset).split(" ")[2] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            bottom: -${
+              String(borderImageOutset).split(" ")[2] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
             left: 0;
             right: 0;
-            height: ${String(borderImageWidth).split(" ")[2] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            height: ${
+              String(borderImageWidth).split(" ")[2] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             background-image: url(${resolvedBorderImages.bottom});
-            background-repeat: ${borderImageRepeat === "stretch"
-              ? "no-repeat"
-              : borderImageRepeat || "repeat"
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
             }-x;
-            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
             };
             background-position: bottom;
           }
 
           .paper-border-bottom-left {
-            bottom: -${String(borderImageOutset).split(" ")[2] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            bottom: -${
+              String(borderImageOutset).split(" ")[2] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            left: -${String(borderImageOutset).split(" ")[3] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            left: -${
+              String(borderImageOutset).split(" ")[3] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            width: ${String(borderImageWidth).split(" ")[3] ||
-            String(borderImageWidth).split(" ")[1] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            width: ${
+              String(borderImageWidth).split(" ")[3] ||
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
-            height: ${String(borderImageWidth).split(" ")[2] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            height: ${
+              String(borderImageWidth).split(" ")[2] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             background-image: url(${resolvedBorderImages.bottomLeft});
             background-size: 100% 100%;
@@ -851,24 +884,29 @@ const TiptapEditor = ({
           }
 
           .paper-border-left {
-            top: calc(-${String(borderImageOutset).split(" ")[0] || 0}px + ${String(borderImageWidth).split(" ")[0] || 0
-            }px);
+            top: calc(-${String(borderImageOutset).split(" ")[0] || 0}px + ${
+            String(borderImageWidth).split(" ")[0] || 0
+          }px);
             bottom: 0;
-            left: -${String(borderImageOutset).split(" ")[3] ||
-            String(borderImageOutset).split(" ")[0] ||
-            0
+            left: -${
+              String(borderImageOutset).split(" ")[3] ||
+              String(borderImageOutset).split(" ")[0] ||
+              0
             }px;
-            width: ${String(borderImageWidth).split(" ")[3] ||
-            String(borderImageWidth).split(" ")[1] ||
-            String(borderImageWidth).split(" ")[0] ||
-            0
+            width: ${
+              String(borderImageWidth).split(" ")[3] ||
+              String(borderImageWidth).split(" ")[1] ||
+              String(borderImageWidth).split(" ")[0] ||
+              0
             }px;
             background-image: url(${resolvedBorderImages.left});
-            background-repeat: ${borderImageRepeat === "stretch"
-              ? "no-repeat"
-              : borderImageRepeat || "repeat"
+            background-repeat: ${
+              borderImageRepeat === "stretch"
+                ? "no-repeat"
+                : borderImageRepeat || "repeat"
             }-y;
-            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
+            background-size: ${
+              borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
             };
             background-position: top;
           }
@@ -876,22 +914,29 @@ const TiptapEditor = ({
           #PaperEditorContent > div.tiptap.ProseMirror {
             width: calc(max(500px, ${width}));
             max-width: 100%;
-            background-color: color-mix(in srgb, ${paperColor} ${paperColorOpacity !== undefined ? paperColorOpacity : 100
-            }%, transparent);
-            border-top-width: ${String(paperBorderWidth).split(" ")[0] || 0
+            background-color: color-mix(in srgb, ${paperColor} ${
+            paperColorOpacity !== undefined ? paperColorOpacity : 100
+          }%, transparent);
+            backdrop-filter: blur(${paperBlur || 0}px);
+            -webkit-backdrop-filter: blur(${paperBlur || 0}px);
+            border-top-width: ${
+              String(paperBorderWidth).split(" ")[0] || 0
             }px!important;
-            border-right-width: ${String(paperBorderWidth).split(" ")[1] ||
-            String(paperBorderWidth).split(" ")[0] ||
-            0
+            border-right-width: ${
+              String(paperBorderWidth).split(" ")[1] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
             }px!important;
-            border-bottom-width: ${String(paperBorderWidth).split(" ")[2] ||
-            String(paperBorderWidth).split(" ")[0] ||
-            0
+            border-bottom-width: ${
+              String(paperBorderWidth).split(" ")[2] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
             }px!important;
-            border-left-width: ${String(paperBorderWidth).split(" ")[3] ||
-            String(paperBorderWidth).split(" ")[1] ||
-            String(paperBorderWidth).split(" ")[0] ||
-            0
+            border-left-width: ${
+              String(paperBorderWidth).split(" ")[3] ||
+              String(paperBorderWidth).split(" ")[1] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
             }px!important;
             border-color: ${paperBorderColor}!important;
             border-style: solid!important;
@@ -1169,7 +1214,6 @@ const TiptapEditor = ({
           </BubbleMenu>
         )}
 
-
         {resolvedBackgroundVideo && (
           <video
             id="BackgroundVideo"
@@ -1181,8 +1225,6 @@ const TiptapEditor = ({
             className="absolute top-0 w-full h-full object-cover pointer-events-none z-[-1]"
           />
         )}
-
-
 
         <div
           id="EditableContainer"
@@ -1227,8 +1269,6 @@ const TiptapEditor = ({
               </div>
             </FloatingMenu>
           )}
-
-
 
           <div className="PaperContentContainer h-fit w-full grow flex flex-col items-center outline-none focus:outline-none z-1 transition-all duration-200">
             <div
