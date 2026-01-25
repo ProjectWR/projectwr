@@ -7,6 +7,8 @@ import {
   desktopToolbarConfig,
   mobilePaperConfig,
   mobileToolbarConfig,
+  getFieldsByCategory,
+  categoryNames,
 } from "./Templates/configs";
 import { DropdownMenu } from "radix-ui";
 import { useFonts } from "../../hooks/useFonts";
@@ -502,326 +504,388 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
     onChange({ ...data, [key]: value });
   };
 
+  const fieldsByCategory = React.useMemo(
+    () => getFieldsByCategory(config),
+    [config],
+  );
+
   return (
-    <>
-      {Object.entries(config).map(([key, fieldConfig]) => {
-        if (fieldConfig.type === "color") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit bg-appBackground h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-lg">
-                    <div className="text-libraryDirectoryBookNodeFontSize  h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
-                      <ColorPicker
-                        color={data[key]}
-                        onChangeComplete={(color) => handleChange(key, color)}
-                      />
+    <div className="flex flex-col w-full pb-10">
+      {Object.entries(fieldsByCategory).map(([category, categoryFields]) => {
+        return (
+          <CategorySection
+            key={category}
+            title={categoryNames[category] || category}
+          >
+            <div className="flex w-full flex-col gap-2">
+              {Object.entries(categoryFields).map(([key, fieldConfig]) => {
+                if (fieldConfig.type === "color") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit bg-appBackground h-full flex items-center justify-center shadow-inner shadow-appLayoutShadow rounded-lg">
+                            <div className="text-libraryDirectoryBookNodeFontSize  h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder">
+                              <ColorPicker
+                                color={data[key]}
+                                onChangeComplete={(color) =>
+                                  handleChange(key, color)
+                                }
+                              />
+                            </div>
+                          </div>
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     </div>
-                  </div>
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
+                  );
+                }
+
+                if (
+                  fieldConfig.type === "number" ||
+                  fieldConfig.type === "text"
+                ) {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex flex-row items-center">
+                          <div className="w-fit h-full">
+                            <input
+                              id={`input-${key}`}
+                              type={
+                                fieldConfig.type === "number"
+                                  ? "number"
+                                  : "text"
+                              }
+                              value={data[key]}
+                              onChange={(e) =>
+                                handleChange(key, e.target.value)
+                              }
+                              min={
+                                fieldConfig.type === "number"
+                                  ? fieldConfig.min
+                                  : undefined
+                              }
+                              max={
+                                fieldConfig.type === "number"
+                                  ? fieldConfig.max
+                                  : undefined
+                              }
+                              className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+                            />
+                          </div>
+
+                          <span className="text-libraryDirectoryBookNodeFontSize h-full ml-1 text-appLayoutTextMuted flex items-center bg-appBackground  rounded-lg">
+                            px
+                          </span>
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize ml-2 w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Modified branch for "numberOrPercent"
+                if (fieldConfig.type === "numberOrPercent") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <NumberOrPercentInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                              fieldConfig={fieldConfig}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (fieldConfig.type === "font") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <FontInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (fieldConfig.type === "video") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <VideoInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (fieldConfig.type === "image") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <ImageInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (fieldConfig.type === "fourSidedValue") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <FourSidedValueInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                              borderImageSource={data.borderImageSource}
+                              label={fieldConfig.label}
+                              description={fieldConfig.description}
+                              showFill={fieldConfig.showFill}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (fieldConfig.type === "select") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <SelectInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                              options={fieldConfig.options || []}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return null;
+              })}
             </div>
-          );
-        }
-
-        if (fieldConfig.type === "number" || fieldConfig.type === "text") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex flex-row items-center">
-                  <div className="w-fit h-full">
-                    <input
-                      id={`input-${key}`}
-                      type={fieldConfig.type === "number" ? "number" : "text"}
-                      value={data[key]}
-                      onChange={(e) => handleChange(key, e.target.value)}
-                      min={
-                        fieldConfig.type === "number"
-                          ? fieldConfig.min
-                          : undefined
-                      }
-                      max={
-                        fieldConfig.type === "number"
-                          ? fieldConfig.max
-                          : undefined
-                      }
-                      className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
-                    />
-                  </div>
-
-                  <span className="text-libraryDirectoryBookNodeFontSize h-full ml-1 text-appLayoutTextMuted flex items-center bg-appBackground  rounded-lg">
-                    px
-                  </span>
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize ml-2 w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        // Modified branch for "numberOrPercent"
-        if (fieldConfig.type === "numberOrPercent") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center">
-                    <NumberOrPercentInput
-                      value={data[key]}
-                      onChange={(val) => handleChange(key, val)}
-                      fieldConfig={fieldConfig}
-                    />
-                  </div>
-
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        if (fieldConfig.type === "font") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center">
-                    <FontInput
-                      value={data[key]}
-                      onChange={(val) => handleChange(key, val)}
-                    />
-                  </div>
-
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        if (fieldConfig.type === "video") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center">
-                    <VideoInput
-                      value={data[key]}
-                      onChange={(val) => handleChange(key, val)}
-                    />
-                  </div>
-
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        if (fieldConfig.type === "image") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center">
-                    <ImageInput
-                      value={data[key]}
-                      onChange={(val) => handleChange(key, val)}
-                    />
-                  </div>
-
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        if (fieldConfig.type === "fourSidedValue") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center">
-                    <FourSidedValueInput
-                      value={data[key]}
-                      onChange={(val) => handleChange(key, val)}
-                      borderImageSource={data.borderImageSource}
-                      label={fieldConfig.label}
-                      description={fieldConfig.description}
-                      showFill={fieldConfig.showFill}
-                    />
-                  </div>
-
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        if (fieldConfig.type === "select") {
-          return (
-            <div key={key} className="flex items-center justify-center">
-              <div className="px-4 w-full flex flex-col gap-1">
-                <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
-                  <div className="w-fit h-full flex items-center">
-                    <SelectInput
-                      value={data[key]}
-                      onChange={(val) => handleChange(key, val)}
-                      options={fieldConfig.options || []}
-                    />
-                  </div>
-
-                  <label
-                    htmlFor={`input-${key}`}
-                    className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
-                  >
-                    {fieldConfig.label}
-                  </label>
-                </div>
-                <AnimatePresence>
-                  {errors[key] && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-500 text-sm text-nowrap overflow-hidden"
-                    >
-                      {errors[key]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          );
-        }
-
-        return null;
+          </CategorySection>
+        );
       })}
-    </>
+    </div>
   );
 }
+
+const CategorySection = ({ title, children }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div className="flex flex-col w-full border-b border-appLayoutBorder/50 last:border-0">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full px-4 py-2 hover:bg-appLayoutHover transition-colors duration-200 group"
+      >
+        <span className="text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutTextMuted group-hover:text-appLayoutText tracking-wider uppercase">
+          {title}
+        </span>
+        <motion.span
+          animate={{ rotate: !isOpen ? 0 : -90 }}
+          className="icon-[formkit--left] w-5 h-5 text-appLayoutTextMuted"
+        />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-2 pb-4">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 // ─── TEMPLATE CONTENT EDITOR ───────────────────────────────────────────────
 /**
@@ -1051,14 +1115,14 @@ const TemplateContentEditor = ({
           scrollbars="y"
           type="hover"
           classNames={{
-            root: `w-fit h-full max-h-full p-0 border border-appLayoutBorder rounded-l-lg shadow-sm shadow-appLayoutGentleShadow`,
+            root: `w-sidePanelWidth  h-full max-h-full p-0 border border-appLayoutBorder rounded-l-lg shadow-sm shadow-appLayoutGentleShadow`,
             scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidth opacity-70`,
             thumb: `bg-appLayoutBorder rounded-l-full hover:bg-appLayoutInverseHover! z-[50]`,
             content:
-              "h-full max-h-full w-fit flex flex-col items-center py-4 justify-start gap-3",
+              "h-full max-h-full w-full flex flex-col items-center pt-0 justify-start gap-3",
           }}
         >
-          <div id="TCEBody w-fit h-fit mt-1 z-0">
+          <div style={{ width: "100%" }} id="TCEBody h-fit mt-1 z-0">
             <AnimatePresence mode="wait">
               <motion.div
                 key={groupSelected}
@@ -1066,7 +1130,7 @@ const TemplateContentEditor = ({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.1 }}
-                className="grid grid-cols-1 py-1 gap-y-2 gap-x-0"
+                className="grid grid-cols-1 w-full py-1 gap-y-2 gap-x-0"
               >
                 {returnGroupEditor()}
               </motion.div>

@@ -459,7 +459,7 @@ const TiptapEditor = ({
   }, [isMobile, setHeaderOpened]);
 
   const editor = useEditor({
-    content: mode === "previewTemplate" ? loremIpsum : content,
+    content: mode === "previewTemplate" ? "" : content,
     extensions:
       mode === "previewTemplate"
         ? previewTemplateExtensions.current
@@ -918,7 +918,6 @@ const TiptapEditor = ({
             paperColorOpacity !== undefined ? paperColorOpacity : 100
           }%, transparent);
             backdrop-filter: blur(${paperBlur || 0}px);
-            -webkit-backdrop-filter: blur(${paperBlur || 0}px);
             border-top-width: ${
               String(paperBorderWidth).split(" ")[0] || 0
             }px!important;
