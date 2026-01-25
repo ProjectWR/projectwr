@@ -99,7 +99,8 @@ export function createProofreadPlugin(
     function containsOnlyTextNodes(node) {
         let onlyText = true;
         node.forEach((child) => {
-            if (!child.isText && child.type.name !== 'inline_math') {
+            console.log("CHILD: ", child);
+            if (!child.isText && child.type.name !== 'inline_math' && child.type.name !== 'mention') {
                 onlyText = false;
                 return false;
             }
@@ -337,6 +338,8 @@ function getDefaultCustomText(node) {
     node.content.forEach((child) => {
         if (child.isText) {
             textContent += child.text;
+        } else if (child.type.name === 'mention') {
+            textContent += `${child.attrs.label}`
         } else if (child.isInline) {
             textContent += `$${getDefaultCustomText(child)}$`;
         } else {

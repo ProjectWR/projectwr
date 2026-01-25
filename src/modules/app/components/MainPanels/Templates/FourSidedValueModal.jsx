@@ -12,7 +12,7 @@ const FourSidedValueModal = ({
   value,
   onChange,
   borderImageSource,
-  title = "Edit Values",
+  title = "Edit",
   description = "Set the values for each side.",
   showFill = false,
 }) => {

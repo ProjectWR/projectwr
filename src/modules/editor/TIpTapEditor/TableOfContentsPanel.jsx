@@ -257,13 +257,19 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
                 >
                   {/* POI Circle */}
                   <motion.div
-                    className="TOCPOI rounded-full transition-all"
+                    className="TOCPOIContainer relative"
                     style={{
                       width: `${poiSize}px`,
                       height: `${poiSize}px`,
                     }}
-                    whileHover={{ scale: 1.3 }}
-                  />
+                    whileHover={{ scale: 1.3, duration: 0.05 }}
+                  >
+                    <div style={{
+                      height: `calc(2px * var(--uiScale))`,
+                    }} className="TOCPOI transition-colors w-full absolute left-0 top-1/2 -translate-y-1/2">
+
+                    </div>
+                  </motion.div>
 
                   {/* Heading label on hover */}
                   <AnimatePresence>

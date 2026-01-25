@@ -28,30 +28,7 @@ let linter = new WorkerLinter({
   dialect: Dialect.British,
 });
 
-// await linter.setLintConfig({
-//   SentenceCapitalization: false,
-// });
 
-lexer.rule(/[a-zA-Z](?:[a-zA-Z0-9]|'(?=[a-zA-Z]))*/, (ctx, match) => {
-  // Handles contractions like don't, couldn't, etc.
-  ctx.accept("word", match[0]);
-});
-
-lexer.rule(/[+-]?[0-9]+/, (ctx, match) => {
-  ctx.accept("number", parseInt(match[0]));
-});
-
-lexer.rule(/\/\/[^\r\n]*\r?\n/, (ctx, match) => {
-  ctx.ignore(); // Comments
-});
-
-lexer.rule(/[ \t\r\n]+/, (ctx, match) => {
-  ctx.ignore(); // Whitespace
-});
-
-lexer.rule(/./, (ctx, match) => {
-  ctx.accept("char"); // Catch-all for punctuation
-});
 
 const spellCheckStore = createSpellCheckEnabledStore(() => {
   true;
@@ -114,38 +91,9 @@ const generateProofreadErrors = async (input) => {
     }
   }
 
-  // lexer.tokens().forEach((token) => {
-  //   if (token.value.length < 2) return;
-
-  //   let result = dictionaryManager.userSpellchecker.correct(token.text);
-  //   if (token.text.indexOf("'") != -1) {
-  //     result =
-  //       result ||
-  //       dictionaryManager.userSpellchecker.correct(token.text.split("'")[0]);
-  //   }
-
-  //   // const replacements = nspellchecker.suggest(token.value);
-
-  //   if (!result) {
-  //     response.matches.push({
-  //       offset: token.pos,
-  //       length: token.value.length,
-  //       message: "Possible spelling mistake found.",
-  //       shortMessage: "Spelling error",
-  //       type: { typeName: "UnknownWord" },
-  //     });
-  //   }
-  // });
-
-  // console.log("RESPONSE MATCHES: ", response.matches);
 
   return response;
-  // try {
 
-  // } catch (error) {
-  //   console.error("Error:", error);
-  //   throw error;
-  // }
 };
 
 const ProsemirrorProofreadExtension = Extension.create({

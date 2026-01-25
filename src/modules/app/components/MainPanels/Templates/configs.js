@@ -99,6 +99,12 @@ export const desktopPaperConfig = {
     category: "typography",
     description: "Size of body text",
   },
+  caretColor: {
+    type: "color",
+    label: "Caret Color",
+    category: "typography",
+    description: "Color of the blinking cursor",
+  },
   lineHeight: {
     type: "number",
     label: "Line Height",
@@ -257,6 +263,14 @@ export const desktopPaperConfig = {
     category: "background",
     description: "Video behind the paper",
   },
+  backgroundVideoPlaybackSpeed: {
+    type: "number",
+    label: "Video Speed",
+    min: 0.1,
+    max: 5,
+    category: "background",
+    description: "Playback speed of background video",
+  },
   paperColor: {
     type: "color",
     label: "Paper Color",
@@ -302,10 +316,12 @@ export const desktopPaperConfig = {
     description: "Corner roundness",
   },
   paperShadow: {
-    type: "text",
+    type: "number",
     label: "Paper Shadow",
+    min: 0,
+    max: 100,
     category: "borders",
-    description: "CSS shadow value",
+    description: "Shadow blur radius (px)",
     advanced: true,
   },
   paperShadowColor: {

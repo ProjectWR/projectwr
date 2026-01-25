@@ -43,8 +43,12 @@ const DirectoryItemNode = ({
 
   const { activatePanel } = useMainPanel();
 
-  const deleteConfirmDontAskAgain = appStore((state) => state.deleteConfirmDontAskAgain);
-  const setDeleteConfirmDontAskAgain = appStore((state) => state.setDeleteConfirmDontAskAgain);
+  const deleteConfirmDontAskAgain = appStore(
+    (state) => state.deleteConfirmDontAskAgain,
+  );
+  const setDeleteConfirmDontAskAgain = appStore(
+    (state) => state.setDeleteConfirmDontAskAgain,
+  );
 
   const dndRef = useRef(null);
 
@@ -62,7 +66,7 @@ const DirectoryItemNode = ({
   }, [sortedDescendants, itemId]);
 
   const [isOpened, setIsOpened] = useState(
-    itemLocalStateManager.isItemOpened(libraryId, itemId)
+    itemLocalStateManager.isItemOpened(libraryId, itemId),
   );
 
   const [isRenaming, setIsRenaming] = useState(false);
@@ -148,7 +152,10 @@ const DirectoryItemNode = ({
   }, [itemMapState.item_properties.item_title]);
 
   const handleRenameSave = useCallback(() => {
-    if (renameValue.trim() && renameValue !== itemMapState.item_properties.item_title) {
+    if (
+      renameValue.trim() &&
+      renameValue !== itemMapState.item_properties.item_title
+    ) {
       const itemMap = itemMapRef.current;
       const currentProperties = itemMap.get("item_properties");
       itemMap.set("item_properties", {
@@ -195,7 +202,7 @@ const DirectoryItemNode = ({
       console.log(
         "APP ITEM TYPE",
         draggedItem.appItemType,
-        draggedItem.appItemType !== "libraries"
+        draggedItem.appItemType !== "libraries",
       );
 
       if (draggedItem.appItemType !== "libraries") {
@@ -211,7 +218,7 @@ const DirectoryItemNode = ({
       if (
         ytree.isNodeUnderOtherNode(
           ytree.computedMap.get(itemId),
-          ytree.computedMap.get(draggedItem.id)
+          ytree.computedMap.get(draggedItem.id),
         )
       ) {
         setIsAncestor(true);
@@ -403,7 +410,7 @@ const DirectoryItemNode = ({
         },
 
         {
-          isDivider: true
+          isDivider: true,
         },
 
         {
@@ -477,7 +484,7 @@ const DirectoryItemNode = ({
         },
 
         {
-          isDivider: true
+          isDivider: true,
         },
 
         {
@@ -551,7 +558,7 @@ const DirectoryItemNode = ({
         },
 
         {
-          isDivider: true
+          isDivider: true,
         },
 
         {
@@ -619,16 +626,16 @@ const DirectoryItemNode = ({
         border-y-transparent
 
         ${(() => {
-            if (!isSelfSelected && !isAncestor && isOverCurrent) {
-              if (areaSelected === "top")
-                return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
-              if (areaSelected === "bottom")
-                return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
-              if (areaSelected === "middle")
-                return "bg-appLayoutDirectoryNodeHover border-y-0";
-            }
-            return "";
-          })()}
+          if (!isSelfSelected && !isAncestor && isOverCurrent) {
+            if (areaSelected === "top")
+              return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
+            if (areaSelected === "bottom")
+              return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
+            if (areaSelected === "middle")
+              return "bg-appLayoutDirectoryNodeHover border-y-0";
+          }
+          return "";
+        })()}
 
           `}
       >
@@ -648,14 +655,14 @@ const DirectoryItemNode = ({
             ${isChildOfRoot && "rounded-l-sm"}
 
             ${(() => {
-                const type = itemMapRef.current.get("type");
-                if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
-                if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
-                if (type === "section")
-                  return "h-libraryDirectorySectionNodeHeight ";
-                if (type === "book") return "h-libraryDirectoryBookNodeHeight";
-                return "";
-              })()}
+              const type = itemMapRef.current.get("type");
+              if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+              if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
+              if (type === "section")
+                return "h-libraryDirectorySectionNodeHeight ";
+              if (type === "book") return "h-libraryDirectoryBookNodeHeight";
+              return "";
+            })()}
 
               transition-colors
               duration-0
@@ -668,6 +675,7 @@ const DirectoryItemNode = ({
                 <button
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
+                    if (isRenaming) return;
                     console.log("edit paper button");
                     if (
                       !(
@@ -702,8 +710,12 @@ const DirectoryItemNode = ({
                       <input
                         type="text"
                         value={renameValue}
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
                         onChange={(e) => setRenameValue(e.target.value)}
                         onKeyDown={(e) => {
+                          e.stopPropagation();
                           if (e.key === "Enter") {
                             handleRenameSave();
                           } else if (e.key === "Escape") {
@@ -730,6 +742,7 @@ const DirectoryItemNode = ({
                 <button
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
+                    if (isRenaming) return;
                     console.log("edit note button");
                     if (
                       !(
@@ -764,8 +777,12 @@ const DirectoryItemNode = ({
                       <input
                         type="text"
                         value={renameValue}
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
                         onChange={(e) => setRenameValue(e.target.value)}
                         onKeyDown={(e) => {
+                          e.stopPropagation();
                           if (e.key === "Enter") {
                             handleRenameSave();
                           } else if (e.key === "Escape") {
@@ -788,58 +805,63 @@ const DirectoryItemNode = ({
 
             {(itemMapRef.current.get("type") === "section" ||
               itemMapRef.current.get("type") === "book") && (
-                <button
-                  className={`grow min-w-0 flex items-center justify-start h-full `}
-                  onClick={() => {
-                    setFocusedItemId(itemId);
-                    const newOpenedState = !isOpened;
-                    setIsOpened(newOpenedState);
-                    itemLocalStateManager.setItemOpened(
-                      libraryId,
-                      itemId,
-                      newOpenedState
-                    );
-                  }}
-                >
-                  <motion.span
-                    animate={{ rotate: isOpened ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={`icon-[formkit--right] ${(() => {
-                      const type = itemMapRef.current.get("type");
+              <button
+                className={`grow min-w-0 flex items-center justify-start h-full `}
+                onClick={() => {
+                  if (isRenaming) return;
+                  setFocusedItemId(itemId);
+                  const newOpenedState = !isOpened;
+                  setIsOpened(newOpenedState);
+                  itemLocalStateManager.setItemOpened(
+                    libraryId,
+                    itemId,
+                    newOpenedState,
+                  );
+                }}
+              >
+                <motion.span
+                  animate={{ rotate: isOpened ? 90 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`icon-[formkit--right] ${(() => {
+                    const type = itemMapRef.current.get("type");
 
-                      if (type === "section")
-                        return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                      if (type === "book")
-                        return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                      return "";
-                    })()}`}
-                  ></motion.span>
+                    if (type === "section")
+                      return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    if (type === "book")
+                      return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
+                    return "";
+                  })()}`}
+                ></motion.span>
 
-                  <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                    {isRenaming ? (
-                      <input
-                        type="text"
-                        value={renameValue}
-                        onChange={(e) => setRenameValue(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleRenameSave();
-                          } else if (e.key === "Escape") {
-                            handleRenameCancel();
-                          }
-                        }}
-                        onBlur={handleRenameSave}
-                        className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
-                        autoFocus
-                      />
-                    ) : (
-                      <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
-                        {itemMapState.item_properties.item_title}
-                      </span>
-                    )}
-                  </div>
-                </button>
-              )}
+                <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
+                  {isRenaming ? (
+                    <input
+                      type="text"
+                      value={renameValue}
+                      onClick={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onChange={(e) => setRenameValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        e.stopPropagation();
+                        if (e.key === "Enter") {
+                          handleRenameSave();
+                        } else if (e.key === "Escape") {
+                          handleRenameCancel();
+                        }
+                      }}
+                      onBlur={handleRenameSave}
+                      className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
+                      autoFocus
+                    />
+                  ) : (
+                    <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
+                      {itemMapState.item_properties.item_title}
+                    </span>
+                  )}
+                </div>
+              </button>
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -899,7 +921,9 @@ const DirectoryItemNode = ({
         </AnimatePresence>
 
         <DialogWrapper
-          open={deleteConfirmDialog.open && deleteConfirmDialog.itemId === itemId}
+          open={
+            deleteConfirmDialog.open && deleteConfirmDialog.itemId === itemId
+          }
           onOpenChange={(open) => {
             if (!open) {
               setDeleteConfirmDialog({
@@ -927,9 +951,8 @@ const DirectoryItemNode = ({
             {
               checked: deleteConfirmDontAskAgain,
               label: "Don't ask again",
-              onChange: (e) =>
-                setDeleteConfirmDontAskAgain(e.target.checked),
-            }
+              onChange: (e) => setDeleteConfirmDontAskAgain(e.target.checked),
+            },
           ]}
         >
           {/* <div className="flex flex-col gap-4">

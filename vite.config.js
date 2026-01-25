@@ -15,10 +15,10 @@ export default defineConfig({
     host: host || false,
     hmr: host
       ? {
-          protocol: "ws",
-          host,
-          port: 5174,
-        }
+        protocol: "ws",
+        host,
+        port: 5174,
+      }
       : undefined,
     watch: {
       ignored: ["**/src-tauri/**"],
@@ -40,6 +40,7 @@ export default defineConfig({
           }
         },
       },
+
     },
   },
   define: { global: "window" },

@@ -105,7 +105,7 @@
     "prosemirror-model": "^1.24.1",
     "prosemirror-proofread": "^0.2.2",
     "prosemirror-state": "^1.4.3",
-    "prosemirror-view": "^1.37.1",
+    "prosemirror-view": "^1.41.4",
     "prosemirror-virtual-cursor": "^0.4.2",
     "radix-ui": "^1.1.3",
     "re-resizable": "^6.11.2",

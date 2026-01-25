@@ -10,7 +10,7 @@ import {
   getFieldsByCategory,
   categoryNames,
 } from "./Templates/configs";
-import { DropdownMenu } from "radix-ui";
+import { DropdownMenu, Portal } from "radix-ui";
 import { useFonts } from "../../hooks/useFonts";
 import { useImages } from "../../hooks/useImages";
 import { ScrollArea } from "@mantine/core";
@@ -337,7 +337,7 @@ const SelectInput = ({ value, onChange, options }) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <button className="w-templateDetailsPreferenceInputWidth border border-appLayoutBorder py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
-          {value || "Select Option"}
+          {value || "Select"}
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
@@ -381,7 +381,7 @@ const FourSidedValueInput = ({
         onClick={() => setIsModalOpen(true)}
         className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder hover:border-appLayoutHighlight"
       >
-        {value || "Edit Values"}
+        {value || "Edit"}
       </button>
 
       <FourSidedValueModal
@@ -853,7 +853,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
 }
 
 const CategorySection = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex flex-col w-full border-b border-appLayoutBorder/50 last:border-0">
@@ -861,7 +861,7 @@ const CategorySection = ({ title, children }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between w-full px-4 py-2 hover:bg-appLayoutHover transition-colors duration-200 group"
       >
-        <span className="text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutTextMuted group-hover:text-appLayoutText tracking-wider uppercase">
+        <span className="text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutTextMuted group-hover:text-appLayoutText tracking-wider">
           {title}
         </span>
         <motion.span
@@ -1168,24 +1168,47 @@ const ColorPicker = ({ color, onChangeComplete }) => {
     setCurrentColor(color);
   }, [color]);
 
-  useEffect(() => {
+  const updatePosition = useCallback(() => {
     if (isOpened && headerRef.current && dropdownRef.current) {
       const headerRect = headerRef.current.getBoundingClientRect();
-      const dropdownHeight = dropdownRef.current.offsetHeight;
-      const dropdownWidth = dropdownRef.current.offsetWidth;
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
 
-      let top = headerRef.current.offsetHeight;
-      let left = 0;
+      let top = headerRect.bottom + 8; // Small gap
+      let left = headerRect.left;
 
-      // Adjust position if dropdown would go off-screen
-      if (headerRect.bottom + dropdownHeight > viewportHeight) {
-        top = -dropdownHeight;
+      // Adjust position if dropdown would go off-screen vertically
+      if (headerRect.bottom + dropdownRect.height > viewportHeight) {
+        top = headerRect.top - dropdownRect.height - 8;
       }
+
+      // Adjust position if dropdown would go off-screen horizontally
+      // If it's on the right side of the screen, try to align right edges
+      if (headerRect.left + dropdownRect.width > viewportWidth) {
+        left = headerRect.right - dropdownRect.width;
+      }
+
+      // Final safety check for left edge
+      if (left < 0) left = 8;
 
       setDropdownPosition({ top, left });
     }
   }, [isOpened]);
+
+  useEffect(() => {
+    if (isOpened) {
+      updatePosition();
+      // Use polling or specific event listeners since sidebar scrolling might not be on 'window'
+      window.addEventListener("resize", updatePosition);
+      window.addEventListener("scroll", updatePosition, true); // Catch-all for nested scrolls
+
+      return () => {
+        window.removeEventListener("resize", updatePosition);
+        window.removeEventListener("scroll", updatePosition, true);
+      };
+    }
+  }, [isOpened, updatePosition]);
 
   const handleColorChange = (color) => {
     setCurrentColor(color.hex);
@@ -1204,20 +1227,23 @@ const ColorPicker = ({ color, onChangeComplete }) => {
 
       <AnimatePresence>
         {isOpened && (
-          <motion.div
-            ref={dropdownRef}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.1 }}
-            style={{
-              top: dropdownPosition.top,
-              left: dropdownPosition.left,
-            }}
-            className="absolute z-[1200] bg-appBackground text-appLayoutText rounded-lg shadow-lg"
-          >
-            <Sketch color={currentColor} onChange={handleColorChange} />
-          </motion.div>
+          <Portal.Root>
+            <motion.div
+              ref={dropdownRef}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.1 }}
+              style={{
+                position: "fixed",
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
+              }}
+              className="z-[2000] bg-appBackground text-appLayoutText rounded-lg shadow-lg"
+            >
+              <Sketch color={currentColor} onChange={handleColorChange} />
+            </motion.div>
+          </Portal.Root>
         )}
       </AnimatePresence>
     </div>
