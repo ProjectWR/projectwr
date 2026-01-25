@@ -85,6 +85,8 @@ const SettingsPanel = () => {
 
   const [isLoginOpen, loginModalControl] = useDisclosure(false);
 
+  const [mediaDropdownOpened, setMediaDropdownOpened] = useState(false);
+
   const [fontImageToggle, setFontImageToggle] = useState("font");
 
   const user = appStore((state) => state.user);
@@ -152,7 +154,7 @@ const SettingsPanel = () => {
     };
     templateManager.createTemplate(
       "New Template #" + Object.keys(templates).length,
-      templateProps
+      templateProps,
     );
   };
 
@@ -540,49 +542,70 @@ const SettingsPanel = () => {
 
           <DetailsPanelDivider />
 
-          <div className="flex flex-row grow basis-0 gap-2 w-full box-border">
+          <div
+            id="MediaManager"
+            className="flex flex-row grow basis-0 gap-2 w-full box-border"
+          >
             <ListShell
               className={`h-full grow basis-0 min-w-0 bg-appBackgroundAccent`}
             >
               <HoverListHeader className={"gap-4"}>
-                <button
-                  className={`
-                  hover:text-appLayoutText
-                  ${
-                    fontImageToggle === "font"
-                      ? "text-appLayoutText"
-                      : "text-appLayoutTextMuted"
-                  } `}
-                  onClick={() => setFontImageToggle("font")}
+                <DropdownMenu.Root
+                  open={mediaDropdownOpened}
+                  onOpenChange={setMediaDropdownOpened}
                 >
-                  Fonts
-                </button>
-
-                <button
-                  className={`
-                  hover:text-appLayoutText
-                  ${
-                    fontImageToggle === "image"
-                      ? "text-appLayoutText"
-                      : "text-appLayoutTextMuted"
-                  } `}
-                  onClick={() => setFontImageToggle("image")}
-                >
-                  Images
-                </button>
-
-                <button
-                  className={`
-                  hover:text-appLayoutText
-                  ${
-                    fontImageToggle === "templates"
-                      ? "text-appLayoutText"
-                      : "text-appLayoutTextMuted"
-                  } `}
-                  onClick={() => setFontImageToggle("templates")}
-                >
-                  Editor Styles
-                </button>
+                  <DropdownMenu.Trigger className="outline-none focus:outline-none">
+                    <div className="flex items-center gap-1 group">
+                      <p className="text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize hover:text-appLayoutHighlight transition-colors duration-100 cursor-pointer flex items-center gap-1">
+                        {fontImageToggle === "font"
+                          ? "Fonts"
+                          : fontImageToggle === "image"
+                          ? "Images"
+                          : "Editor Styles"}
+                        <motion.span
+                          animate={{
+                            rotate: !mediaDropdownOpened ? 0 : -90,
+                          } }
+                          className="icon-[formkit--left] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted group-hover:text-appLayoutText transition-colors duration-100"
+                        ></motion.span>
+                      </p>
+                    </div>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content
+                    style={{ opacity: 1 }}
+                    className="contextMenuContent z-[1100] max-h-[20rem] overflow-y-auto"
+                    sideOffset={5}
+                    align="start"
+                  >
+                    <DropdownMenu.Item
+                      className="contextMenuItem"
+                      onClick={() => setFontImageToggle("font")}
+                    >
+                      <span className="text-appLayoutText">Fonts</span>
+                      {fontImageToggle === "font" && (
+                        <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                      )}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      className="contextMenuItem"
+                      onClick={() => setFontImageToggle("image")}
+                    >
+                      <span className="text-appLayoutText">Images</span>
+                      {fontImageToggle === "image" && (
+                        <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                      )}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      className="contextMenuItem"
+                      onClick={() => setFontImageToggle("templates")}
+                    >
+                      <span className="text-appLayoutText">Editor Styles</span>
+                      {fontImageToggle === "templates" && (
+                        <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                      )}
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
 
                 <span className="grow"></span>
                 <button
@@ -613,7 +636,7 @@ const SettingsPanel = () => {
                         <div className="w-full h-full flex items-center gap-2 justify-between">
                           <p
                             style={{ fontFamily: font.family }}
-                            className="text-libraryManagerHeaderText text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
+                            className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden"
                           >
                             {font.family}
                           </p>
@@ -636,7 +659,7 @@ const SettingsPanel = () => {
                     return (
                       <HoverListItem disabled={true} key={image.id}>
                         <div className="w-full h-full flex items-center gap-2 justify-between">
-                          <p className="text-libraryManagerHeaderText text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                          <p className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
                             {image.fileName}
                           </p>
                           <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
@@ -658,7 +681,7 @@ const SettingsPanel = () => {
                     return (
                       <HoverListItem disabled={true} key={templateId}>
                         <div className="w-full h-full flex items-center gap-2 justify-between">
-                          <p className="text-libraryManagerHeaderText text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                          <p className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
                             {templateId}
                           </p>
                           <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
