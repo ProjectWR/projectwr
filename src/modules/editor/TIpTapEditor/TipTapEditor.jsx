@@ -758,7 +758,7 @@ const TiptapEditor = ({
           }
 
           .paper-border-right {
-            top: 0;
+            top: calc(-${String(borderImageOutset).split(" ")[0] || 0}px + ${String(borderImageWidth).split(" ")[0] || 0}px);
             bottom: 0;
             right: -${
               String(borderImageOutset).split(" ")[1] ||
@@ -779,7 +779,7 @@ const TiptapEditor = ({
             background-size: ${
               borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
             };
-            background-position: right;
+            background-position: top;
           }
 
           .paper-border-bottom-right {
@@ -861,7 +861,7 @@ const TiptapEditor = ({
           }
 
           .paper-border-left {
-            top: 0;
+            top: calc(-${String(borderImageOutset).split(" ")[0] || 0}px + ${String(borderImageWidth).split(" ")[0] || 0}px);
             bottom: 0;
             left: -${
               String(borderImageOutset).split(" ")[3] ||
@@ -883,7 +883,7 @@ const TiptapEditor = ({
             background-size: ${
               borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
             };
-            background-position: left;
+            background-position: top;
           }
 
           #PaperEditorContent > div.tiptap.ProseMirror {
