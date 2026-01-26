@@ -21,6 +21,7 @@ import { YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { StyledTooltip } from "./StyledTooltip";
 import { oauthStore } from "../../stores/oauthStore";
+import LibraryDirectoryHeader from "../SIdePanels/LibraryDirectory/LibraryDirectoryHeader";
 
 const ActionBar = () => {
   const { deviceType } = useDeviceType();
@@ -253,8 +254,9 @@ export const ActionButton = ({
   return (
     <div className="h-full py-1 w-fit">
       <button
-        className={`h-full px-1 w-fit ${!disabled && "hover:bg-appLayoutInverseHover"
-          } rounded-md flex items-center justify-center ${className}`}
+        className={`h-full px-1 w-fit ${
+          !disabled && "hover:bg-appLayoutInverseHover"
+        } rounded-md flex items-center justify-center ${className}`}
         onClick={onClick}
         disabled={disabled}
       >
@@ -272,10 +274,11 @@ const WindowButton = ({
 }) => {
   return (
     <button
-      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${destructive
-        ? "hover:bg-appLayoutDestruct"
-        : "hover:bg-appLayoutInverseHover"
-        } ${className}`}
+      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${
+        destructive
+          ? "hover:bg-appLayoutDestruct"
+          : "hover:bg-appLayoutInverseHover"
+      } ${className}`}
       onClick={onClick}
     >
       {buttonContent}
@@ -367,15 +370,15 @@ const SearchBar = () => {
                 const item_properties =
                   result.id === result.libraryId
                     ? dataManagerSubdocs
-                      .getLibrary(result.libraryId)
-                      .getMap("library_props")
-                      .get("item_properties")
+                        .getLibrary(result.libraryId)
+                        .getMap("library_props")
+                        .get("item_properties")
                     : dataManagerSubdocs
-                      .getLibrary(result.libraryId)
-                      .getMap("library_directory")
-                      .get(result.id)
-                      .get("value")
-                      .get("item_properties");
+                        .getLibrary(result.libraryId)
+                        .getMap("library_directory")
+                        .get(result.id)
+                        .get("value")
+                        .get("item_properties");
 
                 return (
                   <HoverListButton
@@ -401,7 +404,7 @@ const SearchBar = () => {
                       ) {
                         itemLocalStateManager.setItemAndParentsOpened(
                           result.libraryId,
-                          result.id
+                          result.id,
                         );
 
                         setLibraryId(result.libraryId);
@@ -425,8 +428,8 @@ const SearchBar = () => {
                       {new Date(
                         itemLocalStateManager.getLastOpened(
                           result.libraryId,
-                          result.id
-                        )
+                          result.id,
+                        ),
                       ).toLocaleString()}
                     </span>
                   </HoverListButton>
@@ -448,7 +451,7 @@ const SearchBar = () => {
   );
 };
 
-export const ActionBarLeftSide = ({ }) => {
+export const ActionBarLeftSide = ({}) => {
   const zoom = appStore((state) => state.zoom);
   const isMd = appStore((state) => state.isMd);
 
@@ -518,7 +521,7 @@ export const ActionBarLeftSide = ({ }) => {
       id="actionBarContainer"
       style={{
         width: isMd ? `${barWidth}px` : 0,
-        minWidth: `calc(var(--uiScale) * 120px)`,
+        minWidth: `fit-content`,
       }}
       className={`border-b z-1000 border-appLayoutBorder h-full min-h-full bg-appBackgroundAccent text-appLayoutText 
         `}
@@ -569,28 +572,15 @@ export const ActionBarLeftSide = ({ }) => {
             <div className={`w-full h-full bg-appLayoutBorder`}></div>
           </div>
         </div>
-        <ActionButton
-          onClick={() => {
-            activatePanel("dictionary", null, []);
-          }}
-          className={`${false && "z-[1] bg-appLayoutPressed"}`}
-        >
-          <StyledTooltip label="Dictionary">
-            <div className={`h-full pt-px w-actionBarButtonIconSize relative`}>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="searchButton"
-                className="icon-[material-symbols-light--match-word-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
-          </StyledTooltip>
-        </ActionButton>
-        <div className="grow basis-0 min-w-0"></div>
 
-        <div className="w-px min-w-px h-full py-2">
+        <div
+          id="LibraryDirectoryHeaderContainer"
+          className="grow min-w-librarySelectorWidth basis-0 relative"
+        >
+          <LibraryDirectoryHeader />
+        </div>
+
+        <div className="w-[0.5px] min-w-[0.5px] h-full py-2">
           <div className={`w-full h-full bg-appLayoutBorder`}></div>
         </div>
       </div>
@@ -598,7 +588,7 @@ export const ActionBarLeftSide = ({ }) => {
   );
 };
 
-export const ActionBarRightSide = ({ }) => {
+export const ActionBarRightSide = ({}) => {
   const zoom = appStore((state) => state.zoom);
   const driveSyncLoading = appStore((state) => state.driveSyncLoading);
   const userProfile = oauthStore((state) => state.userProfile);
@@ -684,30 +674,40 @@ export const ActionBarRightSide = ({ }) => {
         <div className="grow"></div>
         <div className="h-full w-fit flex items-center gap-1">
           <div className="h-full w-fit pl-1 flex items-center gap-1">
-            {userProfile && <ActionButton
-              onClick={() => {
-                activatePanel("settings", null, []);
-              }}
-              className={`${false && "bg-appLayoutPressed"}  ${driveSyncLoading ? "bg-yellow-800/20" : "bg-green-800/20"}`}
-              disabled={true}
-            >
-              <StyledTooltip label={driveSyncLoading ? "Initializing..." : "Active"} position="bottom">
-                <div className={`h-full w-actionBarButtonIconSize relative`}>
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.1 }}
-                    key="settingsButton"
-                    className={`icon-[logos--google-drive] w-[75%] h-[75%] ${driveSyncLoading ? "left-[50%] -translate-x-1/2 top-px" : "left-[50%] -translate-x-1/2 top-[50%] -translate-y-1/2"} absolute`}
-                  ></motion.span>
-                  {
-                    driveSyncLoading &&
-                    <span className="icon-[eos-icons--three-dots-loading] absolute w-full h-full bottom-1 translate-y-1/2 left-[50%] -translate-x-1/2"></span>
-                  }
-                </div>
-              </StyledTooltip>
-            </ActionButton>}
+            {userProfile && (
+              <ActionButton
+                onClick={() => {
+                  activatePanel("settings", null, []);
+                }}
+                className={`${false && "bg-appLayoutPressed"}  ${
+                  driveSyncLoading ? "bg-yellow-800/20" : "bg-green-800/20"
+                }`}
+                disabled={true}
+              >
+                <StyledTooltip
+                  label={driveSyncLoading ? "Initializing..." : "Active"}
+                  position="bottom"
+                >
+                  <div className={`h-full w-actionBarButtonIconSize relative`}>
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.1 }}
+                      key="settingsButton"
+                      className={`icon-[logos--google-drive] w-[75%] h-[75%] ${
+                        driveSyncLoading
+                          ? "left-[50%] -translate-x-1/2 top-px"
+                          : "left-[50%] -translate-x-1/2 top-[50%] -translate-y-1/2"
+                      } absolute`}
+                    ></motion.span>
+                    {driveSyncLoading && (
+                      <span className="icon-[eos-icons--three-dots-loading] absolute w-full h-full bottom-1 translate-y-1/2 left-[50%] -translate-x-1/2"></span>
+                    )}
+                  </div>
+                </StyledTooltip>
+              </ActionButton>
+            )}
             <ActionButton
               onClick={() => {
                 activatePanel("settings", null, []);

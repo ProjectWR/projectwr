@@ -46,11 +46,10 @@ const LibraryDirectoryHeader = () => {
 
   const libraryManagerOpened = appStore((state) => state.libraryManagerOpened);
   const setLibraryManagerOpened = appStore(
-    (state) => state.setLibraryManagerOpened
+    (state) => state.setLibraryManagerOpened,
   );
 
   const driveSyncLoading = appStore((state) => state.driveSyncLoading);
-
 
   const userProfile = oauthStore((state) => state.userProfile);
 
@@ -84,7 +83,7 @@ const LibraryDirectoryHeader = () => {
 
       return () => {
         const newLibraryIds = getArrayFromYDocMap(
-          dataManagerSubdocs.libraryYDocMap
+          dataManagerSubdocs.libraryYDocMap,
         );
         for (const [libraryId] of newLibraryIds.values()) {
           dataManagerSubdocs
@@ -119,12 +118,12 @@ const LibraryDirectoryHeader = () => {
         prevLibraryIdsWithPropsRef.current = libraryIdsWithProps;
         return prevLibraryIdsWithPropsRef.current;
       }
-    }
+    },
   );
 
   const sortedLibraryIds = useMemo(
     () => sortArrayWithPropsByOrder([...libraryIdsWithProps]),
-    [libraryIdsWithProps]
+    [libraryIdsWithProps],
   );
 
   const handleLibrarySelect = useCallback(
@@ -145,7 +144,7 @@ const LibraryDirectoryHeader = () => {
       setPanelOpened,
       activatePanel,
       setLibraryManagerOpened,
-    ]
+    ],
   );
 
   const handleCreateLibrary = useCallback(() => {
@@ -167,17 +166,20 @@ const LibraryDirectoryHeader = () => {
   ]);
 
   const onRenameClick = useCallback(() => {
-    const currentTitle = libraryIdsWithProps.find(
-      (library) => library[0] === appLibraryId
-    )?.[1]?.item_properties?.item_title || "";
+    const currentTitle =
+      libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
+        ?.item_properties?.item_title || "";
     setRenameValue(currentTitle);
     setIsRenaming(true);
   }, [appLibraryId, libraryIdsWithProps]);
 
   const handleRenameSave = useCallback(() => {
-    if (renameValue.trim() && renameValue !== libraryIdsWithProps.find(
-      (library) => library[0] === appLibraryId
-    )?.[1]?.item_properties?.item_title) {
+    if (
+      renameValue.trim() &&
+      renameValue !==
+        libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
+          ?.item_properties?.item_title
+    ) {
       const libraryYdoc = dataManagerSubdocs.getLibrary(appLibraryId);
       const libraryProps = libraryYdoc.getMap("library_props");
       const currentProperties = libraryProps.get("item_properties");
@@ -211,9 +213,9 @@ const LibraryDirectoryHeader = () => {
         ),
         action: async () => {
           await persistenceManagerForSubdocs.saveArchive(
-            dataManagerSubdocs.getLibrary(appLibraryId)
+            dataManagerSubdocs.getLibrary(appLibraryId),
           );
-        }
+        },
       },
       {
         label: "Load from archive",
@@ -222,12 +224,12 @@ const LibraryDirectoryHeader = () => {
         ),
         action: async () => {
           await persistenceManagerForSubdocs.loadArchive(
-            dataManagerSubdocs.getLibrary(appLibraryId)
+            dataManagerSubdocs.getLibrary(appLibraryId),
           );
-        }
+        },
       },
       {
-        isDivider: true
+        isDivider: true,
       },
 
       {
@@ -245,37 +247,43 @@ const LibraryDirectoryHeader = () => {
         action: async () => {
           console.log("Deleting Library");
           // Show confirmation dialog
-          const libraryTitle = libraryIdsWithProps.find(
-            (library) => library[0] === appLibraryId
-          )?.[1]?.item_properties?.item_title || "Library";
+          const libraryTitle =
+            libraryIdsWithProps.find(
+              (library) => library[0] === appLibraryId,
+            )?.[1]?.item_properties?.item_title || "Library";
           setDeleteConfirmDialog({
             open: true,
             libraryId: appLibraryId,
             libraryTitle: libraryTitle,
           });
-
-        }
+        },
       },
     ];
-
-  }, [appLibraryId, onRenameClick, activatePanel, libraryIdsWithProps])
+  }, [appLibraryId, onRenameClick, activatePanel, libraryIdsWithProps]);
 
   return (
     <div
+      data-tauri-drag-region
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
-      className={`flex items-center justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${libraryManagerOpened
-        ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
-        : "border-transparent bg-transparent"
-        }`}
+      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
+        libraryManagerOpened
+          ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
+          : "border-transparent bg-transparent"
+      }`}
     >
-      <div className="h-fit min-h-fit w-full flex items-center justify-center ">
+      <div className="h-fit relative min-h-fit w-full flex items-center justify-center ">
         <div
+          data-tauri-drag-region
           className={`h-fit w-full max-w-full py-2 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
-          <ContextMenuWrapper triggerClassname="grow h-fit min-w-0" options={options}>
+          <ContextMenuWrapper
+            triggerClassname="grow h-fit min-w-0"
+            options={options}
+          >
             {isRenaming ? (
               <input
+                data-tauri-drag-region={!isRenaming}
                 type="text"
                 value={renameValue}
                 onChange={(e) => setRenameValue(e.target.value)}
@@ -293,7 +301,7 @@ const LibraryDirectoryHeader = () => {
             ) : (
               <p className="max-w-full w-full h-fit text-nowrap pl-1 overflow-hidden text-ellipsis text-center">
                 {libraryIdsWithProps.find(
-                  (library) => library[0] === appLibraryId
+                  (library) => library[0] === appLibraryId,
                 )?.[1]?.item_properties?.item_title || "Open a Library"}
               </p>
             )}
@@ -317,73 +325,132 @@ const LibraryDirectoryHeader = () => {
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          className="w-full"
-          key={
-            appLibraryId == "unselected" || libraryManagerOpened
-              ? "opened"
-              : "closed"
-          }
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.1 }}
-        >
-          {(appLibraryId == "unselected" || libraryManagerOpened) && (
-            <>
-              <div className="h-[0.5px] w-full px-2">
-                <div className="h-[0.5px] w-full bg-appLayoutBorder"></div>
-              </div>
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "fit-content", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="w-full overflow-hidden"
+      <AnimatePresence>
+        {libraryManagerOpened && (
+          <div className="w-full absolute bg-appBackground border border-appLayoutBorder z-[200] top-0 left-1/2 -translate-x-1/2 ">
+            <div className="h-fit min-h-fit w-full flex items-center justify-center ">
+              <div
+                data-tauri-drag-region
+                className={`h-fit w-full max-w-full py-2 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
               >
-                <ScrollArea
-                  classNames={{
-                    root: "h-fit min-h-0 w-full",
-                    scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
-                    thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover opacity-70`,
-                    content: `h-fit w-full max-h-libraryDirectoryHeaderDropdownMaxHeight grid grid-cols-1 py-1`,
-                  }}>
+                <ContextMenuWrapper
+                  triggerClassname="grow h-fit min-w-0"
+                  options={options}
+                >
+                  {isRenaming ? (
+                    <input
+                      type="text"
+                      value={renameValue}
+                      onChange={(e) => setRenameValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleRenameSave();
+                        } else if (e.key === "Escape") {
+                          handleRenameCancel();
+                        }
+                      }}
+                      onBlur={handleRenameSave}
+                      className="w-full bg-appLayoutInputBackground pr-1 pl-2 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
+                      autoFocus
+                    />
+                  ) : (
+                    <p className="max-w-full w-full h-fit text-nowrap pl-1 overflow-hidden text-ellipsis text-center">
+                      {libraryIdsWithProps.find(
+                        (library) => library[0] === appLibraryId,
+                      )?.[1]?.item_properties?.item_title || "Open a Library"}
+                    </p>
+                  )}
+                </ContextMenuWrapper>
 
-                  {sortedLibraryIds &&
-                    sortedLibraryIds.map(
-                      ([libraryId, props]) =>
-                        appLibraryId != libraryId && (
-                          <LibraryDirectoryHeaderButton
-                            key={libraryId}
-                            libraryId={libraryId}
-                            props={props}
-                            onSelect={handleLibrarySelect}
-                            onHover={setLibraryHovered}
-                            isHovered={libraryHovered === libraryId}
-                          />
-                        )
-                    )}
-
-                </ScrollArea>
-
-
-
-                <button className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
-                  onClick={handleCreateLibrary}>
-                  <StyledTooltip label={`Create Library`} position="bottom">
-                    <div
-                      className="h-full w-fit flex items-center justify-center"
+                {appLibraryId != "unselected" && (
+                  <button
+                    onClick={() =>
+                      setLibraryManagerOpened(!libraryManagerOpened)
+                    }
+                    className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
+                  >
+                    <StyledTooltip
+                      label={libraryManagerOpened ? "Close" : "Change Library"}
+                      position="bottom"
                     >
-                      <span className="icon-[material-symbols-light--add-2-rounded] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                      <span
+                        className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
+                      ></span>
+                    </StyledTooltip>
+                  </button>
+                )}
+              </div>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                data-tauri-drag-region
+                className="w-full"
+                key={
+                  appLibraryId == "unselected" || libraryManagerOpened
+                    ? "opened"
+                    : "closed"
+                }
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                {(appLibraryId == "unselected" || libraryManagerOpened) && (
+                  <>
+                    <div className="h-[0.5px] w-full px-2">
+                      <div className="h-[0.5px] w-full bg-appLayoutBorder"></div>
                     </div>
-                  </StyledTooltip>
-
-                </button>
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "fit-content", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-full overflow-hidden"
+                    >
+                      <ScrollArea
+                        data-tauri-drag-region
+                        classNames={{
+                          root: "h-fit min-h-0 w-full",
+                          scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
+                          thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover opacity-70`,
+                          content: `h-fit w-full max-h-libraryDirectoryHeaderDropdownMaxHeight grid grid-cols-1 py-1`,
+                        }}
+                      >
+                        {sortedLibraryIds &&
+                          sortedLibraryIds.map(
+                            ([libraryId, props]) =>
+                              appLibraryId != libraryId && (
+                                <LibraryDirectoryHeaderButton
+                                  key={libraryId}
+                                  libraryId={libraryId}
+                                  props={props}
+                                  onSelect={handleLibrarySelect}
+                                  onHover={setLibraryHovered}
+                                  isHovered={libraryHovered === libraryId}
+                                />
+                              ),
+                          )}
+                      </ScrollArea>
+                      <button
+                        className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
+                        onClick={handleCreateLibrary}
+                      >
+                        <StyledTooltip
+                          label={`Create Library`}
+                          position="bottom"
+                        >
+                          <div className="h-full w-fit flex items-center justify-center">
+                            <span className="icon-[material-symbols-light--add-2-rounded] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                          </div>
+                        </StyledTooltip>
+                      </button>
+                    </motion.div>
+                  </>
+                )}
               </motion.div>
-            </>
-          )}
-        </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
       </AnimatePresence>
 
       <DialogWrapper
@@ -401,14 +468,21 @@ const LibraryDirectoryHeader = () => {
         description={`Are you sure you want to delete "${deleteConfirmDialog.libraryTitle}"? This action cannot be undone.`}
         onSubmit={async () => {
           console.log("Deleting Library", deleteConfirmDialog.libraryId);
-          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(deleteConfirmDialog.libraryId);
-          await persistenceManagerForSubdocs.closeConnectionForYDoc(deleteConfirmDialog.libraryId);
-          await dataManagerSubdocs.destroyLibrary(deleteConfirmDialog.libraryId);
+          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(
+            deleteConfirmDialog.libraryId,
+          );
+          await persistenceManagerForSubdocs.closeConnectionForYDoc(
+            deleteConfirmDialog.libraryId,
+          );
+          await dataManagerSubdocs.destroyLibrary(
+            deleteConfirmDialog.libraryId,
+          );
 
           console.log("userProfile:", userProfile, deleteFromDrive);
           if (userProfile && deleteFromDrive) {
             console.log("Deleting from Drive too");
-            const googleDriveManager = driveOrchestrator.getManager("googleDrive");
+            const googleDriveManager =
+              driveOrchestrator.getManager("googleDrive");
             googleDriveManager.stopSync(deleteConfirmDialog.libraryId);
             googleDriveManager.deleteDocument(deleteConfirmDialog.libraryId);
           }
@@ -421,12 +495,15 @@ const LibraryDirectoryHeader = () => {
         submitLabel="Delete"
         destructive={true}
         options={[
-          ...(userProfile && !driveSyncLoading ? [{
-            checked: deleteFromDrive,
-            label: "Delete from drive",
-            onChange: (e) =>
-              setDeleteFromDrive(e.target.checked),
-          }] : []),
+          ...(userProfile && !driveSyncLoading
+            ? [
+                {
+                  checked: deleteFromDrive,
+                  label: "Delete from drive",
+                  onChange: (e) => setDeleteFromDrive(e.target.checked),
+                },
+              ]
+            : []),
         ]}
       />
     </div>

@@ -44,7 +44,7 @@ const SidePanel = ({}) => {
   return (
     <AnimatePresence mode="wait">
       <div className="w-full h-full z-[49] flex flex-col items-center">
-        <div
+        {/* <div
           id="LibraryDirectoryHeaderContainer"
           className="h-fit min-h-fit w-full"
         >
@@ -52,7 +52,7 @@ const SidePanel = ({}) => {
             key={`libraryDirectoryHeader`}
             currentLibraryId={libraryId}
           />
-        </div>
+        </div> */}
 
         <motion.div
           key={key.current}

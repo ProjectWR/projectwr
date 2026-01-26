@@ -61,14 +61,14 @@ const LibraryDirectory = ({ libraryId }) => {
         itemId: itemId,
       });
     },
-    [libraryId]
+    [libraryId],
   );
 
   // Only initialize library data refs if libraryId is not "unselected"
   const libraryPropsMapRef = useRef(
     libraryId !== "unselected"
       ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-      : null
+      : null,
   );
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
@@ -91,7 +91,7 @@ const LibraryDirectory = ({ libraryId }) => {
         const children = libraryYTreeRef.current.getNodeChildrenFromKey(nodeId);
         const sortedChildren = libraryYTreeRef.current.sortChildrenByOrder(
           children,
-          nodeId
+          nodeId,
         );
 
         descendants.set(nodeId, {
@@ -109,7 +109,7 @@ const LibraryDirectory = ({ libraryId }) => {
         libraryYTreeRef.current.getNodeChildrenFromKey("root");
       const sortedRootChildren = libraryYTreeRef.current.sortChildrenByOrder(
         rootChildren,
-        "root"
+        "root",
       );
 
       descendants.set("root", {
@@ -138,14 +138,14 @@ const LibraryDirectory = ({ libraryId }) => {
 
     if (
       !checkForYTree(
-        dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+        dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory"),
       )
     ) {
       throw new Error("Tried to access uninitialized directory");
     }
 
     libraryYTreeRef.current = new YTree(
-      dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+      dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory"),
     );
 
     // Initialize the centralized descendants state
@@ -236,7 +236,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 callback: () => {
                   console.log("Create Book!");
                   const bookId = dataManagerSubdocs.createEmptyBook(
-                    libraryYTreeRef.current
+                    libraryYTreeRef.current,
                   );
                   setItemId(bookId);
 
@@ -258,7 +258,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   console.log("create section button");
                   const sectionId = dataManagerSubdocs.createEmptySection(
                     libraryYTreeRef.current,
-                    "root"
+                    "root",
                   );
 
                   activatePanel("libraries", "details", [libraryId, sectionId]);
@@ -280,7 +280,7 @@ const LibraryDirectory = ({ libraryId }) => {
                   console.log("create paper button");
                   const paperId = dataManagerSubdocs.createEmptyPaper(
                     libraryYTreeRef.current,
-                    "root"
+                    "root",
                   );
 
                   activatePanel("libraries", "details", [libraryId, paperId]);
@@ -309,11 +309,9 @@ const LibraryDirectory = ({ libraryId }) => {
         </div>
       )}
 
-      {!libraryManagerOpened && (
-        <div className="divider w-full px-3">
-          <div className="w-full h-px bg-appLayoutBorder"></div>
-        </div>
-      )}
+      {/* <div className="divider w-full px-3">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div> */}
 
       <div
         id="LibraryDirectoryCreateHeader"
@@ -348,7 +346,7 @@ const LibraryDirectory = ({ libraryId }) => {
             onClick={() => {
               console.log("Create Book!");
               const bookId = dataManagerSubdocs.createEmptyBook(
-                libraryYTreeRef.current
+                libraryYTreeRef.current,
               );
 
               setItemId(bookId);
@@ -386,7 +384,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 ) {
                   sectionId = dataManagerSubdocs.createEmptySection(
                     libraryYTreeRef.current,
-                    focusedItemId || "root"
+                    focusedItemId || "root",
                   );
                 } else if (
                   focusedItemType === "paper" ||
@@ -395,14 +393,14 @@ const LibraryDirectory = ({ libraryId }) => {
                   sectionId = dataManagerSubdocs.createEmptySection(
                     libraryYTreeRef.current,
                     libraryYTreeRef.current?.getNodeParentFromKey(
-                      focusedItemId
-                    ) || "root"
+                      focusedItemId,
+                    ) || "root",
                   );
                 }
               } else {
                 sectionId = dataManagerSubdocs.createEmptySection(
                   libraryYTreeRef.current,
-                  "root"
+                  "root",
                 );
               }
 
@@ -419,7 +417,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 itemLocalStateManager.setItemOpened(
                   libraryId,
                   focusedItemId,
-                  true
+                  true,
                 );
               itemLocalStateManager.setItemOpened(libraryId, sectionId, true);
             }}
@@ -448,7 +446,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 ) {
                   paperId = dataManagerSubdocs.createEmptyPaper(
                     libraryYTreeRef.current,
-                    focusedItemId || "root"
+                    focusedItemId || "root",
                   );
                 } else if (
                   focusedItemType === "paper" ||
@@ -457,14 +455,14 @@ const LibraryDirectory = ({ libraryId }) => {
                   paperId = dataManagerSubdocs.createEmptyPaper(
                     libraryYTreeRef.current,
                     libraryYTreeRef.current?.getNodeParentFromKey(
-                      focusedItemId
-                    ) || "root"
+                      focusedItemId,
+                    ) || "root",
                   );
                 }
               } else {
                 paperId = dataManagerSubdocs.createEmptyPaper(
                   libraryYTreeRef.current,
-                  "root"
+                  "root",
                 );
               }
 
@@ -481,7 +479,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 itemLocalStateManager.setItemOpened(
                   libraryId,
                   focusedItemId,
-                  true
+                  true,
                 );
               itemLocalStateManager.setItemOpened(libraryId, paperId, true);
             }}
@@ -510,7 +508,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 ) {
                   noteId = dataManagerSubdocs.createEmptyNote(
                     libraryYTreeRef.current,
-                    focusedItemId || "root"
+                    focusedItemId || "root",
                   );
                 } else if (
                   focusedItemType === "paper" ||
@@ -519,14 +517,14 @@ const LibraryDirectory = ({ libraryId }) => {
                   noteId = dataManagerSubdocs.createEmptyNote(
                     libraryYTreeRef.current,
                     libraryYTreeRef.current?.getNodeParentFromKey(
-                      focusedItemId
-                    ) || "root"
+                      focusedItemId,
+                    ) || "root",
                   );
                 }
               } else {
                 noteId = dataManagerSubdocs.createEmptyNote(
                   libraryYTreeRef.current,
-                  "root"
+                  "root",
                 );
               }
 
@@ -543,7 +541,7 @@ const LibraryDirectory = ({ libraryId }) => {
                 itemLocalStateManager.setItemOpened(
                   libraryId,
                   focusedItemId,
-                  true
+                  true,
                 );
               itemLocalStateManager.setItemOpened(libraryId, noteId, true);
             }}
@@ -655,10 +653,11 @@ const OptionsButton = ({
       ref={buttonContainerRef}
       className={`relative w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mr-1 rounded-full 
                   text-appLayoutText
-                  ${isOpened
-          ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
-          : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
-        }
+                  ${
+                    isOpened
+                      ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
+                      : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
+                  }
 
                   flex items-center justify-center
 
@@ -685,18 +684,21 @@ const OptionsButton = ({
             transition={{ ease: "easeOut", duration: 0.1 }}
             className={`absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
-                       ${shouldDropdownGoUp
-                ? `                      
-                              ${origin === "topRight" &&
-                "origin-bottom-right right-0"
-                } 
+                       ${
+                         shouldDropdownGoUp
+                           ? `                      
+                              ${
+                                origin === "topRight" &&
+                                "origin-bottom-right right-0"
+                              } 
                               ${origin === "topMiddle" && "origin-bottom"}`
-                : `                       
-                              ${origin === "topRight" &&
-                "origin-top-right right-0"
-                } 
+                           : `                       
+                              ${
+                                origin === "topRight" &&
+                                "origin-top-right right-0"
+                              } 
                               ${origin === "topMiddle" && "origin-top"}`
-              }
+                       }
 
                        `}
           >
