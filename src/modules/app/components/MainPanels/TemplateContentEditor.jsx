@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import useOuterClick from "../../../design-system/useOuterClick";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import {
   desktopPaperConfig,
@@ -332,12 +332,21 @@ const VideoInput = ({ value, onChange }) => {
   );
 };
 
-const SelectInput = ({ value, onChange, options }) => {
+const SelectInput = ({ value, onChange, fieldConfig }) => {
+  const options = fieldConfig.options || [];
+  const displayValue = React.useMemo(() => {
+    const option = options.find((opt) =>
+      typeof opt === "string" ? opt === value : opt.value === value,
+    );
+    if (!option) return value || "Select";
+    return typeof option === "string" ? option : option.label;
+  }, [value, options]);
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <button className="w-templateDetailsPreferenceInputWidth border border-appLayoutBorder py-1 rounded-lg text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis text-appLayoutTextMuted hover:text-appLayoutText">
-          {value || "Select"}
+          {displayValue}
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
@@ -345,15 +354,19 @@ const SelectInput = ({ value, onChange, options }) => {
         className="contextMenuContent z-[1100] max-h-60 overflow-y-scroll"
         align="start"
       >
-        {options.map((option, index) => (
-          <DropdownMenu.Item
-            key={`${option}-${index}`}
-            className="contextMenuItem"
-            onClick={() => onChange(option)}
-          >
-            <span>{option}</span>
-          </DropdownMenu.Item>
-        ))}
+        {options.map((option, index) => {
+          const val = typeof option === "string" ? option : option.value;
+          const label = typeof option === "string" ? option : option.label;
+          return (
+            <DropdownMenu.Item
+              key={`${val}-${index}`}
+              className="contextMenuItem"
+              onClick={() => onChange(val)}
+            >
+              <span>{label}</span>
+            </DropdownMenu.Item>
+          );
+        })}
         {options.length === 0 && (
           <DropdownMenu.Item className="contextMenuItem" disabled>
             <span>No options available</span>
@@ -368,21 +381,25 @@ const SelectInput = ({ value, onChange, options }) => {
 const FourSidedValueInput = ({
   value,
   onChange,
+  fieldConfig,
   borderImageSource,
-  label,
-  description,
-  showFill,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder hover:border-appLayoutHighlight"
-      >
-        {value || "Edit"}
-      </button>
+      <div className="h-full flex flex-row items-center gap-2">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="w-templateDetailsPreferenceInputWidth text-libraryDirectoryBookNodeFontSize h-full px-3 bg-appBackground rounded-lg border border-appLayoutBorder hover:bg-appLayoutInputBackground transition-colors"
+        >
+          {typeof value === "object"
+            ? `${value.top} ${value.right} ${value.bottom} ${value.left}${
+                value.fill ? " fill" : ""
+              }`
+            : value || "Edit"}
+        </button>
+      </div>
 
       <FourSidedValueModal
         isOpen={isModalOpen}
@@ -390,9 +407,8 @@ const FourSidedValueInput = ({
         value={value}
         onChange={onChange}
         borderImageSource={borderImageSource}
-        title={`Edit ${label}`}
-        description={description}
-        showFill={showFill}
+        label={fieldConfig.label}
+        showFill={fieldConfig.showFill}
       />
     </>
   );
@@ -443,12 +459,12 @@ const NumberOrPercentInput = ({ value, onChange, fieldConfig }) => {
 
 const BooleanInput = ({ value, onChange }) => {
   return (
-    <div className="h-full flex gap-1 items-center bg-appBackground rounded-lg border border-appLayoutBorder p-1">
+    <div className="w-templateDetailsPreferenceInputWidth h-full flex gap-1 items-center bg-appBackground rounded-lg border border-appLayoutBorder overflow-hidden">
       <button
         onClick={() => onChange(true)}
-        className={`px-3 py-1 rounded-md text-libraryDirectoryBookNodeFontSize transition-colors ${
+        className={`grow py-1 rounded-l-lg text-libraryDirectoryBookNodeFontSize transition-colors ${
           value === true
-            ? "bg-appLayoutHighlight text-white"
+            ? "bg-appLayoutInverseHover "
             : "text-appLayoutTextMuted hover:text-appLayoutText"
         }`}
       >
@@ -456,14 +472,34 @@ const BooleanInput = ({ value, onChange }) => {
       </button>
       <button
         onClick={() => onChange(false)}
-        className={`px-3 py-1 rounded-md text-libraryDirectoryBookNodeFontSize transition-colors ${
+        className={`grow py-1 rounded-r-lg text-libraryDirectoryBookNodeFontSize transition-colors ${
           value === false
-            ? "bg-appLayoutHighlight text-white"
+            ? "bg-appLayoutInverseHover "
             : "text-appLayoutTextMuted hover:text-appLayoutText"
         }`}
       >
         No
       </button>
+    </div>
+  );
+};
+
+const PercentInput = ({ value, onChange, fieldConfig }) => {
+  return (
+    <div className="h-full flex flex-row items-center">
+      <div className="w-fit h-full">
+        <input
+          type="number"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          min={fieldConfig.min}
+          max={fieldConfig.max}
+          className="text-libraryDirectoryBookNodeFontSize h-full mr-auto w-templateDetailsPreferenceInputWidth bg-appBackground px-3 focus:outline-none focus:bg-appLayoutInputBackground transition-colors duration-200 flex items-center justify-start rounded-lg border border-appLayoutBorder"
+        />
+      </div>
+      <span className="text-libraryDirectoryBookNodeFontSize h-full ml-1 text-appLayoutTextMuted flex items-center bg-appBackground rounded-lg">
+        %
+      </span>
     </div>
   );
 };
@@ -520,6 +556,18 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
       const hexRegex = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
       if (!hexRegex.test(value)) {
         error = "Invalid hex color";
+      }
+    }
+    if (fieldConfig.type === "percent") {
+      if (
+        value === "" ||
+        isNaN(Number(value)) ||
+        Number(value) < (fieldConfig.min ?? 0) ||
+        Number(value) > (fieldConfig.max ?? 100)
+      ) {
+        error = `Must be between ${fieldConfig.min ?? 0} and ${
+          fieldConfig.max ?? 100
+        }`;
       }
     }
     return error;
@@ -816,6 +864,43 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                   );
                 }
 
+                if (fieldConfig.type === "percent") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <PercentInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                              fieldConfig={fieldConfig}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
+                        <AnimatePresence>
+                          {errors[key] && (
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="text-red-500 text-sm text-nowrap overflow-hidden"
+                            >
+                              {errors[key]}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
                 if (fieldConfig.type === "fourSidedValue") {
                   return (
                     <div key={key} className="flex items-center justify-center">
@@ -825,10 +910,8 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                             <FourSidedValueInput
                               value={data[key]}
                               onChange={(val) => handleChange(key, val)}
+                              fieldConfig={fieldConfig}
                               borderImageSource={data.borderImageSource}
-                              label={fieldConfig.label}
-                              description={fieldConfig.description}
-                              showFill={fieldConfig.showFill}
                             />
                           </div>
 
@@ -865,7 +948,7 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                             <SelectInput
                               value={data[key]}
                               onChange={(val) => handleChange(key, val)}
-                              options={fieldConfig.options || []}
+                              fieldConfig={fieldConfig}
                             />
                           </div>
 
@@ -1211,50 +1294,71 @@ const ColorPicker = ({ color, onChangeComplete }) => {
 
   const headerRef = useRef(null);
   const dropdownRef = useRef(null);
-  const innerRef = useOuterClick(() => {
+  const innerRef = useOuterClick((e) => {
+    if (dropdownRef.current && dropdownRef.current.contains(e.target)) {
+      return;
+    }
     setIsOpened(false);
   });
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && isOpened) {
+        setIsOpened(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpened]);
 
   useEffect(() => {
     setCurrentColor(color);
   }, [color]);
 
   const updatePosition = useCallback(() => {
-    if (isOpened && headerRef.current && dropdownRef.current) {
-      const headerRect = headerRef.current.getBoundingClientRect();
-      const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
+    if (!isOpened || !headerRef.current) return;
 
-      let top = headerRect.bottom + 8; // Small gap
-      let left = headerRect.left;
+    const headerRect = headerRef.current.getBoundingClientRect();
+    const dropdownHeight = 310; // Approximate height of Sketch picker
+    const dropdownWidth = 220; // Approximate width of Sketch picker
 
-      // Adjust position if dropdown would go off-screen vertically
-      if (headerRect.bottom + dropdownRect.height > viewportHeight) {
-        top = headerRect.top - dropdownRect.height - 8;
-      }
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
 
-      // Adjust position if dropdown would go off-screen horizontally
-      // If it's on the right side of the screen, try to align right edges
-      if (headerRect.left + dropdownRect.width > viewportWidth) {
-        left = headerRect.right - dropdownRect.width;
-      }
+    let top = headerRect.bottom + 8;
+    let left = headerRect.left;
 
-      // Final safety check for left edge
-      if (left < 0) left = 8;
-
-      setDropdownPosition({ top, left });
+    // Check vertical boundaries
+    if (top + dropdownHeight > viewportHeight) {
+      top = headerRect.top - dropdownHeight - 8;
     }
+
+    // Check horizontal boundaries
+    if (left + dropdownWidth > viewportWidth) {
+      left = headerRect.right - dropdownWidth;
+    }
+
+    // Secondary vertical check (if it doesn't fit either way, move to fit)
+    if (top < 8) top = 8;
+    if (top + dropdownHeight > viewportHeight)
+      top = viewportHeight - dropdownHeight - 8;
+
+    // Secondary horizontal check
+    if (left < 8) left = 8;
+
+    setDropdownPosition({ top, left });
   }, [isOpened]);
 
   useEffect(() => {
     if (isOpened) {
-      updatePosition();
-      // Use polling or specific event listeners since sidebar scrolling might not be on 'window'
+      // Small delay to ensure button position is stable
+      const timeoutId = setTimeout(updatePosition, 0);
+
       window.addEventListener("resize", updatePosition);
-      window.addEventListener("scroll", updatePosition, true); // Catch-all for nested scrolls
+      window.addEventListener("scroll", updatePosition, true);
 
       return () => {
+        clearTimeout(timeoutId);
         window.removeEventListener("resize", updatePosition);
         window.removeEventListener("scroll", updatePosition, true);
       };

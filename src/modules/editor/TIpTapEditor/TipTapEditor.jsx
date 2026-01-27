@@ -220,6 +220,8 @@ const TiptapEditor = ({
     iconColor,
     scrollbarThumbColor,
     fontColor: toolbarFontColor,
+    backgroundColor: toolbarBgColor,
+    backgroundColorOpacity: toolbarBgOpacity,
   } = toolbarPreferences;
 
   console.log("Width: ", width);
@@ -658,8 +660,10 @@ const TiptapEditor = ({
 
           #EditorContainer {
             background-color: color-mix(in srgb, ${backgroundColor} ${
-            backgroundColorOpacity !== undefined ? backgroundColorOpacity : 100
-          }%, transparent);
+              backgroundColorOpacity !== undefined
+                ? backgroundColorOpacity
+                : 100
+            }%, transparent);
             ${
               resolvedBackgroundImage
                 ? `background-image: url(${resolvedBackgroundImage});`
@@ -683,7 +687,9 @@ const TiptapEditor = ({
             min-height: calc(${
               toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
-            background-color: ${toolbarPreferences.backgroundColor};
+            background-color: color-mix(in srgb, ${toolbarBgColor} ${
+              toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
+            }%, transparent);
             border-color: ${borderColor};
             color: ${toolbarFontColor};
           }
@@ -700,7 +706,9 @@ const TiptapEditor = ({
             min-height: calc(${
               toolbarPreferences.toolbarHeight
             }px * var(--uiScale));
-            background-color: ${toolbarPreferences.backgroundColor};
+            background-color: color-mix(in srgb, ${toolbarBgColor} ${
+              toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
+            }%, transparent);
             border-color: ${borderColor};
             box-shadow: 0px 0px 0.5px ${paperShadowColor};
             color: ${toolbarFontColor};
@@ -848,8 +856,8 @@ const TiptapEditor = ({
             top: calc((-1 * ${
               String(borderImageOutset).split(" ")[0] || 0
             }px + ${
-            String(borderImageWidth).split(" ")[0] || 0
-          }px) * ${scale} * var(--uiScale));
+              String(borderImageWidth).split(" ")[0] || 0
+            }px) * ${scale} * var(--uiScale));
             bottom: 0;
             right: calc(-1 * ${
               String(borderImageOutset).split(" ")[1] ||
@@ -955,8 +963,8 @@ const TiptapEditor = ({
             top: calc((-1 * ${
               String(borderImageOutset).split(" ")[0] || 0
             }px + ${
-            String(borderImageWidth).split(" ")[0] || 0
-          }px) * ${scale} * var(--uiScale));
+              String(borderImageWidth).split(" ")[0] || 0
+            }px) * ${scale} * var(--uiScale));
             bottom: 0;
             left: calc(-1 * ${
               String(borderImageOutset).split(" ")[3] ||
@@ -994,8 +1002,8 @@ const TiptapEditor = ({
             width: calc(var(--uiScale) * ${scale} * max(400px, ${width}));
             max-width: 100%;
             background-color: color-mix(in srgb, ${paperColor} ${
-            paperColorOpacity !== undefined ? paperColorOpacity : 100
-          }%, transparent);
+              paperColorOpacity !== undefined ? paperColorOpacity : 100
+            }%, transparent);
             backdrop-filter: blur(${paperBlur || 0}px);
             border-top-width: calc(${
               String(paperBorderWidth).split(" ")[0] || 0

@@ -599,7 +599,7 @@ const WritingApp = () => {
 
               <div
                 id="AppBodyContainer"
-                className={`w-full grow min-h-0 bg-transparent overflow-hidden basis-0 flex relative
+                className={`w-full grow min-h-0 bg-appBackgroundAccent overflow-hidden basis-0 flex relative
                 ${deviceType === "desktop" && "flex-row"}
               `}
               >

@@ -204,7 +204,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               await toggle();
             }}
             icon={
-              <span className="icon-[bi--collection-fill] w-9/12 h-9/12"></span>
+              <span className="icon-[material-symbols-light--fullscreen] w-9/12 h-9/12"></span>
             }
           />
           {/* <motion.div

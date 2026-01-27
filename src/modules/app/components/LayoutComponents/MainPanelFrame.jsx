@@ -1,5 +1,5 @@
 import { useCallback, useState, useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { mainPanelStore } from "../../stores/mainPanelStore";
 import MainPanel from "./MainPanel";
 import { max, min } from "lib0/math";

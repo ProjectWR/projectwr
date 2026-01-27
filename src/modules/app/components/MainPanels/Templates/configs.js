@@ -648,6 +648,14 @@ export const desktopToolbarConfig = {
     category: "colors",
     description: "Toolbar background color",
   },
+  backgroundColorOpacity: {
+    type: "percent",
+    label: "Background Opacity %",
+    min: 0,
+    max: 100,
+    category: "colors",
+    description: "Opacity of the background color",
+  },
   borderColor: {
     type: "color",
     label: "Border Color",

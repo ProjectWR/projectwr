@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import useOuterClick from "../../design-system/useOuterClick";
 import { useDeviceType } from "../../app/ConfigProviders/DeviceTypeProvider";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import Tippy from "@tippyjs/react";
 
 const colors = [
