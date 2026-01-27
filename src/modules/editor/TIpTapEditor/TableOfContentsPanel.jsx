@@ -2,7 +2,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { appStore } from "../../app/stores/appStore";
 
-export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverflows }) => {
+export const TableOfContentsPanel = ({
+  editor,
+  toolbarPreferences,
+  contentOverflows,
+}) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const overlayRef = useRef(null);
@@ -10,7 +14,16 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
   const tocPinned = appStore((state) => state.tocPinned);
   const setTocPinned = appStore((state) => state.setTocPinned);
 
-  const { buttonHeight, buttonWidth, buttonRadius } = toolbarPreferences;
+  const {
+    buttonHeight,
+    buttonWidth,
+    buttonRadius,
+    backgroundColor,
+    backgroundColorOpacity,
+    toolbarBlur,
+    borderColor,
+    iconColor,
+  } = toolbarPreferences;
 
   const [headings, setHeadings] = useState([]);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -26,7 +39,9 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
     if (!editor) return;
 
     const editorContainer = document.getElementById("EditableContainer");
-    const paperContent = document.querySelector("#PaperEditorContent > div.tiptap.ProseMirror")
+    const paperContent = document.querySelector(
+      "#PaperEditorContent > div.tiptap.ProseMirror",
+    );
 
     if (!editorContainer || !paperContent) return;
 
@@ -121,7 +136,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
       setDragStartY(e.clientY);
       setDragStartScrollTop(scrollTop);
     },
-    [scrollTop]
+    [scrollTop],
   );
 
   const handleMouseMove = useCallback(
@@ -137,8 +152,8 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
         0,
         Math.min(
           documentHeight - viewportHeight,
-          dragStartScrollTop + scrollDelta
-        )
+          dragStartScrollTop + scrollDelta,
+        ),
       );
 
       editorContainer.scrollTop = newScrollTop;
@@ -150,7 +165,7 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
       containerHeight,
       documentHeight,
       viewportHeight,
-    ]
+    ],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -185,17 +200,26 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
       <div className="h-fit w-fit flex z-[100]">
         {/* Trigger Button */}
         <button
-          className={`rounded-lg transition-all duration-200 ${tocPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
-            }`}
+          className={`rounded-lg transition-all duration-200 ${
+            tocPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
+          }`}
           style={{
             height: `calc(${buttonHeight}px * var(--uiScale))`,
             borderRadius: `${buttonRadius}px`,
             width: `calc(${buttonWidth}px * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
+            backgroundColor: tocPinned
+              ? `color-mix(in srgb, ${backgroundColor} ${backgroundColorOpacity ?? 100}%, transparent)`
+              : "transparent",
+            backdropFilter: tocPinned ? `blur(${toolbarBlur || 0}px)` : "none",
+            border: tocPinned ? `1px solid ${borderColor}` : "none",
           }}
           onClick={() => setTocPinned(!tocPinned)}
         >
-          <span className="icon-[carbon--table-of-contents] w-full h-full text-appLayoutText" />
+          <span
+            className="icon-[carbon--table-of-contents] w-full h-full"
+            style={{ backgroundColor: iconColor }}
+          />
         </button>
       </div>
 
@@ -206,24 +230,29 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
       >
         {/* Minimap track */}
         <div className="relative w-full h-full pointer-events-auto">
-          {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
-            <div id="TOCVirtualScrollTrack" className="absolute left-1/2 -translate-x-1/2 w-px h-full z-[98] " />
+          {documentHeight > 0 && viewportHeight / documentHeight < 1 && (
+            <div
+              id="TOCVirtualScrollTrack"
+              className="absolute left-1/2 -translate-x-1/2 w-px h-full z-[98] "
+            />
           )}
           {/* Virtual scroll thumb */}
-          {documentHeight > 0 && (viewportHeight / documentHeight) < 1 && (
+          {documentHeight > 0 && viewportHeight / documentHeight < 1 && (
             <motion.div
               id="TOCVirtualScrollThumb"
               className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin min-h-5 z-[99] rounded-xl  transition-colors cursor-grab active:cursor-grabbing"
               style={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
-                height: `${(viewportHeight / documentHeight) * containerHeight
-                  }px`,
+                height: `${
+                  (viewportHeight / documentHeight) * containerHeight
+                }px`,
               }}
               initial={false}
               animate={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
-                height: `${(viewportHeight / documentHeight) * containerHeight
-                  }px`,
+                height: `${
+                  (viewportHeight / documentHeight) * containerHeight
+                }px`,
               }}
               transition={{ duration: 0.1 }}
               onMouseDown={handleThumbMouseDown}
@@ -264,11 +293,12 @@ export const TableOfContentsPanel = ({ editor, toolbarPreferences, contentOverfl
                     }}
                     whileHover={{ scale: 1.3, duration: 0.05 }}
                   >
-                    <div style={{
-                      height: `calc(2px * var(--uiScale))`,
-                    }} className="TOCPOI transition-colors w-full absolute left-0 top-1/2 -translate-y-1/2">
-
-                    </div>
+                    <div
+                      style={{
+                        height: `calc(2px * var(--uiScale))`,
+                      }}
+                      className="TOCPOI transition-colors w-full absolute left-0 top-1/2 -translate-y-1/2"
+                    ></div>
                   </motion.div>
 
                   {/* Heading label on hover */}

@@ -222,6 +222,7 @@ const TiptapEditor = ({
     fontColor: toolbarFontColor,
     backgroundColor: toolbarBgColor,
     backgroundColorOpacity: toolbarBgOpacity,
+    toolbarBlur,
   } = toolbarPreferences;
 
   console.log("Width: ", width);
@@ -690,6 +691,7 @@ const TiptapEditor = ({
             background-color: color-mix(in srgb, ${toolbarBgColor} ${
               toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
             }%, transparent);
+            backdrop-filter: blur(${toolbarBlur || 0}px);
             border-color: ${borderColor};
             color: ${toolbarFontColor};
           }
@@ -709,6 +711,7 @@ const TiptapEditor = ({
             background-color: color-mix(in srgb, ${toolbarBgColor} ${
               toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
             }%, transparent);
+            backdrop-filter: blur(${toolbarBlur || 0}px);
             border-color: ${borderColor};
             box-shadow: 0px 0px 0.5px ${paperShadowColor};
             color: ${toolbarFontColor};

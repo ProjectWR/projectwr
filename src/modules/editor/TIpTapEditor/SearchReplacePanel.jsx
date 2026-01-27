@@ -8,8 +8,16 @@ export const SearchReplacePanel = ({
   keepSearchReplacePanelAwake,
   forceCloseSearchReplacePanel,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [replaceTerm, setReplaceTerm] = useState("");
+  const {
+    backgroundColor,
+    backgroundColorOpacity,
+    toolbarBlur,
+    borderColor,
+    iconColor,
+    fontColor,
+    hoverColor,
+    pressedColor,
+  } = toolbarPreferences;
 
   const onSearchInputChange = useCallback((e) => {
     const { value } = e.target;
@@ -84,8 +92,7 @@ export const SearchReplacePanel = ({
       onMouseLeave={() => {
         if (searchTerm.length > 0 || replaceTerm.length > 0) {
           keepSearchReplacePanelAwake();
-        }
-        else {
+        } else {
           refreshSearchReplacePanel();
         }
       }}
@@ -93,12 +100,15 @@ export const SearchReplacePanel = ({
         transform: visible
           ? `translateX(0) translateY(105%)`
           : `translateX(0) translateY(-5%)`,
+        backgroundColor: `color-mix(in srgb, ${backgroundColor} ${backgroundColorOpacity ?? 100}%, transparent)`,
+        backdropFilter: `blur(${toolbarBlur || 0}px)`,
+        borderColor: borderColor,
+        color: fontColor,
       }}
       className={`rounded-sm shadow-sm mt-auto
                 shadow-appLayoutGentleShadow h-fit text-[1rem]
-                w-[30%]
-                border border-appLayoutBorder 
-                text-appLayoutText bg-appBackground translate-transform
+                w-[35%]
+                border 
                 duration-200 flex gap-1 flex-col items-start justify-start p-1`}
     >
       <div className="w-full h-[1.75rem] flex gap-1">
@@ -106,21 +116,42 @@ export const SearchReplacePanel = ({
           name="searchTermInput"
           placeholder="search"
           value={searchTerm}
-          className="w-[80%] rounded-sm h-full focus:bg-appLayoutInputBackground p-2 focus:outline-none border border-appLayoutBorder"
+          className="w-[80%] rounded-sm h-full p-2 focus:outline-none border border-appLayoutBorder"
+          style={{
+            backgroundColor: "transparent",
+            borderColor: borderColor,
+            color: fontColor,
+          }}
           onChange={onSearchInputChange}
         />
         <div className="h-full grow basis-0 min-w-0 flex gap-1">
           <button
             onClick={previous}
-            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm"
+            className="h-full grow basis-0 flex items-center justify-center rounded-sm transition-colors"
+            style={{
+              border: `1px solid ${borderColor}`,
+              "--hover-bg": hoverColor,
+              "--active-bg": pressedColor,
+            }}
           >
-            <span className="icon-[formkit--left] h-[80%] w-[80%]"></span>
+            <span
+              className="icon-[formkit--left] h-[80%] w-[80%]"
+              style={{ backgroundColor: iconColor }}
+            ></span>
           </button>
           <button
             onClick={next}
-            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover border-appLayoutBorder rounded-sm"
+            className="h-full grow basis-0 flex items-center justify-center rounded-sm transition-colors"
+            style={{
+              border: `1px solid ${borderColor}`,
+              "--hover-bg": hoverColor,
+              "--active-bg": pressedColor,
+            }}
           >
-            <span className="icon-[formkit--right] h-[80%] w-[80%]"></span>
+            <span
+              className="icon-[formkit--right] h-[80%] w-[80%]"
+              style={{ backgroundColor: iconColor }}
+            ></span>
           </button>
         </div>
       </div>
@@ -130,24 +161,53 @@ export const SearchReplacePanel = ({
           name="replaceTermInput"
           placeholder="replace"
           value={replaceTerm}
-          className="w-[80%] rounded-sm h-full focus:bg-appLayoutInputBackground p-2 focus:outline-none border border-appLayoutBorder"
+          className="w-[80%] rounded-sm h-full p-2 focus:outline-none border border-appLayoutBorder"
+          style={{
+            backgroundColor: "transparent",
+            borderColor: borderColor,
+            color: fontColor,
+          }}
           onChange={onReplaceInputChange}
         />
         <div className="h-full grow basis-0 min-w-0 flex gap-1">
           <button
             onClick={replace}
-            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm"
+            className="h-full grow basis-0 flex items-center justify-center rounded-sm transition-colors"
+            style={{
+              border: `1px solid ${borderColor}`,
+              "--hover-bg": hoverColor,
+              "--active-bg": pressedColor,
+            }}
           >
-            <span className="icon-[codicon--replace] h-[80%] w-[80%]"></span>
+            <span
+              className="icon-[codicon--replace] h-[80%] w-[80%]"
+              style={{ backgroundColor: iconColor }}
+            ></span>
           </button>
           <button
             onClick={replaceAll}
-            className="h-full grow basis-0 flex items-center justify-center hover:bg-appLayoutInverseHover active:bg-appLayoutInverseHover  border-appLayoutBorder rounded-sm"
+            className="h-full grow basis-0 flex items-center justify-center rounded-sm transition-colors"
+            style={{
+              border: `1px solid ${borderColor}`,
+              "--hover-bg": hoverColor,
+              "--active-bg": pressedColor,
+            }}
           >
-            <span className="icon-[codicon--replace-all] h-[80%] w-[80%]"></span>
+            <span
+              className="icon-[codicon--replace-all] h-[80%] w-[80%]"
+              style={{ backgroundColor: iconColor }}
+            ></span>
           </button>
         </div>
       </div>
+      <style>{`
+        #SearchReplacePanel button:hover {
+          background-color: var(--hover-bg) !important;
+        }
+        #SearchReplacePanel button:active {
+          background-color: var(--active-bg) !important;
+        }
+      `}</style>
     </div>
   );
 };

@@ -656,6 +656,14 @@ export const desktopToolbarConfig = {
     category: "colors",
     description: "Opacity of the background color",
   },
+  toolbarBlur: {
+    type: "number",
+    label: "Toolbar Blur",
+    min: 0,
+    max: 100,
+    category: "colors",
+    description: "Frosted glass blur amount",
+  },
   borderColor: {
     type: "color",
     label: "Border Color",
