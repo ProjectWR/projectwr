@@ -11,6 +11,7 @@ import {
 import { listen_for_auth_code } from "./modules/app/lib/auth/eventlisteners";
 import { oauthStore } from "./modules/app/stores/oauthStore";
 import driveOrchestrator from "./modules/app/lib/drive/driveOrchestrator";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 function App() {
   const accessTokenState = oauthStore((state) => state.accessTokenState);
@@ -48,6 +49,10 @@ function App() {
       driveOrchestrator.stopSync("googleDrive");
     }
   }, [accessTokenState])
+
+  useEffect(() => {
+    getCurrentWindow().setT
+  }, [])
 
   return (
     <DeviceTypeProvider>

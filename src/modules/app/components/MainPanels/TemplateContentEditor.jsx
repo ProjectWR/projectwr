@@ -441,6 +441,33 @@ const NumberOrPercentInput = ({ value, onChange, fieldConfig }) => {
   );
 };
 
+const BooleanInput = ({ value, onChange }) => {
+  return (
+    <div className="h-full flex gap-1 items-center bg-appBackground rounded-lg border border-appLayoutBorder p-1">
+      <button
+        onClick={() => onChange(true)}
+        className={`px-3 py-1 rounded-md text-libraryDirectoryBookNodeFontSize transition-colors ${
+          value === true
+            ? "bg-appLayoutHighlight text-white"
+            : "text-appLayoutTextMuted hover:text-appLayoutText"
+        }`}
+      >
+        Yes
+      </button>
+      <button
+        onClick={() => onChange(false)}
+        className={`px-3 py-1 rounded-md text-libraryDirectoryBookNodeFontSize transition-colors ${
+          value === false
+            ? "bg-appLayoutHighlight text-white"
+            : "text-appLayoutTextMuted hover:text-appLayoutText"
+        }`}
+      >
+        No
+      </button>
+    </div>
+  );
+};
+
 // ─── GROUP EDITOR ───────────────────────────────────────────────
 // Renders a series of input fields (or a ChromePicker for color fields)
 // with a floating label and inline error display.
@@ -760,6 +787,30 @@ function GroupEditor({ config, data, onChange, setGroupValid }) {
                             </motion.p>
                           )}
                         </AnimatePresence>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (fieldConfig.type === "boolean") {
+                  return (
+                    <div key={key} className="flex items-center justify-center">
+                      <div className="px-4 w-full flex flex-col gap-1">
+                        <div className="h-templateDetailsPreferenceInputHeight flex gap-2 flex-row items-center">
+                          <div className="w-fit h-full flex items-center">
+                            <BooleanInput
+                              value={data[key]}
+                              onChange={(val) => handleChange(key, val)}
+                            />
+                          </div>
+
+                          <label
+                            htmlFor={`input-${key}`}
+                            className="px-0 text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-appLayoutText h-fit pointer-events-none flex items-center justify-start"
+                          >
+                            {fieldConfig.label}
+                          </label>
+                        </div>
                       </div>
                     </div>
                   );

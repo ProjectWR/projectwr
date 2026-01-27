@@ -5,7 +5,7 @@ export const desktopPaperConfig = {
   width: {
     type: "numberOrPercent",
     label: "Width",
-    min: 500,
+    min: 400,
     max: 1000,
     category: "layout",
     description: "Width of the paper container",
@@ -57,6 +57,15 @@ export const desktopPaperConfig = {
     max: 1000,
     category: "layout",
     description: "Space below paragraphs",
+  },
+  scale: {
+    type: "number",
+    label: "Global Scale",
+    min: 0.5,
+    max: 2,
+    step: 0.1,
+    category: "layout",
+    description: "Overall zoom level of the paper",
   },
 
   // ─── Typography ───────────────────────────────────
@@ -112,6 +121,12 @@ export const desktopPaperConfig = {
     max: 72,
     category: "typography",
     description: "Spacing between lines",
+  },
+  mentionColor: {
+    type: "color",
+    label: "Mention Color",
+    category: "typography",
+    description: "Color of @mentions",
   },
 
   // ─── Heading Styles ───────────────────────────────────
@@ -400,6 +415,13 @@ export const desktopPaperConfig = {
     options: ["stretch", "repeat", "round", "space"],
     advanced: true,
   },
+  borderImageKeepBottomFixed: {
+    type: "boolean",
+    label: "Keep Bottom Fixed",
+    category: "borders",
+    description: "Pin the bottom border to the viewport bottom",
+    advanced: true,
+  },
   backgroundRepeat: {
     type: "select",
     label: "Background Repeat",
@@ -489,6 +511,18 @@ export const desktopPaperConfig = {
     label: "Blockquote Border Color",
     category: "content",
     description: "Color of blockquote border",
+  },
+  spellingErrorColor: {
+    type: "color",
+    label: "Spelling Error Color",
+    category: "content",
+    description: "Underline color for spelling errors",
+  },
+  spellingWarningColor: {
+    type: "color",
+    label: "Spelling Warning Color",
+    category: "content",
+    description: "Underline color for grammar warnings",
   },
 };
 

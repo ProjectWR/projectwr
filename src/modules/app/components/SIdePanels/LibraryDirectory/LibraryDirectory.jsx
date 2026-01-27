@@ -571,7 +571,7 @@ const LibraryDirectory = ({ libraryId }) => {
       >
         <div
           id="BookListContainer"
-          className="h-fit w-full px-2 flex flex-col justify-start items-center"
+          className="h-fit w-full px-0 flex flex-col justify-start items-center"
         >
           {sortedDescendants.get("root")?.sortedChildren &&
             sortedDescendants.get("root").sortedChildren.length > 0 &&

@@ -10,6 +10,12 @@
 
 @plugin "@iconify/tailwind4";
 
+html,
+body,
+#root {
+  background: transparent!important;
+}
+
 @font-face {
   font-family: "NotoSans";
   src: url("/src/assets/NotoSans.ttf") format("truetype");
@@ -50,8 +56,10 @@
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
   display: none;
   scrollbar-gutter: 0;
 }
@@ -274,13 +282,7 @@
     --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
     --breadcrumbItemMaxWidth: calc(1 / var(--uiScale) * 10rem);
 
-    --scrollbarWidth: calc(
-      var(--uiScale) *
-        (
-          0.25rem + var(--libraryManagerAddButtonSize) / 2 -
-            var(--libraryDirectoryBookNodeIconSize) / 2
-        )
-    );
+    --scrollbarWidth: calc(var(--uiScale) * (0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2));
 
     --librarySelectorWidth: calc(var(--uiScale) * 12.5rem);
 
@@ -431,13 +433,7 @@
     --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
     --breadcrumbItemMaxWidth: calc(1 / var(--uiScale) * 10rem);
 
-    --scrollbarWidth: calc(
-      var(--uiScale) *
-        (
-          0.25rem + var(--libraryManagerAddButtonSize) / 2 -
-            var(--libraryDirectoryBookNodeIconSize) / 2
-        )
-    );
+    --scrollbarWidth: calc(var(--uiScale) * (0.25rem + var(--libraryManagerAddButtonSize) / 2 - var(--libraryDirectoryBookNodeIconSize) / 2));
 
     --scrollbarWidthThin: calc(var(--uiScale) * 0.5rem);
 
@@ -604,54 +600,26 @@
   --spacing-sidePanelWidth: var(--sidePanelWidth);
   --spacing-libraryManagerHeaderHeight: var(--libraryManagerHeaderHeight);
   --spacing-libraryManagerHeaderWidth: var(--libraryManagerHeaderWidth);
-  --spacing-libraryManagerHeaderButtonSize: var(
-    --libraryManagerHeaderButtonSize
-  );
+  --spacing-libraryManagerHeaderButtonSize: var(--libraryManagerHeaderButtonSize);
 
   --spacing-libraryManagerNodeHeight: var(--libraryManagerNodeHeight);
   --spacing-libraryManagerAddButtonSize: var(--libraryManagerAddButtonSize);
-  --spacing-libraryManagerNodeEditButtonWidth: var(
-    --libraryManagerNodeEditButtonWidth
-  );
+  --spacing-libraryManagerNodeEditButtonWidth: var(--libraryManagerNodeEditButtonWidth);
   --spacing-libraryManagerNodeIconSize: var(--libraryManagerNodeIconSize);
   --spacing-detailsPanelHeaderHeight: var(--detailsPanelHeaderHeight);
-  --spacing-detailsPanelDescriptionInputHeight: var(
-    --detailsPanelDescriptionInputHeight
-  );
+  --spacing-detailsPanelDescriptionInputHeight: var(--detailsPanelDescriptionInputHeight);
   --spacing-detailsPanelPropLabelHeight: var(--detailsPanelPropLabelHeight);
-  --spacing-libraryDirectoryBookNodeHeight: var(
-    --libraryDirectoryBookNodeHeight
-  );
-  --spacing-libraryDirectoryPaperNodeHeight: var(
-    --libraryDirectoryPaperNodeHeight
-  );
-  --spacing-libraryDirectorySectionNodeHeight: var(
-    --libraryDirectorySectionNodeHeight
-  );
-  --spacing-libraryDirectoryBookNodeIconSize: var(
-    --libraryDirectoryBookNodeIconSize
-  );
-  --spacing-libraryDirectoryPaperNodeIconSize: var(
-    --libraryDirectoryPaperNodeIconSize
-  );
-  --spacing-libraryDirectorySectionNodeIconSize: var(
-    --libraryDirectorySectionNodeIconSize
-  );
-  --spacing-templateDetailsPanelDeviceHeaderHeight: var(
-    --templateDetailsPanelDeviceHeaderHeight
-  );
-  --spacing-templateDetailsPanelSectionHeaderHeight: var(
-    --templateDetailsPanelSectionHeaderHeight
-  );
-  --spacing-templateDetailsPreferenceInputHeight: var(
-    --templateDetailsPreferenceInputHeight
-  );
-  --spacing-templateDetailsPreferenceLabelWidth: var(
-    --templateDetailsPreferenceLabelWidth
-  );
-  --spacing-templateDetailsPreferencesColorInputSize: var(
-    --templateDetailsPreferencesColorInputSize
-  );
+  --spacing-libraryDirectoryBookNodeHeight: var(--libraryDirectoryBookNodeHeight);
+  --spacing-libraryDirectoryPaperNodeHeight: var(--libraryDirectoryPaperNodeHeight);
+  --spacing-libraryDirectorySectionNodeHeight: var(--libraryDirectorySectionNodeHeight);
+  --spacing-libraryDirectoryBookNodeIconSize: var(--libraryDirectoryBookNodeIconSize);
+  --spacing-libraryDirectoryPaperNodeIconSize: var(--libraryDirectoryPaperNodeIconSize);
+  --spacing-libraryDirectorySectionNodeIconSize: var(--libraryDirectorySectionNodeIconSize);
+  --spacing-templateDetailsPanelDeviceHeaderHeight: var(--templateDetailsPanelDeviceHeaderHeight);
+  --spacing-templateDetailsPanelSectionHeaderHeight: var(--templateDetailsPanelSectionHeaderHeight);
+  --spacing-templateDetailsPreferenceInputHeight: var(--templateDetailsPreferenceInputHeight);
+  --spacing-templateDetailsPreferenceLabelWidth: var(--templateDetailsPreferenceLabelWidth);
+  --spacing-templateDetailsPreferencesColorInputSize: var(--templateDetailsPreferencesColorInputSize);
   --spacing-loadingSpinnerSize: var(--loadingSpinnerSize);
   --spacing-authInputHeight: var(--authInputHeight);
   --spacing-optionsDropdownWidth: var(--optionsDropdownWidth);
@@ -660,9 +628,7 @@
   --spacing-authButtonSize: var(--authButtonSize);
   --spacing-actionBarButtonIconSize: var(--actionBarButtonIconSize);
   --spacing-libraryDirectoryHeaderHeight: var(--libraryDirectoryHeaderHeight);
-  --spacing-libraryDirectoryHeaderDropdownMaxHeight: var(
-    --libraryDirectoryHeaderDropdownMaxHeight
-  );
+  --spacing-libraryDirectoryHeaderDropdownMaxHeight: var(--libraryDirectoryHeaderDropdownMaxHeight);
   --spacing-detailsPanelWidth: var(--detailsPanelWidth);
   --spacing-homePanelHeaderHeight: var(--homePanelHeaderHeight);
   --spacing-userPlanDisplayHeight: var(--userPlanDisplayHeight);
@@ -671,12 +637,8 @@
   --spacing-fontContainerHeight: var(--fontContainerHeight);
   --spacing-fontAddButtonSize: var(--fontAddButtonSize);
   --spacing-fontItemHeight: var(--fontItemHeight);
-  --spacing-libraryDetailsActionButtonHeight: var(
-    --libraryDetailsActionButtonHeight
-  );
-  --spacing-libraryDetailsActionButtonWidth: var(
-    --libraryDetailsActionButtonWidth
-  );
+  --spacing-libraryDetailsActionButtonHeight: var(--libraryDetailsActionButtonHeight);
+  --spacing-libraryDetailsActionButtonWidth: var(--libraryDetailsActionButtonWidth);
   --spacing-ZoomButtonWidth: var(--ZoomButtonWidth);
   --spacing-ZoomIconSize: var(--ZoomIconSize);
   --spacing-ZoomDisplayWidth: var(--ZoomDisplayWidth);
@@ -687,24 +649,16 @@
   --spacing-actionBarSearchFooterHeight: var(--actionBarSearchFooterHeight);
   --spacing-actionBarWindowButtonIconSize: var(--actionBarWindowButtonIconSize);
   --spacing-optionsDropdownIconHeight: var(--optionsDropdownIconHeight);
-  --spacing-libraryDetailsActionButtonIconSize: var(
-    --libraryDetailsActionButtonIconSize
-  );
+  --spacing-libraryDetailsActionButtonIconSize: var(--libraryDetailsActionButtonIconSize);
   --spacing-actionBarLogoHeight: var(--actionBarLogoHeight);
-  --spacing-templateContentEditorHeaderPreferenceHeight: var(
-    --templateContentEditorHeaderPreferenceHeight
-  );
-  --spacing-templateContentEditorHeaderGroupHeight: var(
-    --templateContentEditorHeaderGroupHeight
-  );
+  --spacing-templateContentEditorHeaderPreferenceHeight: var(--templateContentEditorHeaderPreferenceHeight);
+  --spacing-templateContentEditorHeaderGroupHeight: var(--templateContentEditorHeaderGroupHeight);
   --spacing-breadcrumbHeight: var(--breadcrumbHeight);
   --spacing-breadcrumbSeperatorSize: var(--breadcrumbSeperatorSize);
   --spacing-breadcrumbItemMaxWidth: var(--breadcrumbItemMaxWidth);
   --spacing-preferencesItemHeight: var(--preferencesItemHeight);
   --spacing-preferencesItemButtonSize: var(--preferencesItemButtonSize);
-  --spacing-templateDetailsPreferenceInputWidth: var(
-    --templateDetailsPreferenceInputWidth
-  );
+  --spacing-templateDetailsPreferenceInputWidth: var(--templateDetailsPreferenceInputWidth);
   --spacing-paperPanelHeaderHeight: var(--paperPanelHeaderHeight);
   --spacing-scrollbarSize: var(--scrollbarSize);
   --spacing-tabsHeight: var(--tabsHeight);
@@ -728,21 +682,11 @@
   --text-detailsPanelPropsFontSize: var(--detailsPanelPropsFontSize);
   --text-detailsPanelPropLabelFontSize: var(--detailsPanelPropLabelFontSize);
   --text-detailsPanelSaveButtonFontSize: var(--detailsPanelSaveButtonFontSize);
-  --text-libraryDirectoryBookNodeFontSize: var(
-    --libraryDirectoryBookNodeFontSize
-  );
-  --text-libraryDirectoryPaperNodeFontSize: var(
-    --libraryDirectoryPaperNodeFontSize
-  );
-  --text-libraryDirectorySectionNodeFontSize: var(
-    --libraryDirectorySectionNodeFontSize
-  );
-  --text-templateDetailsPanelPreferenceFontSize: var(
-    --templateDetailsPanelPreferenceFontSize
-  );
-  --text-templateDetailsPanelPreferenceInputFontSize: var(
-    --templateDetailsPanelPreferenceInputFontSize
-  );
+  --text-libraryDirectoryBookNodeFontSize: var(--libraryDirectoryBookNodeFontSize);
+  --text-libraryDirectoryPaperNodeFontSize: var(--libraryDirectoryPaperNodeFontSize);
+  --text-libraryDirectorySectionNodeFontSize: var(--libraryDirectorySectionNodeFontSize);
+  --text-templateDetailsPanelPreferenceFontSize: var(--templateDetailsPanelPreferenceFontSize);
+  --text-templateDetailsPanelPreferenceInputFontSize: var(--templateDetailsPanelPreferenceInputFontSize);
   --text-optionsDropdownOptionFont: var(--optionsDropdownOptionFont);
   --text-homePanelHeaderFontSize: var(--homePanelHeaderFontSize);
   --text-homePanelSubtitleFontSize: var(--homePanelSubtitleFontSize);
@@ -751,9 +695,7 @@
   --text-actionBarSearchTextSize: var(--actionBarSearchTextSize);
   --text-actionBarResultHeaderTextSize: var(--actionBarResultHeaderTextSize);
   --text-actionBarResultTextSize: var(--actionBarResultTextSize);
-  --text-libraryDetailsActionButtonFontSize: var(
-    --libraryDetailsActionButtonFontSize
-  );
+  --text-libraryDetailsActionButtonFontSize: var(--libraryDetailsActionButtonFontSize);
   --text-actionBarResultDateFontSize: var(--actionBarResultDateFontSize);
   --text-recentlyOpenedDateFontSize: var(--recentlyOpenedDateFontSize);
   --text-recentlyOpenedNodeFontSize: var(--recentlyOpenedNodeFontSize);
@@ -818,6 +760,7 @@ input[type="number"] {
 } */
 
 @keyframes blink {
+
   0%,
   35%,
   65%,
@@ -831,6 +774,7 @@ input[type="number"] {
 }
 
 @layer components {
+
   .contextMenuContent,
   .contextMenuSubContent {
     @apply min-w-optionsDropdownWidth bg-appBackgroundAccent/90 backdrop-blur-[1px] border border-appLayoutBorder rounded-md overflow-hidden p-1 shadow-sm shadow-appLayoutGentleShadow;
@@ -861,7 +805,7 @@ input[type="number"] {
     @apply ml-auto pl-5 text-appLayoutText;
   }
 
-  [data-highlighted] > .rightSlot {
+  [data-highlighted]>.rightSlot {
     @apply text-appLayoutText;
   }
 

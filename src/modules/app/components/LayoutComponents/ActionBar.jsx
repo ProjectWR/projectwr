@@ -575,12 +575,12 @@ export const ActionBarLeftSide = ({}) => {
 
         <div
           id="LibraryDirectoryHeaderContainer"
-          className="grow min-w-librarySelectorWidth basis-0 relative"
+          className="grow w-librarySelectorWidth basis-0 relative"
         >
           <LibraryDirectoryHeader />
         </div>
 
-        <div className="w-[0.5px] min-w-[0.5px] h-full py-2">
+        <div className="w-[0.5px] min-w-[0.5px] basis-[0.5px] h-full py-2">
           <div className={`w-full h-full bg-appLayoutBorder`}></div>
         </div>
       </div>

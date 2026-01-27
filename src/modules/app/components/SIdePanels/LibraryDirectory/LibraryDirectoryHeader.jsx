@@ -27,6 +27,7 @@ import { ScrollArea } from "@mantine/core";
 import DialogWrapper from "../../LayoutComponents/DialogWrapper";
 import driveOrchestrator from "../../../lib/drive/driveOrchestrator";
 import { oauthStore } from "../../../stores/oauthStore";
+import useOuterClick from "../../../../design-system/useOuterClick";
 
 const LibraryDirectoryHeader = () => {
   const { deviceType } = useDeviceType();
@@ -43,6 +44,7 @@ const LibraryDirectoryHeader = () => {
 
   const libraryDropdownRef = useRef(null);
   const [libraryDropdownHeight, setLibraryDropdownHeight] = useState(0);
+
 
   const libraryManagerOpened = appStore((state) => state.libraryManagerOpened);
   const setLibraryManagerOpened = appStore(
@@ -62,6 +64,11 @@ const LibraryDirectoryHeader = () => {
   const [deleteFromDrive, setDeleteFromDrive] = useState(false);
 
   const prevLibraryIdsWithPropsRef = useRef(null);
+
+  
+  const libraryManagerRef = useOuterClick(() => {
+      setLibraryManagerOpened(false)
+  })
 
   useLayoutEffect(() => {
     if (libraryDropdownRef.current) {
@@ -266,6 +273,7 @@ const LibraryDirectoryHeader = () => {
       data-tauri-drag-region
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
+      ref={libraryManagerRef}
       className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
         libraryManagerOpened
           ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
@@ -278,7 +286,7 @@ const LibraryDirectoryHeader = () => {
           className={`h-fit w-full max-w-full py-2 px-1 text-libraryManagerHeaderText text-appLayoutText hover:text-appLayoutHighlight transition-colors duration-100 flex items-center justify-center`}
         >
           <ContextMenuWrapper
-            triggerClassname="grow h-fit min-w-0"
+            triggerClassname="grow basis-0 h-fit min-w-0"
             options={options}
           >
             {isRenaming ? (
@@ -295,7 +303,7 @@ const LibraryDirectoryHeader = () => {
                   }
                 }}
                 onBlur={handleRenameSave}
-                className="w-full bg-appLayoutInputBackground pr-1 pl-2 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
+                className="max-w-full bg-appLayoutInputBackground pr-1 pl-2 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
                 autoFocus
               />
             ) : (
