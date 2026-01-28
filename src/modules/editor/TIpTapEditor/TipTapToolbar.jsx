@@ -60,7 +60,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           {`
             .toolbarButton {
               background-color: color-mix(in srgb, ${buttonColor}, transparent ${100 - buttonBackgroundOpacity}%);
-              backdrop-filter: blur(${buttonBackgroundBlur}px);
+              ${buttonBackgroundBlur > 0 ? `backdrop-filter: blur(${buttonBackgroundBlur}px);` : ""}
               height: ${buttonHeight}px;
               color: ${iconColor};
             }

@@ -17,7 +17,6 @@ export const SearchReplacePanel = ({
     toolbarBlur,
     borderColor,
     iconColor,
-    fontColor,
     hoverColor,
     pressedColor,
   } = toolbarPreferences;
@@ -106,7 +105,7 @@ export const SearchReplacePanel = ({
         backgroundColor: `color-mix(in srgb, ${backgroundColor} ${backgroundColorOpacity ?? 100}%, transparent)`,
         backdropFilter: `blur(${toolbarBlur || 0}px)`,
         borderColor: borderColor,
-        color: fontColor,
+        color: iconColor,
       }}
       className={`rounded-sm shadow-sm mt-auto
                 shadow-appLayoutGentleShadow h-fit text-[1rem]
@@ -123,7 +122,7 @@ export const SearchReplacePanel = ({
           style={{
             backgroundColor: "transparent",
             borderColor: borderColor,
-            color: fontColor,
+            color: iconColor,
           }}
           onChange={onSearchInputChange}
         />
@@ -168,7 +167,7 @@ export const SearchReplacePanel = ({
           style={{
             backgroundColor: "transparent",
             borderColor: borderColor,
-            color: fontColor,
+            color: iconColor,
           }}
           onChange={onReplaceInputChange}
         />
