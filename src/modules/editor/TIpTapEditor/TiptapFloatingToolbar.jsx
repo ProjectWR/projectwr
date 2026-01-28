@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useEditorState } from "@tiptap/react";
 
 const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
@@ -35,27 +36,35 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
     buttonHeight,
     buttonWidth,
     buttonRadius,
-    backgroundColor,
     buttonColor,
     dividerColor,
     fontSize,
     textFormatButtonWidth,
     toolbarFontSize,
     hoverColor,
+    iconColor,
     pressedColor,
+    buttonBackgroundOpacity = 100,
+    buttonBackgroundBlur = 0,
+    hoverColorOpacity = 100,
   } = toolbarPreferences;
 
   return (
     <div className="h-full w-fit overflow-hidden flex gap-1">
       <style>
         {`
+            .toolbarButton {
+              background-color: color-mix(in srgb, ${buttonColor}, transparent ${100 - buttonBackgroundOpacity}%);
+              backdrop-filter: blur(${buttonBackgroundBlur}px);
+              color: ${iconColor};
+            }
 
             .toolbarButton:hover {
-              background-color: ${hoverColor};
+              background-color: color-mix(in srgb, ${hoverColor}, transparent ${100 - hoverColorOpacity}%);
             }
 
             .toolbarButton:focus {
-              background-color: ${hoverColor};
+              background-color: color-mix(in srgb, ${hoverColor}, transparent ${100 - hoverColorOpacity}%);
             }
           `}
       </style>
@@ -70,7 +79,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
       >
-        <span className="icon-[cuida--heading1-outline] w-[80%] h-[80%] text-appLayoutText"></span>
+        <span className="icon-[cuida--heading1-outline] w-[80%] h-[80%]"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -83,7 +92,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
       >
-        <span className="icon-[cuida--heading2-outline] w-[80%] h-[80%] text-appLayoutText"></span>
+        <span className="icon-[cuida--heading2-outline] w-[80%] h-[80%]"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -96,7 +105,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
       >
-        <span className="icon-[cuida--heading3-outline] w-[80%] h-[80%] text-appLayoutText"></span>
+        <span className="icon-[cuida--heading3-outline] w-[80%] h-[80%]"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -107,7 +116,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       >
-        <span className="icon-[material-symbols-light--format-list-bulleted] w-[90%] h-[90%] text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--format-list-bulleted] w-[90%] h-[90%]"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -118,7 +127,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
       >
-        <span className="icon-[material-symbols-light--format-list-numbered] w-[90%] h-[90%] text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--format-list-numbered] w-[90%] h-[90%]"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -131,7 +140,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().setTextAlign("left").run()}
       >
-        <span className="icon-[material-symbols-light--format-align-left] w-full h-full text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--format-align-left] w-full h-full"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -144,7 +153,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().setTextAlign("center").run()}
       >
-        <span className="icon-[material-symbols-light--format-align-center] w-full h-full text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--format-align-center] w-full h-full"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -157,7 +166,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().setTextAlign("right").run()}
       >
-        <span className="icon-[material-symbols-light--format-align-right] w-full h-full text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--format-align-right] w-full h-full"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -170,7 +179,7 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().setTextAlign("justify").run()}
       >
-        <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--format-align-justify] w-full h-full"></span>
       </button>
       <button
         className="toolbarButton rounded-md h-full flex items-center justify-center focus:outline-none"
@@ -183,10 +192,32 @@ const TiptapFloatingToolbar = ({ editor, toolbarPreferences }) => {
         }}
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
       >
-        <span className="icon-[material-symbols-light--horizontal-rule] w-full h-full text-appLayoutText"></span>
+        <span className="icon-[material-symbols-light--horizontal-rule] w-full h-full"></span>
       </button>
     </div>
   );
+};
+
+TiptapFloatingToolbar.propTypes = {
+  editor: PropTypes.object,
+  toolbarPreferences: PropTypes.shape({
+    buttonWidth: PropTypes.number,
+    buttonHeight: PropTypes.number,
+    textFormatButtonWidth: PropTypes.number,
+    toolbarFontSize: PropTypes.number,
+    buttonColor: PropTypes.string,
+    borderColor: PropTypes.string,
+    dividerColor: PropTypes.string,
+    iconColor: PropTypes.string,
+    fontColor: PropTypes.string,
+    hoverColor: PropTypes.string,
+    pressedColor: PropTypes.string,
+    buttonBackgroundOpacity: PropTypes.number,
+    buttonBackgroundBlur: PropTypes.number,
+    hoverColorOpacity: PropTypes.number,
+    toolbarShadow: PropTypes.number,
+    toolbarShadowColor: PropTypes.string,
+  }),
 };
 
 export default TiptapFloatingToolbar;

@@ -118,7 +118,7 @@ export const appStore = create((set) => ({
     return set({ proofreadContextItems: proofreadContextItems });
   },
 
-  libraryManagerOpened: true,
+  libraryManagerOpened: false,
   setLibraryManagerOpened: (libraryManagerOpened) => {
     return set({ libraryManagerOpened: libraryManagerOpened });
   },
@@ -128,7 +128,7 @@ export const appStore = create((set) => ({
     return set({ tocPinned: tocPinned });
   },
 
-  statsPinned: true,
+  statsPinned: false,
   setStatsPinned: (statsPinned) => {
     return set({ statsPinned: statsPinned });
   },

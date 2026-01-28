@@ -1262,7 +1262,14 @@ const TiptapEditor = ({
           >
             <div
               id="EditableUtilityToolbar"
-              className="w-fit rounded-lg border shadow-sm shadow-appLayoutGentleShadow"
+              className="w-fit rounded-lg border"
+              style={{
+                boxShadow: toolbarPreferences.toolbarShadow
+                  ? `0 0 calc(${toolbarPreferences.toolbarShadow}px * ${scale} * var(--uiScale)) ${
+                      toolbarPreferences.toolbarShadowColor || "transparent"
+                    }`
+                  : "none",
+              }}
             >
               <TiptapUtilityToolbar
                 editor={editor}
@@ -1299,7 +1306,7 @@ const TiptapEditor = ({
                 overflow-y-hidden
                 min-w-0 sticky
                 z-[10000]
-                order-0 w-fit rounded-lg backdrop-blur-[2px] border z-[10000]
+                order-0 w-fit rounded-lg border z-[10000]
               `}
             >
               <TipTapToolbar

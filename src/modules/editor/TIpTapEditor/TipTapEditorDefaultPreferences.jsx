@@ -105,6 +105,11 @@ const TiptapDesktopDefaultPreferences = {
     hoverColor: "#121212",
     pressedColor: "#080808",
     scrollbarThumbColor: "#676767",
+    buttonBackgroundOpacity: 100,
+    buttonBackgroundBlur: 0,
+    hoverColorOpacity: 100,
+    toolbarShadow: 0,
+    toolbarShadowColor: "#000000AA",
   },
 };
 
@@ -213,6 +218,11 @@ const TiptapMobileDefaultPreferences = {
     hoverColor: "#121212",
     pressedColor: "#080808",
     scrollbarThumbColor: "#121212",
+    buttonBackgroundOpacity: 100,
+    buttonBackgroundBlur: 0,
+    hoverColorOpacity: 100,
+    toolbarShadow: 0,
+    toolbarShadowColor: "#000000AA",
   },
 };
 

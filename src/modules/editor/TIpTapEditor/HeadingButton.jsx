@@ -88,6 +88,7 @@ const TextFormatButton = ({ editor, toolbarPreferences }) => {
                 minWidth: `calc(${textFormatButtonWidth}px * var(--uiScale))`,
                 width: `calc(${textFormatButtonWidth}px * var(--uiScale))`,
                 border: `1px solid ${dividerColor}`,
+                backgroundColor: backgroundColor,
               }}
             >
               <button

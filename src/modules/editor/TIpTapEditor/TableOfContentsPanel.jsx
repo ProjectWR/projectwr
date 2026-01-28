@@ -201,24 +201,23 @@ export const TableOfContentsPanel = ({
         {/* Trigger Button */}
         <button
           className={`rounded-lg transition-all duration-200 ${
-            tocPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
+            tocPinned ? "opacity-100" : "opacity-50 hover:opacity-75"
           }`}
           style={{
             height: `calc(${buttonHeight}px * var(--uiScale))`,
-            borderRadius: `${buttonRadius}px`,
+            borderRadius: `0 0 0 ${buttonRadius}px`,
             width: `calc(${buttonWidth}px * var(--uiScale))`,
             minWidth: `calc(${buttonWidth}px * var(--uiScale))`,
             backgroundColor: tocPinned
               ? `color-mix(in srgb, ${backgroundColor} ${backgroundColorOpacity ?? 100}%, transparent)`
               : "transparent",
             backdropFilter: tocPinned ? `blur(${toolbarBlur || 0}px)` : "none",
-            border: tocPinned ? `1px solid ${borderColor}` : "none",
           }}
           onClick={() => setTocPinned(!tocPinned)}
         >
           <span
             className="icon-[carbon--table-of-contents] w-full h-full"
-            style={{ backgroundColor: iconColor }}
+            style={{ color: iconColor }}
           />
         </button>
       </div>

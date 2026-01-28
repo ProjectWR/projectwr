@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import TextFormatButton from "./HeadingButton";
 import HighlightButton from "./HighlightButton";
 import { useEditorState } from "@tiptap/react";
@@ -36,7 +37,6 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
     buttonHeight,
     buttonWidth,
     buttonRadius,
-    backgroundColor,
     buttonColor,
     dividerColor,
     fontSize,
@@ -44,26 +44,29 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
     toolbarFontSize,
     hoverColor,
     pressedColor,
+    buttonBackgroundOpacity = 100,
+    buttonBackgroundBlur = 0,
+    hoverColorOpacity = 100,
+    iconColor,
   } = toolbarPreferences;
 
   return (
     <div
       // style={{ scrollbarWidth: "none", scrollbarGutter: 0 }}
-      className="h-full max-h-full z-[10001] EditorStyles text-appLayoutText relative"
+      className="h-full max-h-full z-[10001] EditorStyles relative"
     >
-      <div
-        id="toolbarBody"
-        className="h-full flex items-center"
-      >
+      <div id="toolbarBody" className="h-full flex items-center">
         <style>
           {`
             .toolbarButton {
-              background-color: ${backgroundColor};
+              background-color: color-mix(in srgb, ${buttonColor}, transparent ${100 - buttonBackgroundOpacity}%);
+              backdrop-filter: blur(${buttonBackgroundBlur}px);
               height: ${buttonHeight}px;
+              color: ${iconColor};
             }
 
             .toolbarButton:hover {
-              background-color: ${hoverColor};
+              background-color: color-mix(in srgb, ${hoverColor}, transparent ${100 - hoverColorOpacity}%);
             }
           `}
         </style>
@@ -85,9 +88,8 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
             backgroundColor: editor.isActive("bold") ? pressedColor : "",
           }}
           onClick={() => editor.chain().focus().toggleBold().run()}
-
         >
-          <span className="icon-[material-symbols-light--format-bold] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-bold] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -99,7 +101,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleItalic().run()}
         >
-          <span className="icon-[material-symbols-light--format-italic] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-italic] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -111,7 +113,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleStrike().run()}
         >
-          <span className="icon-[material-symbols-light--format-strikethrough] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-strikethrough] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -123,7 +125,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
         >
-          <span className="icon-[proicons--text-underline] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[proicons--text-underline] w-full h-full"></span>
         </button>
         <HighlightButton
           editor={editor}
@@ -139,7 +141,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleSubscript().run()}
         >
-          <span className="icon-[proicons--text-subscript] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[proicons--text-subscript] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton p-1 pt-px"
@@ -151,7 +153,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleSuperscript().run()}
         >
-          <span className="icon-[proicons--text-superscript] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[proicons--text-superscript] w-full h-full"></span>
         </button>
         <div
           className="w-px h-[70%]"
@@ -167,7 +169,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
         >
-          <span className="icon-[material-symbols-light--format-quote] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-quote] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -179,7 +181,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
-          <span className="icon-[material-symbols-light--format-list-bulleted] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-list-bulleted] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -191,7 +193,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
-          <span className="icon-[material-symbols-light--format-list-numbered] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-list-numbered] w-full h-full"></span>
         </button>
         <div
           className="w-px h-[70%]"
@@ -209,7 +211,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
         >
-          <span className="icon-[material-symbols-light--format-align-left] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-align-left] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -223,7 +225,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
         >
-          <span className="icon-[material-symbols-light--format-align-center] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-align-center] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -237,7 +239,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
         >
-          <span className="icon-[material-symbols-light--format-align-right] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-align-right] w-full h-full"></span>
         </button>
         <button
           className="toolbarButton"
@@ -251,7 +253,7 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().setTextAlign("justify").run()}
         >
-          <span className="icon-[material-symbols-light--format-align-justify] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--format-align-justify] w-full h-full"></span>
         </button>
         {/* <div
           className="w-px h-[70%]"
@@ -269,12 +271,35 @@ const TipTapToolbar = ({ editor, toolbarPreferences }) => {
           }}
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
         >
-          <span className="icon-[material-symbols-light--horizontal-rule] w-full h-full text-appLayoutText"></span>
+          <span className="icon-[material-symbols-light--horizontal-rule] w-full h-full"></span>
         </button> */}
         {/* <div className="w-px h-[70%]" style={{backgroundColor: `${dividerColor}`}}></div> */}
       </div>
     </div>
   );
+};
+
+TipTapToolbar.propTypes = {
+  editor: PropTypes.object,
+  toolbarPreferences: PropTypes.shape({
+    toolbarHeight: PropTypes.number,
+    buttonHeight: PropTypes.number,
+    buttonWidth: PropTypes.number,
+    buttonRadius: PropTypes.number,
+    buttonColor: PropTypes.string,
+    borderColor: PropTypes.string,
+    dividerColor: PropTypes.string,
+    iconColor: PropTypes.string,
+    fontColor: PropTypes.string,
+    hoverColor: PropTypes.string,
+    pressedColor: PropTypes.string,
+    scrollbarThumbColor: PropTypes.string,
+    buttonBackgroundOpacity: PropTypes.number,
+    buttonBackgroundBlur: PropTypes.number,
+    hoverColorOpacity: PropTypes.number,
+    toolbarShadow: PropTypes.number,
+    toolbarShadowColor: PropTypes.string,
+  }),
 };
 
 export default TipTapToolbar;

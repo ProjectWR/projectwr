@@ -37,7 +37,7 @@ export const StatisticsPanel = ({ mode, editor, toolbarPreferences }) => {
         {/* Trigger Button */}
         <button
           className={`rounded-lg transition-all duration-200 ${
-            statsPinned ? "opacity-100" : "opacity-30 hover:opacity-60"
+            statsPinned ? "opacity-100" : "opacity-50 hover:opacity-75"
           }`}
           style={{
             height: `calc(${buttonHeight}px * var(--uiScale) * 0.75)`,
