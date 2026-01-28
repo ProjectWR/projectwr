@@ -13,6 +13,7 @@ import PaperSettingsPanel from "../MainPanels/PaperSettingsPanel";
 import TemplateViewPanel from "../MainPanels/TemplateViewPanel";
 import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
 import HomePanel from "../MainPanels/HomePanel";
+import AppThemeDetailsPanel from "../MainPanels/AppThemeDetailsPanel";
 
 import useMainPanel from "../../hooks/useMainPanel";
 import useStoreHistory from "../../hooks/useStoreHistory";
@@ -68,20 +69,21 @@ const MainPanel = ({ main = true }) => {
 
     if (
       !checkForYTree(
-        dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+        dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory"),
       )
     ) {
       throw new Error("Tried to access uninitialized directory");
     }
 
     libraryYTreeRef.current = new YTree(
-      dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+      dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory"),
     );
     // Only re-initialize YTree if libraryId changes
   }, [libraryId]);
 
   const renderMainPanel = useCallback(() => {
-    const { panelType, mode, breadcrumbs } = splitMode == 'none' || main ? mainPanelState : splitPanelState;
+    const { panelType, mode, breadcrumbs } =
+      splitMode == "none" || main ? mainPanelState : splitPanelState;
 
     const isAtRoot = breadcrumbs.length === 1;
 
@@ -241,6 +243,27 @@ const MainPanel = ({ main = true }) => {
           </PrependBreadcrumbs>
         );
       }
+    } else if (panelType === "appThemes") {
+      key.current = "appThemeDetails-" + rootId;
+
+      const breadcrumbValues = [
+        {
+          label: "Your App Themes",
+          action: () => {},
+        },
+        {
+          label: rootId,
+          action: () => {
+            activatePanel("appThemes", mode, [rootId]);
+          },
+        },
+      ];
+
+      return (
+        <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+          <AppThemeDetailsPanel themeId={rootId} key={rootId} />
+        </PrependBreadcrumbs>
+      );
     } else if (panelType === "dictionary") {
       key.current = "dictionary";
       return <DictionaryPanel />;

@@ -16,11 +16,11 @@ const useMainPanel = () => {
   const mainPanelState = mainPanelStore((state) => state.mainPanelState);
   const setMainPanelState = mainPanelStore((state) => state.setMainPanelState);
   const setSplitMode = mainPanelStore((state) => state.setSplitMode);
-  const setSplitPanelState = mainPanelStore((state) => state.setSplitPanelState);
+  const setSplitPanelState = mainPanelStore(
+    (state) => state.setSplitPanelState,
+  );
   const splitRatio = mainPanelStore((state) => state.splitRatio);
   const setSplitRatio = mainPanelStore((state) => state.setSplitRatio);
-
-
 
   // App Store Setters
   const setFocusedItem = appStore((state) => state.setFocusedItem);
@@ -87,6 +87,10 @@ const useMainPanel = () => {
       } else if (panelType === "templates") {
         const rootId = breadcrumbs[0];
         setTemplateId(rootId);
+      } else if (panelType === "appThemes") {
+        const rootId = breadcrumbs[0];
+        const setAppThemeId = appStore.getState().setAppThemeId;
+        setAppThemeId(rootId);
       }
     },
     [
@@ -98,9 +102,8 @@ const useMainPanel = () => {
       setNotesPanelState,
       setItemId,
       setItemMode,
-    ]
+    ],
   );
-
 
   const activateSplitPanel = useCallback(
     async (panelType, mode, breadcrumbs, orientation) => {
@@ -111,26 +114,28 @@ const useMainPanel = () => {
       }
 
       const newState = {
-
         panelType: panelType,
         mode: mode,
         breadcrumbs: breadcrumbs,
       };
 
       setSplitPanelState(newState);
-    }, [setSplitMode, setSplitPanelState, setSplitRatio, splitRatio]
+    },
+    [setSplitMode, setSplitPanelState, setSplitRatio, splitRatio],
   );
 
-  const deactivateSplitPanel = useCallback(
-    async () => {
-      setSplitMode("none");
-      setSplitRatio(null);
-      setSplitPanelState(null);
+  const deactivateSplitPanel = useCallback(async () => {
+    setSplitMode("none");
+    setSplitRatio(null);
+    setSplitPanelState(null);
+  }, [setSplitMode, setSplitPanelState, setSplitRatio]);
 
-    }, [setSplitMode, setSplitPanelState, setSplitRatio]
-  )
-
-  return { mainPanelState, activatePanel, activateSplitPanel, deactivateSplitPanel };
+  return {
+    mainPanelState,
+    activatePanel,
+    activateSplitPanel,
+    deactivateSplitPanel,
+  };
 };
 
 export default useMainPanel;

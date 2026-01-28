@@ -44,7 +44,8 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
     clearFuture,
   } = useStoreHistory();
 
-  const { activatePanel, activateSplitPanel, deactivateSplitPanel } = useMainPanel();
+  const { activatePanel, activateSplitPanel, deactivateSplitPanel } =
+    useMainPanel();
 
   useEffect(() => {
     const newState = JSON.parse(JSON.stringify(mainPanelState));
@@ -190,8 +191,9 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
         type="hover"
         id="TabsScrollArea"
         classNames={{
-          root: `grow basis-0 min-w-0 h-full min-h-full ${overflow && "border-x border-appLayoutBorder"
-            }
+          root: `grow basis-0 min-w-0 h-full min-h-full ${
+            overflow && "border-x border-appLayoutBorder"
+          }
             `,
           scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
           thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
@@ -212,8 +214,8 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
                   key={
                     breadcrumbs.length >= 1
                       ? breadcrumbs[0] +
-                      "-" +
-                      breadcrumbs[breadcrumbs.length - 1]
+                        "-" +
+                        breadcrumbs[breadcrumbs.length - 1]
                       : panelType
                   }
                   initial={{ opacity: 0, width: 0 }}
@@ -286,7 +288,7 @@ export const TabButton = ({
 
   const [label, setLabel] = useState("DEFAULT");
   const [icon, setIcon] = useState(
-    <span className="icon-[icon-park-outline--dot] w-full h-full"></span>
+    <span className="icon-[icon-park-outline--dot] w-full h-full"></span>,
   );
 
   const action = useCallback(() => {
@@ -294,7 +296,6 @@ export const TabButton = ({
       setActivity("libraries");
       setLibraryId(breadcrumbs[0]);
     }
-
 
     activatePanel(panelType, mode, breadcrumbs);
   }, [panelType, mode, breadcrumbs, activatePanel, setActivity, setLibraryId]);
@@ -377,7 +378,7 @@ export const TabButton = ({
       }
 
       const tabDropIndex = tabs.findIndex((x) =>
-        equalityDeep(x, { panelType, mode, breadcrumbs })
+        equalityDeep(x, { panelType, mode, breadcrumbs }),
       );
 
       const hoverBoundingRect = dndRef.current.getBoundingClientRect();
@@ -388,7 +389,7 @@ export const TabButton = ({
       const middle = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
 
       const tabDraggedIndex = tabs.findIndex((x) =>
-        equalityDeep(x, draggedItem.tabProps)
+        equalityDeep(x, draggedItem.tabProps),
       );
 
       if (tabDraggedIndex !== -1) {
@@ -428,11 +429,11 @@ export const TabButton = ({
       }
 
       const tabDropIndex = tabs.findIndex((x) =>
-        equalityDeep(x, { panelType, mode, breadcrumbs })
+        equalityDeep(x, { panelType, mode, breadcrumbs }),
       );
 
       const tabDraggedIndex = tabs.findIndex((x) =>
-        equalityDeep(x, draggedItem.tabProps)
+        equalityDeep(x, draggedItem.tabProps),
       );
 
       const hoverBoundingRect = dndRef.current.getBoundingClientRect();
@@ -502,7 +503,7 @@ export const TabButton = ({
             dataManagerSubdocs
               .getLibrary(rootId)
               .getMap("library_props")
-              .get("item_properties")["item_title"]
+              .get("item_properties")["item_title"],
           );
         };
 
@@ -524,14 +525,14 @@ export const TabButton = ({
       if (
         !dataManagerSubdocs.getLibrary(rootId) ||
         !checkForYTree(
-          dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
+          dataManagerSubdocs.getLibrary(rootId).getMap("library_directory"),
         )
       ) {
         return null;
       }
 
       const ytree = new YTree(
-        dataManagerSubdocs.getLibrary(rootId).getMap("library_directory")
+        dataManagerSubdocs.getLibrary(rootId).getMap("library_directory"),
       );
 
       const itemMap = ytree.getNodeValueFromKey(youngestId);
@@ -550,29 +551,36 @@ export const TabButton = ({
     } else if (panelType === "templates") {
       setIcon(<span className="icon-[carbon--template] w-full h-full"></span>);
       setLabel(rootId);
+    } else if (panelType === "appThemes") {
+      setIcon(<span className="icon-[carbon--template] w-full h-full"></span>);
+      setLabel(rootId);
     } else if (panelType === "dictionary") {
       setIcon(
-        <span className="icon-[material-symbols-light--match-word-rounded] w-full h-full"></span>
+        <span className="icon-[material-symbols-light--match-word-rounded] w-full h-full"></span>,
       );
       setLabel("Dictionary");
     } else if (panelType === "settings") {
       setIcon(
-        <span className="icon-[material-symbols-light--settings] w-full h-full"></span>
+        <span className="icon-[material-symbols-light--settings] w-full h-full"></span>,
       );
       setLabel("Settings");
     } else if (panelType === "home") {
       setIcon(
-        <span className="icon-[material-symbols-light--home] w-full h-full mb-0.5"></span>
+        <span className="icon-[material-symbols-light--home] w-full h-full mb-0.5"></span>,
       );
       setLabel("Home");
     }
 
-    if (splitPanelTab && splitMode == 'x') {
-      setIcon(<span className="icon-[material-symbols-light--split-scene-left-outline] w-full h-full mb-0.5"></span>)
+    if (splitPanelTab && splitMode == "x") {
+      setIcon(
+        <span className="icon-[material-symbols-light--split-scene-left-outline] w-full h-full mb-0.5"></span>,
+      );
     }
 
-    if (splitPanelTab && splitMode == 'y') {
-      setIcon(<span className="icon-[material-symbols-light--split-scene-down-outline] w-full h-full mb-0.5"></span>)
+    if (splitPanelTab && splitMode == "y") {
+      setIcon(
+        <span className="icon-[material-symbols-light--split-scene-down-outline] w-full h-full mb-0.5"></span>,
+      );
     }
   }, [panelType, breadcrumbs]);
 
@@ -603,24 +611,28 @@ export const TabButton = ({
 
           ${(!isOverCurrent || (isOverCurrent && areaSelected === "")) && ""}
           
-          ${isOverCurrent &&
-        areaSelected === "left" &&
-        `border-r-appLayoutBorder border-l-appLayoutHighlight`
-        }
+          ${
+            isOverCurrent &&
+            areaSelected === "left" &&
+            `border-r-appLayoutBorder border-l-appLayoutHighlight`
+          }
           
-          ${isOverCurrent &&
-        areaSelected === "right" &&
-        `border-l-appLayoutBorder border-r-appLayoutHighlight`
-        }
+          ${
+            isOverCurrent &&
+            areaSelected === "right" &&
+            `border-l-appLayoutBorder border-r-appLayoutHighlight`
+          }
          
-          ${tabIsSelected
-          ? "border-appLayoutBorder bg-appBackground"
-          : "border-transparent hover:bg-appLayoutInverseHover "
-        }
+          ${
+            tabIsSelected
+              ? "border-appLayoutBorder bg-appBackground"
+              : "border-transparent hover:bg-appLayoutInverseHover "
+          }
 
-        ${splitTab ? 
-          "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
-          : ""
+        ${
+          splitTab
+            ? "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
+            : ""
         }
         `}
     >
@@ -644,7 +656,7 @@ export const TabButton = ({
 
             const newTabs = JSON.parse(JSON.stringify(tabs));
             const tabIndex = tabs.findIndex((x) =>
-              equalityDeep(x, { panelType, mode, breadcrumbs })
+              equalityDeep(x, { panelType, mode, breadcrumbs }),
             );
 
             newTabs.splice(tabIndex, 1);
@@ -655,14 +667,15 @@ export const TabButton = ({
               activatePanel(
                 newTabs[newTabs.length - 1].panelType,
                 newTabs[newTabs.length - 1].mode,
-                newTabs[newTabs.length - 1].breadcrumbs
+                newTabs[newTabs.length - 1].breadcrumbs,
               );
             }
           }}
-          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${!tabIsSelected
-            ? "hover:bg-appBackgroundAccent"
-            : "hover:bg-appLayoutInverseHover"
-            }`}
+          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${
+            !tabIsSelected
+              ? "hover:bg-appBackgroundAccent"
+              : "hover:bg-appLayoutInverseHover"
+          }`}
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
@@ -711,7 +724,7 @@ const UnusedSpace = ({ offset = false }) => {
       }
 
       const tabDraggedIndex = tabs.findIndex((x) =>
-        equalityDeep(x, draggedItem.tabProps)
+        equalityDeep(x, draggedItem.tabProps),
       );
 
       if (tabDraggedIndex !== -1) {
@@ -746,9 +759,10 @@ const UnusedSpace = ({ offset = false }) => {
         height: "100%",
       }}
       className={`
-        ${isOverCurrent && isHovering
-          ? ` border-l border-l-appLayoutHighlight`
-          : ""
+        ${
+          isOverCurrent && isHovering
+            ? ` border-l border-l-appLayoutHighlight`
+            : ""
         }
 
         

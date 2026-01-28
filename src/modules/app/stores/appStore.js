@@ -142,4 +142,14 @@ export const appStore = create((set) => ({
   setDriveSyncLoading: (driveSyncLoading) => {
     return set({ driveSyncLoading: driveSyncLoading });
   },
+
+  appThemeId: "unselected",
+  setAppThemeId: (appThemeId) => {
+    return set({ appThemeId: appThemeId });
+  },
+
+  appThemeMode: "details",
+  setAppThemeMode: (appThemeMode) => {
+    return set({ appThemeMode: appThemeMode });
+  },
 }));

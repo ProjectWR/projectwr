@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   useSyncExternalStore,
@@ -69,6 +70,10 @@ import {
 import itemLocalStateManager from "../lib/itemLocalState";
 import { MainPanelFrame } from "./LayoutComponents/MainPanelFrame";
 import { getCurrent } from "@tauri-apps/plugin-deep-link";
+import { useAppThemesList } from "../hooks/useAppThemes";
+import useApplyTheme from "../hooks/useApplyTheme";
+import { darkTheme, lightTheme } from "../lib/appThemeHardcoded";
+import { useTheme } from "../ConfigProviders/ThemeProvider";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -80,6 +85,23 @@ const WritingApp = () => {
 
   const [isMaximized, setIsMaximized] = useState(false);
   const panelOpened = appStore((state) => state.panelOpened);
+
+  const appThemeId = appStore((state) => state.appThemeId);
+  const appThemesList = useAppThemesList();
+  const { theme: activeSystemTheme } = useTheme();
+
+  const currentAppThemeData = useMemo(() => {
+    if (appThemeId === "light") return lightTheme;
+    if (appThemeId === "dark") return darkTheme;
+    if (appThemeId === "system") {
+      return activeSystemTheme === "dark" ? darkTheme : lightTheme;
+    }
+    if (appThemeId === "unselected") return null;
+
+    return appThemesList[appThemeId];
+  }, [appThemesList, appThemeId, activeSystemTheme]);
+
+  useApplyTheme(currentAppThemeData);
 
   // FOR DEV ONLY
 

@@ -60,6 +60,12 @@ import useMainPanel from "../../hooks/useMainPanel";
 import { DropdownMenu } from "radix-ui";
 import videoManager from "../../lib/video";
 import { useVideos } from "../../hooks/useVideos";
+import { useAppThemesList } from "../../hooks/useAppThemes";
+import appThemeManager from "../../lib/appTheme";
+import { appThemeDefaultPreferences } from "../../lib/appThemeDefaultPreferences";
+import useApplyTheme from "../../hooks/useApplyTheme";
+import { StyledTooltip } from "../LayoutComponents/StyledTooltip";
+import { openPath, openUrl } from '@tauri-apps/plugin-opener';
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -72,7 +78,7 @@ const maxLengthRegex = /^.{1,128}$/;
 const SettingsPanel = () => {
   console.log("rendering settings panel");
   const { deviceType } = useDeviceType();
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   const zoom = appStore((state) => state.zoom);
 
@@ -80,6 +86,11 @@ const SettingsPanel = () => {
   const appStoreTemplateId = appStore((state) => state.appStoreTemplateId);
   const setTemplateMode = appStore((state) => state.setTemplateMode);
   const templateMode = appStore((state) => state.templateMode);
+
+  const appThemeId = appStore((state) => state.appThemeId);
+  const setAppThemeId = appStore((state) => state.setAppThemeId);
+  const setAppThemeMode = appStore((state) => state.setAppThemeMode);
+  const appThemeMode = appStore((state) => state.appThemeMode);
 
   const { zoomIn, zoomOut } = useZoom();
 
@@ -90,6 +101,51 @@ const SettingsPanel = () => {
   const [mediaDropdownOpened, setMediaDropdownOpened] = useState(false);
 
   const [fontImageToggle, setFontImageToggle] = useState("font");
+
+  const openMediaFolder = async () => {
+    try {
+      let dirPath = null;
+
+      if (fontImageToggle === "font") dirPath = fontManager.fontsDir;
+      else if (fontImageToggle === "image") dirPath = imageManager.imagesDir;
+      else if (fontImageToggle === "videos") dirPath = videoManager.videosDir;
+      else if (fontImageToggle === "templates") dirPath = templateManager.templatesDirPath;
+      else if (fontImageToggle === "appThemes") dirPath = appThemeManager.themesDirPath;
+
+      // If dirPath is not yet initialized, attempt to initialize the corresponding manager
+      if (!dirPath) {
+        try {
+          if (fontImageToggle === "font") { await fontManager.init(); dirPath = fontManager.fontsDir; }
+          else if (fontImageToggle === "image") { await imageManager.init(); dirPath = imageManager.imagesDir; }
+          else if (fontImageToggle === "videos") { await videoManager.init(); dirPath = videoManager.videosDir; }
+          else if (fontImageToggle === "templates") { await templateManager.initialize(); dirPath = templateManager.templatesDirPath; }
+          else if (fontImageToggle === "appThemes") { await appThemeManager.initialize(); dirPath = appThemeManager.themesDirPath; }
+        } catch (e) {
+          console.error("Error initializing manager for opening folder", e);
+        }
+      }
+
+      if (!dirPath) {
+        console.warn("Media folder path not available");
+        return;
+      }
+
+      await openPath(dirPath);
+    } catch (e) {
+      console.error("Error opening media folder", e);
+    }
+  };
+
+  // Labels are centralized here to make localization and wording changes easier ✅
+  const mediaFolderLabels = {
+    font: "Open Fonts folder",
+    image: "Open Images folder",
+    videos: "Open Videos folder",
+    templates: "Open Editor Styles folder",
+    appThemes: "Open App Themes folder",
+  };
+
+  const getMediaFolderLabel = (type) => mediaFolderLabels[type] || "Open media folder"; 
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
@@ -104,6 +160,21 @@ const SettingsPanel = () => {
   console.log("videos: ", videos);
 
   const [templates, setTemplates] = useState({});
+
+  const appThemesList = useAppThemesList();
+  const currentAppThemeData = useMemo(() => {
+    if (
+      appThemeId === "light" ||
+      appThemeId === "dark" ||
+      appThemeId === "system" ||
+      appThemeId === "unselected"
+    ) {
+      return null;
+    }
+    return appThemesList[appThemeId];
+  }, [appThemesList, appThemeId]);
+
+  useApplyTheme(currentAppThemeData);
 
   const settings = settingsStore((state) => state.settings);
   const setSettings = settingsStore((state) => state.setSettings);
@@ -161,6 +232,16 @@ const SettingsPanel = () => {
     templateManager.createTemplate(
       "New Template #" + Object.keys(templates).length,
       templateProps,
+    );
+  };
+
+  const handleCreateAppTheme = () => {
+    const themeProps = {
+      ...appThemeDefaultPreferences,
+    };
+    appThemeManager.createTheme(
+      "New Theme #" + Object.keys(appThemesList).length,
+      themeProps,
     );
   };
 
@@ -566,8 +647,12 @@ const SettingsPanel = () => {
                         {fontImageToggle === "font"
                           ? "Fonts"
                           : fontImageToggle === "image"
-                          ? "Images"
-                          : "Editor Styles"}
+                            ? "Images"
+                            : fontImageToggle === "videos"
+                              ? "Videos"
+                              : fontImageToggle === "templates"
+                                ? "Editor Styles"
+                                : "App Themes"}
                         <motion.span
                           animate={{
                             rotate: !mediaDropdownOpened ? 0 : -90,
@@ -619,10 +704,28 @@ const SettingsPanel = () => {
                         <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
                       )}
                     </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      className="contextMenuItem"
+                      onClick={() => setFontImageToggle("appThemes")}
+                    >
+                      <span className="text-appLayoutText">App Themes</span>
+                      {fontImageToggle === "appThemes" && (
+                        <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                      )}
+                    </DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
 
                 <span className="grow"></span>
+                <StyledTooltip label={getMediaFolderLabel(fontImageToggle)} position="bottom">
+                  <button
+                    onClick={openMediaFolder}
+                    aria-label="Open media folder"
+                    className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
+                  >
+                    <span className="icon-[material-symbols-light--folder-open] w-full h-full"></span>
+                  </button>
+                </StyledTooltip>
                 <button
                   onClick={async () => {
                     if (fontImageToggle === "font") {
@@ -639,6 +742,10 @@ const SettingsPanel = () => {
 
                     if (fontImageToggle === "templates") {
                       await handleCreateTemplate();
+                    }
+
+                    if (fontImageToggle === "appThemes") {
+                      await handleCreateAppTheme();
                     }
                   }}
                   className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
@@ -756,73 +863,111 @@ const SettingsPanel = () => {
                       </HoverListItem>
                     );
                   })}
+
+                {fontImageToggle === "appThemes" &&
+                  Object.keys(appThemesList).map((themeId) => {
+                    return (
+                      <HoverListItem disabled={true} key={themeId}>
+                        <div className="w-full h-full flex items-center gap-2 justify-between">
+                          <p className="text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted w-fit min-w-0 text-ellipsis text-nowrap overflow-hidden">
+                            {themeId}
+                          </p>
+                          <span className="grow basis-0 h-px bg-appLayoutBorder"></span>
+                          <button
+                            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1.5 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                            onClick={async () => {
+                              activatePanel("appThemes", "details", [themeId]);
+                            }}
+                          >
+                            <span className="icon-[mdi--edit-outline] w-full h-full"></span>
+                          </button>
+                          <button
+                            className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
+                            onClick={async () => {
+                              await appThemeManager.deleteTheme(themeId);
+                              if (appThemeId === themeId) {
+                                setAppThemeId("unselected");
+                              }
+                            }}
+                          >
+                            <span className="icon-[typcn--delete] w-full h-full"></span>
+                          </button>
+                        </div>
+                      </HoverListItem>
+                    );
+                  })}
               </HoverListBody>
             </ListShell>
 
             <div
               id="PreferencesContainer"
-              className="grow basis-0 px-1 border border-transparent min-w-0 h-full flex flex-col items-center"
+              className="grow basis-0 px-1 pt-1 border border-transparent min-w-0 h-full flex flex-col items-center"
             >
               <div
                 id="PreferencesHeader"
-                className={`h-detailsPanelHeaderTwoHeight min-h-detailsPanelHeaderTwoHeight w-full flex items-center justify-start py-1 px-1 
+                className={`h-actionBarSearchHeaderHeight w-full flex items-center justify-start
                 ${deviceType === "desktop" && "px-3"}
               `}
               >
-                <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelHeaderTwoFontSize text-appLayoutText order-1">
+                <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-libraryDirectoryBookNodeFontSize text-appLayoutText order-1">
                   Preferences
                 </h1>
               </div>
-              <div className="divider w-full px-3">
+              <div className="divider w-full px-1">
                 <div className="w-full h-px bg-appLayoutBorder"></div>
               </div>
               <div
                 id="PreferencesBody"
-                className={`grow basis-0 w-full flex flex-col gap-2 items-center justify-start py-1 px-1                 ${
+                className={`grow basis-0 w-full flex flex-col gap-1 items-center justify-start py-3 px-1                 ${
                   deviceType === "desktop" && "px-6"
                 }
               `}
               >
-                <div className="w-full h-preferencesItemHeight flex gap-2 items-center justify-between">
-                  <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
+                <div className="w-full h-fit flex gap-2 items-center justify-between">
+                  <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-libraryDirectoryBookNodeFontSize text-appLayoutText">
                     Zoom
                   </h1>
 
                   <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
 
-                  <div className="ZoomContainer w-fit h-full flex gap-2 flex-row items-center">
+                  <div className="ZoomContainer w-fit h-fit flex gap-2 flex-row items-center">
                     <button
-                      className="zoomInButton w-preferencesItemButtonSize h-preferencesItemButtonSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
-                      onClick={zoomIn}
-                    >
-                      <span className="icon-[material-symbols-light--add-rounded] w-full h-full"></span>
-                    </button>
-                    <div className="zoomDisplay text-preferencesItemFontSize w-ZoomDisplayWidth h-preferencesItemButtonSize pb-px flex items-center justify-center select-none border border-appLayoutBorder rounded-lg">
-                      {zoom && `${round(zoom * 100)}%`}
-                    </div>
-                    <button
-                      className="zoomInButton w-preferencesItemButtonSize h-preferencesItemButtonSize flex items-center justify-center  rounded-full  hover:bg-appLayoutInverseHover"
+                      className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center  rounded-full  hover:bg-appLayoutInverseHover"
                       onClick={zoomOut}
                     >
                       <span className="icon-[material-symbols-light--remove-rounded] w-full h-full"></span>
                     </button>
+                    <div className="zoomDisplay text-libraryDirectoryBookNodeFontSize px-3 w-fit h-fit pb-px flex items-center justify-center select-none border border-appLayoutBorder rounded-lg">
+                      {zoom && `${round(zoom * 100)}%`}
+                    </div>
+                    <button
+                      className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
+                      onClick={zoomIn}
+                    >
+                      <span className="icon-[material-symbols-light--add-rounded] w-full h-full"></span>
+                    </button>
                   </div>
                 </div>
 
-                <div className="w-full h-preferencesItemHeight flex gap-2 items-center justify-between">
-                  <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-detailsPanelPropLabelFontSize text-appLayoutText">
+                <div
+                  id="AppThemeDropdown"
+                  className="w-full h-fit flex gap-2 items-center justify-between"
+                >
+                  <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-libraryDirectoryBookNodeFontSize text-appLayoutText">
                     Theme
                   </h1>
                   <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
 
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
-                      <div className="text-preferencesItemFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
-                        {theme === "dark"
+                      <div className="text-libraryDirectoryBookNodeFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
+                        {appThemeId === "dark"
                           ? "Dark"
-                          : theme === "light"
-                          ? "Light"
-                          : "System"}
+                          : appThemeId === "light"
+                            ? "Light"
+                            : appThemeId === "system"
+                              ? "System"
+                              : appThemeId}
                       </div>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content
@@ -833,31 +978,61 @@ const SettingsPanel = () => {
                     >
                       <DropdownMenu.Item
                         className="contextMenuItem"
-                        onClick={() => setTheme("dark")}
+                        onClick={() => {
+                          setTheme("dark");
+                          setAppThemeId("dark");
+                        }}
                       >
                         <span className="text-appLayoutText">Dark</span>
-                        {theme === "dark" && (
+                        {appThemeId === "dark" && (
                           <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
                         )}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         className="contextMenuItem"
-                        onClick={() => setTheme("light")}
+                        onClick={() => {
+                          setTheme("light");
+                          setAppThemeId("light");
+                        }}
                       >
                         <span className="text-appLayoutText">Light</span>
-                        {theme === "light" && (
+                        {appThemeId === "light" && (
                           <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
                         )}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         className="contextMenuItem"
-                        onClick={() => setTheme("system")}
+                        onClick={() => {
+                          setTheme("system");
+                          setAppThemeId("system");
+                        }}
                       >
                         <span className="text-appLayoutText">System</span>
-                        {theme === "system" && (
+                        {appThemeId === "system" && (
                           <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
                         )}
                       </DropdownMenu.Item>
+                      {Object.keys(appThemesList).length > 0 && (
+                        <HoverListDivider />
+                      )}
+                      {Object.keys(appThemesList).map((themeName) => (
+                        <DropdownMenu.Item
+                          key={themeName}
+                          className="contextMenuItem"
+                          onClick={() => {
+                            setAppThemeId(themeName);
+                            // We might want to persist the choice in settings too,
+                            // but for now let's just use appStore.
+                          }}
+                        >
+                          <span className="text-appLayoutText">
+                            {themeName}
+                          </span>
+                          {appThemeId === themeName && (
+                            <span className="icon-[material-symbols-light--check-rounded] w-preferencesItemButtonSize h-full"></span>
+                          )}
+                        </DropdownMenu.Item>
+                      ))}
                     </DropdownMenu.Content>
                   </DropdownMenu.Root>
                 </div>
