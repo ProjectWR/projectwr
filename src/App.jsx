@@ -51,7 +51,7 @@ function App() {
   }, [accessTokenState])
 
   useEffect(() => {
-    getCurrentWindow().setT
+    
   }, [])
 
   return (

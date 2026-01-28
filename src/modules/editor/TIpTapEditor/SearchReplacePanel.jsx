@@ -8,6 +8,9 @@ export const SearchReplacePanel = ({
   keepSearchReplacePanelAwake,
   forceCloseSearchReplacePanel,
 }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [replaceTerm, setReplaceTerm] = useState("");
+  
   const {
     backgroundColor,
     backgroundColorOpacity,
