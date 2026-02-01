@@ -10,6 +10,7 @@
     - Scrivener-like Corkboard
 - Collaboration: Commenting, suggestion mode, and more granular sharing permissions for documents and libraries.
 - Advanced Search & Insights: Full-text search across all libraries, writing analytics, and productivity tracking.
+- Integration with more Cloud Providers like OneDrive, DropBox, etc.
 
 ## Exploring & On the Horizon
 - Bring Sylvanite to macOS, Linux, and iOS.
