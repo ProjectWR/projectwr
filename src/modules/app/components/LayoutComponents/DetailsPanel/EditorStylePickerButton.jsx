@@ -21,7 +21,7 @@ import { motion } from "motion/react";
 export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   const [pickingEditorStyle, setPickingEditorStyle] = useState(false);
   const [paperEditorTemplateId, setPaperEditorTemplateId] = useState(
-    itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId)
+    itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId),
   );
 
   const EditorStylePickerRef = useOuterClick(() => {
@@ -57,7 +57,7 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   useEffect(() => {
     const updatePaperEditorTemplateId = () => {
       setPaperEditorTemplateId(
-        itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId)
+        itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId),
       );
     };
 
@@ -70,7 +70,11 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
     itemLocalStateManager.on(libraryId, paperId, updatePaperEditorTemplateId);
 
     return () => {
-      itemLocalStateManager.off(libraryId, paperId, updatePaperEditorTemplateId);
+      itemLocalStateManager.off(
+        libraryId,
+        paperId,
+        updatePaperEditorTemplateId,
+      );
     };
   }, [paperId]);
 
@@ -117,7 +121,7 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
                 itemLocalStateManager.setPaperEditorTemplate(
                   libraryId,
                   paperId,
-                  null
+                  null,
                 );
                 setPickingEditorStyle(false);
               }}
@@ -135,7 +139,7 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
                     itemLocalStateManager.setPaperEditorTemplate(
                       libraryId,
                       paperId,
-                      templateId
+                      templateId,
                     );
                     setPickingEditorStyle(false);
                   }}

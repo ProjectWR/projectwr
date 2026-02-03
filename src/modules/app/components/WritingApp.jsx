@@ -408,26 +408,6 @@ const WritingApp = () => {
 
         setLoadingStage("Loading previous session");
 
-        const lastOpenedItem = itemLocalStateManager.fetchLatestOpenedItems(1)
-          ? itemLocalStateManager.fetchLatestOpenedItems(1)[0]
-          : null;
-
-        console.log(
-          "last opened item: ",
-          lastOpenedItem,
-          lastOpenedItem.itemIdLibraryId?.split("::")[0],
-        );
-
-        const lastOpenedlibraryId =
-          lastOpenedItem?.itemIdLibraryId?.split("::")[0];
-
-        if (
-          lastOpenedItem &&
-          dataManagerSubdocs.getLibrary(lastOpenedlibraryId)
-        ) {
-          console.log("Setting last opened library id: ", lastOpenedlibraryId);
-          setLibraryId(lastOpenedlibraryId);
-        }
 
         // await wait(1000);
         setLoadingStage("Finished Loading");

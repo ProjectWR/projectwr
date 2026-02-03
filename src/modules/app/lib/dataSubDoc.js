@@ -146,7 +146,7 @@ class DataManagerSubdocs {
     this.libraryYDocMap.set(uuid, ydoc);
     persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
 
-    itemLocalStateManager.createItemLocalState(uuid, {
+    itemLocalStateManager.createItemLocalState(uuid, uuid, {
       type: "library",
       libraryId: uuid,
     });

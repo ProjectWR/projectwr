@@ -35,6 +35,9 @@ const LibraryDirectoryHeader = () => {
   const appLibraryId = appStore((state) => state.libraryId);
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
+
+  const setActivity = appStore((state) => state.setActivity);
+
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const { activatePanel } = useMainPanel();
 
@@ -65,9 +68,9 @@ const LibraryDirectoryHeader = () => {
 
   const prevLibraryIdsWithPropsRef = useRef(null);
 
-  
+
   const libraryManagerRef = useOuterClick(() => {
-      setLibraryManagerOpened(false)
+    setLibraryManagerOpened(false)
   })
 
   useLayoutEffect(() => {
@@ -141,6 +144,7 @@ const LibraryDirectoryHeader = () => {
         setPanelOpened(false);
       }
       setPanelOpened(true);
+      setActivity("libraries");
       activatePanel("libraries", "details", [libraryId]);
       setLibraryManagerOpened(false);
     },
@@ -149,6 +153,7 @@ const LibraryDirectoryHeader = () => {
       setItemId,
       deviceType,
       setPanelOpened,
+      setActivity,
       activatePanel,
       setLibraryManagerOpened,
     ],
@@ -184,8 +189,8 @@ const LibraryDirectoryHeader = () => {
     if (
       renameValue.trim() &&
       renameValue !==
-        libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
-          ?.item_properties?.item_title
+      libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
+        ?.item_properties?.item_title
     ) {
       const libraryYdoc = dataManagerSubdocs.getLibrary(appLibraryId);
       const libraryProps = libraryYdoc.getMap("library_props");
@@ -274,11 +279,10 @@ const LibraryDirectoryHeader = () => {
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
       ref={libraryManagerRef}
-      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
-        libraryManagerOpened
-          ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
-          : "border-transparent bg-transparent"
-      }`}
+      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${libraryManagerOpened
+        ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
+        : "border-transparent bg-transparent"
+        }`}
     >
       <div className="h-fit relative min-h-fit w-full flex items-center justify-center ">
         <div
@@ -315,21 +319,21 @@ const LibraryDirectoryHeader = () => {
             )}
           </ContextMenuWrapper>
 
-          {appLibraryId != "unselected" && (
-            <button
-              onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
-              className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
+
+          <button
+            onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
+            className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
+          >
+            <StyledTooltip
+              label={libraryManagerOpened ? "Close" : "Change Library"}
+              position="bottom"
             >
-              <StyledTooltip
-                label={libraryManagerOpened ? "Close" : "Change Library"}
-                position="bottom"
-              >
-                <span
-                  className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
-                ></span>
-              </StyledTooltip>
-            </button>
-          )}
+              <span
+                className={`icon-[heroicons-outline--selector] w-libraryManagerHeaderButtonSize h-libraryManagerHeaderButtonSize`}
+              ></span>
+            </StyledTooltip>
+          </button>
+
         </div>
       </div>
 
@@ -505,12 +509,12 @@ const LibraryDirectoryHeader = () => {
         options={[
           ...(userProfile && !driveSyncLoading
             ? [
-                {
-                  checked: deleteFromDrive,
-                  label: "Delete from drive",
-                  onChange: (e) => setDeleteFromDrive(e.target.checked),
-                },
-              ]
+              {
+                checked: deleteFromDrive,
+                label: "Delete from drive",
+                onChange: (e) => setDeleteFromDrive(e.target.checked),
+              },
+            ]
             : []),
         ]}
       />

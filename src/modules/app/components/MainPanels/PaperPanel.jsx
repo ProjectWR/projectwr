@@ -32,7 +32,7 @@ import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { Popover, PopoverDropdown, Text } from "@mantine/core";
 import { EditorStylePickerButton } from "../LayoutComponents/DetailsPanel/EditorStylePickerButton";
 import { useFullscreen } from "@mantine/hooks";
-import { useViewportSize } from '@mantine/hooks';
+import { useViewportSize } from "@mantine/hooks";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 const { desktopDefaultPreferences, mobileDefaultPreferences } =
@@ -200,7 +200,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             exist={true}
             onClick={async () => {
               await getCurrentWindow().setDecorations(true);
-              await getCurrentWindow().setFullscreen(!fullscreen)
+              await getCurrentWindow().setFullscreen(!fullscreen);
               await toggle();
             }}
             icon={

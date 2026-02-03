@@ -66,17 +66,13 @@ const LibraryManagerNode = ({ libraryId, className }) => {
   const { activatePanel } = useMainPanel();
 
   const libraryPropsMapRef = useRef(
-    dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+    dataManagerSubdocs.getLibrary(libraryId).getMap("library_props"),
   );
 
   const ref = useRef(null);
 
   const textContainerRef = useRef(null);
   const textRef = useRef(null);
-
-  const computedLibraryManagerNodeTextSize = useComputedCssVar(
-    "--libraryManagerNodeText"
-  );
 
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
@@ -149,12 +145,12 @@ const LibraryManagerNode = ({ libraryId, className }) => {
       if (isTopSelected) {
         const previousOrderIndex = getPreviousOrderIndex(
           libraryId,
-          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap)
+          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap),
         );
 
         const orderIndex = insertBetween(
           previousOrderIndex,
-          libraryPropsMapRef.current.get("order_index")
+          libraryPropsMapRef.current.get("order_index"),
         );
 
         dataManagerSubdocs
@@ -166,12 +162,12 @@ const LibraryManagerNode = ({ libraryId, className }) => {
       if (!isTopSelected) {
         const nextOrderIndex = getNextOrderIndex(
           libraryId,
-          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap)
+          getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap),
         );
 
         const orderIndex = insertBetween(
           libraryPropsMapRef.current.get("order_index"),
-          nextOrderIndex
+          nextOrderIndex,
         );
 
         dataManagerSubdocs
@@ -194,7 +190,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         icon: (
           <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
         ),
-        action: () => {
+        action: async () => {
           if (
             !(
               appStoreLibraryId === libraryId &&
@@ -205,11 +201,14 @@ const LibraryManagerNode = ({ libraryId, className }) => {
             setLibraryId(libraryId);
             setItemId("unselected");
 
-            itemLocalStateManager.setItemOpened(libraryId, libraryId, true);
+            await itemLocalStateManager.setItemOpened(
+              libraryId,
+              libraryId,
+              true,
+            );
 
             setPanelOpened(true);
             activatePanel("libraries", "details", [libraryId]);
-
           }
         },
       },
@@ -222,7 +221,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
         action: () => {
           console.log("Saving Archive");
           persistenceManagerForSubdocs.saveArchive(
-            dataManagerSubdocs.getLibrary(libraryId)
+            dataManagerSubdocs.getLibrary(libraryId),
           );
         },
       },
@@ -236,7 +235,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
           console.log("Loading Archive");
           setLoading(true);
           await persistenceManagerForSubdocs.loadArchive(
-            dataManagerSubdocs.getLibrary(libraryId)
+            dataManagerSubdocs.getLibrary(libraryId),
           );
           setLoading(false);
         },
@@ -375,7 +374,7 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                 className={
                   "grow min-w-0 h-full rounded-l-lg flex justify-start items-center pl-3 hover:text-appLayoutHighlight hover:bg-appLayoutHover transition-colors duration-0"
                 }
-                onClick={() => {
+                onClick={async () => {
                   if (
                     !(
                       appStoreLibraryId === libraryId &&
@@ -386,7 +385,11 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                     setLibraryId(libraryId);
                     setItemId("unselected");
 
-                    itemLocalStateManager.setItemOpened(libraryId, libraryId, true);
+                    await itemLocalStateManager.setItemOpened(
+                      libraryId,
+                      libraryId,
+                      true,
+                    );
 
                     setPanelOpened(true);
 

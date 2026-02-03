@@ -128,6 +128,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tippy.js": "^6.3.7",
     "tiptap": "^1.32.2",
+    "tiptap-pagination-plus": "^2.0.5",
     "tokenizr": "^1.7.0",
     "use-debounce": "^10.0.4",
     "uuid": "^11.0.5",

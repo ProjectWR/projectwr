@@ -49,7 +49,7 @@ const SearchSidePanel = ({}) => {
   const libraryPropsMapRef = useRef(
     libraryId !== "unselected"
       ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-      : null
+      : null,
   );
   const libraryPropsMapState = useYMap(libraryPropsMapRef.current);
 
@@ -214,7 +214,7 @@ const SearchSidePanel = ({}) => {
                           ) {
                             itemLocalStateManager.setItemAndParentsOpened(
                               result.libraryId,
-                              result.id
+                              result.id,
                             );
 
                             setLibraryId(result.libraryId);

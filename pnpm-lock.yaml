@@ -359,6 +359,9 @@ importers:
       tiptap:
         specifier: ^1.32.2
         version: 1.32.2(vue-template-compiler@2.7.16)(vue@2.7.16)
+      tiptap-pagination-plus:
+        specifier: ^2.0.5
+        version: 2.0.5(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)
       tokenizr:
         specifier: ^1.7.0
         version: 1.7.2
@@ -4221,6 +4224,12 @@ packages:
 
   tiptap-commands@1.17.1:
     resolution: {integrity: sha512-CyGvMD/c6fNer5LThWGtrVMXHAqHn93ivGQpqJ58x3HNZFuoIiF9QTWXAiWbY/4QrG0ANYHKCSe9n5afickTqw==}
+
+  tiptap-pagination-plus@2.0.5:
+    resolution: {integrity: sha512-aKr+WOJBlLIBzwdHql6QATPQnyUZE7HWM4jOsZGz1m4haBhqIU94PAINlSx4FSoku5poXF2nG3ixtBz/+GfHHQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
 
   tiptap-utils@1.13.1:
     resolution: {integrity: sha512-RoCvMfkdu7fp9u7nsRr1OgsYU8RFjoHKHEKpx075rJ9X0t+j5Vxah9n6QzTTr4yjvcavq22WO2flFacm36zYtA==}
@@ -8762,6 +8771,11 @@ snapshots:
       prosemirror-state: 1.4.4
       prosemirror-tables: 1.8.5
       tiptap-utils: 1.13.1
+
+  tiptap-pagination-plus@2.0.5(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2):
+    dependencies:
+      '@tiptap/core': 2.27.2(@tiptap/pm@2.27.2)
+      '@tiptap/pm': 2.27.2
 
   tiptap-utils@1.13.1:
     dependencies:

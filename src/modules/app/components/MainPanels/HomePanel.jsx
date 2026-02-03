@@ -66,7 +66,7 @@ const HomePanel = () => {
       } else {
         return prevLatestItemsRef.current;
       }
-    }
+    },
   );
 
   return (
@@ -177,7 +177,7 @@ const HomePanel = () => {
                               !checkForYTree(
                                 dataManagerSubdocs
                                   .getLibrary(libraryId)
-                                  .getMap("library_directory")
+                                  .getMap("library_directory"),
                               )
                             ) {
                               return null;
@@ -186,7 +186,7 @@ const HomePanel = () => {
                             ytree = new YTree(
                               dataManagerSubdocs
                                 .getLibrary(libraryId)
-                                .getMap("library_directory")
+                                .getMap("library_directory"),
                             );
 
                             name = ytree
@@ -220,7 +220,7 @@ const HomePanel = () => {
                                   itemLocalStateManager.setItemOpened(
                                     itemId,
                                     itemId,
-                                    true
+                                    true,
                                   );
                                   setLibraryId(itemId);
                                   setItemId("unselected");
@@ -241,7 +241,7 @@ const HomePanel = () => {
                                 ) {
                                   itemLocalStateManager.setItemAndParentsOpened(
                                     props.libraryId,
-                                    itemId
+                                    itemId,
                                   );
 
                                   setLibraryId(props.libraryId);
