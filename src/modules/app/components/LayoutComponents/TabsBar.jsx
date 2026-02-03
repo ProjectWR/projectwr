@@ -203,7 +203,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       >
         <div
           id="TabsContent"
-          className="w-fit min-w-full h-full z-[4] flex items-end gap-1 border-b border-appLayoutBorder"
+          className="w-fit min-w-full h-full z-[4] flex items-end gap-1 border-b border-appLayoutBorder bg-appBackgroundAccent"
         >
           <AnimatePresence>
             {tabs?.map((tab) => {

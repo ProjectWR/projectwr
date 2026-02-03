@@ -282,6 +282,9 @@ const MainPanel = ({ main = true }) => {
     setActivity,
     setPanelOpened,
     setLibraryId,
+    main,
+    splitMode,
+    splitPanelState
   ]);
 
   return (

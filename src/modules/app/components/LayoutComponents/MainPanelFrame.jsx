@@ -210,7 +210,7 @@ export const MainPanelFrame = () => {
 
           {/* Hovering Split Panel Tab */}
           {splitPanelState && (
-            <div className="absolute top-2 right-2 z-50 shadow-none">
+            <div className="absolute top-1 left-1 z-50 shadow-none">
               <div className="h-tabsHeight w-fit max-w-tabWidth">
                 <TabButton
                   panelType={splitPanelState.panelType}
