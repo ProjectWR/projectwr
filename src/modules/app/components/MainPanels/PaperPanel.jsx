@@ -8,7 +8,6 @@ import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
 import TipTapEditor from "../../../editor/TipTapEditor/TipTapEditor";
 import { AnimatePresence, motion } from "motion/react";
 import { equalityDeep } from "lib0/function";
-import itemLocalStateManager from "../../lib/itemLocalState";
 import useTemplates from "../../hooks/useTemplates";
 import { TipTapEditorDefaultPreferences } from "../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
@@ -17,7 +16,6 @@ import DetailsPanel, {
 } from "../LayoutComponents/DetailsPanel/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
-import templateManager from "../../lib/templates";
 import useMainPanel from "../../hooks/useMainPanel";
 import { getAncestorsForBreadcrumbs } from "../../lib/util";
 import {
@@ -34,24 +32,19 @@ import { EditorStylePickerButton } from "../LayoutComponents/DetailsPanel/Editor
 import { useFullscreen } from "@mantine/hooks";
 import { useViewportSize } from "@mantine/hooks";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-
-const { desktopDefaultPreferences, mobileDefaultPreferences } =
-  TipTapEditorDefaultPreferences;
+import templateManager from "../../lib/templates";
+import { useKeyLocalState } from "../../hooks/useLocalState";
 
 /**
  *
- * @param {{ytree: YTree, paperId: string}} param0
+ * @param {{ytree: YTree, paperId: string, libraryId: string}} param0
  * @returns
  */
 const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const { deviceType } = useDeviceType();
 
   const { ref, toggle, fullscreen } = useFullscreen();
-  const { height, width } = useViewportSize();
-  console.log("Viewport: ", height, width);
-
-  const isMobile = deviceType === "mobile";
-
+  useViewportSize();
   console.log("paper panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
@@ -60,49 +53,37 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
 
-  const [templateFromFile, setTemplateFromFile] = useState(null);
-
-  const preferences = useMemo(() => {
-    if (
-      !itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId) ||
-      templateFromFile === null ||
-      templateFromFile === undefined
-    )
-      return null;
-    return isMobile
-      ? templateFromFile?.template_content.mobileDefaultPreferences
-      : templateFromFile?.template_content.desktopDefaultPreferences;
-  }, [templateFromFile, isMobile, paperId, libraryId]);
+  const { editorStyle: paperEditorTemplateId } = useKeyLocalState(
+    libraryId,
+    paperId,
+  );
+  const [templateContent, setTemplateContent] = useState(null);
 
   useEffect(() => {
-    const callback = async () => {
-      try {
-        const templateJSON = await templateManager.getTemplate(
-          itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId),
-        );
-        setTemplateFromFile(templateJSON);
-      } catch (e) {
-        console.error(
-          `Error finding template with name ${itemLocalStateManager.getPaperEditorTemplate(
-            libraryId,
-            paperId,
-          )}:`,
-          e,
-        );
-        setTemplateFromFile(null);
+    const fetchTemplate = async () => {
+      if (paperEditorTemplateId && paperEditorTemplateId !== "unselected") {
+        try {
+          const template = await templateManager.getTemplate(
+            paperEditorTemplateId,
+          );
+          setTemplateContent(template);
+        } catch (e) {
+          console.error("Error fetching template", e);
+          setTemplateContent(null);
+        }
+      } else {
+        setTemplateContent(null);
       }
     };
+    fetchTemplate();
+  }, [paperEditorTemplateId]);
 
-    itemLocalStateManager.on(libraryId, paperId, callback);
-    templateManager.addCallback(callback);
-
-    callback();
-
-    return () => {
-      itemLocalStateManager.off(libraryId, paperId, callback);
-      templateManager.removeCallback(callback);
-    };
-  }, [paperId, libraryId]);
+  const preferences = useMemo(() => {
+    if (!templateContent) return null;
+    return deviceType === "mobile"
+      ? templateContent.template_content.mobileDefaultPreferences
+      : templateContent.template_content.desktopDefaultPreferences;
+  }, [templateContent, deviceType]);
 
   useEffect(() => {
     if (deviceType === "mobile") {
@@ -207,36 +188,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
               <span className="icon-[material-symbols-light--fullscreen] w-9/12 h-9/12"></span>
             }
           />
-          {/* <motion.div
-            animate={{
-              width:
-                notesPanelOpened && (isMd || isNotesPanelAwake)
-                  ? `${notesPanelWidth}px`
-                  : 0,
-            }}
-            transition={{ ease: "linear", duration: 0.1 }}
-          ></motion.div> */}
-          {/* 
-          <DetailsPanelButtonOnClick
-            onClick={() => {
-              if (isMd) {
-                setNotesPanelOpened(!notesPanelOpened);
-              } else {
-                if (!(notesPanelOpened && isNotesPanelAwake)) {
-                  setNotesPanelOpened(true);
-                  refreshNotesPanel();
-                }
-              }
-            }}
-            exist={true}
-            icon={
-              notesPanelOpened && (isMd || isNotesPanelAwake) ? (
-                <span className="icon-[bi--collection-fill] w-9/12 h-9/12"></span>
-              ) : (
-                <span className="icon-[bi--collection] w-9/12 h-9/12"></span>
-              )
-            }
-          /> */}
         </DetailsPanelHeader>
 
         <DetailsPanelDivider />
@@ -247,23 +198,12 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
             className="grow h-full min-h-0 min-w-0 minbasis-0"
           >
             <TipTapEditor
-              key={paperId}
+              key={`${paperId}-${paperEditorTemplateId}`}
               yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
               setHeaderOpened={setHeaderOpened}
               preferences={preferences}
             />
           </motion.div>
-          {/* <DetailsPanelNotesPanel
-            libraryId={libraryId}
-            itemId={ytree.getNodeParentFromKey(paperId)}
-            ytree={ytree}
-            notesPanelWidth={notesPanelWidth}
-            setNotesPanelWidth={setNotesPanelWidth}
-            notesPanelOpened={notesPanelOpened}
-            isNotesPanelAwake={isNotesPanelAwake}
-            refreshNotesPanel={refreshNotesPanel}
-            keepNotesPanelAwake={keepNotesPanelAwake}
-          /> */}
         </DetailsPanelBody>
       </form>
     </DetailsPanel>

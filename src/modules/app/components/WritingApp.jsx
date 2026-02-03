@@ -67,13 +67,13 @@ import {
   handleLoadFrom,
   saveAuthCode,
 } from "../lib/auth/auth";
-import itemLocalStateManager from "../lib/itemLocalState";
 import { MainPanelFrame } from "./LayoutComponents/MainPanelFrame";
 import { getCurrent } from "@tauri-apps/plugin-deep-link";
 import { useAppThemesList } from "../hooks/useAppThemes";
 import useApplyTheme from "../hooks/useApplyTheme";
 import { darkTheme, lightTheme } from "../lib/appThemeHardcoded";
 import { useTheme } from "../ConfigProviders/ThemeProvider";
+import localStateManager from "../lib/localState";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -185,6 +185,10 @@ const WritingApp = () => {
 
         const settings = await loadSettings();
         setZoom(settings["ui_scale"]);
+
+        setLoadingStage("Loading Local State");
+
+        await localStateManager.init();
 
         setLoadingStage("Loading dictionaries and spellchecker");
 
@@ -407,7 +411,6 @@ const WritingApp = () => {
         }
 
         setLoadingStage("Loading previous session");
-
 
         // await wait(1000);
         setLoadingStage("Finished Loading");

@@ -5,7 +5,6 @@ import useYMap from "../../../hooks/useYMap";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { appStore } from "../../../stores/appStore";
 import { AnimatePresence, motion } from "motion/react";
-import itemLocalStateManager from "../../../lib/itemLocalState";
 import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import DialogWrapper from "../../LayoutComponents/DialogWrapper";
@@ -65,9 +64,7 @@ const DirectoryItemNode = ({
     return sortedDescendants.get(itemId)?.sortedChildren || [];
   }, [sortedDescendants, itemId]);
 
-  const [isOpened, setIsOpened] = useState(
-    itemLocalStateManager.isItemOpened(libraryId, itemId),
-  );
+  const [isOpened, setIsOpened] = useState(false);
 
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState("");
@@ -84,50 +81,11 @@ const DirectoryItemNode = ({
     }
   }, [focusedItemId, itemId]);
 
-  useEffect(() => {
-    const updateisOpened = (isOpened) => {
-      setIsOpened(isOpened);
-    };
-
-    const itemMap = itemMapRef.current;
-    const type = itemMap.get("type");
-
-    if (!itemLocalStateManager.hasItemLocalState(libraryId, itemId)) {
-      itemLocalStateManager.createItemLocalState(libraryId, itemId, {
-        type: type,
-      });
-    }
-
-    if (type === "section" || type === "book") {
-      itemLocalStateManager.on(libraryId, itemId, updateisOpened);
-    }
-
-    return () => {
-      if (type === "section" || type === "book") {
-        itemLocalStateManager.off(libraryId, itemId, updateisOpened);
-      }
-    };
-  }, [itemId, libraryId]);
-
-  // // Update the header label (title) and children when the underlying Yjs node changes.
-  // useEffect(() => {
-  //   // const updat,eNodeChildrenState = () => {
-  //   //   setNodeChildrenState(ytree.getNodeChildrenFromKey(itemId));
-  //   // };
-
-  //   // ytree (updateNodeChildrenState);
-
-  //   return () => {
-  //     // ytree.unobserve(updateNodeChildrenState);
-  //   };
-  // }, [itemId, ytree]);
-
   const onCreateSectionClick = useCallback(() => {
     const newId = dataManagerSubdocs.createEmptySection(ytree, itemId);
     setIsOpened(true);
     setFocusedItemId(newId);
     activatePanel("libraries", "details", [libraryId, newId]);
-    itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const onCreatePaperClick = useCallback(() => {
@@ -135,7 +93,6 @@ const DirectoryItemNode = ({
     setIsOpened(true);
     setFocusedItemId(newId);
     activatePanel("libraries", "details", [libraryId, newId]);
-    itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const onCreateNoteClick = useCallback(() => {
@@ -143,7 +100,6 @@ const DirectoryItemNode = ({
     setIsOpened(true);
     setFocusedItemId(newId);
     activatePanel("libraries", "details", [libraryId, newId]);
-    itemLocalStateManager.setItemOpened(libraryId, newId, true);
   }, [ytree, itemId, libraryId, setFocusedItemId, activatePanel]);
 
   const onRenameClick = useCallback(() => {
@@ -199,12 +155,6 @@ const DirectoryItemNode = ({
       if (!dndRef.current) return;
       const currentItemType = itemMapRef.current.get("type");
 
-      console.log(
-        "APP ITEM TYPE",
-        draggedItem.appItemType,
-        draggedItem.appItemType !== "libraries",
-      );
-
       if (draggedItem.appItemType !== "libraries") {
         setAreaSelected("");
         return;
@@ -227,8 +177,6 @@ const DirectoryItemNode = ({
       }
 
       const type = ytree.getNodeValueFromKey(draggedItem.id).get("type");
-
-      console.log("ancestor: ", isAncestor, " self selected: ", isSelfSelected);
 
       if (isAncestor || isSelfSelected) return;
 
@@ -261,18 +209,6 @@ const DirectoryItemNode = ({
         return;
       }
 
-      // if (draggedItem.id === itemId) {
-      //   setIsSelfSelected(true);
-      // } else {
-      //   setIsSelfSelected(false);
-      // }
-
-      // if (ytree.isNodeUnderOtherNode(itemId, draggedItem.id)) {
-      //   setIsAncestor(true);
-      // } else {
-      //   setIsAncestor(false);
-      // }
-
       if (isAncestor || isSelfSelected) return;
 
       // Get the parent of the current node.
@@ -285,8 +221,6 @@ const DirectoryItemNode = ({
 
       if (areaSelected !== "middle") {
         if (parentChildren.includes(draggedItem.id)) {
-          console.log("is sibling");
-
           if (areaSelected === "top") {
             ytree.setNodeBefore(draggedItem.id, itemId);
           }
@@ -295,7 +229,6 @@ const DirectoryItemNode = ({
             ytree.setNodeAfter(draggedItem.id, itemId);
           }
         } else {
-          console.log("not sibling");
           if (type === "book") return;
 
           ytree.moveChildToParent(draggedItem.id, parentId);
@@ -309,7 +242,6 @@ const DirectoryItemNode = ({
           }
         }
       } else {
-        console.log("dropped middle");
         if (
           type === "book" ||
           currentItemType === "paper" ||
@@ -346,7 +278,6 @@ const DirectoryItemNode = ({
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("edit section details button");
             if (!(appStoreItemId === itemId && itemMode === "details")) {
               setItemId(itemId);
               setFocusedItemId(itemId);
@@ -367,7 +298,6 @@ const DirectoryItemNode = ({
             <span className="icon-[fluent--folder-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("create section button");
             onCreateSectionClick();
           },
         },
@@ -378,7 +308,6 @@ const DirectoryItemNode = ({
             <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("create paper button");
             onCreatePaperClick();
           },
         },
@@ -389,7 +318,6 @@ const DirectoryItemNode = ({
             <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("create note button");
             onCreateNoteClick();
           },
         },
@@ -404,7 +332,6 @@ const DirectoryItemNode = ({
           ),
 
           action: () => {
-            console.log("export section button");
             exportItem(ytree, itemId);
           },
         },
@@ -427,7 +354,6 @@ const DirectoryItemNode = ({
             <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("delete item button");
             if (deleteConfirmDontAskAgain) {
               // Skip confirmation dialog and delete directly
               dataManagerSubdocs.deleteItem(ytree, itemId);
@@ -453,7 +379,6 @@ const DirectoryItemNode = ({
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("edit paper editor button");
             if (
               !(
                 appStoreItemId === itemId &&
@@ -501,7 +426,6 @@ const DirectoryItemNode = ({
             <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("delete paper button");
             if (deleteConfirmDontAskAgain) {
               // Skip confirmation dialog and delete directly
               dataManagerSubdocs.deleteItem(ytree, itemId);
@@ -527,7 +451,6 @@ const DirectoryItemNode = ({
             <span className="icon-[ion--enter-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("edit note button");
             if (
               !(
                 appStoreItemId === itemId &&
@@ -575,7 +498,6 @@ const DirectoryItemNode = ({
             <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            console.log("delete note button");
             if (deleteConfirmDontAskAgain) {
               // Skip confirmation dialog and delete directly
               dataManagerSubdocs.deleteItem(ytree, itemId);
@@ -626,16 +548,16 @@ const DirectoryItemNode = ({
         border-y-transparent
 
         ${(() => {
-          if (!isSelfSelected && !isAncestor && isOverCurrent) {
-            if (areaSelected === "top")
-              return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
-            if (areaSelected === "bottom")
-              return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
-            if (areaSelected === "middle")
-              return "bg-appLayoutDirectoryNodeHover border-y-0";
-          }
-          return "";
-        })()}
+            if (!isSelfSelected && !isAncestor && isOverCurrent) {
+              if (areaSelected === "top")
+                return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
+              if (areaSelected === "bottom")
+                return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
+              if (areaSelected === "middle")
+                return "bg-appLayoutDirectoryNodeHover border-y-0";
+            }
+            return "";
+          })()}
 
           `}
       >
@@ -655,14 +577,14 @@ const DirectoryItemNode = ({
             ${isChildOfRoot && "rounded-l-sm"}
 
             ${(() => {
-              const type = itemMapRef.current.get("type");
-              if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
-              if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
-              if (type === "section")
-                return "h-libraryDirectorySectionNodeHeight ";
-              if (type === "book") return "h-libraryDirectoryBookNodeHeight";
-              return "";
-            })()}
+                const type = itemMapRef.current.get("type");
+                if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+                if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
+                if (type === "section")
+                  return "h-libraryDirectorySectionNodeHeight ";
+                if (type === "book") return "h-libraryDirectoryBookNodeHeight";
+                return "";
+              })()}
 
               transition-colors
               duration-0
@@ -676,7 +598,6 @@ const DirectoryItemNode = ({
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
                     if (isRenaming) return;
-                    console.log("edit paper button");
                     if (
                       !(
                         appStoreItemId === itemId &&
@@ -697,7 +618,7 @@ const DirectoryItemNode = ({
                     }
                   }}
                 >
-                  <div className="h-libraryDirectoryPaperNodeIconSize flex items-center w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize">
+                  <div className="h-libraryDirectoryPaperNodeIconSize flex items-center w-libraryDirectoryPaperNodeIconSize p-px min-w-libraryDirectoryPaperNodeIconSize">
                     <motion.span
                       animate={{ rotate: 0 }}
                       transition={{ duration: 0.2 }}
@@ -743,7 +664,6 @@ const DirectoryItemNode = ({
                   className="grow min-w-0 flex items-center justify-start h-full"
                   onClick={() => {
                     if (isRenaming) return;
-                    console.log("edit note button");
                     if (
                       !(
                         appStoreItemId === itemId &&
@@ -764,11 +684,11 @@ const DirectoryItemNode = ({
                     }
                   }}
                 >
-                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize flex items-center justify-center">
+                  <div className="h-libraryDirectoryPaperNodeIconSize w-libraryDirectoryPaperNodeIconSize min-w-libraryDirectoryPaperNodeIconSize p-px flex items-center justify-center">
                     <motion.span
                       animate={{ rotate: 0 }}
                       transition={{ duration: 0.2 }}
-                      className={`icon-[fluent--square-20-regular] h-full w-full m-auto`}
+                      className={`icon-[fluent--square-20-regular] h-full w-full `}
                     ></motion.span>
                   </div>
 
@@ -803,189 +723,194 @@ const DirectoryItemNode = ({
               </>
             )}
 
-            {(itemMapRef.current.get("type") === "section" ||
-              itemMapRef.current.get("type") === "book") && (
-              <button
-                className={`grow min-w-0 flex items-center justify-start h-full `}
-                onClick={() => {
-                  if (isRenaming) return;
-                  setFocusedItemId(itemId);
-                  const newOpenedState = !isOpened;
-                  setIsOpened(newOpenedState);
-                  itemLocalStateManager.setItemOpened(
-                    libraryId,
-                    itemId,
-                    newOpenedState,
-                  );
-                }}
-              >
-                <motion.span
-                  animate={{ rotate: isOpened ? 90 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`icon-[formkit--right] ${(() => {
-                    const type = itemMapRef.current.get("type");
-
-                    if (type === "section")
-                      return "h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                    if (type === "book")
-                      return "h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectorySectionNodeIconSize";
-                    return "";
-                  })()}`}
-                ></motion.span>
-
-                <div className="grow ml-1 text-libraryDirectoryBookNodeFontSize min-w-0 h-full flex items-center justify-start">
-                  {isRenaming ? (
-                    <input
-                      type="text"
-                      value={renameValue}
-                      onClick={(e) => e.stopPropagation()}
-                      onPointerDown={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onChange={(e) => setRenameValue(e.target.value)}
-                      onKeyDown={(e) => {
-                        e.stopPropagation();
-                        if (e.key === "Enter") {
-                          handleRenameSave();
-                        } else if (e.key === "Escape") {
-                          handleRenameCancel();
-                        }
-                      }}
-                      onBlur={handleRenameSave}
-                      className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
-                      autoFocus
-                    />
-                  ) : (
-                    <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
-                      {itemMapState.item_properties.item_title}
-                    </span>
-                  )}
-                </div>
-              </button>
-            )}
-          </motion.div>
-        </AnimatePresence>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            className="w-full"
-            key={isOpened ? "opened" : "closed"}
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -10, opacity: 0 }}
-            transition={{ duration: 0.1 }}
-          >
-            {isOpened &&
-              (itemMapRef.current.get("type") === "section" ||
-                itemMapRef.current.get("type") === "book") && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "fit-content", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  id="DirectoryItemNodeBodyContainer"
-                  className={`w-full flex flex-row justify-start`}
+            {itemMapRef.current.get("type") == "section" && (
+              <>
+                <button
+                  className="grow min-w-0 flex items-center justify-start h-full"
+                  onClick={() => {
+                    setIsOpened(!isOpened);
+                  }}
                 >
-                  <div
-                    style={{
-                      marginLeft:
-                        "calc(3px + var(--libraryDirectoryBookNodeIconSize) / 2)",
-                    }}
-                    className={`w-px flex items-center justify-center`}
-                  >
-                    <span className={`h-full w-full bg-appLayoutBorder`}></span>
+                  <div className="h-libraryDirectorySectionNodeIconSize w-libraryDirectorySectionNodeIconSize min-w-libraryDirectorySectionNodeIconSize">
+                    <motion.span
+                      animate={{ rotate: isOpened ? 90 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`icon-[uiw--right] h-[95%] w-[95%]`}
+                    ></motion.span>
                   </div>
-                  <div
-                    id="DirectoryItemNodeBody"
-                    className="h-fit w-full grid grid-cols-1"
-                  >
-                    {nodeChildrenStates !== null &&
-                      nodeChildrenStates.length > 0 &&
-                      nodeChildrenStates.map((childKey) => (
-                        <div id="DirectoryItemNodeChild" key={childKey}>
-                          <DirectoryItemNode
-                            libraryId={libraryId}
-                            ytree={ytree}
-                            itemId={childKey}
-                            breadcrumbs={[...breadcrumbs, childKey]}
-                            setFocusedItemId={setFocusedItemId}
-                            focusedItemId={focusedItemId}
-                            isChildOfRoot={false}
-                            sortedDescendants={sortedDescendants}
-                          />
-                        </div>
-                      ))}
+
+                  <div className="grow ml-1 text-libraryDirectorySectionNodeFontSize min-w-0 h-full flex items-center justify-start">
+                    {isRenaming ? (
+                      <input
+                        type="text"
+                        value={renameValue}
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          e.stopPropagation();
+                          if (e.key === "Enter") {
+                            handleRenameSave();
+                          } else if (e.key === "Escape") {
+                            handleRenameCancel();
+                          }
+                        }}
+                        onBlur={handleRenameSave}
+                        className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectorySectionNodeFontSize focus:outline-none focus:border-appLayoutFocus"
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
+                        {itemMapState.item_properties.item_title}
+                      </span>
+                    )}
                   </div>
-                </motion.div>
-              )}
+                </button>
+              </>
+            )}
+
+            {itemMapRef.current.get("type") == "book" && (
+              <>
+                <button
+                  className="grow min-w-0 flex items-center justify-start h-full"
+                  onClick={() => {
+                    setIsOpened(!isOpened);
+                  }}
+                >
+                  <div className="h-libraryDirectoryBookNodeIconSize w-libraryDirectoryBookNodeIconSize min-w-libraryDirectoryBookNodeIconSize">
+                    <motion.span
+                      animate={{ rotate: isOpened ? 90 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className={`icon-[uiw--right] h-[95%] w-[95%]`}
+                    ></motion.span>
+                  </div>
+
+                  <div className="min-w-0 basis-0 grow ml-1 text-libraryDirectoryBookNodeFontSize font-bold min-w-0 h-full flex items-center justify-start">
+                    {isRenaming ? (
+                      <input
+                        type="text"
+                        value={renameValue}
+                        onClick={(e) => e.stopPropagation()}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          e.stopPropagation();
+                          if (e.key === "Enter") {
+                            handleRenameSave();
+                          } else if (e.key === "Escape") {
+                            handleRenameCancel();
+                          }
+                        }}
+                        onBlur={handleRenameSave}
+                        className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryDirectoryBookNodeFontSize focus:outline-none focus:border-appLayoutFocus"
+                        autoFocus
+                      />
+                    ) : (
+                      <span className="w-fit max-w-full overflow-hidden text-nowrap text-ellipsis">
+                        {itemMapState.item_properties.item_title}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              </>
+            )}
+
+            <div
+              id="DirectoryItemNodeActions"
+              className="h-full w-fit flex items-center justify-end px-1 gap-1"
+            >
+              {(itemMapRef.current.get("type") === "section" ||
+                itemMapRef.current.get("type") === "book") && (
+                  <button
+                    className="h-libraryDirectoryActionIconSize w-libraryDirectoryActionIconSize rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center"
+                    onClick={onCreatePaperClick}
+                  >
+                    <span className="icon-[fluent--document-add-24-regular] w-full h-full"></span>
+                  </button>
+                )}
+            </div>
           </motion.div>
         </AnimatePresence>
 
-        <DialogWrapper
-          open={
-            deleteConfirmDialog.open && deleteConfirmDialog.itemId === itemId
-          }
-          onOpenChange={(open) => {
-            if (!open) {
-              setDeleteConfirmDialog({
-                open: false,
-                itemId: null,
-                itemType: null,
-                itemTitle: null,
-              });
-            }
-          }}
-          title="Delete Item"
-          description={`Are you sure you want to delete "${deleteConfirmDialog.itemTitle}"? This action cannot be undone.`}
-          onSubmit={() => {
-            dataManagerSubdocs.deleteItem(ytree, itemId);
-            setDeleteConfirmDialog({
-              open: false,
-              itemId: null,
-              itemType: null,
-              itemTitle: null,
-            });
-          }}
-          submitLabel="Delete"
-          destructive={true}
-          options={[
-            {
-              checked: deleteConfirmDontAskAgain,
-              label: "Don't ask again",
-              onChange: (e) => setDeleteConfirmDontAskAgain(e.target.checked),
-            },
-          ]}
-        >
-          {/* <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                checked={deleteConfirmDontAskAgain}
-                onChange={(e) => setDeleteConfirmDontAskAgain(e.target.checked)}
-                variant="outline"
-                iconColor="var(--appLayoutText)"
-                styles={{
-                  input: {
-                    borderColor:
-                      deleteConfirmDontAskAgain ? "var(--appLayoutText)" : undefined,
-                  },
-                }}
-                classNames={{
-                  root: "w-4 h-4 cursor-pointer",
-                  body: "w-full h-full",
-                  inner: "w-full h-full",
-                  input: "w-full h-full bg-transparent border-appLayoutInverseHover",
-                  icon: "bg-appLayoutBorder border-appLayoutBorder",
-                }}
-              />
-              <label
-                htmlFor="dontAskAgain"
-                className="text-sm text-appLayoutText cursor-pointer"
-              >
-                Don't ask again
-              </label>
-            </div>
-          </div> */}
-        </DialogWrapper>
+        <AnimatePresence>
+          {isOpened && (
+            <motion.div
+              id="DirectoryItemNodeChildren"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.15, ease: "easeInOut" }}
+              style={{
+                marginLeft: "calc(0.25rem + var(--spacing-libraryDirectoryBookNodeIconSize) / 2)"
+              }}
+              className="overflow-hidden border-l border-appLayoutBorder "
+            >
+              {nodeChildrenStates.map((childId) => (
+                <DirectoryItemNode
+                  key={childId}
+                  libraryId={libraryId}
+                  ytree={ytree}
+                  itemId={childId}
+                  breadcrumbs={[...breadcrumbs, itemId]}
+                  focusedItemId={focusedItemId}
+                  setFocusedItemId={setFocusedItemId}
+                  isChildOfRoot={false}
+                  sortedDescendants={sortedDescendants}
+                />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onClose={() =>
+          setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false })
+        }
+        title={`Delete ${deleteConfirmDialog.itemType}?`}
+      >
+        <div className="flex flex-col gap-4">
+          <p>
+            Are you sure you want to delete{" "}
+            <b>{deleteConfirmDialog.itemTitle}</b>? This action cannot be
+            undone.
+          </p>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={deleteConfirmDontAskAgain}
+              onChange={(e) =>
+                setDeleteConfirmDontAskAgain(e.currentTarget.checked)
+              }
+              label="Don't ask me again"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              className="px-4 py-2 rounded bg-appLayoutBorder hover:bg-appLayoutHover"
+              onClick={() =>
+                setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false })
+              }
+            >
+              Cancel
+            </button>
+            <button
+              className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
+              onClick={() => {
+                dataManagerSubdocs.deleteItem(
+                  ytree,
+                  deleteConfirmDialog.itemId,
+                );
+                setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false });
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </DialogWrapper>
     </ContextMenuWrapper>
   );
 };
@@ -998,7 +923,7 @@ DirectoryItemNode.propTypes = {
   focusedItemId: PropTypes.string,
   setFocusedItemId: PropTypes.func.isRequired,
   isChildOfRoot: PropTypes.bool,
-  sortedDescendants: PropTypes.instanceOf(Map).isRequired,
+  sortedDescendants: PropTypes.object.isRequired,
 };
 
 export default DirectoryItemNode;

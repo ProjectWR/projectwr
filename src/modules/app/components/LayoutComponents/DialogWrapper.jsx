@@ -43,7 +43,7 @@ const DialogWrapper = ({
               </Dialog.Description>
             )}
 
-            {options.map((option, index) => {
+            {options && options.map((option, index) => {
               return (
                 <div key={option.label} className="flex items-center justify-start gap-2 z-[10002] px-4 pb-2">
                   <Checkbox

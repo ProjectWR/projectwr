@@ -13,7 +13,7 @@
 html,
 body,
 #root {
-  background: transparent!important;
+  background: transparent !important;
 }
 
 @font-face {
@@ -347,7 +347,7 @@ body,
     --libraryDirectorySectionNodeFontSize: calc(var(--uiScale) * 0.8rem);
 
     --libraryDirectoryBookNodeIconSize: calc(var(--uiScale) * 1.1rem);
-    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 0.9rem);
+    --libraryDirectoryPaperNodeIconSize: calc(var(--uiScale) * 1.1rem);
     --libraryDirectorySectionNodeIconSize: calc(var(--uiScale) * 1.1rem);
 
     --templateDetailsPanelDeviceHeaderHeight: calc(var(--uiScale) * 4rem);

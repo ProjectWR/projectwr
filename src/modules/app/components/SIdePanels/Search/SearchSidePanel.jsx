@@ -8,7 +8,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../../stores/appStore";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { ScrollArea } from "@mantine/core";
-import itemLocalStateManager from "../../../lib/itemLocalState";
 import { queryData } from "../../../lib/search";
 import LibraryDirectoryHeader from "../LibraryDirectory/LibraryDirectoryHeader";
 
@@ -154,88 +153,68 @@ const SearchSidePanel = ({}) => {
             className="h-fit w-full px-2 flex flex-col gap-0 justify-start items-center"
           >
             {searchResults.length > 0 &&
-              searchResults
-                .toSorted((a, b) => {
-                  if (!itemLocalStateManager.getLastOpened(a.libraryId, a.id)) {
-                    return false;
-                  } else if (
-                    !itemLocalStateManager.getLastOpened(b.libraryId, b.id)
-                  ) {
-                    return true;
-                  } else {
-                    return (
-                      itemLocalStateManager.getLastOpened(b.libraryId, b.id) -
-                      itemLocalStateManager.getLastOpened(a.libraryId, a.id)
-                    );
-                  }
-                })
-                .map((result, index) => {
-                  const item_properties =
-                    result.id === result.libraryId
-                      ? dataManagerSubdocs
-                          .getLibrary(result.libraryId)
-                          .getMap("library_props")
-                          .get("item_properties")
-                      : dataManagerSubdocs
-                          .getLibrary(result.libraryId)
-                          .getMap("library_directory")
-                          .get(result.id)
-                          .get("value")
-                          .get("item_properties");
+              searchResults.map((result, index) => {
+                const item_properties =
+                  result.id === result.libraryId
+                    ? dataManagerSubdocs
+                        .getLibrary(result.libraryId)
+                        .getMap("library_props")
+                        .get("item_properties")
+                    : dataManagerSubdocs
+                        .getLibrary(result.libraryId)
+                        .getMap("library_directory")
+                        .get(result.id)
+                        .get("value")
+                        .get("item_properties");
 
-                  return (
-                    <div
-                      key={result.id}
-                      className="h-fit w-full flex gap-1 items-center"
-                    >
-                      <span className="text-libraryDirectoryBookNodeFontSize pb-px text-appLayoutTextMuted w-fit h-fit">
-                        -
-                      </span>
-                      <SearchNode
-                        label={item_properties.item_title}
-                        onClick={() => {
-                          if (item_properties.item_title) {
-                            setLibraryId(result.libraryId);
-                            setItemId("unselected");
-                            if (deviceType === "mobile") {
-                              setPanelOpened(false);
-                            }
-                            setPanelOpened(true);
-
-                            activatePanel("libraries", "details", [
-                              result.libraryId,
-                            ]);
+                return (
+                  <div
+                    key={result.id}
+                    className="h-fit w-full flex gap-1 items-center"
+                  >
+                    <span className="text-libraryDirectoryBookNodeFontSize pb-px text-appLayoutTextMuted w-fit h-fit">
+                      -
+                    </span>
+                    <SearchNode
+                      label={item_properties.item_title}
+                      onClick={() => {
+                        if (item_properties.item_title) {
+                          setLibraryId(result.libraryId);
+                          setItemId("unselected");
+                          if (deviceType === "mobile") {
+                            setPanelOpened(false);
                           }
-
-                          if (
-                            result.type === "book" ||
-                            result.type === "paper" ||
-                            result.type === "section"
-                          ) {
-                            itemLocalStateManager.setItemAndParentsOpened(
-                              result.libraryId,
-                              result.id,
-                            );
-
-                            setLibraryId(result.libraryId);
-                            setItemId(result.id);
-                            setItemMode("details");
-                            if (deviceType === "mobile") {
-                              setPanelOpened(false);
-                            }
-                            setPanelOpened(true);
-                          }
-                          setActivity("libraries");
+                          setPanelOpened(true);
 
                           activatePanel("libraries", "details", [
                             result.libraryId,
-                            result.id,
                           ]);
-                        }}
-                      />
-                    </div>
-                  );
-                })}
+                        }
+
+                        if (
+                          result.type === "book" ||
+                          result.type === "paper" ||
+                          result.type === "section"
+                        ) {
+                          setLibraryId(result.libraryId);
+                          setItemId(result.id);
+                          setItemMode("details");
+                          if (deviceType === "mobile") {
+                            setPanelOpened(false);
+                          }
+                          setPanelOpened(true);
+                        }
+                        setActivity("libraries");
+
+                        activatePanel("libraries", "details", [
+                          result.libraryId,
+                          result.id,
+                        ]);
+                      }}
+                    />
+                  </div>
+                );
+              })}
 
             {searchResults.length === 0 && (
               <SearchNode disabled={true} label={"No Results Found"} />
@@ -266,7 +245,7 @@ const SearchNode = ({ itemId, label, onClick, disabled }) => {
                     rounded-sm
         
                     h-libraryDirectoryPaperNodeHeight
-
+ 
                     w-full
             
                     transition-colors

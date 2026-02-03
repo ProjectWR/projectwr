@@ -1,40 +1,53 @@
-import {
-  useMotionTemplate,
-  useMotionValue,
-  motion,
-  useSpring,
-  AnimatePresence,
-} from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import itemLocalStateManager from "../../lib/itemLocalState";
-import { equalityDeep, equalityFlat } from "lib0/function";
-import GrainyDiv from "../../../design-system/GrainyDiv";
-import GrainyButton from "../../../design-system/GrainyButton";
+import { useMemo, useState } from "react";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import useMainPanel from "../../hooks/useMainPanel";
+import { useAllLocalState } from "../../hooks/useLocalState";
+import localStateManager from "../../lib/localState";
+import PropTypes from "prop-types";
+
+const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
+  const [hover, setHover] = useState(false);
+  return (
+    <button
+      id={itemId}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={onClick}
+      className="px-3 py-1 w-full h-fit flex items-center justify-between rounded-md  text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
+    >
+      <span className="h-fit flex items-center gap-2">
+        <motion.span transition={{ duration: 0.2 }}>{name}</motion.span>
+        <span className="text-recentlyOpenedDateFontSize w-fit pt-1 text-nowrap">
+          {type}
+        </span>
+      </span>
+      <span className="text-libraryDirectoryBookNodeFontSize">
+        {new Date(props.lastOpened).toLocaleString()}
+      </span>
+    </button>
+  );
+};
+
+RecentlyOpenedItemButton.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  itemId: PropTypes.string.isRequired,
+  props: PropTypes.shape({
+    lastOpened: PropTypes.string,
+    libraryId: PropTypes.string,
+  }).isRequired,
+  type: PropTypes.string.isRequired,
+};
 
 const HomePanel = () => {
   const { deviceType } = useDeviceType();
 
-  const {
-    saveStateInHistory,
-    canGoBack,
-    goBack,
-    canGoForward,
-    goForward,
-    clearFuture,
-  } = useStoreHistory();
+  useStoreHistory();
 
   const setLibraryId = appStore((state) => state.setLibraryId);
   const setItemId = appStore((state) => state.setItemId);
@@ -44,30 +57,26 @@ const HomePanel = () => {
 
   const { activatePanel } = useMainPanel();
 
-  const prevLatestItemsRef = useRef(null);
+  const allLocalState = useAllLocalState();
 
-  const latestItems = useSyncExternalStore(
-    (callback) => {
-      itemLocalStateManager.onAll(callback);
+  const latestItems = useMemo(() => {
+    return Object.entries(allLocalState)
+      .filter(([, val]) => val.lastOpenedDtm)
+      .sort(
+        (a, b) =>
+          new Date(b[1].lastOpenedDtm).getTime() -
+          new Date(a[1].lastOpenedDtm).getTime(),
+      )
+      .slice(0, 10)
+      .map(([itemIdLibraryId, val]) => {
+        const [libraryId] = itemIdLibraryId.split("::");
 
-      return () => {
-        itemLocalStateManager.offAll(callback);
-      };
-    },
-    () => {
-      const latestItems = itemLocalStateManager.fetchLatestOpenedItems(10);
-      if (
-        prevLatestItemsRef.current === null ||
-        prevLatestItemsRef.current === undefined ||
-        !equalityDeep(latestItems, prevLatestItemsRef.current)
-      ) {
-        prevLatestItemsRef.current = latestItems;
-        return prevLatestItemsRef.current;
-      } else {
-        return prevLatestItemsRef.current;
-      }
-    },
-  );
+        return {
+          itemIdLibraryId,
+          props: { ...val, lastOpened: val.lastOpenedDtm, libraryId },
+        };
+      });
+  }, [allLocalState]);
 
   return (
     <main className="w-full h-full flex flex-col items-center">
@@ -98,44 +107,6 @@ const HomePanel = () => {
             >
               Sylvanite
             </motion.h1>
-            {/* {latestItems.length === 0 && (
-              <>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5, bounce: 0 }}
-                  className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
-                >
-                  &nbsp;
-                  <q>
-                    The problems of the human heart in conflict with itself…
-                    alone can make good writing because only that is worth
-                    writing about, worth the agony and the sweat.
-                  </q>
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1, bounce: 0 }}
-                  className="text-homePanelSubtitleFontSize text-appLayoutText flex flex-row w-full"
-                >
-                  <span className="grow"></span>
-                  <span className="w-fit">- Rohit Kottamasu</span>
-                </motion.p>
-              </>
-            )}
-
-            {latestItems.length > 0 && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, bounce: 0 }}
-                className="text-homePanelSubtitleFontSize text-appLayoutTextMuted pl-1"
-              >
-                &nbsp;
-                <q>A subtitle goes here</q>
-              </motion.p>
-            )} */}
           </div>
 
           <div
@@ -152,18 +123,20 @@ const HomePanel = () => {
                 >
                   <div className={`h-fit w-full`}>
                     <div className="w-full h-full flex flex-col items-center justify-start pt-3 pb-2 gap-1">
-                      <div className="h-f it w-full text-xl px-6 pb-2 flex items-center justify-between">
+                      <div className="h-fit w-full text-xl px-6 pb-2 flex items-center justify-between">
                         <span>Recently Opened</span>
                         <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
                       </div>
                       <div className="divider w-full px-3">
                         <div className="w-full h-px bg-appLayoutBorder"></div>
                       </div>{" "}
-                      {latestItems.map(({ itemIdLibraryId, props, type }) => {
+                      {latestItems.map(({ itemIdLibraryId, props }) => {
                         const itemId = itemIdLibraryId.split("::")[1];
                         const libraryId = itemIdLibraryId.split("::")[0];
 
                         let name = "";
+
+                        let type = itemId === libraryId ? "library" : "unknown";
 
                         try {
                           /**
@@ -171,7 +144,7 @@ const HomePanel = () => {
                            */
                           let ytree;
 
-                          if (type !== "library") {
+                          if (type != "library") {
                             if (
                               !dataManagerSubdocs.getLibrary(libraryId) ||
                               !checkForYTree(
@@ -192,6 +165,10 @@ const HomePanel = () => {
                             name = ytree
                               .getNodeValueFromKey(itemId)
                               .get("item_properties")["item_title"];
+
+                            type = ytree
+                              .getNodeValueFromKey(itemId)
+                              .get("type");
                           } else {
                             if (!dataManagerSubdocs.getLibrary(libraryId)) {
                               return null;
@@ -201,7 +178,8 @@ const HomePanel = () => {
                               .getMap("library_props")
                               .get("item_properties")["item_title"];
                           }
-                        } catch (e) {
+                        } catch (error) {
+                          console.error(error);
                           return null;
                         }
 
@@ -216,12 +194,12 @@ const HomePanel = () => {
                               props={props}
                               type={type}
                               onClick={() => {
+                                localStateManager.updateLastOpened(
+                                  libraryId,
+                                  itemId,
+                                );
+
                                 if (type === "library") {
-                                  itemLocalStateManager.setItemOpened(
-                                    itemId,
-                                    itemId,
-                                    true,
-                                  );
                                   setLibraryId(itemId);
                                   setItemId("unselected");
                                   if (deviceType === "mobile") {
@@ -239,11 +217,6 @@ const HomePanel = () => {
                                   type === "paper" ||
                                   type === "section"
                                 ) {
-                                  itemLocalStateManager.setItemAndParentsOpened(
-                                    props.libraryId,
-                                    itemId,
-                                  );
-
                                   setLibraryId(props.libraryId);
                                   setItemId(itemId);
                                   setItemMode("details");
@@ -277,26 +250,3 @@ const HomePanel = () => {
 };
 
 export default HomePanel;
-
-const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
-  const [hover, setHover] = useState(false);
-  return (
-    <button
-      id={itemId}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={onClick}
-      className="px-3 py-1 w-full h-fit flex items-center justify-between rounded-md  text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
-    >
-      <span className="h-fit flex items-center gap-2">
-        <motion.span transition={{ duration: 0.2 }}>{name}</motion.span>
-        <span className="text-recentlyOpenedDateFontSize w-fit pt-1 text-nowrap">
-          {type}
-        </span>
-      </span>
-      <span className="text-libraryDirectoryBookNodeFontSize">
-        {new Date(props.lastOpened).toLocaleString()}
-      </span>
-    </button>
-  );
-};

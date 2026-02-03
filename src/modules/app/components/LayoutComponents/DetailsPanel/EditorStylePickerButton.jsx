@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import itemLocalStateManager from "../../../lib/itemLocalState";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import templateManager from "../../../lib/templates";
 import { TipTapEditorDefaultPreferences } from "../../../../editor/TipTapEditor/TipTapEditorDefaultPreferences";
@@ -12,16 +11,20 @@ import {
   HoverListShell,
 } from "../HoverListShell";
 import { motion } from "motion/react";
+import { useKeyLocalState } from "../../hooks/useLocalState";
+import localStateManager from "../../../lib/localState";
 
 /**
  *
- * @param {{ytree: YTree, paperId: string}} param0
+ * @param {{ytree: YTree, paperId: string, libraryId: string}} param0
  * @returns
  */
 export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
   const [pickingEditorStyle, setPickingEditorStyle] = useState(false);
-  const [paperEditorTemplateId, setPaperEditorTemplateId] = useState(
-    itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId),
+
+  const { editorStyle: paperEditorTemplateId } = useKeyLocalState(
+    libraryId,
+    paperId,
   );
 
   const EditorStylePickerRef = useOuterClick(() => {
@@ -54,37 +57,9 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
 
   console.log("templates: ", Object.entries(templates));
 
-  useEffect(() => {
-    const updatePaperEditorTemplateId = () => {
-      setPaperEditorTemplateId(
-        itemLocalStateManager.getPaperEditorTemplate(libraryId, paperId),
-      );
-    };
-
-    if (!itemLocalStateManager.hasItemLocalState(libraryId, paperId)) {
-      itemLocalStateManager.createItemLocalState(libraryId, paperId, {
-        type: "paper",
-      });
-    }
-
-    itemLocalStateManager.on(libraryId, paperId, updatePaperEditorTemplateId);
-
-    return () => {
-      itemLocalStateManager.off(
-        libraryId,
-        paperId,
-        updatePaperEditorTemplateId,
-      );
-    };
-  }, [paperId]);
-
-  const handleCreateTemplate = () => {
-    const templateProps = {
-      template_name: "New Template",
-      template_editor: "TipTapEditor",
-      template_content: TipTapEditorDefaultPreferences,
-    };
-    templateManager.createTemplate(templateProps);
+  const handleUpdateTemplate = (templateId) => {
+    localStateManager.updateEditorStyle(libraryId, paperId, templateId);
+    setPickingEditorStyle(false);
   };
 
   return (
@@ -118,12 +93,7 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
             <HoverListButton
               key={`resetToDefault`}
               onClick={() => {
-                itemLocalStateManager.setPaperEditorTemplate(
-                  libraryId,
-                  paperId,
-                  null,
-                );
-                setPickingEditorStyle(false);
+                handleUpdateTemplate("unselected");
               }}
             >
               Use the default editor style
@@ -131,23 +101,20 @@ export const EditorStylePickerButton = ({ libraryId, ytree, paperId }) => {
           )}
 
           {Object.entries(templates).length > 0 &&
-            Object.entries(templates).map(([templateId, template]) => {
-              return (
-                <HoverListButton
-                  key={templateId}
-                  onClick={() => {
-                    itemLocalStateManager.setPaperEditorTemplate(
-                      libraryId,
-                      paperId,
-                      templateId,
-                    );
-                    setPickingEditorStyle(false);
-                  }}
-                >
-                  {templateId}
-                </HoverListButton>
-              );
-            })}
+            Object.entries(templates)
+              .filter(([id]) => id !== "unselected")
+              .map(([templateId, template]) => {
+                return (
+                  <HoverListButton
+                    key={templateId}
+                    onClick={() => {
+                      handleUpdateTemplate(templateId);
+                    }}
+                  >
+                    {templateId}
+                  </HoverListButton>
+                );
+              })}
 
           {Object.entries(templates).length == 0 && (
             <motion.div

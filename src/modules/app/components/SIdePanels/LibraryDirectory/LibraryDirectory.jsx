@@ -11,7 +11,6 @@ import { appStore } from "../../../stores/appStore";
 import useOuterClick from "../../../../design-system/useOuterClick";
 import { max, min } from "lib0/math";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
-import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { ScrollArea } from "@mantine/core";
@@ -357,7 +356,6 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
-              itemLocalStateManager.setItemOpened(libraryId, bookId, true);
             }}
           >
             <StyledTooltip label="Create Book" position="bottom">
@@ -412,14 +410,6 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
-
-              if (focusedItemId)
-                itemLocalStateManager.setItemOpened(
-                  libraryId,
-                  focusedItemId,
-                  true,
-                );
-              itemLocalStateManager.setItemOpened(libraryId, sectionId, true);
             }}
           >
             <StyledTooltip label="Create Section" position="bottom">
@@ -475,13 +465,6 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
-              if (focusedItemId)
-                itemLocalStateManager.setItemOpened(
-                  libraryId,
-                  focusedItemId,
-                  true,
-                );
-              itemLocalStateManager.setItemOpened(libraryId, paperId, true);
             }}
           >
             <StyledTooltip label="Create Paper" position="bottom">
@@ -537,13 +520,6 @@ const LibraryDirectory = ({ libraryId }) => {
               }
 
               setPanelOpened(true);
-              if (focusedItemId)
-                itemLocalStateManager.setItemOpened(
-                  libraryId,
-                  focusedItemId,
-                  true,
-                );
-              itemLocalStateManager.setItemOpened(libraryId, noteId, true);
             }}
           >
             <StyledTooltip label="Create Note" position="bottom">

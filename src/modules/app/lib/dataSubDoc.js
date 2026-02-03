@@ -1,10 +1,10 @@
-import { Editor } from '@tiptap/core'
+import { Editor } from "@tiptap/core";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Highlight from "@tiptap/extension-highlight";
 import Collaboration from "@tiptap/extension-collaboration";
-import Bold from "@tiptap/extension-bold";;
+import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
@@ -23,26 +23,25 @@ import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
 
 import * as Y from "yjs";
-import { YKeyValue } from 'y-utility/y-keyvalue'
+import { YKeyValue } from "y-utility/y-keyvalue";
 import { generateUUID } from "../utils/uuidUtil";
 import { getHighestOrderIndex, insertBetween } from "../utils/orderUtil";
 import { YTree } from "yjs-orderedtree";
 import persistenceManagerForSubdocs from "./persistenceSubDocs";
 import ObservableMap from "./ObservableMap";
-import { min } from 'lib0/math';
+import { min } from "lib0/math";
 
 import {
   DocxSerializer,
   defaultDocxSerializer,
   defaultNodes,
-  defaultMarks
+  defaultMarks,
 } from "prosemirror-docx";
 
-import { Buffer } from 'buffer/';
-import { save } from '@tauri-apps/plugin-dialog';
-import { writeFile } from '@tauri-apps/plugin-fs';
-import { Packer } from 'docx';
-import itemLocalStateManager from './itemLocalState';
+import { Buffer } from "buffer/";
+import { save } from "@tauri-apps/plugin-dialog";
+import { writeFile } from "@tauri-apps/plugin-fs";
+import { Packer } from "docx";
 
 let instance;
 
@@ -50,7 +49,7 @@ class DataManagerSubdocs {
   constructor() {
     if (instance) {
       throw new Error(
-        "DataManagerSubdocs is a singleton class. Use getInstance() instead."
+        "DataManagerSubdocs is a singleton class. Use getInstance() instead.",
       );
     }
 
@@ -129,14 +128,17 @@ class DataManagerSubdocs {
     const ydoc = new Y.Doc({ guid: uuid });
 
     const libraryPropertiesYMap = ydoc.getMap("library_props");
-    libraryPropertiesYMap.set("item_properties", { "item_title": `Untitled Library #${this.libraryYDocMap.size}`, "item_description": null })
+    libraryPropertiesYMap.set("item_properties", {
+      item_title: `Untitled Library #${this.libraryYDocMap.size}`,
+      item_description: null,
+    });
 
     libraryPropertiesYMap.set(
       "order_index",
       insertBetween(
         getHighestOrderIndex(getArrayFromYDocMap(this.libraryYDocMap)),
-        ""
-      )
+        "",
+      ),
     );
 
     ydoc.getArray("daily_word_counts");
@@ -146,17 +148,12 @@ class DataManagerSubdocs {
     this.libraryYDocMap.set(uuid, ydoc);
     persistenceManagerForSubdocs.initLocalPersistenceForYDoc(ydoc);
 
-    itemLocalStateManager.createItemLocalState(uuid, uuid, {
-      type: "library",
-      libraryId: uuid,
-    });
-
     return uuid;
   }
 
   /**
-   * 
-   * @param {YTree} ytree 
+   *
+   * @param {YTree} ytree
    * @returns {string}
    */
   createEmptyBook(ytree) {
@@ -165,122 +162,123 @@ class DataManagerSubdocs {
     bookMap.set("type", "book");
     bookMap.set("item_id", uuid);
 
-    bookMap.set("item_properties", { "item_title": `Untitled Book #${ytree.getNodeChildrenFromKey("root")?.length}`, "item_description": null, "item_progress": 0, "item_goal": 60000 })
+    bookMap.set("item_properties", {
+      item_title: `Untitled Book #${ytree.getNodeChildrenFromKey("root")?.length}`,
+      item_description: null,
+      item_progress: 0,
+      item_goal: 60000,
+    });
 
     ytree.createNode("root", uuid, bookMap);
-
-    itemLocalStateManager.createItemLocalState(uuid, {
-      type: "book",
-      libraryId: ytree._ydoc.guid,
-    });
 
     return uuid;
   }
 
   /**
-   * 
-   * @param {YTree} ytree 
-   * @param {string} bookId 
+   *
+   * @param {YTree} ytree
+   * @param {string} bookId
    */
   createEmptySection(ytree, bookId) {
     const uuid = generateUUID();
     const sectionMap = new Y.Map();
     sectionMap.set("type", "section");
     sectionMap.set("item_id", uuid);
-    sectionMap.set("item_properties", { "item_title": `Untitled Section #${ytree.getNodeChildrenFromKey(bookId)?.length}`, "item_description": null, "item_progress": 0, "item_goal": 10000 })
+    sectionMap.set("item_properties", {
+      item_title: `Untitled Section #${ytree.getNodeChildrenFromKey(bookId)?.length}`,
+      item_description: null,
+      item_progress: 0,
+      item_goal: 10000,
+    });
     ytree.createNode(bookId, uuid, sectionMap);
 
-    itemLocalStateManager.createItemLocalState(uuid, {
-      type: "section",
-      libraryId: ytree._ydoc.guid,
-    });
     return uuid;
   }
 
   /**
-   * 
-   * @param {YTree} ytree 
-   * @param {string} parentId 
+   *
+   * @param {YTree} ytree
+   * @param {string} parentId
    */
   createEmptyPaper(ytree, parentId) {
     const uuid = generateUUID();
     const paperMap = new Y.Map();
     paperMap.set("type", "paper");
     paperMap.set("item_id", uuid);
-    paperMap.set("item_properties", { "item_title": `Untitled Paper #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": null, "item_progress": 0, "item_goal": 1000 })
+    paperMap.set("item_properties", {
+      item_title: `Untitled Paper #${ytree.getNodeChildrenFromKey(parentId)?.length}`,
+      item_description: null,
+      item_progress: 0,
+      item_goal: 1000,
+    });
     paperMap.set("paper_xml", new Y.XmlFragment());
     ytree.createNode(parentId, uuid, paperMap);
 
-    itemLocalStateManager.createItemLocalState(uuid, {
-      type: "paper",
-      libraryId: ytree._ydoc.guid,
-    });
     return uuid;
   }
 
   /**
-   * 
-   * @param {YTree} ytree 
-   * @param {string} parentId 
+   *
+   * @param {YTree} ytree
+   * @param {string} parentId
    */
   createEmptyNote(ytree, parentId) {
     const uuid = generateUUID();
     const noteMap = new Y.Map();
     noteMap.set("type", "note");
     noteMap.set("item_id", uuid);
-    noteMap.set("item_properties", { "item_title": `Untitled Note #${ytree.getNodeChildrenFromKey(parentId)?.length}`, "item_description": null, })
+    noteMap.set("item_properties", {
+      item_title: `Untitled Note #${ytree.getNodeChildrenFromKey(parentId)?.length}`,
+      item_description: null,
+    });
     ytree.createNode(parentId, uuid, noteMap);
 
-    itemLocalStateManager.createItemLocalState(uuid, {
-      type: "note",
-      libraryId: ytree._ydoc.guid,
-    });
     return uuid;
   }
 
   /**
-  * @param {YTree} ytree 
-  * @param {string} itemId 
+   * @param {YTree} ytree
+   * @param {string} itemId
    */
   deleteItem(ytree, itemId) {
     ytree.deleteNodeAndDescendants(itemId);
-    itemLocalStateManager.deleteItemLocalState(itemId);
   }
 
   /**
-  * 
-  * @param {YTree} ytree 
-  * @param {string} parentId 
-  */
+   *
+   * @param {YTree} ytree
+   * @param {string} parentId
+   */
   async exportAllChildrenToDocx(ytree, parentId) {
-
     let finalHTML = "";
 
     /**
-     * @param {string} nodeId 
+     * @param {string} nodeId
      */
     const processNode = (nodeId, nodeLevel) => {
       const level = min(nodeLevel, 6);
       const nodeMap = ytree.getNodeValueFromKey(nodeId);
-      if (nodeMap.get("type") === 'paper') {
+      if (nodeMap.get("type") === "paper") {
         const html = this.getHtmlFromPaper(ytree, nodeId);
-        finalHTML += `< h${level} > ${nodeMap.get("item_title")} </h${level} > `
+        finalHTML += `< h${level} > ${nodeMap.get("item_title")} </h${level} > `;
         finalHTML += html;
+      } else if (nodeMap.get("type") === "section") {
+        finalHTML += `< h${level} > ${nodeMap.get("item_title")} </h${level} > `;
+      } else if (nodeMap.get("type") === "book") {
+        finalHTML += `< h1 > ${nodeMap.get("item_title")} </ > `;
       }
-      else if (nodeMap.get("type") === 'section') {
-        finalHTML += `< h${level} > ${nodeMap.get("item_title")} </h${level} > `
-      }
-      else if (nodeMap.get("type") === 'book') {
-        finalHTML += `< h1 > ${nodeMap.get("item_title")} </ > `
-      }
-    }
+    };
 
     const nodeDescendants = [[parentId, 1]];
     while (nodeDescendants.length > 0) {
       const nodeChild = nodeDescendants.shift();
-      if (nodeChild[0] != parentId) finalHTML += "<br>"
+      if (nodeChild[0] != parentId) finalHTML += "<br>";
       processNode(nodeChild[0], nodeChild[1]);
-      const nodeGrandChildren = ytree.sortChildrenByOrder(ytree.getNodeChildrenFromKey(nodeChild[0]), nodeChild[0])
+      const nodeGrandChildren = ytree
+        .sortChildrenByOrder(
+          ytree.getNodeChildrenFromKey(nodeChild[0]),
+          nodeChild[0],
+        )
         .map((nodeId) => [nodeId, nodeChild[1] + 1]);
       nodeDescendants.unshift(...nodeGrandChildren);
     }
@@ -315,14 +313,14 @@ class DataManagerSubdocs {
         TextAlign.configure({
           types: ["heading", "paragraph"],
         }),
-      ]
+      ],
     });
 
     // If there are images, we will need to preload the buffers
     const opts = {
       getImageBuffer(src) {
         return Buffer.from(src);
-      }
+      },
     };
 
     const nodeSerializer = {
@@ -337,10 +335,13 @@ class DataManagerSubdocs {
         // No image
         state.renderInline(node);
         state.closeBlock(node);
-      }
+      },
     };
 
-    const docxSerializer = new DocxSerializer(defaultDocxSerializer, defaultMarks);
+    const docxSerializer = new DocxSerializer(
+      defaultDocxSerializer,
+      defaultMarks,
+    );
 
     const wordDoc = docxSerializer.serialize(editor.state.doc, opts);
 
@@ -348,34 +349,31 @@ class DataManagerSubdocs {
     const path = await save({
       filters: [
         {
-          name: 'docx',
-          extensions: ['docx'],
+          name: "docx",
+          extensions: ["docx"],
         },
       ],
     });
 
     console.log(path);
 
-    const data = await Packer.toBuffer(wordDoc)
+    const data = await Packer.toBuffer(wordDoc);
 
-    await writeFile(
-      path,
-      data
-    );
+    await writeFile(path, data);
   }
 
   /**
-  * 
-  * @param {YTree} ytree 
-  * @param {string} paperId 
-  * 
-  * @returns {string}
-  */
+   *
+   * @param {YTree} ytree
+   * @param {string} paperId
+   *
+   * @returns {string}
+   */
   getHtmlFromPaper(ytree, paperId) {
     const paperMap = ytree.getNodeValueFromKey(paperId);
 
     const editor = new Editor({
-      content: '<p>Getting HTML from paper</p>',
+      content: "<p>Getting HTML from paper</p>",
       extensions: [
         Collaboration.configure({
           fragment: paperMap.get("paper_xml"),
@@ -405,25 +403,25 @@ class DataManagerSubdocs {
         TextAlign.configure({
           types: ["heading", "paragraph"],
         }),
-      ]
+      ],
     });
 
     return editor.getHTML();
   }
 
   /**
-  * 
-  * @param {YTree} ytree 
-  * @param {string} paperId 
-  * @param {string} html 
-  * 
-  * @returns {string}
-  */
+   *
+   * @param {YTree} ytree
+   * @param {string} paperId
+   * @param {string} html
+   *
+   * @returns {string}
+   */
   setHtmlToPaper(ytree, paperId, html) {
     const paperMap = ytree.getNodeValueFromKey(paperId);
 
     const editor = new Editor({
-      content: '<p>Getting HTML from paper</p>',
+      content: "<p>Getting HTML from paper</p>",
       extensions: [
         Collaboration.configure({
           fragment: paperMap.get("paper_xml"),
@@ -453,7 +451,7 @@ class DataManagerSubdocs {
         TextAlign.configure({
           types: ["heading", "paragraph"],
         }),
-      ]
+      ],
     });
 
     editor.commands.setContent(html);
@@ -465,8 +463,6 @@ class DataManagerSubdocs {
 const dataManagerSubdocs = Object.freeze(new DataManagerSubdocs());
 
 export default dataManagerSubdocs;
-
-
 
 /**
  * Convert a Y.Doc Map to an array of [id, order_index] pairs

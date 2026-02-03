@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { mainPanelStore } from "../stores/mainPanelStore";
 import useStoreHistory from "./useStoreHistory";
-
 import { appStore } from "../stores/appStore";
 import { getOrInitLibraryYTree } from "../lib/ytree";
+import localStateManager from "../lib/localState";
 
 const useMainPanel = () => {
   /**
@@ -49,6 +49,8 @@ const useMainPanel = () => {
         const isAtRoot = breadcrumbs.length === 1;
         const rootId = breadcrumbs[0];
         const youngestId = breadcrumbs[breadcrumbs.length - 1];
+
+        localStateManager.updateLastOpened(rootId, youngestId);
 
         setFocusedItem({
           type: "libraries",

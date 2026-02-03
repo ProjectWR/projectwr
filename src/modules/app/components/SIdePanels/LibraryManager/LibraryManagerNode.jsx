@@ -27,7 +27,6 @@ import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
 import useComputedCssVar from "../../../hooks/useComputedCssVar";
 import { createDebouncer } from "lib0/eventloop";
 import { ContextMenu } from "radix-ui";
-import itemLocalStateManager from "../../../lib/itemLocalState";
 import useStoreHistory from "../../../hooks/useStoreHistory";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
@@ -200,12 +199,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
           ) {
             setLibraryId(libraryId);
             setItemId("unselected");
-
-            await itemLocalStateManager.setItemOpened(
-              libraryId,
-              libraryId,
-              true,
-            );
 
             setPanelOpened(true);
             activatePanel("libraries", "details", [libraryId]);
@@ -384,12 +377,6 @@ const LibraryManagerNode = ({ libraryId, className }) => {
                   ) {
                     setLibraryId(libraryId);
                     setItemId("unselected");
-
-                    await itemLocalStateManager.setItemOpened(
-                      libraryId,
-                      libraryId,
-                      true,
-                    );
 
                     setPanelOpened(true);
 
