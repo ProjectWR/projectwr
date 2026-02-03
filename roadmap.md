@@ -3,6 +3,8 @@
 ## Planned for Upcoming Releases
 - Finalize Windows Version
 - Bring Sylvanite to Android.
+- Allow Editor to be Paged View
+    - Add toggle in template editor, and also a toggle in paper settings.
 - Enhanced Publishing & Export: More export formats (EPUB, PDF), advanced formatting controls, and one-click publishing drafts.
 - Advanced Planning tools:
     - Timeline Editor
