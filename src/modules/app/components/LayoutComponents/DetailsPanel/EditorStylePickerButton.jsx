@@ -11,7 +11,7 @@ import {
   HoverListShell,
 } from "../HoverListShell";
 import { motion } from "motion/react";
-import { useKeyLocalState } from "../../hooks/useLocalState";
+import { useKeyLocalState } from "../../../hooks/useLocalState";
 import localStateManager from "../../../lib/localState";
 
 /**

@@ -1,5 +1,5 @@
-import { split } from "postcss/lib/list";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 /**
  * Store for managing the main panel's state in the application.
@@ -23,38 +23,45 @@ import { create } from "zustand";
  *   breadcrumbs: ["home", "settings"]
  * });
  */
-export const mainPanelStore = create((set) => ({
-  mainPanelState: { panelType: "home", mode: null, breadcrumbs: [] },
-  setMainPanelState: (mainPanelState) => {
-    return set({ mainPanelState: mainPanelState });
-  },
+export const mainPanelStore = create(
+  persist(
+    (set) => ({
+      mainPanelState: { panelType: "home", mode: null, breadcrumbs: [] },
+      setMainPanelState: (mainPanelState) => {
+        return set({ mainPanelState: mainPanelState });
+      },
 
-  /**
-   * Sets the list of tabs in the main panel store.
-   * @param {tabs} tabs - The list of tabs to set.
-   * @example
-   * mainPanelStore.setTabs([
-   *     { panelType: "home", mode: null, breadcrumbs: [] },
-   *     { panelType: "settings", mode: "edit", breadcrumbs: ["home", "settings"] }
-   * ])
-   */
-  tabs: [],
-  setTabs: (tabs) => {
-    return set({ tabs: tabs });
-  },
+      /**
+       * Sets the list of tabs in the main panel store.
+       * @param {tabs} tabs - The list of tabs to set.
+       * @example
+       * mainPanelStore.setTabs([
+       *     { panelType: "home", mode: null, breadcrumbs: [] },
+       *     { panelType: "settings", mode: "edit", breadcrumbs: ["home", "settings"] }
+       * ])
+       */
+      tabs: [],
+      setTabs: (tabs) => {
+        return set({ tabs: tabs });
+      },
 
-  splitMode: 'none',
-  setSplitMode: (splitMode) => {
-    return set({ splitMode: splitMode });
-  },
+      splitMode: "none",
+      setSplitMode: (splitMode) => {
+        return set({ splitMode: splitMode });
+      },
 
-  splitPanelState: null,
-  setSplitPanelState: (splitPanelState) => {
-    return set({ splitPanelState: splitPanelState });
-  },
+      splitPanelState: null,
+      setSplitPanelState: (splitPanelState) => {
+        return set({ splitPanelState: splitPanelState });
+      },
 
-  splitRatio: 0.5,
-  setSplitRatio: (splitRatio) => {
-    return set({ splitRatio: splitRatio });
-  },
-}));
+      splitRatio: 0.5,
+      setSplitRatio: (splitRatio) => {
+        return set({ splitRatio: splitRatio });
+      },
+    }),
+    {
+      name: "main-panel-store",
+    },
+  ),
+);

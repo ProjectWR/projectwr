@@ -151,6 +151,16 @@ class LocalStateManager {
   async updateEditorStyle(libraryId, itemId, editorStyle) {
     await this.set(libraryId, itemId, { editorStyle });
   }
+
+  /**
+   * Convenience method to update the paper Scroll Position
+   * @param {string} libraryId
+   * @param {string} itemId
+   * @param {string} editorStyle
+   */
+  async updatePaperScrollPosition(libraryId, itemId, scrollPos) {
+    await this.set(libraryId, itemId, { scrollPos });
+  }
 }
 
 const localStateManager = new LocalStateManager();
