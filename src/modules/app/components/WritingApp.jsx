@@ -415,7 +415,7 @@ const WritingApp = () => {
         // await wait(1000);
         setLoadingStage("Finished Loading");
 
-        return () => {};
+        return () => { };
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -453,11 +453,15 @@ const WritingApp = () => {
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
   useEffect(() => {
-    const unlisten = getCurrentWindow().listen("tauri://resize", async () => {
-      const x = await getCurrentWindow().isMaximized();
 
+    const checkMaximized = async () => {
+      const x = await getCurrentWindow().isMaximized();
       setIsMaximized(x);
-    });
+    }
+
+    checkMaximized();
+    const unlisten = getCurrentWindow().listen("tauri://resize", checkMaximized);
+
 
     const checkScreenSize = () => {
       if (window.innerWidth >= 1280) {
@@ -473,7 +477,7 @@ const WritingApp = () => {
     return async () => {
       (await unlisten)();
     };
-  }, [setIsMd]);
+  }, [setIsMd, setIsMaximized]);
 
   useEffect(() => {
     const callback = async () => {
@@ -512,8 +516,8 @@ const WritingApp = () => {
               >
                 <span
                   className="w-full h-full"
-                  // animate={{ rotate: 360 }}
-                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                // animate={{ rotate: 360 }}
+                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
