@@ -126,6 +126,7 @@
     "tailwind-scrollbar-utilities": "^0.2.0",
     "tailwindcss": "^4.1.5",
     "tailwindcss-animate": "^1.0.7",
+    "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1",
     "tippy.js": "^6.3.7",
     "tiptap": "^1.32.2",
     "tiptap-pagination-plus": "^2.0.5",

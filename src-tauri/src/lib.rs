@@ -80,6 +80,7 @@ pub fn run() {
 
     builder
         .plugin(tauri_plugin_deep_link::init())
+        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -115,7 +116,7 @@ pub fn run() {
                         .build(),
                 )?;
             }
-            
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

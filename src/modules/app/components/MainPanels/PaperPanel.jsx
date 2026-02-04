@@ -57,6 +57,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     libraryId,
     paperId,
   );
+  
   const [templateContent, setTemplateContent] = useState(null);
 
   useEffect(() => {
