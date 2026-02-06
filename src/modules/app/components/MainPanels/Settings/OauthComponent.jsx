@@ -70,7 +70,7 @@ export const OauthComponent = ({}) => {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `100%` }}
                 exit={{ opacity: 0, width: 0 }}
-                className="h-full flex flex-col justify-end items-start"
+                className="h-full flex gap-2 justify-start items-center"
               >
                 <button
                   onClick={() => {
@@ -83,19 +83,9 @@ export const OauthComponent = ({}) => {
                   <span className="icon-[logos--google-drive]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
                   Sync via Google Drive
                 </button>
-                {/* <GrainyElementButton
-                  gradientSize={100}
-                  gradientSizeY={10}
-                  onClick={() => {
-                    handleLogout();
-                  }}
-                  className={`h-full w-full p-2 text-appLayoutText border border-appLayoutBorder rounded-lg overflow-hidden flex items-center`}
-                >
-                  <span className="h-fit grow min-w-0">
-                    {" "}
-                    Log out of Google Drive
-                  </span>
-                </GrainyElementButton> */}
+                <span className="p-2 flex w-fit items-center gap-2 text-appLayoutTextMuted border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 transition-colors duration-200">
+                  More Integrations coming soon...
+                </span>
               </motion.div>
             )}
             {loggedIn && (
