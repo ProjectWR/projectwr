@@ -15,44 +15,22 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 
 function App() {
   const accessTokenState = oauthStore((state) => state.accessTokenState);
-
-  // // check the offline data for access token
-  // useEffect(() => {
-  //   handleInitialLogin().catch((err) => {
-  //     console.log(err);
-  //   });
-  // }, []);
-
-  // // to generate a port and listen to it
-  // useEffect(() => {
-  //   listen_for_auth_code({
-  //     onSucess: (code) => {
-  //       console.log(code, "code generated");
-  //       if (code) {
-  //         saveAuthCode(code).then(() => {
-  //           console.log("code saved");
-  //         });
-  //         getAccessToken(code).then((accessTokenBody) => {
-  //           handleLoadFrom(accessTokenBody);
-  //         });
-  //       }
-  //     },
-  //     onError: (err) => {
-  //       console.log(err);
-
-  //     },
-  //   });
-  // }, []);
+  const setAccessTokenState = oauthStore((state) => state.setAccessTokenState);
+  const setProfile = oauthStore((state) => state.setProfile);
 
   useEffect(() => {
     if (!accessTokenState && driveOrchestrator.getManager("googleDrive")) {
       driveOrchestrator.stopSync("googleDrive");
     }
-  }, [accessTokenState])
+  }, [accessTokenState]);
 
   useEffect(() => {
-    
-  }, [])
+    return () => {
+      driveOrchestrator.stopSync("googleDrive");
+      setAccessTokenState(null);
+      setProfile(null);
+    };
+  }, [setAccessTokenState, setProfile]);
 
   return (
     <DeviceTypeProvider>

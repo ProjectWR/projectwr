@@ -71,10 +71,8 @@ class TemplateManager {
     try {
       const entries = await readDir(this.templatesDirPath);
 
-      console.log("ENTRIES: ", entries);
-
       for (const entry of entries) {
-        console.log("ENTRY: ", entry);
+        // console.log("ENTRY loaded: ", entry);
         if (entry?.isDirectory) { // Check if it's a directory
           try {
             const stylePath = await join(this.templatesDirPath, entry.name, 'style.json');

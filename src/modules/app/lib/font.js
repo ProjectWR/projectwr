@@ -32,7 +32,7 @@ class FontManager {
   }
 
   async loadFontsOnInit() {
-    console.log("loading fonts on init");
+    
     try {
       const files = await readDir(this.fontsDir);
 
@@ -47,7 +47,7 @@ class FontManager {
         if (!['ttf', 'otf', 'woff', 'woff2'].includes(format)) continue;
 
         const family = parts.shift();
-        console.log("family: ", family);
+        // console.log("family loaded: ", family);
         const fontPath = await join(this.fontsDir, fileName);
         const fontBuffer = await readFile(fontPath);
 
@@ -121,11 +121,11 @@ class FontManager {
 
   async addFontsFromPath(path, source) {
 
-    console.log("adding fonts from path: ", path);
+    // console.log("adding fonts from path: ", path);
 
     const files = await readDir(path);
 
-    console.log("files: ", files);
+    // console.log("files: ", files);
 
     for (const file of files) {
       if (!file.isFile) continue;

@@ -49,7 +49,7 @@ class PersistenceManagerForSubdocs {
     );
 
 
-    console.log("Started wait for sync to finish!");
+    // console.log("Started wait for local sync to finish!");
 
     await new Promise((resolve) => {
       this.indexeddbProviderMap.get(ydoc.guid).whenSynced.then(() => {
@@ -57,9 +57,7 @@ class PersistenceManagerForSubdocs {
       });
     });
 
-    console.log("finished wait for sync to finish!");
-
-    console.log("after sync finished: ", ydoc.toJSON());
+    // console.log("after sync local finished: ", ydoc.toJSON());
 
     return true;
   }

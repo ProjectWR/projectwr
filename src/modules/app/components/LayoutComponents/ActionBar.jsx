@@ -427,6 +427,8 @@ export const ActionBarRightSide = ({}) => {
   const driveSyncLoading = appStore((state) => state.driveSyncLoading);
   const userProfile = oauthStore((state) => state.userProfile);
 
+  console.log("userProfile: ", userProfile);
+
   const { deviceType } = useDeviceType();
   const appWindow = getCurrentWindow();
 

@@ -86,6 +86,7 @@ const WritingApp = () => {
   const [isMaximized, setIsMaximized] = useState(false);
   const panelOpened = appStore((state) => state.panelOpened);
 
+
   const appThemeId = appStore((state) => state.appThemeId);
   const appThemesList = useAppThemesList();
   const { theme: activeSystemTheme } = useTheme();
@@ -254,7 +255,7 @@ const WritingApp = () => {
           await dataManagerSubdocs.initLibrary(libraryId);
           const ydoc = dataManagerSubdocs.getLibrary(libraryId);
 
-          console.log(ydoc.guid, ydoc);
+          //  console.log("Initiated in data layer: ", ydoc.guid, ydoc);
         }
 
         console.log("Local Libraries: ", localLibraries);
@@ -267,22 +268,22 @@ const WritingApp = () => {
               const googleDriveManager =
                 driveOrchestrator.getManager("googleDrive");
 
-              dataManagerSubdocs.addLibraryYDocMapCallback(
-                async (action, key, value) => {
-                  if (action === "set") {
-                    await googleDriveManager.addDocument(
-                      key,
-                      dataManagerSubdocs.getLibrary(key),
-                      dataManagerSubdocs.getLibrary(key)?.clientID,
-                      key,
-                    );
-
-                    driveOrchestrator.startSync("googleDrive", key, 20000);
-                  }
-                },
-              );
-
               if (await googleDriveManager.initDriveSync()) {
+                dataManagerSubdocs.addLibraryYDocMapCallback(
+                  async (action, key, value) => {
+                    if (action === "set") {
+                      await googleDriveManager.addDocument(
+                        key,
+                        dataManagerSubdocs.getLibrary(key),
+                        dataManagerSubdocs.getLibrary(key)?.clientID,
+                        key,
+                      );
+
+                      driveOrchestrator.startSync("googleDrive", key, 20000);
+                    }
+                  },
+                );
+
                 console.log("INITIATED GOOGLE DRIVE SYNC!");
 
                 // start sync for all local ydocs
@@ -415,7 +416,7 @@ const WritingApp = () => {
         // await wait(1000);
         setLoadingStage("Finished Loading");
 
-        return () => { };
+        return () => {};
       } catch (error) {
         console.error("Failed to initialize app:", error);
         // setLoading(false); // Ensure loading is false even if there's an error
@@ -428,6 +429,8 @@ const WritingApp = () => {
       initializeWritingApp();
       setWasLocalSetup(true);
     }
+
+    return () => {};
   }, [
     setDefaultSettings,
     setSettings,
@@ -453,15 +456,16 @@ const WritingApp = () => {
   }, [panelOpened, sidePanelAnimate, sidePanelScope, loading]);
 
   useEffect(() => {
-
     const checkMaximized = async () => {
       const x = await getCurrentWindow().isMaximized();
       setIsMaximized(x);
-    }
+    };
 
     checkMaximized();
-    const unlisten = getCurrentWindow().listen("tauri://resize", checkMaximized);
-
+    const unlisten = getCurrentWindow().listen(
+      "tauri://resize",
+      checkMaximized,
+    );
 
     const checkScreenSize = () => {
       if (window.innerWidth >= 1280) {
@@ -500,7 +504,7 @@ const WritingApp = () => {
         <motion.div
           id="Layout"
           className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent overflow-hidden font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
-            ${!isMaximized ? "border border-r-2 border-appLayoutGradientHover border-b-2 rounded-xl" : "rounded-none"}
+            ${!isMaximized ? "border border-r-2 border-appLayoutInverseHover border-b-2 rounded-2xl" : "rounded-none"}
             `}
         >
           {loading && (
@@ -516,8 +520,8 @@ const WritingApp = () => {
               >
                 <span
                   className="w-full h-full"
-                // animate={{ rotate: 360 }}
-                // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                  // animate={{ rotate: 360 }}
+                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

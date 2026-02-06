@@ -37,10 +37,19 @@ export const ListShell = ({ children, className }) => {
 
 export const HoverListHeader = ({ children, className }) => {
   return (
-    <div
-      data-disabled={true}
-      className="contextMenuItem text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted"
-    >
+    <div className="contextMenuItem text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+      {children}
+    </div>
+  );
+};
+
+export const HoverListInteractiveHeader = ({
+  children,
+  className,
+  disabled = false,
+}) => {
+  return (
+    <div className="contextMenuItem text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:bg-transparent! py-1">
       {children}
     </div>
   );

@@ -1,6 +1,12 @@
 import axios from "axios";
-import { readTextFile, remove, writeTextFile } from '@tauri-apps/plugin-fs';
-import { delete_access_token, get_access_token, get_auth_code, save_access_token, save_auth_code } from "./invoker";
+import { readTextFile, remove, writeTextFile } from "@tauri-apps/plugin-fs";
+import {
+  delete_access_token,
+  get_access_token,
+  get_auth_code,
+  save_access_token,
+  save_auth_code,
+} from "./invoker";
 import settings from "../../../../config/settings";
 import { CLIENT_ID, CLIENT_SECRET } from "../../../../config/credentials";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -8,14 +14,14 @@ import { AuthStore } from "./DBStores";
 import { wait } from "lib0/promise";
 import { oauthStore } from "../../stores/oauthStore";
 
-
 const DEFAULT_DIRECTORY = settings.fs.DEFAULT_DIRECTORY;
 const GOOGLE_OAUTH_ENDPOINT = settings.auth.GOOGLE_OAUTH_ENDPOINT;
 const SCOPE = settings.auth.SCOPE;
 const STORAGE_PATHS = settings.storage.paths;
 
 // Deep link redirect URI - your redirect server will redirect to this
-const REDIRECT_URI = "https://calamus-website-git-main-yeshan-kaushiks-projects.vercel.app/api/oauth/callback";
+const REDIRECT_URI =
+  "https://calamus-website-git-main-yeshan-kaushiks-projects.vercel.app/api/oauth/callback";
 
 export async function getAccessToken(code) {
   try {
@@ -27,15 +33,16 @@ export async function getAccessToken(code) {
       grant_type: "authorization_code",
     };
     console.log(data, "data");
-    const response = await axios.post("https://oauth2.googleapis.com/token", data);
+    const response = await axios.post(
+      "https://oauth2.googleapis.com/token",
+      data,
+    );
     console.log(response, "response from getAccessToken");
     return response.data;
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error, "error from getAccessToken");
     throw new Error("Error getting access token");
   }
-
 }
 
 export async function refreshAccessToken(refreshToken) {
@@ -46,8 +53,11 @@ export async function refreshAccessToken(refreshToken) {
       client_secret: CLIENT_SECRET,
       grant_type: "refresh_token",
     };
-    console.log('attempting to refresh access token', data);
-    const response = await axios.post("https://oauth2.googleapis.com/token", data);
+    console.log("attempting to refresh access token", data);
+    const response = await axios.post(
+      "https://oauth2.googleapis.com/token",
+      data,
+    );
     console.log("RESPONSE: ", response);
     return { ...response.data, refresh_token: refreshToken };
   } catch (error) {
@@ -72,7 +82,10 @@ export async function revokeAccessToken(accessToken) {
     const data = {
       token: accessToken,
     };
-    const response = await axios.post("https://oauth2.googleapis.com/revoke", data);
+    const response = await axios.post(
+      "https://oauth2.googleapis.com/revoke",
+      data,
+    );
     return response.data;
   } catch (error) {
     console.error("Error revoking access token:", error);
@@ -80,15 +93,17 @@ export async function revokeAccessToken(accessToken) {
   }
 }
 
-
 export async function fetchUserProfile(accessToken) {
   try {
     // Fetch user profile information using the access token
-    const response = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    });
+    );
     console.log(response.data, "response from fetchUserProfile");
     return response.data;
   } catch (error) {
@@ -96,8 +111,6 @@ export async function fetchUserProfile(accessToken) {
     throw new Error("Error fetching user profile");
   }
 }
-
-
 
 // to handle login to get auth
 export async function openAuthWindow() {
@@ -145,8 +158,6 @@ export async function saveAccessToken(accessToken) {
   }
 }
 
-
-
 export async function getAccessTokenFromStorage() {
   try {
     let accessToken = await get_access_token();
@@ -157,12 +168,16 @@ export async function getAccessTokenFromStorage() {
       throw new Error("No access token found");
     }
 
-    console.log('new access token found')
+    console.log("new access token found");
     // check if the access token is expired
     console.log("accessToken", accessToken);
     const lastLogin = parseInt(localStorage.getItem("lastLogin") || "0");
-    console.log("(accessToken.expires_in < Date.now() || Date.now() - lastLogin > 3620)", accessToken.expires_in, Date.now() - lastLogin);
-    if ((accessToken.expires_in < Date.now() - lastLogin) && navigator.onLine) {
+    console.log(
+      "(accessToken.expires_in < Date.now() || Date.now() - lastLogin > 3620)",
+      accessToken.expires_in,
+      Date.now() - lastLogin,
+    );
+    if (accessToken.expires_in < Date.now() - lastLogin && navigator.onLine) {
       accessToken = await refreshAndSaveAccessToken(accessToken.refresh_token);
     }
     return accessToken;
@@ -171,7 +186,6 @@ export async function getAccessTokenFromStorage() {
     return null;
   }
 }
-
 
 export async function deleteAccessToken() {
   try {
@@ -182,10 +196,13 @@ export async function deleteAccessToken() {
   }
 }
 
-
 export async function saveUserProfile(userProfile) {
   try {
-    return await writeTextFile(STORAGE_PATHS.user_profile, JSON.stringify(userProfile), { baseDir: DEFAULT_DIRECTORY });
+    return await writeTextFile(
+      STORAGE_PATHS.user_profile,
+      JSON.stringify(userProfile),
+      { baseDir: DEFAULT_DIRECTORY },
+    );
   } catch (error) {
     console.error("Error saving user profile:", error);
     throw new Error("Error saving user profile");
@@ -194,14 +211,15 @@ export async function saveUserProfile(userProfile) {
 
 export async function getUserProfileFromStorage() {
   try {
-    const userProfile = await readTextFile(STORAGE_PATHS.user_profile, { baseDir: DEFAULT_DIRECTORY });
+    const userProfile = await readTextFile(STORAGE_PATHS.user_profile, {
+      baseDir: DEFAULT_DIRECTORY,
+    });
     return JSON.parse(userProfile);
   } catch (error) {
     console.error("Error getting user profile:", error);
     return null;
   }
 }
-
 
 export async function handleLogin() {
   try {
@@ -216,34 +234,32 @@ export async function handleLogin() {
     console.log(await getAccessTokenFromStorage());
   } catch (error) {
     console.log(error);
-
   }
 }
 
-
 export async function handleLoadFrom(accessTokenBody) {
   try {
-    await saveAccessToken(JSON.stringify(accessTokenBody, null, 2))
+    await saveAccessToken(JSON.stringify(accessTokenBody, null, 2));
     //   setAccessToken(accessTokenBody.access_token);
     oauthStore.setState({ accessTokenState: accessTokenBody.access_token });
     const userProfile = await fetchUserProfile(accessTokenBody.access_token);
-    await saveUserProfile(userProfile)
+    await saveUserProfile(userProfile);
 
     oauthStore.setState({ userProfile: userProfile });
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     await handleLogout();
   }
 }
 
 export async function handleLogout() {
-  oauthStore.setState({ accessTokenState: null });
-  oauthStore.setState({ userProfileState: null });
+  oauthStore.getState().setAccessTokenState(null);
+  oauthStore.getState().setProfile(null);
+
+  console.log("handleLogout", oauthStore.getState());
 
   await deleteAccessToken();
 }
-
 
 export async function handleInitialLogin() {
   // get access token from storage
@@ -251,13 +267,10 @@ export async function handleInitialLogin() {
   if (!accessToken) throw new Error("Signin required");
 
   const profile = await fetchUserProfile(accessToken.access_token);
-  if (!profile || !profile?.email) throw new Error("Something went wrong, please try again");
+  if (!profile || !profile?.email)
+    throw new Error("Something went wrong, please try again");
   oauthStore.setState({ userProfile: profile });
   // setProfile(profile);
   // setAccessToken(accessToken.access_token);
   oauthStore.setState({ accessTokenState: accessToken.access_token });
 }
-
-
-
-

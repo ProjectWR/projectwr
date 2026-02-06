@@ -42,6 +42,7 @@ import {
   HoverListButton,
   HoverListDivider,
   HoverListHeader,
+  HoverListInteractiveHeader,
   HoverListItem,
   HoverListShell,
   ListShell,
@@ -151,13 +152,13 @@ const SettingsPanel = () => {
   const setUser = appStore((state) => state.setUser);
 
   const fonts = useFonts();
-  console.log("fonts: ", fonts);
+  // console.log("fonts: ", fonts);
 
   const images = useImages();
-  console.log("images: ", images);
+  // console.log("images: ", images);
 
   const videos = useVideos();
-  console.log("videos: ", videos);
+  // console.log("videos: ", videos);
 
   const [templates, setTemplates] = useState({});
 
@@ -636,7 +637,7 @@ const SettingsPanel = () => {
             <ListShell
               className={`h-full grow basis-0 min-w-0 bg-appBackgroundAccent`}
             >
-              <HoverListHeader className={"gap-4"}>
+              <HoverListInteractiveHeader className={"gap-4 py-1"}>
                 <DropdownMenu.Root
                   open={mediaDropdownOpened}
                   onOpenChange={setMediaDropdownOpened}
@@ -752,7 +753,7 @@ const SettingsPanel = () => {
                 >
                   <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
                 </button>
-              </HoverListHeader>
+              </HoverListInteractiveHeader>
               <HoverListDivider />
               <HoverListBody>
                 {fontImageToggle === "font" &&

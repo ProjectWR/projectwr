@@ -443,7 +443,7 @@ const SearchResults = ({
 
   return (
     <HoverListShell className={"min-w-0"} condition={visible}>
-      <HoverListHeader>
+      <HoverListHeader disabled={true}>
         <span>
           {" "}
           {searchResults.length}{" "}
