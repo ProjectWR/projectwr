@@ -503,7 +503,7 @@ const WritingApp = () => {
       <AnimatePresence mode="wait">
         <motion.div
           id="Layout"
-          className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent overflow-hidden font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
+          className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent overflow-hidden font-[NotoSans] w400  border-appLayoutBorder text-appLayoutText
             ${!isMaximized ? "border border-r-2 border-appLayoutInverseHover border-b-2 rounded-2xl" : "rounded-none"}
             `}
         >
