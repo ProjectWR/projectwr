@@ -66,7 +66,7 @@ import appThemeManager from "../../lib/appTheme";
 import { appThemeDefaultPreferences } from "../../lib/appThemeDefaultPreferences";
 import useApplyTheme from "../../hooks/useApplyTheme";
 import { StyledTooltip } from "../LayoutComponents/StyledTooltip";
-import { openPath, openUrl } from '@tauri-apps/plugin-opener';
+import { openPath, openUrl } from "@tauri-apps/plugin-opener";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -110,17 +110,30 @@ const SettingsPanel = () => {
       if (fontImageToggle === "font") dirPath = fontManager.fontsDir;
       else if (fontImageToggle === "image") dirPath = imageManager.imagesDir;
       else if (fontImageToggle === "videos") dirPath = videoManager.videosDir;
-      else if (fontImageToggle === "templates") dirPath = templateManager.templatesDirPath;
-      else if (fontImageToggle === "appThemes") dirPath = appThemeManager.themesDirPath;
+      else if (fontImageToggle === "templates")
+        dirPath = templateManager.templatesDirPath;
+      else if (fontImageToggle === "appThemes")
+        dirPath = appThemeManager.themesDirPath;
 
       // If dirPath is not yet initialized, attempt to initialize the corresponding manager
       if (!dirPath) {
         try {
-          if (fontImageToggle === "font") { await fontManager.init(); dirPath = fontManager.fontsDir; }
-          else if (fontImageToggle === "image") { await imageManager.init(); dirPath = imageManager.imagesDir; }
-          else if (fontImageToggle === "videos") { await videoManager.init(); dirPath = videoManager.videosDir; }
-          else if (fontImageToggle === "templates") { await templateManager.initialize(); dirPath = templateManager.templatesDirPath; }
-          else if (fontImageToggle === "appThemes") { await appThemeManager.initialize(); dirPath = appThemeManager.themesDirPath; }
+          if (fontImageToggle === "font") {
+            await fontManager.init();
+            dirPath = fontManager.fontsDir;
+          } else if (fontImageToggle === "image") {
+            await imageManager.init();
+            dirPath = imageManager.imagesDir;
+          } else if (fontImageToggle === "videos") {
+            await videoManager.init();
+            dirPath = videoManager.videosDir;
+          } else if (fontImageToggle === "templates") {
+            await templateManager.initialize();
+            dirPath = templateManager.templatesDirPath;
+          } else if (fontImageToggle === "appThemes") {
+            await appThemeManager.initialize();
+            dirPath = appThemeManager.themesDirPath;
+          }
         } catch (e) {
           console.error("Error initializing manager for opening folder", e);
         }
@@ -146,7 +159,19 @@ const SettingsPanel = () => {
     appThemes: "Open App Themes folder",
   };
 
-  const getMediaFolderLabel = (type) => mediaFolderLabels[type] || "Open media folder"; 
+  const mediaFolderAddLabels = {
+    font: "Add Font",
+    image: "Add Image",
+    videos: "Add Video",
+    templates: "Add Editor Style",
+    appThemes: "Add App Theme",
+  };
+
+  const getMediaFolderLabel = (type) =>
+    mediaFolderLabels[type] || "Open media folder";
+
+  const getMediaFolderAddLabel = (type) =>
+    mediaFolderAddLabels[type] || "Add media";
 
   const user = appStore((state) => state.user);
   const setUser = appStore((state) => state.setUser);
@@ -637,13 +662,28 @@ const SettingsPanel = () => {
             <ListShell
               className={`h-full grow basis-0 min-w-0 bg-appBackgroundAccent`}
             >
-              <HoverListInteractiveHeader className={"gap-4 py-1"}>
+              <HoverListInteractiveHeader
+                className={"gap-4 py-1 flex justify-start"}
+              >
+                <p className="text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize">
+                  Manage Assets
+                </p>
+
+                <span className="grow"></span>
+
                 <DropdownMenu.Root
                   open={mediaDropdownOpened}
+                  modal={true}
                   onOpenChange={setMediaDropdownOpened}
                 >
-                  <DropdownMenu.Trigger className="outline-none focus:outline-none">
-                    <div className="flex items-center gap-1 group">
+                  <DropdownMenu.Trigger className="outline-none focus:outline-none w-fit">
+                    <div className="w-fit flex items-center gap-0 group">
+                      <motion.span
+                        animate={{
+                          rotate: !mediaDropdownOpened ? 180 : 270,
+                        }}
+                        className="icon-[formkit--left] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted group-hover:text-appLayoutText transition-colors duration-100"
+                      ></motion.span>
                       <p className="text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize hover:text-appLayoutHighlight transition-colors duration-100 cursor-pointer flex items-center gap-1">
                         {fontImageToggle === "font"
                           ? "Fonts"
@@ -654,20 +694,15 @@ const SettingsPanel = () => {
                               : fontImageToggle === "templates"
                                 ? "Editor Styles"
                                 : "App Themes"}
-                        <motion.span
-                          animate={{
-                            rotate: !mediaDropdownOpened ? 0 : -90,
-                          }}
-                          className="icon-[formkit--left] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted group-hover:text-appLayoutText transition-colors duration-100"
-                        ></motion.span>
                       </p>
                     </div>
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Content
                     style={{ opacity: 1 }}
                     className="contextMenuContent z-1100 max-h-80 overflow-y-auto"
-                    sideOffset={5}
-                    align="start"
+                    sideOffset={4}
+                    alignOffset={5}
+                    align="center"
                   >
                     <DropdownMenu.Item
                       className="contextMenuItem"
@@ -717,42 +752,50 @@ const SettingsPanel = () => {
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
 
-                <span className="grow"></span>
-                <StyledTooltip label={getMediaFolderLabel(fontImageToggle)} position="bottom">
+                <StyledTooltip
+                  label={getMediaFolderLabel(fontImageToggle)}
+                  position="bottom"
+                >
                   <button
                     onClick={openMediaFolder}
                     aria-label="Open media folder"
-                    className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
+                    className="h-fontAddButtonSize w-fontAddButtonSize p-px min-w-0 hover:bg-appLayoutInverseHover rounded-md text-appLayoutText"
                   >
                     <span className="icon-[material-symbols-light--folder-open] w-full h-full"></span>
                   </button>
                 </StyledTooltip>
-                <button
-                  onClick={async () => {
-                    if (fontImageToggle === "font") {
-                      await fontManager.addFont();
-                    }
 
-                    if (fontImageToggle === "image") {
-                      await imageManager.addImage();
-                    }
-
-                    if (fontImageToggle === "videos") {
-                      await videoManager.addVideo();
-                    }
-
-                    if (fontImageToggle === "templates") {
-                      await handleCreateTemplate();
-                    }
-
-                    if (fontImageToggle === "appThemes") {
-                      await handleCreateAppTheme();
-                    }
-                  }}
-                  className="h-fontAddButtonSize w-fontAddButtonSize min-w-0 hover:bg-appLayoutInverseHover rounded-full text-appLayoutText"
+                <StyledTooltip
+                  label={getMediaFolderAddLabel(fontImageToggle)}
+                  position="bottom"
                 >
-                  <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
-                </button>
+                  <button
+                    onClick={async () => {
+                      if (fontImageToggle === "font") {
+                        await fontManager.addFont();
+                      }
+
+                      if (fontImageToggle === "image") {
+                        await imageManager.addImage();
+                      }
+
+                      if (fontImageToggle === "videos") {
+                        await videoManager.addVideo();
+                      }
+
+                      if (fontImageToggle === "templates") {
+                        await handleCreateTemplate();
+                      }
+
+                      if (fontImageToggle === "appThemes") {
+                        await handleCreateAppTheme();
+                      }
+                    }}
+                    className="h-fontAddButtonSize w-fontAddButtonSize p-px min-w-0 hover:bg-appLayoutInverseHover rounded-md text-appLayoutText"
+                  >
+                    <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
+                  </button>
+                </StyledTooltip>
               </HoverListInteractiveHeader>
               <HoverListDivider />
               <HoverListBody>

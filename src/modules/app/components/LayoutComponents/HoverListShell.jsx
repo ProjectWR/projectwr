@@ -37,7 +37,7 @@ export const ListShell = ({ children, className }) => {
 
 export const HoverListHeader = ({ children, className }) => {
   return (
-    <div className="contextMenuItem text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+    <div className="contextMenuItem text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:bg-transparent!">
       {children}
     </div>
   );
