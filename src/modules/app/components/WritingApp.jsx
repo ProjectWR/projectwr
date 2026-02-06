@@ -500,7 +500,7 @@ const WritingApp = () => {
         <motion.div
           id="Layout"
           className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent overflow-hidden font-[NotoSans] w400  border-appLayoutBorder overflow-hidden text-appLayoutText
-            ${!isMaximized ? "border border-r-2 border-appLayoutBorder rounded-xl" : "rounded-none"}
+            ${!isMaximized ? "border border-r-2 border-appLayoutGradientHover border-b-2 rounded-xl" : "rounded-none"}
             `}
         >
           {loading && (

@@ -103,7 +103,6 @@ export function createProofreadPlugin(
   function containsOnlyTextNodes(node) {
     let onlyText = true;
     node.forEach((child) => {
-      console.log("CHILD: ", child);
       if (
         !child.isText &&
         child.type.name !== "inline_math" &&

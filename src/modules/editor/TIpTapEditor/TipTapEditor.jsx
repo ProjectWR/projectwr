@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import localStateManager from "../../app/lib/localState";
 import TipTapToolbar from "./TipTapToolbar";
 
 import {
@@ -63,6 +65,7 @@ import TiptapFloatingToolbar from "./TiptapFloatingToolbar";
 import TiptapUtilityToolbar from "./TiptapUtilityToolbar";
 import { StatisticsPanel } from "./StatisticsPanel";
 import { SearchReplacePanel } from "./SearchReplacePanel";
+import { useDebouncedCallback } from "use-debounce";
 
 const content = "<p>Hello World!</p>";
 
@@ -75,6 +78,10 @@ const TiptapEditor = ({
   setHeaderOpened,
   mode = "editPaper",
   preferences,
+  saveScrollPosition,
+  libraryId,
+  paperId,
+  lastSelectionPosition,
 }) => {
   console.log("Tiptap Editor Rendering");
 
@@ -134,6 +141,17 @@ const TiptapEditor = ({
     keepSearchReplacePanelAwake,
     forceCloseSearchReplacePanel,
   ] = useRefreshableTimer({ time: 2000 });
+
+  const debouncedUpdateSelectionPosition = useDebouncedCallback(
+    (libraryId, paperId, position) => {
+      localStateManager.updateLastSelectionPosition(
+        libraryId,
+        paperId,
+        position,
+      );
+    },
+    1500,
+  );
 
   const {
     width,
@@ -533,8 +551,29 @@ const TiptapEditor = ({
         }
       }
       setSelectingError(errorText);
+
+      if (editor && libraryId && paperId) {
+        const { from } = editor.state.selection;
+        debouncedUpdateSelectionPosition(libraryId, paperId, from);
+      }
     },
   });
+
+  // Restore selection position on init
+  useEffect(() => {
+    if (
+      editor &&
+      lastSelectionPosition !== null &&
+      lastSelectionPosition !== undefined
+    ) {
+      console.log("last Selection Position: ", lastSelectionPosition);
+      // Small timeout to ensure document is fully loaded/synced
+      if (!editor.isDestroyed) {
+        editor.commands.setTextSelection(lastSelectionPosition);
+        // Also try to scroll if needed, though setTextSelection usually handles viewport
+      }
+    }
+  }, [editor, lastSelectionPosition]);
 
   const editorState = useEditorState({
     editor,
@@ -1435,6 +1474,18 @@ const TiptapEditor = ({
 };
 
 export default React.memo(TiptapEditor);
+
+TiptapEditor.propTypes = {
+  hunspell: PropTypes.object,
+  yXmlFragment: PropTypes.object.isRequired,
+  setHeaderOpened: PropTypes.func.isRequired,
+  mode: PropTypes.string,
+  preferences: PropTypes.object,
+  saveScrollPosition: PropTypes.func,
+  libraryId: PropTypes.string,
+  paperId: PropTypes.string,
+  lastSelectionPosition: PropTypes.number,
+};
 
 const useFocus = () => {
   const htmlElRef = useRef(null);

@@ -45,17 +45,20 @@ const ExportTreeComponent = forwardRef(
         }
         let parentId = ytree.getNodeParentFromKey(currentId);
 
-        while (parentId && parentId !== "root") {
+        while (parentId) {
           if (checkboxState[parentId]) {
             return true;
           }
+
+          if (parentId == "root") return false;
+
           currentId = parentId;
           parentId = ytree.getNodeParentFromKey(currentId);
         }
 
         return false;
       },
-      [ytree, checkboxState]
+      [ytree, checkboxState],
     );
 
     /**
@@ -84,7 +87,7 @@ const ExportTreeComponent = forwardRef(
           return true;
         });
       },
-      [ytree]
+      [ytree],
     );
 
     /**
@@ -124,7 +127,7 @@ const ExportTreeComponent = forwardRef(
           return newState;
         });
       },
-      [getSelectedItemsFromState, onSelectionChange]
+      [getSelectedItemsFromState, onSelectionChange],
     );
 
     const selectAll = useCallback(() => {
@@ -211,7 +214,7 @@ const ExportTreeComponent = forwardRef(
     // Get children of the root item
     const rootChildren = useMemo(() => {
       return ytree.getNodeChildrenFromKey(
-        itemId == libraryId ? "root" : itemId
+        itemId == libraryId ? "root" : itemId,
       );
     }, [ytree, itemId, libraryId]);
 
@@ -335,7 +338,7 @@ const ExportTreeComponent = forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );
 
 ExportTreeComponent.displayName = "ExportTreeComponent";

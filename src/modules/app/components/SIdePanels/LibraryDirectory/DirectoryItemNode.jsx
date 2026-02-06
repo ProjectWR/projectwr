@@ -10,7 +10,7 @@ import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import DialogWrapper from "../../LayoutComponents/DialogWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { exportItem } from "../../../lib/importExport";
-import { Checkbox } from "@mantine/core";
+import Checkbox from "../../LayoutComponents/Checkbox";
 
 /**
  *
@@ -548,16 +548,16 @@ const DirectoryItemNode = ({
         border-y-transparent
 
         ${(() => {
-            if (!isSelfSelected && !isAncestor && isOverCurrent) {
-              if (areaSelected === "top")
-                return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
-              if (areaSelected === "bottom")
-                return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
-              if (areaSelected === "middle")
-                return "bg-appLayoutDirectoryNodeHover border-y-0";
-            }
-            return "";
-          })()}
+          if (!isSelfSelected && !isAncestor && isOverCurrent) {
+            if (areaSelected === "top")
+              return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
+            if (areaSelected === "bottom")
+              return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
+            if (areaSelected === "middle")
+              return "bg-appLayoutDirectoryNodeHover border-y-0";
+          }
+          return "";
+        })()}
 
           `}
       >
@@ -577,14 +577,14 @@ const DirectoryItemNode = ({
             ${isChildOfRoot && "rounded-l-sm"}
 
             ${(() => {
-                const type = itemMapRef.current.get("type");
-                if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
-                if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
-                if (type === "section")
-                  return "h-libraryDirectorySectionNodeHeight ";
-                if (type === "book") return "h-libraryDirectoryBookNodeHeight";
-                return "";
-              })()}
+              const type = itemMapRef.current.get("type");
+              if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+              if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
+              if (type === "section")
+                return "h-libraryDirectorySectionNodeHeight ";
+              if (type === "book") return "h-libraryDirectoryBookNodeHeight";
+              return "";
+            })()}
 
               transition-colors
               duration-0
@@ -823,13 +823,13 @@ const DirectoryItemNode = ({
             >
               {(itemMapRef.current.get("type") === "section" ||
                 itemMapRef.current.get("type") === "book") && (
-                  <button
-                    className="h-libraryDirectoryActionIconSize w-libraryDirectoryActionIconSize rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center"
-                    onClick={onCreatePaperClick}
-                  >
-                    <span className="icon-[fluent--document-add-24-regular] w-full h-full"></span>
-                  </button>
-                )}
+                <button
+                  className="h-libraryDirectoryActionIconSize w-libraryDirectoryActionIconSize rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center"
+                  onClick={onCreatePaperClick}
+                >
+                  <span className="icon-[fluent--document-add-24-regular] w-full h-full"></span>
+                </button>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -843,7 +843,8 @@ const DirectoryItemNode = ({
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.15, ease: "easeInOut" }}
               style={{
-                marginLeft: "calc(0.25rem + var(--spacing-libraryDirectoryBookNodeIconSize) / 2)"
+                marginLeft:
+                  "calc(0.25rem + var(--spacing-libraryDirectoryBookNodeIconSize) / 2)",
               }}
               className="overflow-hidden border-l border-appLayoutBorder "
             >
@@ -881,9 +882,7 @@ const DirectoryItemNode = ({
           <div className="flex items-center gap-2">
             <Checkbox
               checked={deleteConfirmDontAskAgain}
-              onChange={(e) =>
-                setDeleteConfirmDontAskAgain(e.currentTarget.checked)
-              }
+              onCheckedChange={(val) => setDeleteConfirmDontAskAgain(val)}
               label="Don't ask me again"
             />
           </div>

@@ -73,7 +73,7 @@ const NoteCard = ({ noteId, libraryId, ytree }) => {
       >
         <div className="h-noteCardHeaderHeight w-full flex pl-2">
           <input
-            className={`bg-transparent  grow basis-0 min-w-0 h-full text-noteCardFontSizeThree  text-start
+            className={`bg-transparent  grow basis-0 min-w-0 h-full text-libraryDirectoryBookNodeFontSize  text-start
                     focus:bg-appLayoutInputBackground focus:outline-none text-appLayoutTextMuted focus:text-appLayoutText
                      px-px py-px transition-colors duration-200`}
             name={"item_title"}
@@ -190,9 +190,9 @@ const NoteCardEditor = ({
           toolbar: "bg-transparent border-b border-appLayoutBorder",
           content: `bg-transparent text-appLayoutText placeholder:text-gray-500 placeholder:italic 
           ${fixedSize ? "h-nodeCardHeight" : " max-h-noteCardHeight"} 
-          ${sizeMode === 1 && "text-noteCardFontSizeOne"} 
-          ${sizeMode === 2 && "text-noteCardFontSizeTwo"} 
-          ${sizeMode === 3 && "text-noteCardFontSizeThree"} 
+          ${sizeMode === 1 && "text-libraryDirectoryBookNodeFontSize"} 
+          ${sizeMode === 2 && "text-libraryDirectoryBookNodeFontSize"} 
+          ${sizeMode === 3 && "text-libraryDirectoryBookNodeFontSize"} 
           overflow-y-scroll p-1 NoteCardEditor`,
           controlsGroup: "bg-appBackgroundAccent gap-1 rounded-lg",
           control:

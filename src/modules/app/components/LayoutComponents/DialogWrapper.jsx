@@ -1,6 +1,6 @@
-import { Checkbox } from '@mantine/core';
-import * as Dialog from '@radix-ui/react-dialog';
-import PropTypes from 'prop-types';
+import Checkbox from "./Checkbox";
+import * as Dialog from "@radix-ui/react-dialog";
+import PropTypes from "prop-types";
 
 const DialogWrapper = ({
   open,
@@ -12,10 +12,8 @@ const DialogWrapper = ({
   options,
   onSubmit,
   submitLabel,
-  destructive
+  destructive,
 }) => {
-
-
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>}
@@ -28,7 +26,7 @@ const DialogWrapper = ({
               <Dialog.Title className="text-[1.1rem] text-appLayoutText px-4 pt-3">
                 {title}
               </Dialog.Title>
-              <Dialog.Close className='p-1 mt-1 mr-1 h-full' asChild>
+              <Dialog.Close className="p-1 mt-1 mr-1 h-full" asChild>
                 <button
                   className={`h-full flex items-center border border-appLayoutBorder justify-center w-fit p-px rounded-md text-appLayoutHighlight hover:bg-appLayoutInverseHover `}
                 >
@@ -43,54 +41,43 @@ const DialogWrapper = ({
               </Dialog.Description>
             )}
 
-            {options && options.map((option, index) => {
-              return (
-                <div key={option.label} className="flex items-center justify-start gap-2 z-[10002] px-4 pb-2">
-                  <Checkbox
-                    checked={option.checked}
-                    onChange={option.onChange}
-                    variant="outline"
-                    iconColor="var(--appLayoutText)"
-                    styles={{
-                      input: {
-                        borderColor:
-                          option.checked ? "var(--appLayoutText)" : undefined,
-                      },
-                    }}
-                    classNames={{
-                      root: "w-4 h-4 cursor-pointer",
-                      body: "w-full h-full",
-                      inner: "w-full h-full",
-                      input: "w-full h-full bg-transparent border-appLayoutInverseHover",
-                      icon: "bg-appLayoutBorder border-appLayoutBorder",
-                    }}
-                  />
-                  <label
-                    htmlFor="dontAskAgain"
-                    className="text-optionsDropdownOptionFont text-appLayoutText cursor-pointer"
+            {options &&
+              options.map((option, index) => {
+                return (
+                  <div
+                    key={option.label}
+                    className="flex items-center justify-start gap-2 z-[10002] px-4 pb-2"
                   >
-                    {option.label}
-                  </label>
-                </div>
-
-              )
-            })}
+                    <Checkbox
+                      checked={option.checked}
+                      onCheckedChange={option.onChange}
+                      className="w-4 h-4 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="dontAskAgain"
+                      className="text-optionsDropdownOptionFont text-appLayoutText cursor-pointer"
+                    >
+                      {option.label}
+                    </label>
+                  </div>
+                );
+              })}
             <div className="flex items-center justify-end gap-2 px-4 pb-4">
-              <div className='h-full'>
+              <div className="h-full">
                 <Dialog.Close
                   className={`h-full flex items-center border border-appLayoutBorder justify-center w-fit px-2 pt-px rounded-sm text-appLayoutHighlight text-optionsDropdownOptionFont hover:bg-appLayoutInverseHover `}
                 >
                   Cancel
                 </Dialog.Close>
               </div>
-              <div className='h-full'>
+              <div className="h-full">
                 <button
                   className={`h-full flex items-center justify-center w-fit px-2 pt-px rounded-sm text-appLayoutHighlight text-optionsDropdownOptionFont  
-                      ${destructive ? 'bg-appLayoutDestruct/50 hover:bg-appLayoutDestruct/80' : 'hover:bg-appLayoutInverseHover'}
+                      ${destructive ? "bg-appLayoutDestruct/50 hover:bg-appLayoutDestruct/80" : "hover:bg-appLayoutInverseHover"}
                       `}
                   onClick={onSubmit}
                 >
-                  {submitLabel || 'OK'}
+                  {submitLabel || "OK"}
                 </button>
               </div>
             </div>
@@ -107,7 +94,7 @@ DialogWrapper.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   children: PropTypes.node.isRequired,
-  trigger: PropTypes.node
+  trigger: PropTypes.node,
 };
 
 export default DialogWrapper;

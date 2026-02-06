@@ -84,7 +84,9 @@ export const DetailsPanelNotesPanel = ({
       if (libraryId && dataManagerSubdocs.getLibrary(libraryId)) {
         if (
           !checkForYTree(
-            dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
+            dataManagerSubdocs
+              .getLibrary(libraryId)
+              .getMap("library_directory"),
           )
         ) {
           throw new Error("ytree doesn't already exist");
@@ -92,18 +94,20 @@ export const DetailsPanelNotesPanel = ({
 
         setYtree(
           new YTree(
-            dataManagerSubdocs.getLibrary(libraryId).getMap("library_directory")
-          )
+            dataManagerSubdocs
+              .getLibrary(libraryId)
+              .getMap("library_directory"),
+          ),
         );
 
         setError(null);
-        return () => { };
+        return () => {};
       } else {
         throw new Error("library not found locally");
       }
     } catch (e) {
       setError("Something went wrong");
-      return () => { };
+      return () => {};
     }
   }, [libraryId]);
 
@@ -125,7 +129,7 @@ export const DetailsPanelNotesPanel = ({
       setNotesPanelSliderPos(newWidth);
       setNotesPanelSliderActive(true);
     },
-    [setNotesPanelSliderPos, setNotesPanelSliderActive, zoom]
+    [setNotesPanelSliderPos, setNotesPanelSliderActive, zoom],
   );
 
   const handleDragEnd = useCallback(
@@ -152,7 +156,7 @@ export const DetailsPanelNotesPanel = ({
       setNotesPanelSliderPos,
       setNotesPanelSliderActive,
       zoom,
-    ]
+    ],
   );
 
   useEffect(() => {
@@ -185,9 +189,10 @@ export const DetailsPanelNotesPanel = ({
             <motion.div
               key={`NotesPanelMotionContainer-${libraryId}`}
               id="NotesPanelMotionContainer"
-              className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${!isMd &&
+              className={`h-full border-l border-appLayoutBorder z-5 bg-appBackgroundAccent ${
+                !isMd &&
                 "absolute top-0 right-0 bg-appBackgroundAccent/95 backdrop-blur-[1px]"
-                } `}
+              } `}
               initial={{
                 opacity: 0,
                 width: 0,
@@ -216,7 +221,11 @@ export const DetailsPanelNotesPanel = ({
               <div className="w-full h-full @container flex flex-col relative">
                 {error}
 
-                {!error && libraryId && itemId && ytree && ytree._ydoc.guid == libraryId ? (
+                {!error &&
+                libraryId &&
+                itemId &&
+                ytree &&
+                ytree._ydoc.guid == libraryId ? (
                   <NotesContent
                     libraryId={libraryId}
                     itemId={itemId}
@@ -227,10 +236,11 @@ export const DetailsPanelNotesPanel = ({
                 )}
 
                 <motion.div
-                  className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${notesPanelSliderActive
+                  className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${
+                    notesPanelSliderActive
                       ? "bg-sidePanelDragHandle"
                       : "bg-transparent"
-                    } cursor-w-resize`}
+                  } cursor-w-resize`}
                   drag="x"
                   style={{
                     right: `${notesPanelSliderPos}px`,
@@ -268,11 +278,11 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
   const itemMapState = useYMap(
     itemId === "root"
       ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-      : ytree.getNodeValueFromKey(itemId)
+      : ytree.getNodeValueFromKey(itemId),
   );
 
   const [headerText, setHeaderText] = useState(
-    itemMapState.item_properties.item_title
+    itemMapState.item_properties.item_title,
   );
 
   useEffect(() => {
@@ -286,7 +296,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
       try {
         sortedChildren = ytree.sortChildrenByOrder(
           ytree.getNodeChildrenFromKey(itemId),
-          itemId
+          itemId,
         );
       } catch (e) {
         console.error("Error fetching Note IDs in Notes Panel: ", e);
@@ -310,7 +320,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
 
   return (
     <>
-      <div className="w-full h-fit text-notesPanelHeaderFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
+      <div className="w-full h-fit text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted flex items-center justify-start px-2 py-2">
         <div
           ref={searchRef}
           className="w-full relative h-fit flex items-center"
@@ -319,7 +329,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
             onFocus={() => {
               setSearchOpened(true);
             }}
-            className="h-fit min-h-fit text-notesPanelHeaderFontSize w-full px-2 py-1 bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-appLayoutBorder border rounded-sm"
+            className="h-fit min-h-fit text-libraryDirectoryBookNodeFontSize w-full px-2 py-1 bg-appBackground focus:outline-none focus:border-appLayoutGradientHover border-appLayoutBorder border rounded-sm"
             value={headerText}
             onChange={(e) => {
               setHeaderText(e.target.value);
@@ -397,7 +407,6 @@ const SortedNotes = ({ sortedNoteIds, libraryId, ytree }) => {
               libraryId={libraryId}
               ytree={ytree}
             />
-
           </>
         ))}
     </>
@@ -407,7 +416,7 @@ const SortedNotes = ({ sortedNoteIds, libraryId, ytree }) => {
 const SearchResults = ({
   libraryId,
   input = "",
-  onClick = () => { },
+  onClick = () => {},
   visible = false,
 }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -420,8 +429,8 @@ const SearchResults = ({
             (result.type === "book" ||
               result.type === "section" ||
               result.id === result.libraryId) &&
-            result.libraryId === libraryId
-        )
+            result.libraryId === libraryId,
+        ),
       );
     } else {
       setSearchResults([]);
@@ -448,15 +457,15 @@ const SearchResults = ({
             const item_properties =
               result.id === result.libraryId
                 ? dataManagerSubdocs
-                  .getLibrary(result.libraryId)
-                  .getMap("library_props")
-                  .get("item_properties")
+                    .getLibrary(result.libraryId)
+                    .getMap("library_props")
+                    .get("item_properties")
                 : dataManagerSubdocs
-                  .getLibrary(result.libraryId)
-                  .getMap("library_directory")
-                  .get(result.id)
-                  .get("value")
-                  .get("item_properties");
+                    .getLibrary(result.libraryId)
+                    .getMap("library_directory")
+                    .get(result.id)
+                    .get("value")
+                    .get("item_properties");
 
             return (
               <HoverListButton
@@ -465,7 +474,7 @@ const SearchResults = ({
                   onClick(result, item_properties.item_title);
                 }}
               >
-                <span> {item_properties.item_title}</span>
+                {item_properties.item_title}
               </HoverListButton>
             );
           })}
@@ -478,8 +487,6 @@ const SearchResults = ({
           </HoverListItem>
         )}
       </HoverListBody>
-      <HoverListDivider />
-      <HoverListFooter />
     </HoverListShell>
   );
 };

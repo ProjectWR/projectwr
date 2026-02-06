@@ -45,7 +45,6 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 
   const { ref, toggle, fullscreen } = useFullscreen();
   useViewportSize();
-  console.log("paper panel rendering: ", paperId);
 
   const setShowActivityBar = appStore((state) => state.setShowActivityBar);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
@@ -53,12 +52,12 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const setItemId = appStore((state) => state.setItemId);
   const [headerOpened, setHeaderOpened] = useState(true);
 
-  const { editorStyle: paperEditorTemplateId } = useKeyLocalState(
-    libraryId,
-    paperId,
-  );
-  
+  const { editorStyle: paperEditorTemplateId, lastSelectionPosition } =
+    useKeyLocalState(libraryId, paperId);
+
   const [templateContent, setTemplateContent] = useState(null);
+
+  console.log("paper panel rendering: ", paperId, lastSelectionPosition);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -200,9 +199,12 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
           >
             <TipTapEditor
               key={`${paperId}-${paperEditorTemplateId}`}
+              libraryId={libraryId}
+              paperId={paperId}
               yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
               setHeaderOpened={setHeaderOpened}
               preferences={preferences}
+              lastSelectionPosition={lastSelectionPosition}
             />
           </motion.div>
         </DetailsPanelBody>
@@ -212,3 +214,9 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
 };
 
 export default PaperPanel;
+
+PaperPanel.propTypes = {
+  ytree: PropTypes.object.isRequired,
+  paperId: PropTypes.string.isRequired,
+  libraryId: PropTypes.string.isRequired,
+};

@@ -277,6 +277,8 @@ body,
     --recentlyOpenedDateFontSize: calc(var(--uiScale) * 0.9rem);
     --actionBarLogoHeight: calc(var(--uiScale) * 2.65rem);
 
+    --noteScopeDropdownWidth: calc(var(--uiScale) * 8rem);
+
     --breadcrumbHeight: calc(var(--uiScale) * 1.2rem);
     --breadcrumbFontSize: calc(var(--uiScale) * 0.95rem);
     --breadcrumbSeperatorSize: calc(var(--uiScale) * 1.2rem);
@@ -798,7 +800,7 @@ input[type="number"] {
   }
 
   .contextMenuSeparator {
-    @apply h-[0.5px] bg-appLayoutBorder;
+    @apply h-px w-full bg-appLayoutBorder;
   }
 
   .rightSlot {

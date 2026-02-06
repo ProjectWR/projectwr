@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "motion/react";
 import useYMap from "../../../hooks/useYMap";
-import { Checkbox } from "@mantine/core";
+import Checkbox from "../Checkbox";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 
 /**
@@ -27,12 +27,12 @@ const ExportTreeNode = ({
   const itemMapRef = useRef(
     itemId === "root"
       ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
-      : ytree.getNodeValueFromKey(itemId)
+      : ytree.getNodeValueFromKey(itemId),
   );
   const itemMapState = useYMap(itemMapRef.current);
 
   const [nodeChildren, setNodeChildren] = useState(
-    ytree.getNodeChildrenFromKey(itemId)
+    ytree.getNodeChildrenFromKey(itemId),
   );
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,7 +41,8 @@ const ExportTreeNode = ({
     itemId === "root" ? "library" : itemMapRef.current.get("type");
   const hasChildren = nodeChildren && nodeChildren.length > 0;
   const canExpand =
-    (itemType === "section" || itemType === "book" || itemType === "library") && hasChildren;
+    (itemType === "section" || itemType === "book" || itemType === "library") &&
+    hasChildren;
 
   const disabled = isDisabled(itemId);
   const checked = checkboxState[itemId] || false;
@@ -58,12 +59,6 @@ const ExportTreeNode = ({
       ytree.unobserve(updateNodeChildren);
     };
   }, [itemId, ytree]);
-
-  const handleCheckboxChange = (e) => {
-    if (!disabled) {
-      onCheckboxChange(itemId, e.target.checked);
-    }
-  };
 
   const handleExpandToggle = () => {
     if (canExpand) {
@@ -115,26 +110,8 @@ const ExportTreeNode = ({
           <Checkbox
             checked={checked}
             disabled={disabled}
-            onChange={handleCheckboxChange}
-            variant="outline"
-            iconColor="var(--appLayoutText)"
-            styles={{
-              input: {
-                borderColor:
-                  checked && !disabled ? "var(--appLayoutText)" : undefined,
-              },
-            }}
-            classNames={{
-              root: "w-libraryDirectoryPaperNodeIconSize h-libraryDirectoryPaperNodeIconSize cursor-pointer ",
-              body: "w-full h-full",
-              inner: "w-full h-full",
-              input:
-                "w-full h-full bg-transparent border-appLayoutInverseHover",
-              label:
-                "text-libraryDirectoryPaperNodeFontSize grow min-w-0 truncate",
-              icon: "bg-appLayoutBorder border-appLayoutBorder ",
-              labelWrapper: "flex items-center gap-2",
-            }}
+            onCheckedChange={(val) => onCheckboxChange(itemId, val)}
+            className="w-libraryDirectoryPaperNodeIconSize h-libraryDirectoryPaperNodeIconSize cursor-pointer"
           />
 
           {/* Icon */}
@@ -195,6 +172,7 @@ const ExportTreeNode = ({
 ExportTreeNode.propTypes = {
   ytree: PropTypes.object.isRequired,
   itemId: PropTypes.string.isRequired,
+  libraryId: PropTypes.string,
   checkboxState: PropTypes.object.isRequired,
   onCheckboxChange: PropTypes.func.isRequired,
   isDisabled: PropTypes.func.isRequired,

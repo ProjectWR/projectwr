@@ -11,6 +11,7 @@ export function useKeyLocalState(libraryId, itemId) {
   const [state, setState] = useState({
     lastOpenedDtm: null,
     editorStyle: "unselected",
+    lastSelectionPosition: null,
   });
 
   useEffect(() => {

@@ -582,7 +582,7 @@ export const TabButton = ({
         <span className="icon-[material-symbols-light--split-scene-down-outline] w-full h-full mb-0.5"></span>,
       );
     }
-  }, [panelType, breadcrumbs]);
+  }, [panelType, breadcrumbs, splitMode, splitPanelTab]);
 
   const tabIsSelected = useMemo(() => {
     return equalityDeep(mainPanelState, {
@@ -664,11 +664,19 @@ export const TabButton = ({
             if (newTabs.length > 0) {
               setTabs(newTabs);
 
-              activatePanel(
-                newTabs[newTabs.length - 1].panelType,
-                newTabs[newTabs.length - 1].mode,
-                newTabs[newTabs.length - 1].breadcrumbs,
-              );
+              if (tabIndex > 0) {
+                activatePanel(
+                  newTabs[tabIndex - 1].panelType,
+                  newTabs[tabIndex - 1].mode,
+                  newTabs[tabIndex - 1].breadcrumbs,
+                );
+              } else {
+                activatePanel(
+                  newTabs[tabIndex].panelType,
+                  newTabs[tabIndex].mode,
+                  newTabs[tabIndex].breadcrumbs,
+                );
+              }
             }
           }}
           className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${

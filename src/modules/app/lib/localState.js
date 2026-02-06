@@ -38,13 +38,19 @@ class LocalStateManager {
    * Retrieves the local state for a specific item.
    * @param {string} libraryId
    * @param {string} itemId
-   * @returns {Promise<{lastOpenedDtm: string | null, editorStyle: string}>}
+   * @returns {Promise<{lastOpenedDtm: string | null, editorStyle: string, lastSelectionPosition: number | null}>}
    */
   async get(libraryId, itemId) {
     await this.init();
     const key = this._getKey(libraryId, itemId);
     const value = await this.store.get(key);
-    return value || { lastOpenedDtm: null, editorStyle: "unselected" };
+    return (
+      value || {
+        lastOpenedDtm: null,
+        editorStyle: "unselected",
+        lastSelectionPosition: null,
+      }
+    );
   }
 
   /**
@@ -153,13 +159,13 @@ class LocalStateManager {
   }
 
   /**
-   * Convenience method to update the paper Scroll Position
+   * Convenience method to update the paper selection position
    * @param {string} libraryId
    * @param {string} itemId
-   * @param {string} editorStyle
+   * @param {number} lastSelectionPosition
    */
-  async updatePaperScrollPosition(libraryId, itemId, scrollPos) {
-    await this.set(libraryId, itemId, { scrollPos });
+  async updateLastSelectionPosition(libraryId, itemId, lastSelectionPosition) {
+    await this.set(libraryId, itemId, { lastSelectionPosition });
   }
 }
 
