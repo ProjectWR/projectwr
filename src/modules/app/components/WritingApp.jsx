@@ -488,6 +488,7 @@ const WritingApp = () => {
   }, [setIsMd, setIsMaximized]);
 
   useEffect(() => {
+     getCurrentWindow().setDecorations(false);
     const callback = async () => {
       if (!document.fullscreenElement) {
         await getCurrentWindow().setDecorations(false);

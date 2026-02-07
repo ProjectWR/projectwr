@@ -81,7 +81,7 @@ const ActionBar = () => {
             </div>
           </div>
 
-          <ActionButton onClick={() => setSideBarOpened(!sideBarOpened)}>
+          <ActionButton data-tauri-drag-region onClick={() => setSideBarOpened(!sideBarOpened)}>
             <StyledTooltip label="Toggle Sidebar">
               <div className="h-full w-actionBarButtonIconSize relative">
                 <AnimatePresence mode="sync">
@@ -253,9 +253,8 @@ export const ActionButton = ({
   return (
     <div className="h-full py-1 w-fit">
       <button
-        className={`h-full px-1 w-fit ${
-          !disabled && "hover:bg-appLayoutInverseHover"
-        } rounded-md flex items-center justify-center ${className}`}
+        className={`h-full px-1 w-fit ${!disabled && "hover:bg-appLayoutInverseHover"
+          } rounded-md flex items-center justify-center ${className}`}
         onClick={onClick}
         disabled={disabled}
       >
@@ -273,11 +272,10 @@ const WindowButton = ({
 }) => {
   return (
     <button
-      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${
-        destructive
+      className={`h-full flex items-center justify-center w-fit px-3 text-appLayoutHighlight ${destructive
           ? "hover:bg-appLayoutDestruct"
           : "hover:bg-appLayoutInverseHover"
-      } ${className}`}
+        } ${className}`}
       onClick={onClick}
     >
       {buttonContent}
@@ -285,7 +283,7 @@ const WindowButton = ({
   );
 };
 
-export const ActionBarLeftSide = ({}) => {
+export const ActionBarLeftSide = ({ }) => {
   const zoom = appStore((state) => state.zoom);
   const isMd = appStore((state) => state.isMd);
 
@@ -422,7 +420,7 @@ export const ActionBarLeftSide = ({}) => {
   );
 };
 
-export const ActionBarRightSide = ({}) => {
+export const ActionBarRightSide = ({ }) => {
   const zoom = appStore((state) => state.zoom);
   const driveSyncLoading = appStore((state) => state.driveSyncLoading);
   const userProfile = oauthStore((state) => state.userProfile);
@@ -515,9 +513,8 @@ export const ActionBarRightSide = ({}) => {
                 onClick={() => {
                   activatePanel("settings", null, []);
                 }}
-                className={`${false && "bg-appLayoutPressed"}  ${
-                  driveSyncLoading ? "bg-yellow-800/20" : "bg-green-800/20"
-                }`}
+                className={`${false && "bg-appLayoutPressed"}  ${driveSyncLoading ? "bg-yellow-800/20" : "bg-green-800/20"
+                  }`}
                 disabled={true}
               >
                 <StyledTooltip
@@ -531,11 +528,10 @@ export const ActionBarRightSide = ({}) => {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.1 }}
                       key="settingsButton"
-                      className={`icon-[logos--google-drive] w-[75%] h-[75%] ${
-                        driveSyncLoading
+                      className={`icon-[logos--google-drive] w-[75%] h-[75%] ${driveSyncLoading
                           ? "left-[50%] -translate-x-1/2 top-px"
                           : "left-[50%] -translate-x-1/2 top-[50%] -translate-y-1/2"
-                      } absolute`}
+                        } absolute`}
                     ></motion.span>
                     {driveSyncLoading && (
                       <span className="icon-[eos-icons--three-dots-loading] absolute w-full h-full bottom-1 translate-y-1/2 left-[50%] -translate-x-1/2"></span>

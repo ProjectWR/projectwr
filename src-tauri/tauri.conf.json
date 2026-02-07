@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "projectwr-dev",
+  "productName": "Sylvanite",
   "version": "0.1.0",
   "identifier": "com.tauri.projectwr",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "projectwr-dev",
+        "title": "Sylvanite",
         "width": 1024,
         "height": 768,
         "minHeight": 768,

@@ -205,63 +205,44 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           </StyledTooltip>
         </ActionButton>
       </div>
-      <ScrollArea
-        overscrollBehavior="none"
-        scrollbars="x"
-        type="hover"
-        id="TabsScrollArea"
-        classNames={{
-          root: `grow basis-0 min-w-0 h-full min-h-full ${
-            overflow && "border-x border-appLayoutBorder"
-          }
-            `,
-          scrollbar: `bg-transparent hover:bg-transparent p-0 h-scrollbarSize`,
-          thumb: `bg-appLayoutBorder rounded-t-full hover:!bg-appLayoutInverseHover`,
-          viewport: `h-full w-full`,
-          content: `h-full w-full bg-appBackgroundAccent`,
-        }}
+
+      <div
+        id="TabsContent"
+        className="grow basis-0 min-w-0 min-h-full h-full z-[4] flex justify-start gap-1 border-b border-appLayoutBorder bg-appBackgroundAccent"
       >
-        <div
-          id="TabsContent"
-          className="w-fit min-w-full h-full z-[4] flex items-end gap-1 border-b border-appLayoutBorder bg-appBackgroundAccent"
-        >
-          <AnimatePresence>
-            {tabs?.map((tab) => {
-              const { panelType, mode, breadcrumbs } = tab;
+        <AnimatePresence>
+          {tabs?.map((tab) => {
+            const { panelType, mode, breadcrumbs } = tab;
 
-              return (
-                <motion.div
-                  key={
-                    breadcrumbs.length >= 1
-                      ? breadcrumbs[0] +
-                        "-" +
-                        breadcrumbs[breadcrumbs.length - 1]
-                      : panelType
-                  }
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{
-                    opacity: 1,
-                    width: isMd
-                      ? `var(--tabWidth)`
-                      : `calc(var(--tabWidth) * 0.7)`,
-                  }}
-                  exit={{ opacity: 0, width: 0 }}
-                  className="h-full overflow-x-hidden overflow-ellipsis flex items-center"
-                >
-                  <TabButton
-                    panelType={panelType}
-                    mode={mode}
-                    breadcrumbs={breadcrumbs}
-                    isRemoveAvailable={tabs.length > 1}
-                  />
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+            return (
+              <motion.div
+                key={
+                  breadcrumbs.length >= 1
+                    ? breadcrumbs[0] +
+                    "-" +
+                    breadcrumbs[breadcrumbs.length - 1]
+                    : panelType
+                }
+                layout
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "var(--tabWidth)" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.1 }}
 
-          <UnusedSpace />
-        </div>
-      </ScrollArea>
+                className="h-full w-full min-w-0 overflow-x-hidden overflow-ellipsis flex items-center "
+              >
+                <TabButton
+                  panelType={panelType}
+                  mode={mode}
+                  breadcrumbs={breadcrumbs}
+                  isRemoveAvailable={tabs.length > 1}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
+
       <div
         data-tauri-drag-region
         className={`border-b flex items-center w-fit min-w-0 z-1000 border-appLayoutBorder h-full min-h-full text-appLayoutText bg-appBackgroundAccent  px-1
@@ -631,28 +612,24 @@ export const TabButton = ({
 
           ${(!isOverCurrent || (isOverCurrent && areaSelected === "")) && ""}
           
-          ${
-            isOverCurrent &&
-            areaSelected === "left" &&
-            `border-r-appLayoutBorder border-l-appLayoutHighlight`
-          }
+          ${isOverCurrent &&
+        areaSelected === "left" &&
+        `border-r-appLayoutBorder border-l-appLayoutHighlight`
+        }
           
-          ${
-            isOverCurrent &&
-            areaSelected === "right" &&
-            `border-l-appLayoutBorder border-r-appLayoutHighlight`
-          }
+          ${isOverCurrent &&
+        areaSelected === "right" &&
+        `border-l-appLayoutBorder border-r-appLayoutHighlight`
+        }
          
-          ${
-            tabIsSelected
-              ? "border-appLayoutBorder bg-appBackground"
-              : "border-transparent hover:bg-appLayoutInverseHover "
-          }
+          ${tabIsSelected
+          ? "border-appLayoutBorder bg-appBackground"
+          : "border-transparent hover:bg-appLayoutInverseHover "
+        }
 
-        ${
-          splitTab
-            ? "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
-            : ""
+        ${splitTab
+          ? "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
+          : ""
         }
         `}
     >
@@ -699,11 +676,10 @@ export const TabButton = ({
               }
             }
           }}
-          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${
-            !tabIsSelected
-              ? "hover:bg-appBackgroundAccent"
-              : "hover:bg-appLayoutInverseHover"
-          }`}
+          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${!tabIsSelected
+            ? "hover:bg-appBackgroundAccent"
+            : "hover:bg-appLayoutInverseHover"
+            }`}
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
@@ -787,10 +763,9 @@ const UnusedSpace = ({ offset = false }) => {
         height: "100%",
       }}
       className={`
-        ${
-          isOverCurrent && isHovering
-            ? ` border-l border-l-appLayoutHighlight`
-            : ""
+        ${isOverCurrent && isHovering
+          ? ` border-l border-l-appLayoutHighlight`
+          : ""
         }
 
         
