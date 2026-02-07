@@ -3,7 +3,7 @@
 ## Planned for Upcoming Releases
 - Finalize Windows Version
 - Bring Sylvanite to Android.
-- Localization and Dialect Switching
+- Adding support for Non-English languages (currently limited by what Harper.js provides)
 - Allow Editor to be Paged View
     - Add toggle in template editor, and also a toggle in paper settings.
 - Enhanced Publishing & Export: More export formats (EPUB, PDF), advanced formatting controls, and one-click publishing drafts.
