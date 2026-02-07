@@ -36,15 +36,23 @@ const DictionaryManager = () => {
   /** @type {[]} */
   const wordArray = useSyncExternalStore(
     (callback) => {
-      dictionaryManager.dictionaryYDoc.getMap("wordMap").observeDeep(callback);
+      if (!dictionaryManager.dictionaryYDoc) {
+        return () => {};
+      }
+      dictionaryManager.dictionaryYDoc
+        .getArray("wordList")
+        .observeDeep(callback);
 
       return () => {
         dictionaryManager.dictionaryYDoc
-          .getMap("wordMap")
+          .getArray("wordList")
           .unobserveDeep(callback);
       };
     },
     () => {
+      if (!dictionaryManager.dictionaryYDoc) {
+        return [];
+      }
       const wordArray = dictionaryManager.getWordArray();
       if (
         prevWordArrayRef.current !== null &&
@@ -56,7 +64,7 @@ const DictionaryManager = () => {
         prevWordArrayRef.current = wordArray;
         return prevWordArrayRef.current;
       }
-    }
+    },
   );
 
   const sortedWordArray = useMemo(() => {

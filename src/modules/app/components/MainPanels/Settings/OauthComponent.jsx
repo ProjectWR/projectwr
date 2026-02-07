@@ -84,7 +84,7 @@ export const OauthComponent = ({}) => {
                   Sync via Google Drive
                 </button>
                 <span className="p-2 flex w-fit items-center gap-2 text-appLayoutTextMuted border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 transition-colors duration-200">
-                  More Integrations coming soon...
+                  More integrations coming soon...
                 </span>
               </motion.div>
             )}

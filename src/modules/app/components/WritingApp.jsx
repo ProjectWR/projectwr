@@ -42,6 +42,7 @@ import useZoom from "../hooks/useZoom";
 import useComputedCssVar from "../hooks/useComputedCssVar";
 import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
 import dictionaryManager from "../lib/dictionary";
+import linterManager from "../lib/linterManager";
 import useRefreshableTimer from "../hooks/useRefreshableTimer";
 import { useDebouncedCallback } from "@mantine/hooks";
 import templateManager from "../lib/templates";
@@ -85,7 +86,6 @@ const WritingApp = () => {
 
   const [isMaximized, setIsMaximized] = useState(false);
   const panelOpened = appStore((state) => state.panelOpened);
-
 
   const appThemeId = appStore((state) => state.appThemeId);
   const appThemesList = useAppThemesList();
@@ -194,6 +194,10 @@ const WritingApp = () => {
         setLoadingStage("Loading dictionaries and spellchecker");
 
         await dictionaryManager.init();
+
+        setLoadingStage("Initializing linter");
+
+        await linterManager.init();
 
         // await setupEnDictionary();
 

@@ -8,25 +8,9 @@ import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile } from "@tauri-apps/plugin-fs";
 import createProofreadPlugin, { spellcheckkey } from "./createProofreadPlugin";
 import dictionaryManager from "../../../app/lib/dictionary";
-import {
-  binary,
-  binaryInlined,
-  BinaryModule,
-  Dialect,
-  LocalLinter,
-  WorkerLinter,
-} from "harper.js";
+import linterManager from "../../../app/lib/linterManager";
 import { message } from "@tauri-apps/plugin-dialog";
 import { appStore } from "../../../app/stores/appStore";
-
-let lexer = new Tokenizr();
-
-const baseUrl = window.location.origin;
-
-let linter = new WorkerLinter({
-  binary: binaryInlined,
-  dialect: Dialect.British,
-});
 
 const spellCheckStore = createSpellCheckEnabledStore(() => {
   true;
@@ -65,7 +49,7 @@ const generateProofreadErrors = async (input) => {
   console.log("PRROFREADING INPUT: ", `-${input}-`);
 
   // 2. Lint the input (content inside delimiters serves as context)
-  const lints = await linter.lint(input);
+  const lints = await linterManager.lint(input);
 
   for (const lint of lints) {
     const start = lint.span().start;
@@ -94,6 +78,7 @@ const generateProofreadErrors = async (input) => {
         message: lint.message(),
         type: { typeName },
         replacements,
+        lintObject: lint, // Store the original lint object for ignoring
       });
     }
   }
@@ -269,8 +254,10 @@ function createSuggestionBox({
 
   contextItems.push({
     label: "Ignore",
-    action: () => {
-      if (onIgnore) onIgnore();
+    action: async () => {
+      if (onIgnore) {
+        await onIgnore();
+      }
       container.style.opacity = "0";
       container.style.transform = "translateY(-10px)";
       setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);
@@ -289,8 +276,10 @@ function createSuggestionBox({
   ignoreButton.style.transition = "background-color 0.2s ease";
 
   ignoreButton.textContent = "Ignore";
-  ignoreButton.addEventListener("click", () => {
-    if (onIgnore) onIgnore();
+  ignoreButton.addEventListener("click", async () => {
+    if (onIgnore) {
+      await onIgnore();
+    }
     container.style.opacity = "0";
     container.style.transform = "translateY(-10px)";
     setTimeout(() => appStore.setState({ proofreadContextItems: [] }), 300);

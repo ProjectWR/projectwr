@@ -123,6 +123,26 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
       >
         <ActionButton
           onClick={() => {
+            activatePanel("dictionary", null, []);
+          }}
+          className={`${false && "z-[1] bg-appLayoutPressed"}`}
+        >
+          <StyledTooltip label="Dictionary">
+            <div className={`h-full pt-px w-actionBarButtonIconSize relative`}>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+                key="searchButton"
+                className="icon-[material-symbols-light--match-word-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+              ></motion.span>
+            </div>
+          </StyledTooltip>
+        </ActionButton>
+
+        <ActionButton
+          onClick={() => {
             activatePanel("home", null, []);
           }}
           className={`${false && "bg-appLayoutPressed"}`}

@@ -677,25 +677,30 @@ const SettingsPanel = () => {
                   onOpenChange={setMediaDropdownOpened}
                 >
                   <DropdownMenu.Trigger className="outline-none focus:outline-none w-fit">
-                    <div className="w-fit flex items-center gap-0 group">
-                      <motion.span
-                        animate={{
-                          rotate: !mediaDropdownOpened ? 180 : 270,
-                        }}
-                        className="icon-[formkit--left] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted group-hover:text-appLayoutText transition-colors duration-100"
-                      ></motion.span>
-                      <p className="text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize hover:text-appLayoutHighlight transition-colors duration-100 cursor-pointer flex items-center gap-1">
-                        {fontImageToggle === "font"
-                          ? "Fonts"
-                          : fontImageToggle === "image"
-                            ? "Images"
-                            : fontImageToggle === "videos"
-                              ? "Videos"
-                              : fontImageToggle === "templates"
-                                ? "Editor Styles"
-                                : "App Themes"}
-                      </p>
-                    </div>
+                    <StyledTooltip
+                      label={"Switch Asset Type"}
+                      position="bottom"
+                    >
+                      <div className="w-fit flex items-center gap-0 group">
+                        <motion.span
+                          animate={{
+                            rotate: !mediaDropdownOpened ? 180 : 270,
+                          }}
+                          className="icon-[formkit--left] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted group-hover:text-appLayoutText transition-colors duration-100"
+                        ></motion.span>
+                        <p className="text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize hover:text-appLayoutHighlight transition-colors duration-100 cursor-pointer flex items-center gap-1">
+                          {fontImageToggle === "font"
+                            ? "Fonts"
+                            : fontImageToggle === "image"
+                              ? "Images"
+                              : fontImageToggle === "videos"
+                                ? "Videos"
+                                : fontImageToggle === "templates"
+                                  ? "Editor Styles"
+                                  : "App Themes"}
+                        </p>
+                      </div>
+                    </StyledTooltip>
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Content
                     style={{ opacity: 1 }}
@@ -759,9 +764,9 @@ const SettingsPanel = () => {
                   <button
                     onClick={openMediaFolder}
                     aria-label="Open media folder"
-                    className="h-fontAddButtonSize w-fontAddButtonSize p-px min-w-0 hover:bg-appLayoutInverseHover rounded-md text-appLayoutText"
+                    className="h-fontAddButtonSize w-fontAddButtonSize p-0 min-w-0 flex items-center justify-center hover:bg-appLayoutInverseHover rounded-md text-appLayoutText"
                   >
-                    <span className="icon-[material-symbols-light--folder-open] w-full h-full"></span>
+                    <span className="icon-[material-symbols-light--folder-open] w-[90%] h-[90%]"></span>
                   </button>
                 </StyledTooltip>
 
@@ -791,9 +796,9 @@ const SettingsPanel = () => {
                         await handleCreateAppTheme();
                       }
                     }}
-                    className="h-fontAddButtonSize w-fontAddButtonSize p-px min-w-0 hover:bg-appLayoutInverseHover rounded-md text-appLayoutText"
+                    className="h-fontAddButtonSize w-fontAddButtonSize p-0 min-w-0 hover:bg-appLayoutInverseHover rounded-md text-appLayoutText"
                   >
-                    <span className="icon-[material-symbols-light--add-2-rounded] w-full h-full"></span>
+                    <span className="icon-[material-symbols-light--add-2-rounded] w-[90%] h-[90%]"></span>
                   </button>
                 </StyledTooltip>
               </HoverListInteractiveHeader>
@@ -975,21 +980,25 @@ const SettingsPanel = () => {
                   <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
 
                   <div className="ZoomContainer w-fit h-fit flex gap-2 flex-row items-center">
-                    <button
-                      className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center  rounded-full  hover:bg-appLayoutInverseHover"
-                      onClick={zoomOut}
-                    >
-                      <span className="icon-[material-symbols-light--remove-rounded] w-full h-full"></span>
-                    </button>
+                    <StyledTooltip label={"Zoom Out"} position="bottom">
+                      <button
+                        className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center  rounded-full  hover:bg-appLayoutInverseHover"
+                        onClick={zoomOut}
+                      >
+                        <span className="icon-[material-symbols-light--remove-rounded] w-full h-full"></span>
+                      </button>
+                    </StyledTooltip>
                     <div className="zoomDisplay text-libraryDirectoryBookNodeFontSize px-3 w-fit h-fit pb-px flex items-center justify-center select-none border border-appLayoutBorder rounded-lg">
                       {zoom && `${round(zoom * 100)}%`}
                     </div>
-                    <button
-                      className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
-                      onClick={zoomIn}
-                    >
-                      <span className="icon-[material-symbols-light--add-rounded] w-full h-full"></span>
-                    </button>
+                    <StyledTooltip label={"Zoom in"} position="bottom">
+                      <button
+                        className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
+                        onClick={zoomIn}
+                      >
+                        <span className="icon-[material-symbols-light--add-rounded] w-full h-full"></span>
+                      </button>
+                    </StyledTooltip>
                   </div>
                 </div>
 
@@ -1004,15 +1013,17 @@ const SettingsPanel = () => {
 
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
-                      <div className="text-libraryDirectoryBookNodeFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
-                        {appThemeId === "dark"
-                          ? "Dark"
-                          : appThemeId === "light"
-                            ? "Light"
-                            : appThemeId === "system"
-                              ? "System"
-                              : appThemeId}
-                      </div>
+                      <StyledTooltip label={"Select theme"} position="bottom">
+                        <button className="text-libraryDirectoryBookNodeFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
+                          {appThemeId === "dark"
+                            ? "Dark"
+                            : appThemeId === "light"
+                              ? "Light"
+                              : appThemeId === "system"
+                                ? "System"
+                                : appThemeId}
+                        </button>
+                      </StyledTooltip>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content
                       style={{ opacity: 1 }}

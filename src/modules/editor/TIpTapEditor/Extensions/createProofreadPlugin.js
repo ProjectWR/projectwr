@@ -49,10 +49,15 @@ export function createProofreadPlugin(
   const debouncedCheck = debounce(check, debounceTimeMS);
   let editorview;
 
-  function showSuggestionBox(event, errorDetails, view, decor) {
+  function showSuggestionBox(event, errorDetails, view, decor, nodeKey) {
     const errorKey = generateErrorKey(errorDetails);
 
     const rect = event.target.getBoundingClientRect();
+
+    // Get source text from cache
+    const pluginState = spellcheckkey.getState(view.state);
+    const cachedData = pluginState.cacheMap.get(nodeKey);
+    const sourceText = cachedData?.sourceText || "";
 
     const app = createSuggestionBox({
       error: errorDetails,
@@ -78,9 +83,30 @@ export function createProofreadPlugin(
         view.dispatch(tr);
         app.destroy();
       },
-      onIgnore: () => {
+      onIgnore: async () => {
         const pluginState = spellcheckkey.getState(view.state);
         const { from, to } = decor;
+
+        // Call linterManager to persist the ignored lint
+        console.log(
+          "onIgnore triggered. Source text:",
+          sourceText ? "Present" : "Missing",
+          "Lint Object:",
+          errorDetails.lintObject,
+        );
+        console.log("Full Source Text:", sourceText);
+
+        if (errorDetails.lintObject && sourceText) {
+          try {
+            const linterManager = (
+              await import("../../../app/lib/linterManager")
+            ).default;
+            await linterManager.ignoreLint(sourceText, errorDetails.lintObject);
+          } catch (error) {
+            console.error("Failed to ignore lint in linterManager:", error);
+          }
+        }
+
         pluginState.decor = pluginState.decor.remove(
           pluginState.decor
             .find(from, to)
@@ -132,6 +158,7 @@ export function createProofreadPlugin(
         shortmsg: error.shortMessage,
         type: error.type.typeName,
         replacements: error.replacements,
+        lintObject: error.lintObject, // Pass through the lint object
       });
     }
     return problems;
@@ -139,7 +166,7 @@ export function createProofreadPlugin(
 
   async function check(doc, pluginState, editorView) {
     const decorations = [];
-    const processErrors = (errors, offset, ignoredErrors) => {
+    const processErrors = (errors, offset, ignoredErrors, nodeKey) => {
       errors.forEach((error) => {
         const errorKey = generateErrorKey(error);
         if (!ignoredErrors.has(errorKey)) {
@@ -152,7 +179,7 @@ export function createProofreadPlugin(
               error.from + offset,
               error.to + offset,
               { class: classname },
-              { error, key: errorKey },
+              { error, key: errorKey, nodeKey }, // Store nodeKey in spec
             ),
           );
         }
@@ -176,6 +203,9 @@ export function createProofreadPlugin(
             pluginState.cacheMap.set(nodeKey, {
               problems: errors,
               text: node.textContent,
+              sourceText: getCustomText
+                ? getCustomText(node)
+                : getDefaultCustomText(node), // Store source text
             });
           }
 
@@ -188,6 +218,7 @@ export function createProofreadPlugin(
             pluginState.cacheMap.get(nodeKey)?.problems || [],
             offset,
             pluginState.ignoredErrors,
+            nodeKey, // Pass nodeKey to processErrors
           );
         }
       });
@@ -305,11 +336,13 @@ export function createProofreadPlugin(
         const decorationsAtPos = decorationSet.find(pos, pos);
 
         if (decorationsAtPos && decorationsAtPos.length >= 1) {
+          const decoration = decorationsAtPos[0];
           showSuggestionBox(
             event,
-            decorationsAtPos[0].spec.error,
+            decoration.spec.error,
             view,
-            decorationsAtPos[0],
+            decoration,
+            decoration.spec.nodeKey, // Pass nodeKey from decoration spec
           );
         } else {
           const existingBox = document.querySelector(".proofread-suggestion");
