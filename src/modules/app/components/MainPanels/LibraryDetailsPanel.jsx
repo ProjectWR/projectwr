@@ -34,6 +34,10 @@ import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/De
 import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import ExportTreeComponent from "../LayoutComponents/DetailsPanel/ExportTreeComponent";
+import useItemContextMenu from "../../hooks/useItemContextMenu";
+import ContextMenuWrapper from "../LayoutComponents/ContextMenuWrapper";
+import DialogWrapper from "../LayoutComponents/DialogWrapper";
+import driveOrchestrator from "../../lib/drive/driveOrchestrator";
 
 const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   const { deviceType } = useDeviceType();
@@ -53,7 +57,7 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   const isSynced = syncManager.fireProviderMap.has(libraryId);
 
   const itemMapState = useYMap(
-    dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
+    dataManagerSubdocs.getLibrary(libraryId).getMap("library_props"),
   );
 
   const initialItemProperties = useRef({
@@ -64,6 +68,23 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   const [itemProperties, setItemProperties] = useState({
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
+  });
+
+  const {
+    options,
+    deleteConfirmDialog,
+    setDeleteConfirmDialog,
+    deleteFromDrive,
+    setDeleteFromDrive,
+    userProfile,
+    driveSyncLoading,
+  } = useItemContextMenu({
+    itemId: libraryId,
+    itemType: "library",
+    libraryId: libraryId,
+    ytree: ytree,
+    itemTitle: itemProperties.item_title,
+    formId: "LibraryDetailsContent",
   });
 
   useEffect(() => {
@@ -103,183 +124,241 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
   };
 
   return (
-    <DetailsPanel>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          handleSave();
-        }}
-        id="LibraryDetailsContent"
-        className={formClassName}
-      >
-        <DetailsPanelHeader>
-          {deviceType === "mobile" && (
-            <>
-              <button
-                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
-                         order-1
-          `}
-                onClick={() => {
-                  setPanelOpened(true);
-                  setLibraryId("unselected");
-                }}
-              >
-                <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-              </button>
-
-              <button
-                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 mr-2 rounded-full text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center
-                          order-3`}
-                onClick={() => {
-                  setPanelOpened(true);
-                }}
-                onMouseEnter={() => {
-                  setIsDoorOpen(true);
-                }}
-                onMouseLeave={() => {
-                  setIsDoorOpen(false);
-                }}
-              >
-                <div className="relative w-full h-full">
-                  <AnimatePresence mode="sync">
-                    {isDoorOpen && (
-                      <motion.span
-                        initial={{ opacity: 0.6 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0.6 }}
-                        transition={{ duration: 0.1 }}
-                        key="doorOpen"
-                        className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-100"
-                      ></motion.span>
-                    )}
-
-                    {!isDoorOpen && (
-                      <motion.span
-                        initial={{ opacity: 0.6 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0.6 }}
-                        transition={{ duration: 0.1 }}
-                        key="doorClose"
-                        className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-100"
-                      ></motion.span>
-                    )}
-                  </AnimatePresence>{" "}
-                </div>
-              </button>
-            </>
-          )}
-          <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
-
-          <DetailsPanelNameInput
-            name="item_title"
-            onChange={handleChange}
-            value={itemProperties.item_title}
-            unsavedChangesExist={unsavedChangesExist}
-          />
-
-          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-        </DetailsPanelHeader>
-
-        <DetailsPanelBody>
-          <DetailsPanelProperties>
-            <div className="w-full flex flex-col lg:flex-row gap-4">
-              {/* Description Section - First Column */}
-              <div className="w-full lg:w-1/2">
-                <DetailsPanelDescriptionProp
-                  itemProperties={itemProperties}
-                  updateProperties={(content) => {
-                    setItemProperties({
-                      ...itemProperties,
-                      item_description: content,
-                    });
+    <ContextMenuWrapper triggerClassname="w-full h-full" options={options}>
+      <DetailsPanel>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
+          id="LibraryDetailsContent"
+          className={formClassName}
+        >
+          <DetailsPanelHeader>
+            {deviceType === "mobile" && (
+              <>
+                <button
+                  className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 mx-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+                          order-1
+            `}
+                  onClick={() => {
+                    setPanelOpened(true);
+                    setLibraryId("unselected");
                   }}
-                />
-              </div>
+                >
+                  <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+                </button>
 
-              {/* Buttons Section - Second Column */}
-              <div className="w-full lg:w-1/2">
-                <DetailsPanelButtonsShell>
-                  {/* <DetailsPanelButton
-                    onClick={async () => {
-                      setSyncLoading(true);
+                <button
+                  className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 mr-2 rounded-full text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center
+                            order-3`}
+                  onClick={() => {
+                    setPanelOpened(true);
+                  }}
+                  onMouseEnter={() => {
+                    setIsDoorOpen(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsDoorOpen(false);
+                  }}
+                >
+                  <div className="relative w-full h-full">
+                    <AnimatePresence mode="sync">
+                      {isDoorOpen && (
+                        <motion.span
+                          initial={{ opacity: 0.6 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0.6 }}
+                          transition={{ duration: 0.1 }}
+                          key="doorOpen"
+                          className="icon-[ion--enter] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                        ></motion.span>
+                      )}
 
-                      await syncManager.initFireSync(
-                        dataManagerSubdocs.getLibrary(libraryId)
-                      );
-
-                      await wait(2000);
-
-                      setSyncLoading(false);
-                    }}
-                    icon={
-                      isSynced ? (
-                        <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
-                      ) : (
-                        <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
-                      )
-                    }
-                    text={"Synchronize"}
-                    loading={syncLoading}
-                  /> */}
-                  <DetailsPanelButton
-                    onClick={async () => {
-                      setSaveLoading(true);
-                      console.log("Saving Archive");
-                      await persistenceManagerForSubdocs.saveArchive(
-                        dataManagerSubdocs.getLibrary(libraryId)
-                      );
-
-                      setSaveLoading(false);
-                    }}
-                    icon={
-                      <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-200"></span>
-                    }
-                    text={"Save as archive"}
-                    loading={saveLoading}
-                  />
-                  <DetailsPanelButton
-                    onClick={async () => {
-                      setLoadLoading(true);
-                      console.log("Loading Archive");
-                      await persistenceManagerForSubdocs.loadArchive(
-                        dataManagerSubdocs.getLibrary(libraryId)
-                      );
-                      setLoadLoading(false);
-                    }}
-                    icon={
-                      <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-200"></span>
-                    }
-                    text={"Load from archive"}
-                    loading={loadLoading}
-                  />
-                  <DetailsPanelButton
-                    onClick={async () => {
-                      setDeleteLoading(true);
-                      console.log("Deleting Library");
-                      await wait(1000);
-                      setDeleteLoading(false);
-                    }}
-                    icon={
-                      <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-200"></span>
-                    }
-                    text={"Delete"}
-                    loading={deleteLoading}
-                  />
-                </DetailsPanelButtonsShell>
-              </div>
-            </div>
-            {ytree && (
-              <ExportTreeComponent
-                ytree={ytree}
-                itemId={"root"}
-                libraryId={libraryId}
-              />
+                      {!isDoorOpen && (
+                        <motion.span
+                          initial={{ opacity: 0.6 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0.6 }}
+                          transition={{ duration: 0.1 }}
+                          key="doorClose"
+                          className="icon-[ion--enter-outline] h-full w-full absolute top-0 left-0 transition-colors duration-100"
+                        ></motion.span>
+                      )}
+                    </AnimatePresence>{" "}
+                  </div>
+                </button>
+              </>
             )}
-          </DetailsPanelProperties>
-        </DetailsPanelBody>
-      </form>
-    </DetailsPanel>
+            <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
+
+            <DetailsPanelNameInput
+              name="item_title"
+              onChange={handleChange}
+              value={itemProperties.item_title}
+              unsavedChangesExist={unsavedChangesExist}
+            />
+
+            <DetailsPanelSubmitButton
+              unsavedChangesExist={unsavedChangesExist}
+            />
+          </DetailsPanelHeader>
+
+          <DetailsPanelBody>
+            <DetailsPanelProperties>
+              <div className="w-full flex flex-col lg:flex-row gap-4">
+                {/* Description Section - First Column */}
+                <div className="w-full lg:w-1/2">
+                  <DetailsPanelDescriptionProp
+                    itemProperties={itemProperties}
+                    updateProperties={(content) => {
+                      setItemProperties({
+                        ...itemProperties,
+                        item_description: content,
+                      });
+                    }}
+                  />
+                </div>
+
+                {/* Buttons Section - Second Column */}
+                <div className="w-full lg:w-1/2">
+                  <DetailsPanelButtonsShell>
+                    {/* <DetailsPanelButton
+                      onClick={async () => {
+                        setSyncLoading(true);
+
+                        await syncManager.initFireSync(
+                          dataManagerSubdocs.getLibrary(libraryId)
+                        );
+
+                        await wait(2000);
+
+                        setSyncLoading(false);
+                      }}
+                      icon={
+                        isSynced ? (
+                          <span className="icon-[iconamoon--cloud-yes-thin] h-full w-full transition-colors duration-200"></span>
+                        ) : (
+                          <span className="icon-[iconamoon--cloud-no-thin] h-full w-full transition-colors duration-200"></span>
+                        )
+                      }
+                      text={"Synchronize"}
+                      loading={syncLoading}
+                    /> */}
+                    <DetailsPanelButton
+                      onClick={async () => {
+                        setSaveLoading(true);
+                        console.log("Saving Archive");
+                        await persistenceManagerForSubdocs.saveArchive(
+                          dataManagerSubdocs.getLibrary(libraryId),
+                        );
+
+                        setSaveLoading(false);
+                      }}
+                      icon={
+                        <span className="icon-[ph--download-thin] h-full w-full transition-colors duration-200"></span>
+                      }
+                      text={"Save as archive"}
+                      loading={saveLoading}
+                    />
+                    <DetailsPanelButton
+                      onClick={async () => {
+                        setLoadLoading(true);
+                        console.log("Loading Archive");
+                        await persistenceManagerForSubdocs.loadArchive(
+                          dataManagerSubdocs.getLibrary(libraryId),
+                        );
+                        setLoadLoading(false);
+                      }}
+                      icon={
+                        <span className="icon-[ph--upload-thin] h-full w-full transition-colors duration-200"></span>
+                      }
+                      text={"Load from archive"}
+                      loading={loadLoading}
+                    />
+                    <DetailsPanelButton
+                      onClick={async () => {
+                        // Show confirmation dialog
+                        setDeleteConfirmDialog({
+                          open: true,
+                          libraryId: libraryId,
+                          libraryTitle: itemProperties.item_title,
+                        });
+                      }}
+                      icon={
+                        <span className="icon-[ph--trash-thin] h-full w-full transition-colors duration-200"></span>
+                      }
+                      text={"Delete"}
+                      loading={deleteLoading}
+                    />
+                  </DetailsPanelButtonsShell>
+                </div>
+              </div>
+              {ytree && (
+                <ExportTreeComponent
+                  ytree={ytree}
+                  itemId={"root"}
+                  libraryId={libraryId}
+                />
+              )}
+            </DetailsPanelProperties>
+          </DetailsPanelBody>
+        </form>
+      </DetailsPanel>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              libraryId: null,
+              libraryTitle: null,
+            });
+          }
+        }}
+        title="Delete Library"
+        description={`Are you sure you want to delete "${itemProperties.item_title}"? This action cannot be undone.`}
+        onSubmit={async () => {
+          console.log("Deleting Library", libraryId);
+          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(
+            libraryId,
+          );
+          await persistenceManagerForSubdocs.closeConnectionForYDoc(libraryId);
+          await dataManagerSubdocs.destroyLibrary(libraryId);
+
+          console.log("userProfile:", userProfile, deleteFromDrive);
+          if (userProfile && deleteFromDrive) {
+            console.log("Deleting from Drive too");
+            const googleDriveManager =
+              driveOrchestrator.getManager("googleDrive");
+            googleDriveManager.stopSync(libraryId);
+            googleDriveManager.deleteDocument(libraryId);
+          }
+          setDeleteConfirmDialog({
+            open: false,
+            libraryId: null,
+            libraryTitle: null,
+          });
+          setPanelOpened(true);
+          setLibraryId("unselected");
+        }}
+        submitLabel="Delete"
+        destructive={true}
+        options={[
+          ...(userProfile && !driveSyncLoading
+            ? [
+                {
+                  checked: deleteFromDrive,
+                  label: "Delete from drive",
+                  onChange: (e) => setDeleteFromDrive(e.target.checked),
+                },
+              ]
+            : []),
+        ]}
+      />
+    </ContextMenuWrapper>
   );
 };
 LibraryDetailsPanel.propTypes = {

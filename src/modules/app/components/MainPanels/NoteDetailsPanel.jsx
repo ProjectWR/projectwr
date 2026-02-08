@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import useYMap from "../../hooks/useYMap";
 import { YTree } from "yjs-orderedtree";
@@ -19,6 +19,10 @@ import {
 import { DetailsPanelNameInput } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import { DetailsPanelSubmitButton } from "../LayoutComponents/DetailsPanel/DetailsPanelSubmitButton";
 import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
+import useItemContextMenu from "../../hooks/useItemContextMenu";
+import ContextMenuWrapper from "../LayoutComponents/ContextMenuWrapper";
+import DialogWrapper from "../LayoutComponents/DialogWrapper";
+import dataManagerSubdocs from "../../lib/dataSubDoc";
 
 /**
  *
@@ -26,16 +30,16 @@ import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/De
  * @returns
  */
 const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
-  console.log("library details panel rendering: ", noteId);
-
   const { deviceType } = useDeviceType();
+  const isMd = appStore((state) => state.isMd);
 
+  console.log("library details panel rendering: ", noteId);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const setItemId = appStore((state) => state.setItemId);
 
   const itemMapState = useYMap(ytree.getNodeValueFromKey(noteId));
 
-  const [initialItemProperties, setInitialItemProperties] = useState({
+  const initialItemProperties = useRef({
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
   });
@@ -45,21 +49,38 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
     item_description: itemMapState.item_properties.item_description,
   });
 
+  const {
+    options,
+    deleteConfirmDialog,
+    setDeleteConfirmDialog,
+    deleteFromDrive,
+    setDeleteFromDrive,
+    userProfile,
+    driveSyncLoading,
+  } = useItemContextMenu({
+    itemId: noteId,
+    itemType: "note",
+    libraryId: libraryId,
+    ytree: ytree,
+    itemTitle: itemProperties.item_title,
+    formId: "NoteDetailsContent",
+  });
+
   useEffect(() => {
     setItemProperties({
       item_title: itemMapState.item_properties.item_title,
       item_description: itemMapState.item_properties.item_description,
     });
 
-    setInitialItemProperties({
+    initialItemProperties.current = {
       item_title: itemMapState.item_properties.item_title,
       item_description: itemMapState.item_properties.item_description,
-    });
+    };
   }, [noteId, itemMapState]);
 
   const unsavedChangesExist = useMemo(() => {
-    return !equalityDeep(itemProperties, initialItemProperties);
-  }, [itemProperties, initialItemProperties]);
+    return !equalityDeep(itemProperties, initialItemProperties.current);
+  }, [itemProperties]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,9 +91,9 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
   };
 
   const handleSave = (e) => {
-    const itemMap = ytree.getNodeValueFromKey(noteId);
+    const noteMap = ytree.getNodeValueFromKey(noteId);
 
-    itemMap.set("item_properties", {
+    noteMap.set("item_properties", {
       item_title: itemProperties.item_title,
       item_description: itemProperties.item_description,
     });
@@ -81,56 +102,90 @@ const NoteDetailsPanel = ({ ytree, noteId, libraryId }) => {
   };
 
   return (
-    <DetailsPanel>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          handleSave();
-        }}
-        id="NoteDetailsContent"
-        className={formClassName}
-      >
-        <DetailsPanelHeader>
-          {deviceType === "mobile" && (
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
-             order-first
-          `}
-              onClick={() => {
-                setPanelOpened(true);
-                setItemId("unselected");
-              }}
-            >
-              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-          )}
+    <ContextMenuWrapper triggerClassname="w-full h-full" options={options}>
+      <DetailsPanel>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
+          id="NoteDetailsContent"
+          className={formClassName}
+        >
+          <DetailsPanelHeader>
+            {deviceType === "mobile" && (
+              <button
+                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+              order-first
+            `}
+                onClick={() => {
+                  setPanelOpened(true);
+                  setItemId("unselected");
+                }}
+              >
+                <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+              </button>
+            )}
 
-          <DetailsPanelNameInput
-            name="item_title"
-            onChange={handleChange}
-            value={itemProperties.item_title}
-            unsavedChangesExist={unsavedChangesExist}
-          />
-          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-        </DetailsPanelHeader>
-        {/* <DetailsPanelDivider /> */}
-        <DetailsPanelBody>
-          <DetailsPanelProperties>
-            <DetailsPanelDescriptionProp
-              itemProperties={itemProperties}
-              updateProperties={(content) => {
-                setItemProperties({
-                  ...itemProperties,
-                  item_description: content,
-                });
-              }}
-              label={"Note"}
+            <DetailsPanelNameInput
+              name="item_title"
+              onChange={handleChange}
+              value={itemProperties.item_title}
+              unsavedChangesExist={unsavedChangesExist}
             />
-          </DetailsPanelProperties>
-        </DetailsPanelBody>
-      </form>
-    </DetailsPanel>
+            <DetailsPanelSubmitButton
+              unsavedChangesExist={unsavedChangesExist}
+            />
+          </DetailsPanelHeader>
+          {/* <DetailsPanelDivider /> */}
+          <DetailsPanelBody>
+            <DetailsPanelProperties>
+              <DetailsPanelDescriptionProp
+                itemProperties={itemProperties}
+                updateProperties={(content) => {
+                  setItemProperties({
+                    ...itemProperties,
+                    item_description: content,
+                  });
+                }}
+                label={"Note"}
+              />
+            </DetailsPanelProperties>
+          </DetailsPanelBody>
+        </form>
+      </DetailsPanel>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              itemId: null,
+              itemType: null,
+              itemTitle: null,
+            });
+          }
+        }}
+        title={`Delete ${deleteConfirmDialog.itemType}`}
+        description={`Are you sure you want to delete "${
+          deleteConfirmDialog.itemTitle
+        }"? This action cannot be undone.`}
+        onSubmit={async () => {
+          dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+          setDeleteConfirmDialog({
+            open: false,
+            itemId: null,
+            itemType: null,
+            itemTitle: null,
+          });
+          setPanelOpened(true);
+        }}
+        submitLabel="Delete"
+        destructive={true}
+      />
+    </ContextMenuWrapper>
   );
 };
 

@@ -32,6 +32,12 @@ import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import { DetailsPanelButton } from "../LayoutComponents/DetailsPanel/DetailsPanelButton";
 import ExportTreeComponent from "../LayoutComponents/DetailsPanel/ExportTreeComponent";
+import useItemContextMenu from "../../hooks/useItemContextMenu";
+import ContextMenuWrapper from "../LayoutComponents/ContextMenuWrapper";
+import DialogWrapper from "../LayoutComponents/DialogWrapper";
+import driveOrchestrator from "../../lib/drive/driveOrchestrator";
+import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
+import dataManagerSubdocs from "../../lib/dataSubDoc";
 
 let lexer = new Tokenizr();
 
@@ -84,6 +90,23 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
     item_description: itemMapState.item_properties.item_description,
     item_progress: itemMapState.item_properties.item_progress,
     item_goal: itemMapState.item_properties.item_goal,
+  });
+
+  const {
+    options,
+    deleteConfirmDialog,
+    setDeleteConfirmDialog,
+    deleteFromDrive,
+    setDeleteFromDrive,
+    userProfile,
+    driveSyncLoading,
+  } = useItemContextMenu({
+    itemId: bookId,
+    itemType: "book",
+    libraryId: libraryId,
+    ytree: ytree,
+    itemTitle: itemProperties.item_title,
+    formId: "BookDetailsContent",
   });
 
   useEffect(() => {
@@ -161,69 +184,72 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
   }, [bookId, libraryId, setWordCount, getWordCount]);
 
   return (
-    <DetailsPanel>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          handleSave();
-        }}
-        id="BookDetailsContent"
-        className={formClassName}
-      >
-        <DetailsPanelHeader>
-          <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
+    <ContextMenuWrapper triggerClassname="w-full h-full" options={options}>
+      <DetailsPanel>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
+          id="BookDetailsContent"
+          className={formClassName}
+        >
+          <DetailsPanelHeader>
+            <DetailsPanelButtonPlaceHolder exist={unsavedChangesExist} />
 
-          <DetailsPanelNameInput
-            name="item_title"
-            onChange={handleChange}
-            value={itemProperties.item_title}
-            unsavedChangesExist={unsavedChangesExist}
-          />
-          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-        </DetailsPanelHeader>
-        {/* <DetailsPanelDivider /> */}
+            <DetailsPanelNameInput
+              name="item_title"
+              onChange={handleChange}
+              value={itemProperties.item_title}
+              unsavedChangesExist={unsavedChangesExist}
+            />
+            <DetailsPanelSubmitButton
+              unsavedChangesExist={unsavedChangesExist}
+            />
+          </DetailsPanelHeader>
+          {/* <DetailsPanelDivider /> */}
 
-        <DetailsPanelBody>
-          <DetailsPanelProperties>
-            <div className="w-full flex flex-col lg:flex-row gap-4">
-              {/* Description Section - First Column */}
-              <div className="w-full lg:w-1/2">
-                <DetailsPanelDescriptionProp
-                  description={itemProperties.item_description}
-                  updateProperties={(content) => {
-                    setItemProperties({
-                      ...itemProperties,
-                      item_description: content,
-                    });
-                  }}
-                />
+          <DetailsPanelBody>
+            <DetailsPanelProperties>
+              <div className="w-full flex flex-col lg:flex-row gap-4">
+                {/* Description Section - First Column */}
+                <div className="w-full lg:w-1/2">
+                  <DetailsPanelDescriptionProp
+                    description={itemProperties.item_description}
+                    updateProperties={(content) => {
+                      setItemProperties({
+                        ...itemProperties,
+                        item_description: content,
+                      });
+                    }}
+                  />
+                </div>
+
+                {/* Word Count and Status Section - Second Column */}
+                <div className="w-full lg:w-1/2 flex flex-col gap-3">
+                  <h2 className="w-fit h-fit px-2 pt-1  flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+                    &nbsp;
+                  </h2>
+                  <DetailsPanelWordCountProp
+                    currentWordCount={wordCount}
+                    itemProperties={itemProperties}
+                    onChange={handleChange}
+                  />
+                  <DetailsPanelStatusProp
+                    itemProperties={itemProperties}
+                    setItemProperties={setItemProperties}
+                  />
+                </div>
               </div>
-
-              {/* Word Count and Status Section - Second Column */}
-              <div className="w-full lg:w-1/2 flex flex-col gap-3">
-                <h2 className="w-fit h-fit px-2 pt-1  flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
-                  &nbsp;
-                </h2>
-                <DetailsPanelWordCountProp
-                  currentWordCount={wordCount}
-                  itemProperties={itemProperties}
-                  onChange={handleChange}
+              {ytree && (
+                <ExportTreeComponent
+                  ytree={ytree}
+                  itemId={bookId}
+                  libraryId={libraryId}
                 />
-                <DetailsPanelStatusProp
-                  itemProperties={itemProperties}
-                  setItemProperties={setItemProperties}
-                />
-              </div>
-            </div>
-            {ytree && (
-              <ExportTreeComponent
-                ytree={ytree}
-                itemId={bookId}
-                libraryId={libraryId}
-              />
-            )}
-            {/* <div className="prop w-full h-fit relative">
+              )}
+              {/* <div className="prop w-full h-fit relative">
             <h2 className="w-full h-fit pt-2 px-3 border-t border-x border-appLayoutBorder rounded-t-md flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
               Book Description
             </h2>
@@ -244,10 +270,41 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
               value={itemProperties.item_description}
             />
           </div> */}
-          </DetailsPanelProperties>
-        </DetailsPanelBody>
-      </form>
-    </DetailsPanel>
+            </DetailsPanelProperties>
+          </DetailsPanelBody>
+        </form>
+      </DetailsPanel>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              itemId: null,
+              itemType: null,
+              itemTitle: null,
+            });
+          }
+        }}
+        title={`Delete ${deleteConfirmDialog.itemType}`}
+        description={`Are you sure you want to delete "${
+          deleteConfirmDialog.itemTitle
+        }"? This action cannot be undone.`}
+        onSubmit={async () => {
+          dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+          setDeleteConfirmDialog({
+            open: false,
+            itemId: null,
+            itemType: null,
+            itemTitle: null,
+          });
+          setPanelOpened(true);
+        }}
+        submitLabel="Delete"
+        destructive={true}
+      />
+    </ContextMenuWrapper>
   );
 };
 

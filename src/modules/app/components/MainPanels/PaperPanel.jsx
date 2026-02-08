@@ -34,6 +34,11 @@ import { useViewportSize } from "@mantine/hooks";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import templateManager from "../../lib/templates";
 import { useKeyLocalState } from "../../hooks/useLocalState";
+import useItemContextMenu from "../../hooks/useItemContextMenu";
+import ContextMenuWrapper from "../LayoutComponents/ContextMenuWrapper";
+import DialogWrapper from "../LayoutComponents/DialogWrapper";
+import driveOrchestrator from "../../lib/drive/driveOrchestrator";
+import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
 
 /**
  *
@@ -58,6 +63,29 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   const [templateContent, setTemplateContent] = useState(null);
 
   console.log("paper panel rendering: ", paperId, lastSelectionPosition);
+
+  const itemMapState = useYMap(ytree.getNodeValueFromKey(paperId));
+
+  const [itemProperties, setItemProperties] = useState({
+    item_title: itemMapState.item_properties.item_title,
+  });
+
+  const {
+    options,
+    deleteConfirmDialog,
+    setDeleteConfirmDialog,
+    deleteFromDrive,
+    setDeleteFromDrive,
+    userProfile,
+    driveSyncLoading,
+  } = useItemContextMenu({
+    itemId: paperId,
+    itemType: "paper",
+    libraryId: libraryId,
+    ytree: ytree,
+    itemTitle: itemProperties.item_title,
+    formId: "PaperDetailsContent",
+  });
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -95,13 +123,7 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
     };
   }, [setShowActivityBar, deviceType]);
 
-  const itemMapState = useYMap(ytree.getNodeValueFromKey(paperId));
-
   const initialItemProperties = useRef({
-    item_title: itemMapState.item_properties.item_title,
-  });
-
-  const [itemProperties, setItemProperties] = useState({
     item_title: itemMapState.item_properties.item_title,
   });
 
@@ -136,80 +158,118 @@ const PaperPanel = ({ ytree, paperId, libraryId }) => {
   };
 
   return (
-    <DetailsPanel>
-      <form
-        noValidate
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          handleSave();
-        }}
-        className={formClassName}
-      >
-        <DetailsPanelHeader>
-          <Popover
-            offset={{ mainAxis: 6, crossAxis: 5 }}
-            classNames={{
-              dropdown:
-                "w-[30rem] min-w-[30rem] h-[30rem] shadow-md shadow-appLayoutGentleShadow bg-appBackgroundAccent/90 border border-appLayoutBorder text-appLayoutText backdrop-blur-sm",
-              arrow: "border border-appLayoutBorder",
-            }}
-            position="bottom-start"
-          >
-            {" "}
-            <PopOverTargetButton>
-              <span className="icon-[bi--sliders2] w-[70%] h-[70%]"></span>
-            </PopOverTargetButton>
-            <PopoverDropdown>
-              <EditorStylePickerButton
-                ytree={ytree}
-                paperId={paperId}
-                libraryId={libraryId}
-              />
-            </PopoverDropdown>
-          </Popover>
+    <ContextMenuWrapper triggerClassname="w-full h-full" options={options}>
+      <DetailsPanel>
+        <form
+          noValidate
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
+          className={formClassName}
+          id="PaperDetailsContent"
+        >
+          <DetailsPanelHeader>
+            <Popover
+              offset={{ mainAxis: 6, crossAxis: 5 }}
+              classNames={{
+                dropdown:
+                  "w-[30rem] min-w-[30rem] h-[30rem] shadow-md shadow-appLayoutGentleShadow bg-appBackgroundAccent/90 border border-appLayoutBorder text-appLayoutText backdrop-blur-sm",
+                arrow: "border border-appLayoutBorder",
+              }}
+              position="bottom-start"
+            >
+              {" "}
+              <PopOverTargetButton>
+                <span className="icon-[bi--sliders2] w-[70%] h-[70%]"></span>
+              </PopOverTargetButton>
+              <PopoverDropdown>
+                <EditorStylePickerButton
+                  ytree={ytree}
+                  paperId={paperId}
+                  libraryId={libraryId}
+                />
+              </PopoverDropdown>
+            </Popover>
 
-          <DetailsPanelNameInput
-            name="item_title"
-            onChange={handleChange}
-            value={itemProperties.item_title}
-          />
-
-          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-
-          <DetailsPanelButtonOnClick
-            exist={true}
-            onClick={async () => {
-              await getCurrentWindow().setDecorations(true);
-              await getCurrentWindow().setFullscreen(!fullscreen);
-              await toggle();
-            }}
-            icon={
-              <span className="icon-[material-symbols-light--fullscreen] w-9/12 h-9/12"></span>
-            }
-          />
-        </DetailsPanelHeader>
-
-        <DetailsPanelDivider />
-        <DetailsPanelBody>
-          <motion.div
-            id="PaperBody"
-            ref={ref}
-            className="grow h-full min-h-0 min-w-0 minbasis-0"
-          >
-            <TipTapEditor
-              key={`${paperId}-${paperEditorTemplateId}`}
-              libraryId={libraryId}
-              paperId={paperId}
-              yXmlFragment={ytree.getNodeValueFromKey(paperId).get("paper_xml")}
-              setHeaderOpened={setHeaderOpened}
-              preferences={preferences}
-              lastSelectionPosition={lastSelectionPosition}
+            <DetailsPanelNameInput
+              name="item_title"
+              onChange={handleChange}
+              value={itemProperties.item_title}
+              unsavedChangesExist={unsavedChangesExist}
             />
-          </motion.div>
-        </DetailsPanelBody>
-      </form>
-    </DetailsPanel>
+
+            <DetailsPanelSubmitButton
+              unsavedChangesExist={unsavedChangesExist}
+            />
+
+            <DetailsPanelButtonOnClick
+              exist={true}
+              onClick={async () => {
+                await getCurrentWindow().setDecorations(true);
+                await getCurrentWindow().setFullscreen(!fullscreen);
+                await toggle();
+              }}
+              icon={
+                <span className="icon-[material-symbols-light--fullscreen] w-9/12 h-9/12"></span>
+              }
+            />
+          </DetailsPanelHeader>
+
+          <DetailsPanelDivider />
+          <DetailsPanelBody>
+            <motion.div
+              id="PaperBody"
+              ref={ref}
+              className="grow h-full min-h-0 min-w-0 minbasis-0"
+            >
+              <TipTapEditor
+                key={`${paperId}-${paperEditorTemplateId}`}
+                libraryId={libraryId}
+                paperId={paperId}
+                yXmlFragment={ytree
+                  .getNodeValueFromKey(paperId)
+                  .get("paper_xml")}
+                setHeaderOpened={setHeaderOpened}
+                preferences={preferences}
+                lastSelectionPosition={lastSelectionPosition}
+              />
+            </motion.div>
+          </DetailsPanelBody>
+        </form>
+      </DetailsPanel>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              itemId: null,
+              itemType: null,
+              itemTitle: null,
+            });
+          }
+        }}
+        title={`Delete ${deleteConfirmDialog.itemType}`}
+        description={`Are you sure you want to delete "${
+          deleteConfirmDialog.itemTitle
+        }"? This action cannot be undone.`}
+        onSubmit={async () => {
+          dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+          setDeleteConfirmDialog({
+            open: false,
+            itemId: null,
+            itemType: null,
+            itemTitle: null,
+          });
+          setPanelOpened(true);
+        }}
+        submitLabel="Delete"
+        destructive={true}
+      />
+    </ContextMenuWrapper>
   );
 };
 

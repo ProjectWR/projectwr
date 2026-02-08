@@ -24,6 +24,11 @@ import useRefreshableTimer from "../../hooks/useRefreshableTimer";
 import { DetailsPanelDescriptionProp } from "../LayoutComponents/DetailsPanel/DetailsPanelProps";
 import { DetailsPanelNotesPanel } from "../LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import ExportTreeComponent from "../LayoutComponents/DetailsPanel/ExportTreeComponent";
+import useItemContextMenu from "../../hooks/useItemContextMenu";
+import ContextMenuWrapper from "../LayoutComponents/ContextMenuWrapper";
+import DialogWrapper from "../LayoutComponents/DialogWrapper";
+import driveOrchestrator from "../../lib/drive/driveOrchestrator";
+import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
 
 /**
  *
@@ -50,6 +55,23 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
   const [itemProperties, setItemProperties] = useState({
     item_title: itemMapState.item_properties.item_title,
     item_description: itemMapState.item_properties.item_description,
+  });
+
+  const {
+    options,
+    deleteConfirmDialog,
+    setDeleteConfirmDialog,
+    deleteFromDrive,
+    setDeleteFromDrive,
+    userProfile,
+    driveSyncLoading,
+  } = useItemContextMenu({
+    itemId: sectionId,
+    itemType: "section",
+    libraryId: libraryId,
+    ytree: ytree,
+    itemTitle: itemProperties.item_title,
+    formId: "SectionDetailsContent",
   });
 
   useEffect(() => {
@@ -89,59 +111,93 @@ const SectionDetailsPanel = ({ ytree, sectionId, libraryId }) => {
   };
 
   return (
-    <DetailsPanel>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          handleSave();
+    <ContextMenuWrapper triggerClassname="w-full h-full" options={options}>
+      <DetailsPanel>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleSave();
+          }}
+          id="SectionDetailsContent"
+          className={formClassName}
+        >
+          <DetailsPanelHeader>
+            {deviceType === "mobile" && (
+              <button
+                className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
+              order-first
+            `}
+                onClick={() => {
+                  setPanelOpened(true);
+                  setItemId("unselected");
+                }}
+              >
+                <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
+              </button>
+            )}
+            <DetailsPanelNameInput
+              name="item_title"
+              onChange={handleChange}
+              value={itemProperties.item_title}
+              unsavedChangesExist={unsavedChangesExist}
+            />
+            <DetailsPanelSubmitButton
+              unsavedChangesExist={unsavedChangesExist}
+            />
+          </DetailsPanelHeader>
+          {/* <DetailsPanelDivider /> */}
+          <DetailsPanelBody>
+            <DetailsPanelProperties>
+              <DetailsPanelDescriptionProp
+                itemProperties={itemProperties}
+                updateProperties={(content) => {
+                  setItemProperties({
+                    ...itemProperties,
+                    item_description: content,
+                  });
+                }}
+              />
+              <ExportTreeComponent
+                ytree={ytree}
+                itemId={sectionId}
+                libraryId={libraryId}
+              />
+            </DetailsPanelProperties>
+          </DetailsPanelBody>
+        </form>
+      </DetailsPanel>
+
+      <DialogWrapper
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({
+              open: false,
+              itemId: null,
+              itemType: null,
+              itemTitle: null,
+            });
+          }
         }}
-        id="BookDetailsContainer"
-        className={formClassName}
-      >
-        <DetailsPanelHeader>
-          {deviceType === "mobile" && (
-            <button
-              className={`w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-200 p-1 ml-1 rounded-full hover:bg-appLayoutHover hover:text-appLayoutHighlight flex items-center justify-center
-             order-first
-          `}
-              onClick={() => {
-                setPanelOpened(true);
-                setItemId("unselected");
-              }}
-            >
-              <span className="icon-[material-symbols-light--arrow-back-rounded] hover:text-appLayoutHighlight rounded-full w-full h-full"></span>
-            </button>
-          )}
-          <DetailsPanelNameInput
-            name="item_title"
-            onChange={handleChange}
-            value={itemProperties.item_title}
-            unsavedChangesExist={unsavedChangesExist}
-          />
-          <DetailsPanelSubmitButton unsavedChangesExist={unsavedChangesExist} />
-        </DetailsPanelHeader>
-        {/* <DetailsPanelDivider /> */}
-        <DetailsPanelBody>
-          <DetailsPanelProperties>
-            <DetailsPanelDescriptionProp
-              itemProperties={itemProperties}
-              updateProperties={(content) => {
-                setItemProperties({
-                  ...itemProperties,
-                  item_description: content,
-                });
-              }}
-            />
-            <ExportTreeComponent
-              ytree={ytree}
-              itemId={sectionId}
-              libraryId={libraryId}
-            />
-          </DetailsPanelProperties>
-        </DetailsPanelBody>
-      </form>
-    </DetailsPanel>
+        title={`Delete ${deleteConfirmDialog.itemType}`}
+        description={`Are you sure you want to delete "${
+          deleteConfirmDialog.itemTitle
+        }"? This action cannot be undone.`}
+        onSubmit={async () => {
+          dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+          setDeleteConfirmDialog({
+            open: false,
+            itemId: null,
+            itemType: null,
+            itemTitle: null,
+          });
+          setPanelOpened(true);
+        }}
+        submitLabel="Delete"
+        destructive={true}
+      />
+    </ContextMenuWrapper>
   );
 };
 
