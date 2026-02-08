@@ -101,26 +101,6 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
             </div>
           </StyledTooltip>
         </ActionButton>
-        {refreshNotesPanel && (
-          <ActionButton
-            onClick={() => {
-              refreshNotesPanel();
-            }}
-          >
-            <StyledTooltip label="Refresh Notes Panel" position="bottom">
-              <div className={`h-full w-actionBarButtonIconSize relative`}>
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  key="refreshNotesPanelButton"
-                  className="icon-[material-symbols-light--refresh] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-                ></motion.span>
-              </div>
-            </StyledTooltip>
-          </ActionButton>
-        )}
 
         <ActionButton
           onClick={() => {

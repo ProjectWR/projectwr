@@ -6,12 +6,21 @@ export const DetailsPanelButtonsShell = ({ children }) => {
   const { deviceType } = useDeviceType();
 
   return (
-    <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-2 border border-transparent rounded-md overflow-hidden">
-      <h2 className="w-full h-fit px-2 pt-1 flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+    <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+      <h2 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
         Actions
       </h2>
-      {children}
+      <div className="divider w-full px-1">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
+      <div
+        id="LibraryActionList"
+        className="w-full flex flex-wrap px-1 mt-1 gap-1"
+      >
+        {children}
+      </div>
     </div>
+
   );
 };
 
@@ -26,9 +35,9 @@ export const DetailsPanelButton = ({
     <button
       onClick={onClick}
       disabled={loading || disabled}
-      className="min-h-fit flex gap-2 items-center text-libraryDirectoryBookNodeFontSize p-2 px-3 rounded-lg border border-appLayoutBorder hover:bg-appLayoutInverseHover bg-transparent transition-colors duration-200"
+      className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
     >
-      {loading && (<span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>)} <div className="w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize">{icon}</div> {text}
+      {loading && (<span className="icon-[line-md--loading-twotone-loop]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>)} <div className="w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize">{icon}</div> {text}
     </button>
   )
 };

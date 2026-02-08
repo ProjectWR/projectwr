@@ -222,23 +222,26 @@ export const DetailsPanelDescriptionProp = ({
   }, [editor, selectingError, setSearchQuery]);
 
   return (
-    <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-2 border border-transparent rounded-md overflow-hidden">
-      <h2 className="w-fit h-fit px-2 pt-1 flex justify-start items-center  text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+    <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+      <h2 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
         {label}
       </h2>
-      <ContextMenuWrapper options={options} triggerClassname="w-full grow">
+      <div className="divider w-full px-1">
+        <div className="w-full h-px bg-appLayoutBorder"></div>
+      </div>
+      <ContextMenuWrapper options={options} triggerClassname="w-full grow px-1">
         <RichTextEditor
           editor={editor}
           variant="subtle"
           classNames={{
-            root: "bg-appBackground h-fit border border-appLayoutBorder rounded-lg px-1 flex flex-col",
+            root: "bg-appBackground h-fit border border-appLayoutBorder rounded-lg px-px flex flex-col",
             Typography: "grow h-fit w-full",
-            toolbar: "bg-appBackground border-b border-appLayoutBorder",
+            toolbar: "bg-appBackground border-b h-fit rounded-t-lg border-appLayoutBorder",
             content:
-              "bg-appBackground text-appLayoutText max-h-detailsPanelDescriptionInputHeight h-fit overflow-y-scroll px-3 py-3 text-libraryDirectoryBookNodeFontSize DetailsPanelDescriptionProp",
-            controlsGroup: "bg-appBackground gap-1",
+              "bg-appBackground rounded-b-lg text-appLayoutText max-h-detailsPanelDescriptionInputHeight h-fit overflow-y-scroll px-3 py-3 text-libraryDirectoryBookNodeFontSize DetailsPanelDescriptionProp",
+            controlsGroup: "bg-appBackground gap-1 h-fit",
             control:
-              "bg-appBackground size-libraryDirectoryBookNodeHeight border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
+              "bg-appBackground size-libraryDirectoryBookNodeIconSize border-none border-appLayoutBorder text-appLayoutText overflow-hidden hover:bg-appLayoutInverseHover hover:text-appLayoutText  data-active:bg-appLayoutPressed data-active:shadow-inner shadow-appLayoutShadow",
           }}
         >
           <style>
