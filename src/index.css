@@ -309,7 +309,7 @@ body,
     --activityBarIconSize: calc(var(--uiScale) * 1.5rem);
     --activityBarFontSize: calc(var(--uiScale) * 1.2rem);
 
-    --homePanelHeaderHeight: calc(var(--uiScale) * 6rem);
+    --homePanelHeaderHeight: calc(var(--uiScale) * 4rem);
     --homePanelHeaderFontSize: calc(var(--uiScale) * 4rem);
     --homePanelSubtitleFontSize: calc(var(--uiScale) * 1.5rem);
 
@@ -800,7 +800,7 @@ input[type="number"] {
   }
 
   .contextMenuSeparator {
-    @apply h-px w-full bg-appLayoutBorder;
+    @apply h-px w-full bg-appLayoutBorder mt-1 mb-1;
   }
 
   .rightSlot {

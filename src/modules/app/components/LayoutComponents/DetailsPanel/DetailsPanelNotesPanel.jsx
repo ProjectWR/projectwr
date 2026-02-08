@@ -1,34 +1,17 @@
 import { AnimatePresence, motion } from "motion/react";
 import { appStore } from "../../../stores/appStore";
-import {
-  lazy,
-  Suspense,
-  useCallback,
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { max, min } from "lib0/math";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import useYMap from "../../../hooks/useYMap";
-import { useDeviceType } from "../../../ConfigProviders/DeviceTypeProvider";
-import { equalityDeep } from "lib0/function";
-import Highlight from "@tiptap/extension-highlight";
-import Underline from "@tiptap/extension-underline";
-import { BubbleMenu, FloatingMenu, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { RichTextEditor } from "@mantine/tiptap";
-import ProsemirrorProofreadExtension from "../../../../editor/TipTapEditor/Extensions/ProsemirrorProofreadExtension";
-import ContextMenuWrapper from "../ContextMenuWrapper";
+import PropTypes from "prop-types";
+
 import { ScrollArea } from "@mantine/core";
 import { queryData } from "../../../lib/search";
 import {
   HoverListBody,
   HoverListButton,
   HoverListDivider,
-  HoverListFooter,
   HoverListHeader,
   HoverListItem,
   HoverListShell,
@@ -37,7 +20,6 @@ import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { useDebouncedCallback } from "use-debounce";
 import { mainPanelStore } from "../../../stores/mainPanelStore";
 import useOuterClick from "../../../../design-system/useOuterClick";
-import useRefreshableTimer from "../../../hooks/useRefreshableTimer";
 
 const lazyWithPrefetch = (factory) => {
   factory();
@@ -105,7 +87,7 @@ export const DetailsPanelNotesPanel = ({
       } else {
         throw new Error("library not found locally");
       }
-    } catch (e) {
+    } catch {
       setError("Something went wrong");
       return () => {};
     }
@@ -236,7 +218,7 @@ export const DetailsPanelNotesPanel = ({
                 )}
 
                 <motion.div
-                  className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${
+                  className={`absolute h-full w-[6px] top-0 z-50 hover:bg-sidePanelDragHandle ${
                     notesPanelSliderActive
                       ? "bg-sidePanelDragHandle"
                       : "bg-transparent"
@@ -316,7 +298,7 @@ const NotesContent = ({ libraryId, itemId, ytree }) => {
 
   const onCreateNoteClick = useCallback(() => {
     dataManagerSubdocs.createEmptyNote(ytree, itemId);
-  }, [ytree, itemId, libraryId]);
+  }, [ytree, itemId]);
 
   return (
     <>
@@ -489,4 +471,29 @@ const SearchResults = ({
       </HoverListBody>
     </HoverListShell>
   );
+};
+
+DetailsPanelNotesPanel.propTypes = {
+  isNotesPanelAwake: PropTypes.bool,
+  refreshNotesPanel: PropTypes.func,
+  keepNotesPanelAwake: PropTypes.func,
+};
+
+NotesContent.propTypes = {
+  libraryId: PropTypes.string.isRequired,
+  itemId: PropTypes.string.isRequired,
+  ytree: PropTypes.object.isRequired,
+};
+
+SortedNotes.propTypes = {
+  sortedNoteIds: PropTypes.array.isRequired,
+  libraryId: PropTypes.string.isRequired,
+  ytree: PropTypes.object.isRequired,
+};
+
+SearchResults.propTypes = {
+  libraryId: PropTypes.string.isRequired,
+  input: PropTypes.string,
+  onClick: PropTypes.func,
+  visible: PropTypes.bool,
 };

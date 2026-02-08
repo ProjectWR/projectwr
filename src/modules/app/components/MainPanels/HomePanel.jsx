@@ -1,14 +1,24 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
-import { useMemo, useState } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { checkForYTree, YTree } from "yjs-orderedtree";
-import dataManagerSubdocs from "../../lib/dataSubDoc";
+import dataManagerSubdocs, { getArrayFromYDocMap } from "../../lib/dataSubDoc";
 import { appStore } from "../../stores/appStore";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import useMainPanel from "../../hooks/useMainPanel";
 import { useAllLocalState } from "../../hooks/useLocalState";
 import localStateManager from "../../lib/localState";
 import PropTypes from "prop-types";
+import { sortArrayWithPropsByOrder } from "../../utils/orderUtil";
+import { equalityDeep } from "lib0/function";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
   const [hover, setHover] = useState(false);
@@ -18,15 +28,20 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}
-      className="px-3 py-1 w-full h-fit flex items-center justify-between rounded-md  text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
+      className="py-1 px-2 w-full h-fit flex items-center gap-3 text-nowrap hover:bg-appLayoutInverseHover justify-between rounded-md  text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
     >
-      <span className="h-fit flex items-center gap-2">
-        <motion.span transition={{ duration: 0.2 }}>{name}</motion.span>
-        <span className="text-recentlyOpenedDateFontSize w-fit pt-1 text-nowrap">
+      <span className="h-fit flex grow basis-0 min-w-0 items-center gap-2">
+        <motion.span
+          className="overflow-hidden overflow-ellipsis min-w-0"
+          transition={{ duration: 0.2 }}
+        >
+          {name}
+        </motion.span>
+        <span className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-nowrap">
           {type}
         </span>
       </span>
-      <span className="text-libraryDirectoryBookNodeFontSize">
+      <span className="text-libraryDirectoryBookNodeFontSize min-w-fit">
         {new Date(props.lastOpened).toLocaleString()}
       </span>
     </button>
@@ -58,6 +73,86 @@ const HomePanel = () => {
   const { activatePanel } = useMainPanel();
 
   const allLocalState = useAllLocalState();
+
+  const prevLibraryIdsWithPropsRef = useRef(null);
+
+  // Get all libraries with props
+  const libraryIdsWithProps = useSyncExternalStore(
+    (callback) => {
+      dataManagerSubdocs.addLibraryYDocMapCallback(callback);
+      const libraryIds = getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap);
+      for (const [libraryId] of libraryIds.values()) {
+        dataManagerSubdocs
+          .getLibrary(libraryId)
+          .getMap("library_props")
+          .observe(callback);
+      }
+
+      return () => {
+        const newLibraryIds = getArrayFromYDocMap(
+          dataManagerSubdocs.libraryYDocMap,
+        );
+        for (const [libraryId] of newLibraryIds.values()) {
+          dataManagerSubdocs
+            .getLibrary(libraryId)
+            .getMap("library_props")
+            .unobserve(callback);
+        }
+        dataManagerSubdocs.removeLibraryYDocMapCallback(callback);
+      };
+    },
+    () => {
+      const libraryIds = getArrayFromYDocMap(dataManagerSubdocs.libraryYDocMap);
+
+      const libraryIdsWithProps = [];
+      for (const [libraryId] of libraryIds) {
+        libraryIdsWithProps.push([
+          libraryId,
+          dataManagerSubdocs
+            .getLibrary(libraryId)
+            .getMap("library_props")
+            .toJSON(),
+        ]);
+      }
+
+      if (
+        prevLibraryIdsWithPropsRef.current !== null &&
+        prevLibraryIdsWithPropsRef.current !== undefined &&
+        equalityDeep(prevLibraryIdsWithPropsRef.current, libraryIdsWithProps)
+      ) {
+        return prevLibraryIdsWithPropsRef.current;
+      } else {
+        prevLibraryIdsWithPropsRef.current = libraryIdsWithProps;
+        return prevLibraryIdsWithPropsRef.current;
+      }
+    },
+  );
+
+  const sortedLibraryIds = useMemo(
+    () => sortArrayWithPropsByOrder([...libraryIdsWithProps]),
+    [libraryIdsWithProps],
+  );
+
+  const handleLibrarySelect = useCallback(
+    (libraryId) => {
+      setLibraryId(libraryId);
+      setItemId("unselected");
+      if (deviceType === "mobile") {
+        setPanelOpened(false);
+      }
+      setPanelOpened(true);
+      setActivity("libraries");
+      activatePanel("libraries", "details", [libraryId]);
+    },
+    [
+      setLibraryId,
+      setItemId,
+      deviceType,
+      setPanelOpened,
+      setActivity,
+      activatePanel,
+    ],
+  );
 
   const latestItems = useMemo(() => {
     return Object.entries(allLocalState)
@@ -93,12 +188,21 @@ const HomePanel = () => {
             minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
           }}
         >
-          <div
+          <button
+            onClick={() => {
+              openUrl("https://www.sylvanite.app");
+            }}
             id="HomeHeader"
-            className={`h-fit min-h-fit w-full flex flex-col items-center
+            className={`h-fit min-h-fit w-full flex items-center justify-start gap-4 cursor-pointer
             ${deviceType === "desktop" && "px-6"}
           `}
           >
+            <img
+              src="/src/assets/pen.svg"
+              width={400}
+              height={400}
+              className="w-homePanelHeaderHeight h-homePanelHeaderHeight stroke-appLayoutText"
+            />
             <motion.h1
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -107,27 +211,64 @@ const HomePanel = () => {
             >
               Sylvanite
             </motion.h1>
-          </div>
+          </button>
 
           <div
             id="HomeBody"
-            className="h-fit min-h-fit w-full  flex flex-col items-center justify-start mt-6"
+            className="h-fit min-h-fit w-full flex items-start justify-start mt-6"
           >
+            <AnimatePresence>
+              {
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="grow min-w-0 basis-0 h-fit overflow-hidden rounded-lg"
+                >
+                  <div className={`h-fit w-full`}>
+                    <div className="w-full h-full flex flex-col items-center justify-start">
+                      <div className="h-fit w-full text-libraryDirectoryBookNodeFontSize px-5 py-1 flex items-center justify-between">
+                        <span>Your Libraries</span>
+                        <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
+                      </div>
+                      <div className="divider w-full px-4">
+                        <div className="w-full h-px bg-appLayoutBorder"></div>
+                      </div>
+                      <div
+                        id="HomePanelLibraryList"
+                        className="w-full flex flex-wrap px-4 mt-1 gap-1"
+                      >
+                        {sortedLibraryIds.map(([libraryId, props]) => (
+                          <button
+                            key={libraryId}
+                            onClick={() => handleLibrarySelect(libraryId)}
+                            className="w-fit h-fit text-libraryDirectoryBookNodeFontSize px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
+                          >
+                            {props?.item_properties?.item_title ||
+                              "Untitled Library"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              }
+            </AnimatePresence>
             <AnimatePresence>
               {latestItems.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="w-full h-fit overflow-hidden rounded-lg"
+                  className="grow min-w-0 basis-0 h-fit overflow-hidden rounded-lg"
                 >
                   <div className={`h-fit w-full`}>
-                    <div className="w-full h-full flex flex-col items-center justify-start pt-3 pb-2 gap-1">
-                      <div className="h-fit w-full text-xl px-6 pb-2 flex items-center justify-between">
+                    <div className="w-full h-full flex flex-col items-center justify-start">
+                      <div className="h-fit w-full text-libraryDirectoryBookNodeFontSize px-5 py-1 flex items-center justify-between">
                         <span>Recently Opened</span>
                         <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
                       </div>
-                      <div className="divider w-full px-3">
+                      <div className="divider w-full px-4">
                         <div className="w-full h-px bg-appLayoutBorder"></div>
                       </div>{" "}
                       {latestItems.map(({ itemIdLibraryId, props }) => {

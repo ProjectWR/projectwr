@@ -1,12 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import { type } from "@tauri-apps/plugin-os";
 import { settingsStore } from "../stores/settingsStore";
 import { useDeviceType } from "../ConfigProviders/DeviceTypeProvider";
@@ -18,39 +10,24 @@ import {
 } from "../lib/settings";
 import dataManagerSubdocs from "../lib/dataSubDoc";
 import persistenceManagerForSubdocs from "../lib/persistenceSubDocs";
-import { ThemeProvider } from "../ConfigProviders/ThemeProvider";
 import Footer from "./LayoutComponents/Footer";
 import MainPanel from "./LayoutComponents/MainPanel";
-import SidePanel from "./LayoutComponents/SidePanel";
-import ActivityBar from "./LayoutComponents/ActivityBar";
-import {
-  AnimatePresence,
-  motion,
-  useAnimate,
-  useMotionValue,
-} from "motion/react";
+import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import firebaseApp from "../lib/Firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import syncManager from "../lib/sync";
-import { max, min } from "lib0/math";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import fontManager from "../lib/font";
-import useZoom from "../hooks/useZoom";
-import useComputedCssVar from "../hooks/useComputedCssVar";
-import { destroySearchForLibrary, setupSearchForLibrary } from "../lib/search";
+import { setupSearchForLibrary, destroySearchForLibrary } from "../lib/search";
 import dictionaryManager from "../lib/dictionary";
 import linterManager from "../lib/linterManager";
 import useRefreshableTimer from "../hooks/useRefreshableTimer";
-import { useDebouncedCallback } from "@mantine/hooks";
 import templateManager from "../lib/templates";
-import useMainPanel from "../hooks/useMainPanel";
 import imageManager from "../lib/image";
 import videoManager from "../lib/video";
-import { mainPanelStore } from "../stores/mainPanelStore";
-import { equalityDeep } from "lib0/function";
 import { DetailsPanelNotesPanel } from "./LayoutComponents/DetailsPanel/DetailsPanelNotesPanel";
 import {
   ActionBarLeftSide,
@@ -69,12 +46,12 @@ import {
   saveAuthCode,
 } from "../lib/auth/auth";
 import { MainPanelFrame } from "./LayoutComponents/MainPanelFrame";
-import { getCurrent } from "@tauri-apps/plugin-deep-link";
 import { useAppThemesList } from "../hooks/useAppThemes";
 import useApplyTheme from "../hooks/useApplyTheme";
 import { darkTheme, lightTheme } from "../lib/appThemeHardcoded";
 import { useTheme } from "../ConfigProviders/ThemeProvider";
 import localStateManager from "../lib/localState";
+import ContextMenuWrapper from "./LayoutComponents/ContextMenuWrapper";
 
 const firebaseFlag = false;
 const googleDriveFlag = true;
@@ -222,7 +199,7 @@ const WritingApp = () => {
         dataManagerSubdocs.destroyAll();
         persistenceManagerForSubdocs.closeAllConnections();
 
-        const searchCallback = (action, key, value) => {
+        const searchCallback = (action, key) => {
           console.log("In search callback: ", action, key);
           if (action === "set") {
             setupSearchForLibrary(key);
@@ -257,8 +234,6 @@ const WritingApp = () => {
           localLibraries.push(libraryId);
 
           await dataManagerSubdocs.initLibrary(libraryId);
-          const ydoc = dataManagerSubdocs.getLibrary(libraryId);
-
           //  console.log("Initiated in data layer: ", ydoc.guid, ydoc);
         }
 
@@ -274,7 +249,7 @@ const WritingApp = () => {
 
               if (await googleDriveManager.initDriveSync()) {
                 dataManagerSubdocs.addLibraryYDocMapCallback(
-                  async (action, key, value) => {
+                  async (action, key) => {
                     if (action === "set") {
                       await googleDriveManager.addDocument(
                         key,
@@ -338,7 +313,7 @@ const WritingApp = () => {
                   console.log("INITIATED GOOGLE DRIVE SYNC!");
 
                   dataManagerSubdocs.addLibraryYDocMapCallback(
-                    async (action, key, value) => {
+                    async (action, key) => {
                       if (action === "set") {
                         await googleDriveManager.addDocument(
                           key,
@@ -488,7 +463,7 @@ const WritingApp = () => {
   }, [setIsMd, setIsMaximized]);
 
   useEffect(() => {
-     getCurrentWindow().setDecorations(false);
+    getCurrentWindow().setDecorations(false);
     const callback = async () => {
       if (!document.fullscreenElement) {
         await getCurrentWindow().setDecorations(false);
@@ -502,164 +477,210 @@ const WritingApp = () => {
     };
   }, []);
 
+  const windowOptions = useMemo(() => {
+    const appWindow = getCurrentWindow();
+    return [
+      {
+        label: "Minimize",
+        icon: (
+          <span className="icon-[fluent--minimize-16-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => appWindow.minimize(),
+      },
+      {
+        label: isMaximized ? "Restore" : "Maximize",
+        icon: isMaximized ? (
+          <span className="icon-[clarity--window-restore-line] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ) : (
+          <span className="icon-[fluent--maximize-16-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => appWindow.toggleMaximize(),
+      },
+      {
+        isDivider: true,
+      },
+      {
+        label: "Reload App",
+        icon: (
+          <span className="icon-[ion--refresh-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => appWindow.forceReload(),
+      },
+      {
+        isDivider: true,
+      },
+      {
+        label: "Close",
+        icon: (
+          <span className="icon-[material-symbols-light--close-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => appWindow.close(),
+      },
+    ];
+  }, [isMaximized]);
+
   // Render loading screen if loading is true
   return (
     <DndProvider backend={HTML5Backend}>
       <AnimatePresence mode="wait">
-        <motion.div
-          id="Layout"
-          className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent overflow-hidden font-[NotoSans] w400  border-appLayoutBorder text-appLayoutText
+        <ContextMenuWrapper options={windowOptions}>
+          <motion.div
+            id="Layout"
+            className={`h-screen w-screen max-w-screen min-w-screen max-h-screen min-h-screen bg-transparent overflow-hidden font-[NotoSans] w400  border-appLayoutBorder text-appLayoutText
             ${!isMaximized ? "border border-r-2 border-appLayoutInverseHover border-b-2 rounded-2xl" : "rounded-none"}
             `}
-        >
-          {loading && (
-            <motion.div
-              key="WritingAppLoading"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              className="flex flex-col justify-center items-center h-screen max-h-screen w-screen max-w-screen bg-appBackground text-appLayoutText"
-            >
-              <div
-                className={`relative w-loadingSpinnerSize h-loadingSpinnerSize`}
+          >
+            {loading && (
+              <motion.div
+                key="WritingAppLoading"
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                className="flex flex-col justify-center items-center h-screen max-h-screen w-screen max-w-screen bg-appBackground text-appLayoutText"
               >
-                <span
-                  className="w-full h-full"
-                  // animate={{ rotate: 360 }}
-                  // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                <div
+                  className={`relative w-loadingSpinnerSize h-loadingSpinnerSize`}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={"100%"}
-                    height={"100%"}
-                    viewBox="0 0 24 24"
+                  <span
+                    className="w-full h-full"
+                    // animate={{ rotate: 360 }}
+                    // transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                   >
-                    <g
-                      fill="none"
-                      stroke={`#a3a3a3`}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={0.3}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={"100%"}
+                      height={"100%"}
+                      viewBox="0 0 24 24"
                     >
-                      <path
-                        strokeDasharray={16}
-                        strokeDashoffset={16}
-                        d="M12 3c4.97 0 9 4.03 9 9"
+                      <g
+                        fill="none"
+                        stroke={`#a3a3a3`}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={0.3}
                       >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          dur="0.3s"
-                          values="16;0"
-                        ></animate>
-                        <animateTransform
-                          attributeName="transform"
-                          dur="1.5s"
-                          repeatCount="indefinite"
-                          type="rotate"
-                          values="0 12 12;360 12 12"
-                        ></animateTransform>
-                      </path>
-                      <path
-                        strokeDasharray={64}
-                        strokeDashoffset={64}
-                        strokeOpacity={0.3}
-                        d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
-                      >
-                        <animate
-                          fill="freeze"
-                          attributeName="stroke-dashoffset"
-                          dur="1.2s"
-                          values="64;0"
-                        ></animate>
-                      </path>
-                    </g>
-                  </svg>
-                </span>
-                <motion.div
-                  initial={{ opacity: 0.4 }}
-                  animate={{ opacity: 1 }}
-                  transition={{
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    duration: 1.2,
-                    ease: "linear",
-                  }}
-                  className="absolute w-full h-full p-[20%] top-0 left-0"
-                >
-                  <span className="icon-[mingcute--quill-pen-line] h-full w-full"></span>
-                </motion.div>
-              </div>
+                        <path
+                          strokeDasharray={16}
+                          strokeDashoffset={16}
+                          d="M12 3c4.97 0 9 4.03 9 9"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            dur="0.3s"
+                            values="16;0"
+                          ></animate>
+                          <animateTransform
+                            attributeName="transform"
+                            dur="1.5s"
+                            repeatCount="indefinite"
+                            type="rotate"
+                            values="0 12 12;360 12 12"
+                          ></animateTransform>
+                        </path>
+                        <path
+                          strokeDasharray={64}
+                          strokeDashoffset={64}
+                          strokeOpacity={0.3}
+                          d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                        >
+                          <animate
+                            fill="freeze"
+                            attributeName="stroke-dashoffset"
+                            dur="1.2s"
+                            values="64;0"
+                          ></animate>
+                        </path>
+                      </g>
+                    </svg>
+                  </span>
+                  <motion.div
+                    initial={{ opacity: 0.4 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      duration: 1.2,
+                      ease: "linear",
+                    }}
+                    className="absolute w-full h-full p-[20%] top-0 left-0"
+                  >
+                    <span className="icon-[mingcute--quill-pen-line] h-full w-full"></span>
+                  </motion.div>
+                </div>
+                <div className="mt-4 text-appLayoutTextMuted text-sm font-medium animate-pulse">
+                  {loadingStage}
+                </div>
+                {/* Add a spinner or animation here */}
+              </motion.div>
+            )}
 
-              {/* Add a spinner or animation here */}
-            </motion.div>
-          )}
+            {!loading && isDesktop && (
+              <motion.div
+                key="WritingApp"
+                id="AppContainer"
+                className="border-none bg-transparent h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* {deviceType === "desktop" && (<ActionBar />)} */}
+                <div className="w-full bg-transparent h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
+                  <ActionBarLeftSide />
+                  <TabsBar
+                    isNotesPanelAwake={isNotesPanelAwake}
+                    refreshNotesPanel={refreshNotesPanel}
+                  />
+                  <ActionBarRightSide />
+                </div>
 
-          {!loading && isDesktop && (
-            <motion.div
-              key="WritingApp"
-              id="AppContainer"
-              className="border-none bg-transparent h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.2 }}
-            >
-              {/* {deviceType === "desktop" && (<ActionBar />)} */}
-              <div className="w-full bg-transparent h-actionBarHeight min-h-actionBarHeight basis-actionBarHeight flex">
-                <ActionBarLeftSide />
-                <TabsBar
-                  isNotesPanelAwake={isNotesPanelAwake}
-                  refreshNotesPanel={refreshNotesPanel}
-                />
-                <ActionBarRightSide />
-              </div>
-
-              <div
-                id="AppBodyContainer"
-                className={`w-full grow min-h-0 bg-appBackgroundAccent overflow-hidden basis-0 flex relative
+                <div
+                  id="AppBodyContainer"
+                  className={`w-full grow min-h-0 bg-appBackgroundAccent overflow-hidden basis-0 flex relative
                 ${deviceType === "desktop" && "flex-row"}
               `}
+                >
+                  {deviceType === "desktop" && (
+                    <>
+                      <SidePanelContainer loading={loading} />
+
+                      <MainPanelFrame />
+
+                      <DetailsPanelNotesPanel
+                        isNotesPanelAwake={isNotesPanelAwake}
+                        refreshNotesPanel={refreshNotesPanel}
+                        keepNotesPanelAwake={keepNotesPanelAwake}
+                      />
+                    </>
+                  )}
+                </div>
+                <Footer />
+              </motion.div>
+            )}
+
+            {!loading && !isDesktop && (
+              <motion.div
+                key="WritingApp"
+                id="AppContainer"
+                className="border-appLayoutBorder bg-appBackground h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.2 }}
               >
-                {deviceType === "desktop" && (
-                  <>
-                    <SidePanelContainer loading={loading} />
-
-                    <MainPanelFrame />
-
-                    <DetailsPanelNotesPanel
-                      isNotesPanelAwake={isNotesPanelAwake}
-                      refreshNotesPanel={refreshNotesPanel}
-                      keepNotesPanelAwake={keepNotesPanelAwake}
-                    />
-                  </>
-                )}
-              </div>
-              <Footer />
-            </motion.div>
-          )}
-
-          {!loading && !isDesktop && (
-            <motion.div
-              key="WritingApp"
-              id="AppContainer"
-              className="border-appLayoutBorder bg-appBackground h-full max-h-full w-full max-w-full overflow-hidden flex flex-col text-appLayoutText"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div
-                id="MainPanelContainer"
-                className="relative grow overflow-hidden relative"
-              >
-                <MainPanel />
-                <MobileSidePanelDrawer />
-              </div>
-              <MobileDockBar />
-            </motion.div>
-          )}
-        </motion.div>
+                <div
+                  id="MainPanelContainer"
+                  className="relative grow overflow-hidden relative"
+                >
+                  <MainPanel />
+                  <MobileSidePanelDrawer />
+                </div>
+                <MobileDockBar />
+              </motion.div>
+            )}
+          </motion.div>
+        </ContextMenuWrapper>
       </AnimatePresence>
     </DndProvider>
   );

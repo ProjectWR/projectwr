@@ -48,6 +48,7 @@ tauri-plugin-shell = "2.2"
 window-vibrancy = "0.6.0"
 tauri-plugin-os = "2"
 tauri-plugin-window-state = "2.0.0"
+tauri-plugin-prevent-default = "4"
 
 
 

@@ -48,7 +48,6 @@ const LibraryDirectoryHeader = () => {
   const libraryDropdownRef = useRef(null);
   const [libraryDropdownHeight, setLibraryDropdownHeight] = useState(0);
 
-
   const libraryManagerOpened = appStore((state) => state.libraryManagerOpened);
   const setLibraryManagerOpened = appStore(
     (state) => state.setLibraryManagerOpened,
@@ -68,10 +67,9 @@ const LibraryDirectoryHeader = () => {
 
   const prevLibraryIdsWithPropsRef = useRef(null);
 
-
   const libraryManagerRef = useOuterClick(() => {
-    setLibraryManagerOpened(false)
-  })
+    setLibraryManagerOpened(false);
+  });
 
   useLayoutEffect(() => {
     if (libraryDropdownRef.current) {
@@ -189,8 +187,8 @@ const LibraryDirectoryHeader = () => {
     if (
       renameValue.trim() &&
       renameValue !==
-      libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
-        ?.item_properties?.item_title
+        libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
+          ?.item_properties?.item_title
     ) {
       const libraryYdoc = dataManagerSubdocs.getLibrary(appLibraryId);
       const libraryProps = libraryYdoc.getMap("library_props");
@@ -279,10 +277,11 @@ const LibraryDirectoryHeader = () => {
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
       ref={libraryManagerRef}
-      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${libraryManagerOpened
-        ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
-        : "border-transparent bg-transparent"
-        }`}
+      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
+        libraryManagerOpened
+          ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
+          : "border-transparent bg-transparent"
+      }`}
     >
       <div className="h-fit relative min-h-fit w-full flex items-center justify-center ">
         <div
@@ -319,7 +318,6 @@ const LibraryDirectoryHeader = () => {
             )}
           </ContextMenuWrapper>
 
-
           <button
             onClick={() => setLibraryManagerOpened(!libraryManagerOpened)}
             className={`hover:bg-appLayoutInverseHover h-libraryManagerHeaderButtonSize rounded-md w-libraryManagerHeaderButtonSize flex items-center justify-center`}
@@ -333,7 +331,6 @@ const LibraryDirectoryHeader = () => {
               ></span>
             </StyledTooltip>
           </button>
-
         </div>
       </div>
 
@@ -429,19 +426,16 @@ const LibraryDirectoryHeader = () => {
                         }}
                       >
                         {sortedLibraryIds &&
-                          sortedLibraryIds.map(
-                            ([libraryId, props]) =>
-                              appLibraryId != libraryId && (
-                                <LibraryDirectoryHeaderButton
-                                  key={libraryId}
-                                  libraryId={libraryId}
-                                  props={props}
-                                  onSelect={handleLibrarySelect}
-                                  onHover={setLibraryHovered}
-                                  isHovered={libraryHovered === libraryId}
-                                />
-                              ),
-                          )}
+                          sortedLibraryIds.map(([libraryId, props]) => (
+                            <LibraryDirectoryHeaderButton
+                              key={libraryId}
+                              libraryId={libraryId}
+                              props={props}
+                              onSelect={handleLibrarySelect}
+                              onHover={setLibraryHovered}
+                              isHovered={libraryHovered === libraryId}
+                            />
+                          ))}
                       </ScrollArea>
                       <button
                         className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
@@ -509,12 +503,12 @@ const LibraryDirectoryHeader = () => {
         options={[
           ...(userProfile && !driveSyncLoading
             ? [
-              {
-                checked: deleteFromDrive,
-                label: "Delete from drive",
-                onChange: (e) => setDeleteFromDrive(e.target.checked),
-              },
-            ]
+                {
+                  checked: deleteFromDrive,
+                  label: "Delete from drive",
+                  onChange: (e) => setDeleteFromDrive(e.target.checked),
+                },
+              ]
             : []),
         ]}
       />
