@@ -14,10 +14,15 @@ import PropTypes from "prop-types";
  *              isDivider?: boolean}]}} param0
  * @returns
  */
-const ContextMenuWrapper = ({ children, triggerClassname = "w-full h-full", options }) => {
+const ContextMenuWrapper = ({
+  children,
+  triggerClassname = "w-full h-full",
+  options,
+  asChild = false,
+}) => {
   return (
-    <ContextMenu.Root modal={false}>
-      <ContextMenu.Trigger className={`${triggerClassname}`}>
+    <ContextMenu.Root modal={true}>
+      <ContextMenu.Trigger asChild={asChild} className={`${triggerClassname}`}>
         {children}
       </ContextMenu.Trigger>
       <ContextMenu.Content
@@ -32,7 +37,7 @@ const ContextMenuWrapper = ({ children, triggerClassname = "w-full h-full", opti
           if (isDivider) {
             return (
               <ContextMenu.Separator
-                key={label} 
+                key={label}
                 className="contextMenuSeparator"
               />
             );

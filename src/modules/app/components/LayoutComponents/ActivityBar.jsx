@@ -15,8 +15,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const panelOpened = appStore((state) => state.panelOpened);
   const setPanelOpened = appStore((state) => state.setPanelOpened);
 
-
-
   const {
     saveStateInHistory,
     canGoBack,
@@ -34,7 +32,6 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
   const showActivityBar = appStore((state) => state.showActivityBar);
 
   const sideBarOpened = appStore((state) => state.sideBarOpened);
-
 
   return (
     <AnimatePresence mode="wait">
@@ -59,7 +56,7 @@ const ActivityBar = ({ isPanelAwakeOrScreenMd }) => {
                 console.log(
                   "ACTIVITY AND LIBRARYID INSIDE",
                   activity,
-                  libraryId
+                  libraryId,
                 );
               }
             }}
@@ -212,17 +209,19 @@ const ActivityButton = ({
         exit={{ opacity: toggleButton ? 0 : 1 }}
         transition={{ duration: 0.15 }}
         className={`relative z-1000
-        ${deviceType === "mobile"
+        ${
+          deviceType === "mobile"
             ? `h-full ${flexValue}`
             : "w-full h-activityButtonHeight"
-          } 
+        } 
 
         flex items-center justify-center
      
-        ${selectedActivity === activity
+        ${
+          selectedActivity === activity
             ? "text-activityButtonIconHighlight bg-appLayoutPressed/50 z-1000 "
             : "text-appLayoutTextMuted hover:text-appLayoutText"
-          }
+        }
        
         ${className}
       `}
@@ -237,10 +236,11 @@ const ActivityButton = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className={`absolute ${deviceType === "mobile"
-                ? "h-px w-full top-0"
-                : "w-px h-full left-full top-0"
-                } bg-activitySelectLine`}
+              className={`absolute ${
+                deviceType === "mobile"
+                  ? "h-px w-full top-0"
+                  : "w-px h-full left-full top-0"
+              } bg-activitySelectLine`}
             />
           )}
         </AnimatePresence>

@@ -247,7 +247,7 @@ const ExportTreeComponent = forwardRef(
 
           <ScrollArea
             classNames={{
-              root: "w-full h-fit py-3 px-2 overflow-y-auto border border-appLayoutBorder rounded-lg",
+              root: "w-full h-fit p-1 overflow-y-auto border border-appLayoutBorder rounded-lg",
               scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin`,
               thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover`,
               content:

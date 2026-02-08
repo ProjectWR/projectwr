@@ -15,6 +15,8 @@ import useStoreHistory from "../../../hooks/useStoreHistory";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { ScrollArea } from "@mantine/core";
 import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
+import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
+import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
 
 const LibraryDirectory = ({ libraryId }) => {
   console.log("Library Directory was rendered: ", libraryId);
@@ -124,6 +126,148 @@ const LibraryDirectory = ({ libraryId }) => {
       setSortedDescendants(descendants);
     }
   }, [libraryId]);
+
+  const onRenameClick = useCallback(() => {
+    setLibraryId(libraryId);
+    setItemId("unselected");
+    if (deviceType === "mobile") {
+      setPanelOpened(false);
+    }
+    setPanelOpened(true);
+    // Ideally we would trigger renaming mode here if LibraryDetailsPanel supports it via a prop or state
+    // For now, navigating to details is the best valid action
+    activatePanel("libraries", "details", [libraryId]);
+  }, [
+    libraryId,
+    deviceType,
+    setPanelOpened,
+    activatePanel,
+    setItemId,
+    setLibraryId,
+  ]);
+
+  const contextMenuOptions = useMemo(() => {
+    return [
+      {
+        label: "Edit Properties",
+        icon: (
+          <span className="icon-[bitcoin-icons--edit-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight transition-colors duration-0"></span>
+        ),
+        action: () => {
+          setLibraryId(libraryId);
+          setItemId("unselected");
+          if (deviceType === "mobile") {
+            setPanelOpened(false);
+          }
+          setPanelOpened(true);
+          activatePanel("libraries", "details", [libraryId]);
+        },
+      },
+      {
+        label: "Create Book",
+        icon: (
+          <span className="icon-[fluent--book-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          const bookId = dataManagerSubdocs.createEmptyBook(
+            libraryYTreeRef.current,
+          );
+          setItemId(bookId);
+          activatePanel("libraries", "details", [libraryId, bookId]);
+          if (deviceType === "mobile") {
+            setPanelOpened(false);
+          }
+          setPanelOpened(true);
+        },
+      },
+      {
+        label: "Create Section",
+        icon: (
+          <span className="icon-[uiw--folder-add] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          const sectionId = dataManagerSubdocs.createEmptySection(
+            libraryYTreeRef.current,
+            "root",
+          );
+          activatePanel("libraries", "details", [libraryId, sectionId]);
+          setItemId(sectionId);
+          if (deviceType === "mobile") {
+            setPanelOpened(false);
+          }
+          setPanelOpened(true);
+        },
+      },
+      {
+        label: "Create Paper",
+        icon: (
+          <span className="icon-[fluent--document-one-page-add-24-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          const paperId = dataManagerSubdocs.createEmptyPaper(
+            libraryYTreeRef.current,
+            "root",
+          );
+          activatePanel("libraries", "details", [libraryId, paperId]);
+          setItemId(paperId);
+          if (deviceType === "mobile") {
+            setPanelOpened(false);
+          }
+          setPanelOpened(true);
+        },
+      },
+      {
+        label: "Create Note",
+        icon: (
+          <span className="icon-[fluent--square-add-20-regular] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: () => {
+          const noteId = dataManagerSubdocs.createEmptyNote(
+            libraryYTreeRef.current,
+            "root",
+          );
+          setItemId(noteId);
+          activatePanel("libraries", "details", [libraryId, noteId]);
+          if (deviceType === "mobile") {
+            setPanelOpened(false);
+          }
+          setPanelOpened(true);
+        },
+      },
+      {
+        isDivider: true,
+      },
+      {
+        label: "Save as archive",
+        icon: (
+          <span className="icon-[ph--download-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          await persistenceManagerForSubdocs.saveArchive(
+            dataManagerSubdocs.getLibrary(libraryId),
+          );
+        },
+      },
+      {
+        label: "Load from archive",
+        icon: (
+          <span className="icon-[ph--upload-thin] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+        ),
+        action: async () => {
+          await persistenceManagerForSubdocs.loadArchive(
+            dataManagerSubdocs.getLibrary(libraryId),
+          );
+        },
+      },
+    ];
+  }, [
+    libraryId,
+    deviceType,
+    setPanelOpened,
+    activatePanel,
+    setItemId,
+    setLibraryId,
+  ]);
 
   // useEffect(() => {
   //   console.log("Focused Item: ", focusedItemId);
@@ -528,51 +672,57 @@ const LibraryDirectory = ({ libraryId }) => {
           </button>
         </div>
       </div>
-      <ScrollArea
-        scrollbars="y"
-        id="libraryDirectoryBodyContainer"
-        type="hover"
-        classNames={{
-          root: "grow min-h-0 basis-0  w-full",
-          scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
-          thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover opacity-70`,
-          content: `h-fit w-full max-h-full px-1`,
-        }}
-        onClick={(event) => {
-          if (event.target === event.currentTarget) {
-            handleSetFocusedItemId(null);
-          }
-        }}
-        ref={libraryDirectoryBodyRef}
+      <ContextMenuWrapper
+        asChild={true}
+        options={contextMenuOptions}
+        triggerClassname="grow min-h-0 basis-0 w-full"
       >
-        <div
-          id="BookListContainer"
-          className="h-fit w-full px-0 flex flex-col justify-start items-center"
+        <ScrollArea
+          scrollbars="y"
+          id="libraryDirectoryBodyContainer"
+          type="hover"
+          classNames={{
+            root: "grow min-h-0 basis-0  w-full",
+            scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin z-[5]`,
+            thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover opacity-70`,
+            content: `h-fit w-full max-h-full px-1`,
+          }}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              handleSetFocusedItemId(null);
+            }
+          }}
+          ref={libraryDirectoryBodyRef}
         >
-          {sortedDescendants.get("root")?.sortedChildren &&
-            sortedDescendants.get("root").sortedChildren.length > 0 &&
-            sortedDescendants.get("root").sortedChildren.map((bookId) => (
-              <motion.div
-                id={`Node-${bookId}`}
-                key={bookId}
-                className="w-full h-fit"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
-              >
-                <DirectoryItemNode
-                  libraryId={libraryId}
-                  ytree={libraryYTreeRef.current}
-                  itemId={bookId}
-                  breadcrumbs={[libraryId, bookId]}
-                  focusedItemId={focusedItemId}
-                  setFocusedItemId={handleSetFocusedItemId}
-                  sortedDescendants={sortedDescendants}
-                />
-              </motion.div>
-            ))}
-        </div>
-      </ScrollArea>
+          <div
+            id="BookListContainer"
+            className="h-fit w-full px-0 flex flex-col justify-start items-center"
+          >
+            {sortedDescendants.get("root")?.sortedChildren &&
+              sortedDescendants.get("root").sortedChildren.length > 0 &&
+              sortedDescendants.get("root").sortedChildren.map((bookId) => (
+                <motion.div
+                  id={`Node-${bookId}`}
+                  key={bookId}
+                  className="w-full h-fit"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <DirectoryItemNode
+                    libraryId={libraryId}
+                    ytree={libraryYTreeRef.current}
+                    itemId={bookId}
+                    breadcrumbs={[libraryId, bookId]}
+                    focusedItemId={focusedItemId}
+                    setFocusedItemId={handleSetFocusedItemId}
+                    sortedDescendants={sortedDescendants}
+                  />
+                </motion.div>
+              ))}
+          </div>
+        </ScrollArea>
+      </ContextMenuWrapper>
     </div>
   );
 };

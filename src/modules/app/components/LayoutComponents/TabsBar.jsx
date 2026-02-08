@@ -61,7 +61,7 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
     <>
       <div
         data-tauri-drag-region
-        className={`border-b flex w-fit z-1000 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText  px-1
+        className={`border-b flex w-fit z-100 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText  px-1
           `}
       >
         <ActionButton

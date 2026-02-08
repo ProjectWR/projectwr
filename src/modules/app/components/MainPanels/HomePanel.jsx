@@ -19,32 +19,26 @@ import PropTypes from "prop-types";
 import { sortArrayWithPropsByOrder } from "../../utils/orderUtil";
 import { equalityDeep } from "lib0/function";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { StyledTooltip } from "../LayoutComponents/StyledTooltip";
 
 const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
   const [hover, setHover] = useState(false);
   return (
-    <button
-      id={itemId}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onClick={onClick}
-      className="py-1 px-2 w-full h-fit flex items-center gap-3 text-nowrap hover:bg-appLayoutInverseHover justify-between rounded-md  text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted hover:text-appLayoutText"
+    <StyledTooltip
+      label={type}
+      position="bottom"
     >
-      <span className="h-fit flex grow basis-0 min-w-0 items-center gap-2">
-        <motion.span
-          className="overflow-hidden overflow-ellipsis min-w-0"
-          transition={{ duration: 0.2 }}
-        >
-          {name}
-        </motion.span>
-        <span className="text-libraryDirectoryBookNodeFontSize w-fit min-w-fit text-nowrap">
-          {type}
-        </span>
-      </span>
-      <span className="text-libraryDirectoryBookNodeFontSize min-w-fit">
-        {new Date(props.lastOpened).toLocaleString()}
-      </span>
-    </button>
+      <button
+        id={itemId}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        onClick={onClick}
+        className="w-fit h-fit text-libraryDirectoryBookNodeFontSize px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
+      >
+        {name}
+      </button>
+    </StyledTooltip>
+
   );
 };
 
@@ -162,7 +156,7 @@ const HomePanel = () => {
           new Date(b[1].lastOpenedDtm).getTime() -
           new Date(a[1].lastOpenedDtm).getTime(),
       )
-      .slice(0, 10)
+      .slice(0, 20)
       .map(([itemIdLibraryId, val]) => {
         const [libraryId] = itemIdLibraryId.split("::");
 
@@ -265,119 +259,124 @@ const HomePanel = () => {
                   <div className={`h-fit w-full`}>
                     <div className="w-full h-full flex flex-col items-center justify-start">
                       <div className="h-fit w-full text-libraryDirectoryBookNodeFontSize px-5 py-1 flex items-center justify-between">
-                        <span>Recently Opened</span>
+                        <span>Recently opened</span>
                         <span className="text-appLayoutTextMuted text-actionBarResultDateFontSize"></span>
                       </div>
                       <div className="divider w-full px-4">
                         <div className="w-full h-px bg-appLayoutBorder"></div>
-                      </div>{" "}
-                      {latestItems.map(({ itemIdLibraryId, props }) => {
-                        const itemId = itemIdLibraryId.split("::")[1];
-                        const libraryId = itemIdLibraryId.split("::")[0];
+                      </div>
+                      <div
+                        id="RecentlyOpenedItemsList"
+                        className="w-full flex flex-wrap px-4 mt-1 gap-1"
+                      >
+                        {latestItems.map(({ itemIdLibraryId, props }) => {
+                          const itemId = itemIdLibraryId.split("::")[1];
+                          const libraryId = itemIdLibraryId.split("::")[0];
 
-                        let name = "";
+                          let name = "";
 
-                        let type = itemId === libraryId ? "library" : "unknown";
+                          let type = itemId === libraryId ? "library" : "unknown";
 
-                        try {
-                          /**
-                           * @type {YTree}
-                           */
-                          let ytree;
+                          try {
+                            /**
+                             * @type {YTree}
+                             */
+                            let ytree;
 
-                          if (type != "library") {
-                            if (
-                              !dataManagerSubdocs.getLibrary(libraryId) ||
-                              !checkForYTree(
+                            if (type != "library") {
+                              if (
+                                !dataManagerSubdocs.getLibrary(libraryId) ||
+                                !checkForYTree(
+                                  dataManagerSubdocs
+                                    .getLibrary(libraryId)
+                                    .getMap("library_directory"),
+                                )
+                              ) {
+                                return null;
+                              }
+
+                              ytree = new YTree(
                                 dataManagerSubdocs
                                   .getLibrary(libraryId)
                                   .getMap("library_directory"),
-                              )
-                            ) {
-                              return null;
-                            }
+                              );
 
-                            ytree = new YTree(
-                              dataManagerSubdocs
+                              name = ytree
+                                .getNodeValueFromKey(itemId)
+                                .get("item_properties")["item_title"];
+
+                              type = ytree
+                                .getNodeValueFromKey(itemId)
+                                .get("type");
+                            } else {
+                              if (!dataManagerSubdocs.getLibrary(libraryId)) {
+                                return null;
+                              }
+                              name = dataManagerSubdocs
                                 .getLibrary(libraryId)
-                                .getMap("library_directory"),
-                            );
-
-                            name = ytree
-                              .getNodeValueFromKey(itemId)
-                              .get("item_properties")["item_title"];
-
-                            type = ytree
-                              .getNodeValueFromKey(itemId)
-                              .get("type");
-                          } else {
-                            if (!dataManagerSubdocs.getLibrary(libraryId)) {
-                              return null;
+                                .getMap("library_props")
+                                .get("item_properties")["item_title"];
                             }
-                            name = dataManagerSubdocs
-                              .getLibrary(libraryId)
-                              .getMap("library_props")
-                              .get("item_properties")["item_title"];
+                          } catch (error) {
+                            console.error(error);
+                            return null;
                           }
-                        } catch (error) {
-                          console.error(error);
-                          return null;
-                        }
 
-                        return (
-                          <div
-                            key={itemIdLibraryId}
-                            className="w-full h-fit px-3"
-                          >
-                            <RecentlyOpenedItemButton
-                              name={name}
-                              itemId={itemId}
-                              props={props}
-                              type={type}
-                              onClick={() => {
-                                localStateManager.updateLastOpened(
-                                  libraryId,
-                                  itemId,
-                                );
-
-                                if (type === "library") {
-                                  setLibraryId(itemId);
-                                  setItemId("unselected");
-                                  if (deviceType === "mobile") {
-                                    setPanelOpened(false);
-                                  }
-                                  setPanelOpened(true);
-
-                                  activatePanel("libraries", "details", [
+                          return (
+                            <div
+                              key={itemIdLibraryId}
+                              className="w-fit h-fit"
+                            >
+                              <RecentlyOpenedItemButton
+                                name={name}
+                                itemId={itemId}
+                                props={props}
+                                type={type}
+                                onClick={() => {
+                                  localStateManager.updateLastOpened(
+                                    libraryId,
                                     itemId,
-                                  ]);
-                                }
+                                  );
 
-                                if (
-                                  type === "book" ||
-                                  type === "paper" ||
-                                  type === "section"
-                                ) {
-                                  setLibraryId(props.libraryId);
-                                  setItemId(itemId);
-                                  setItemMode("details");
-                                  if (deviceType === "mobile") {
-                                    setPanelOpened(false);
+                                  if (type === "library") {
+                                    setLibraryId(itemId);
+                                    setItemId("unselected");
+                                    if (deviceType === "mobile") {
+                                      setPanelOpened(false);
+                                    }
+                                    setPanelOpened(true);
+
+                                    activatePanel("libraries", "details", [
+                                      itemId,
+                                    ]);
                                   }
-                                  setPanelOpened(true);
 
-                                  activatePanel("libraries", "details", [
-                                    props.libraryId,
-                                    itemId,
-                                  ]);
-                                }
+                                  if (
+                                    type === "book" ||
+                                    type === "paper" ||
+                                    type === "section"
+                                  ) {
+                                    setLibraryId(props.libraryId);
+                                    setItemId(itemId);
+                                    setItemMode("details");
+                                    if (deviceType === "mobile") {
+                                      setPanelOpened(false);
+                                    }
+                                    setPanelOpened(true);
 
-                                setActivity("libraries");
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
+                                    activatePanel("libraries", "details", [
+                                      props.libraryId,
+                                      itemId,
+                                    ]);
+                                  }
+
+                                  setActivity("libraries");
+                                }}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
