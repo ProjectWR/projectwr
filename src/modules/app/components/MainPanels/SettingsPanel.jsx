@@ -950,15 +950,15 @@ const SettingsPanel = () => {
 
             <div
               id="PreferencesContainer"
-              className="grow basis-0 px-1 pt-1 border border-transparent min-w-0 h-full flex flex-col items-center"
+              className="grow basis-0 px-1 border border-transparent min-w-0 h-full flex flex-col items-center"
             >
               <div
                 id="PreferencesHeader"
                 className={`h-actionBarSearchHeaderHeight w-full flex items-center justify-start
-                ${deviceType === "desktop" && "px-3"}
+                px-2
               `}
               >
-                <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-libraryDirectoryBookNodeFontSize text-appLayoutText order-1">
+                <h1 className="h-fit w-fit text-libraryDirectoryBookNodeFontSize text-appLayoutText order-1">
                   Preferences
                 </h1>
               </div>
@@ -967,13 +967,11 @@ const SettingsPanel = () => {
               </div>
               <div
                 id="PreferencesBody"
-                className={`grow basis-0 w-full flex flex-col gap-1 items-center justify-start py-3 px-1                 ${
-                  deviceType === "desktop" && "px-6"
-                }
+                className={`grow basis-0 w-full flex flex-col gap-0 items-center justify-start mt-1 px-3
               `}
               >
-                <div className="w-full h-fit flex gap-2 items-center justify-between">
-                  <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-libraryDirectoryBookNodeFontSize text-appLayoutText">
+                <div id="zoomSelector" className="w-full h-fit flex mt-1 gap-2 items-center justify-between">
+                  <h1 className="h-fit w-fit py-1 text-libraryDirectoryBookNodeFontSize text-appLayoutText">
                     Zoom
                   </h1>
 
@@ -982,18 +980,18 @@ const SettingsPanel = () => {
                   <div className="ZoomContainer w-fit h-fit flex gap-2 flex-row items-center">
                     <StyledTooltip label={"Zoom Out"} position="bottom">
                       <button
-                        className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center  rounded-full  hover:bg-appLayoutInverseHover"
+                        className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center  rounded-md hover:bg-appLayoutInverseHover"
                         onClick={zoomOut}
                       >
                         <span className="icon-[material-symbols-light--remove-rounded] w-full h-full"></span>
                       </button>
                     </StyledTooltip>
-                    <div className="zoomDisplay text-libraryDirectoryBookNodeFontSize px-3 w-fit h-fit pb-px flex items-center justify-center select-none border border-appLayoutBorder rounded-lg">
+                    <div className="zoomDisplay text-libraryDirectoryBookNodeFontSize px-2 w-fit h-fit py-px flex items-center justify-center select-none border border-appLayoutBorder rounded-lg">
                       {zoom && `${round(zoom * 100)}%`}
                     </div>
                     <StyledTooltip label={"Zoom in"} position="bottom">
                       <button
-                        className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center rounded-full  hover:bg-appLayoutInverseHover"
+                        className="zoomInButton w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize flex items-center justify-center rounded-md hover:bg-appLayoutInverseHover"
                         onClick={zoomIn}
                       >
                         <span className="icon-[material-symbols-light--add-rounded] w-full h-full"></span>
@@ -1004,9 +1002,9 @@ const SettingsPanel = () => {
 
                 <div
                   id="AppThemeDropdown"
-                  className="w-full h-fit flex gap-2 items-center justify-between"
+                  className="w-full h-fit mt-1 flex gap-2 items-center justify-between"
                 >
-                  <h1 className="h-fit w-fit pt-1 pb-[0.38rem]  text-libraryDirectoryBookNodeFontSize text-appLayoutText">
+                  <h1 className="h-fit w-fit py-1 text-libraryDirectoryBookNodeFontSize text-appLayoutText">
                     Theme
                   </h1>
                   <span className="h-px grow basis-0 bg-appLayoutBorder"></span>
@@ -1014,7 +1012,7 @@ const SettingsPanel = () => {
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                       <StyledTooltip label={"Select theme"} position="bottom">
-                        <button className="text-libraryDirectoryBookNodeFontSize w-fit h-preferencesItemButtonSize px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
+                        <button className="text-libraryDirectoryBookNodeFontSize w-fit h-fit py-px px-2 flex items-center justify-center select-none border-appLayoutBorder rounded-lg hover:bg-appLayoutInverseHover transition-colors duration-100">
                           {appThemeId === "dark"
                             ? "Dark"
                             : appThemeId === "light"
