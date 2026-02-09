@@ -12,9 +12,6 @@ import dataManagerSubdocs, {
 } from "../../../lib/dataSubDoc";
 import ContextMenuWrapper from "../../LayoutComponents/ContextMenuWrapper";
 import persistenceManagerForSubdocs from "../../../lib/persistenceSubDocs";
-import DialogWrapper from "../../LayoutComponents/DialogWrapper";
-import driveOrchestrator from "../../../lib/drive/driveOrchestrator";
-import { oauthStore } from "../../../stores/oauthStore";
 import { appStore } from "../../../stores/appStore";
 
 const LibraryDirectoryHeaderButton = ({
@@ -23,6 +20,7 @@ const LibraryDirectoryHeaderButton = ({
   onSelect,
   onHover,
   isHovered,
+  onDelete,
 }) => {
   const ref = useRef(null);
 
@@ -30,17 +28,6 @@ const LibraryDirectoryHeaderButton = ({
   const [isSelfSelected, setIsSelfSelected] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState("");
-  const driveSyncLoading = appStore((state) => state.driveSyncLoading);
-
-  const userProfile = oauthStore((state) => state.userProfile);
-
-  const [deleteConfirmDialog, setDeleteConfirmDialog] = useState({
-    open: false,
-    libraryId: null,
-    libraryTitle: null,
-  });
-
-  const [deleteFromDrive, setDeleteFromDrive] = useState(false);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
@@ -232,23 +219,25 @@ const LibraryDirectoryHeaderButton = ({
           <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
         ),
         action: async () => {
-          // Show confirmation dialog
-          setDeleteConfirmDialog({
-            open: true,
-            libraryId: libraryId,
-            libraryTitle: props.item_properties.item_title,
-          });
+          onDelete(libraryId, props.item_properties.item_title);
         },
       },
     ];
-  }, [onRenameClick, libraryId, onSelect, props.item_properties.item_title]);
+  }, [
+    onRenameClick,
+    libraryId,
+    onSelect,
+    props.item_properties.item_title,
+    onDelete,
+  ]);
 
   return (
-    <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>
-      <div
-        ref={ref}
-        id="DirectoryItemNodeContainer"
-        className={`w-full h-fit
+    <>
+      <ContextMenuWrapper triggerClassname="w-full h-fit" options={options}>
+        <div
+          ref={ref}
+          id="DirectoryItemNodeContainer"
+          className={`w-full h-fit
         ${isDragging ? "opacity-20" : ""}
         
         ${(() => {
@@ -261,124 +250,71 @@ const LibraryDirectoryHeaderButton = ({
           }
         })()}
       `}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            onMouseEnter={() => onHover(libraryId)}
-            onMouseLeave={() => onHover(null)}
-            transition={{ duration: 0.05 }}
-            key={libraryId}
-            className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
-            onClick={() => onSelect(libraryId)}
-          >
+        >
+          <AnimatePresence mode="wait">
             <motion.div
-              animate={{
-                width: isHovered ? "fit-content" : 0,
-                opacity: isHovered ? 1 : 0,
+              initial={{
+                opacity: 0,
               }}
-              transition={{ duration: 0.1 }}
-              className="h-full w-fit flex items-center justify-center"
+              animate={{
+                opacity: 1,
+              }}
+              exit={{
+                opacity: 0,
+              }}
+              onMouseEnter={() => onHover(libraryId)}
+              onMouseLeave={() => onHover(null)}
+              transition={{ duration: 0.05 }}
+              key={libraryId}
+              className="text-libraryManagerHeaderText h-libraryDirectoryBookNodeHeight px-2 text-appLayoutTextMuted hover:text-appLayoutHighlight w-full flex items-center gap-1 justify-center hover:bg-appLayoutHover transition-colors duration-100 group cursor-pointer"
+              onClick={() => onSelect(libraryId)}
             >
-              <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
-            </motion.div>
-            {isRenaming ? (
-              <input
-                type="text"
-                value={renameValue}
-                onChange={(e) => setRenameValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleRenameSave();
-                  } else if (e.key === "Escape") {
-                    handleRenameCancel();
-                  }
+              <motion.div
+                animate={{
+                  width: isHovered ? "fit-content" : 0,
+                  opacity: isHovered ? 1 : 0,
                 }}
-                onBlur={handleRenameSave}
-                className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
-                autoFocus
-              />
-            ) : (
-              <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">
-                {props.item_properties.item_title}
-              </span>
-            )}
-            <motion.div
-              animate={{
-                width: isHovered ? "fit-content" : 0,
-                opacity: isHovered ? 1 : 0,
-              }}
-              transition={{ duration: 0.1 }}
-              className="h-full w-fit flex items-center justify-center"
-            >
-              <span className="icon-[formkit--left] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+                transition={{ duration: 0.1 }}
+                className="h-full w-fit flex items-center justify-center"
+              >
+                <span className="icon-[formkit--right] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+              </motion.div>
+              {isRenaming ? (
+                <input
+                  type="text"
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleRenameSave();
+                    } else if (e.key === "Escape") {
+                      handleRenameCancel();
+                    }
+                  }}
+                  onBlur={handleRenameSave}
+                  className="w-full bg-appLayoutInputBackground border border-appLayoutBorder px-1 text-appLayoutText text-libraryManagerHeaderText text-center focus:outline-none focus:border-appLayoutFocus"
+                  autoFocus
+                />
+              ) : (
+                <span className="w-fit whitespace-nowrap text-nowrap overflow-x-hidden text-ellipsis">
+                  {props.item_properties.item_title}
+                </span>
+              )}
+              <motion.div
+                animate={{
+                  width: isHovered ? "fit-content" : 0,
+                  opacity: isHovered ? 1 : 0,
+                }}
+                transition={{ duration: 0.1 }}
+                className="h-full w-fit flex items-center justify-center"
+              >
+                <span className="icon-[formkit--left] w-libraryDirectorySectionNodeIconSize h-libraryDirectorySectionNodeIconSize overflow-hidden"></span>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      <DialogWrapper
-        open={deleteConfirmDialog.open}
-        onOpenChange={(open) => {
-          if (!open) {
-            setDeleteConfirmDialog({
-              open: false,
-              libraryId: null,
-              libraryTitle: null,
-            });
-          }
-        }}
-        title="Delete Library"
-        description={`Are you sure you want to delete "${deleteConfirmDialog.libraryTitle}"? This action cannot be undone.`}
-        onSubmit={async () => {
-          console.log("Deleting Library", deleteConfirmDialog.libraryId);
-          await persistenceManagerForSubdocs.clearLocalPersistenceForYDoc(
-            deleteConfirmDialog.libraryId,
-          );
-          await persistenceManagerForSubdocs.closeConnectionForYDoc(
-            deleteConfirmDialog.libraryId,
-          );
-          await dataManagerSubdocs.destroyLibrary(
-            deleteConfirmDialog.libraryId,
-          );
-
-          console.log("userProfile:", userProfile, deleteFromDrive);
-          if (userProfile && deleteFromDrive) {
-            console.log("Deleting from Drive too");
-            const googleDriveManager =
-              driveOrchestrator.getManager("googleDrive");
-            googleDriveManager.stopSync(deleteConfirmDialog.libraryId);
-            googleDriveManager.deleteDocument(deleteConfirmDialog.libraryId);
-          }
-          setDeleteConfirmDialog({
-            open: false,
-            libraryId: null,
-            libraryTitle: null,
-          });
-        }}
-        submitLabel="Delete"
-        destructive={true}
-        options={[
-          ...(userProfile && !driveSyncLoading
-            ? [
-                {
-                  checked: deleteFromDrive,
-                  label: "Delete from drive",
-                  onChange: (e) => setDeleteFromDrive(e.target.checked),
-                },
-              ]
-            : []),
-        ]}
-      />
-    </ContextMenuWrapper>
+          </AnimatePresence>
+        </div>
+      </ContextMenuWrapper>
+    </>
   );
 };
 
@@ -388,6 +324,7 @@ LibraryDirectoryHeaderButton.propTypes = {
   onSelect: PropTypes.func.isRequired,
   onHover: PropTypes.func.isRequired,
   isHovered: PropTypes.bool.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default React.memo(LibraryDirectoryHeaderButton);

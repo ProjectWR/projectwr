@@ -205,6 +205,14 @@ const LibraryDirectoryHeader = () => {
     setIsRenaming(false);
   }, []);
 
+  const handleDeleteLibrary = useCallback((libraryId, libraryTitle) => {
+    setDeleteConfirmDialog({
+      open: true,
+      libraryId: libraryId,
+      libraryTitle: libraryTitle,
+    });
+  }, []);
+
   const options = useMemo(() => {
     return [
       {
@@ -261,15 +269,17 @@ const LibraryDirectoryHeader = () => {
             libraryIdsWithProps.find(
               (library) => library[0] === appLibraryId,
             )?.[1]?.item_properties?.item_title || "Library";
-          setDeleteConfirmDialog({
-            open: true,
-            libraryId: appLibraryId,
-            libraryTitle: libraryTitle,
-          });
+          handleDeleteLibrary(appLibraryId, libraryTitle);
         },
       },
     ];
-  }, [appLibraryId, onRenameClick, activatePanel, libraryIdsWithProps]);
+  }, [
+    appLibraryId,
+    onRenameClick,
+    activatePanel,
+    libraryIdsWithProps,
+    handleDeleteLibrary,
+  ]);
 
   return (
     <div
@@ -434,6 +444,7 @@ const LibraryDirectoryHeader = () => {
                               onSelect={handleLibrarySelect}
                               onHover={setLibraryHovered}
                               isHovered={libraryHovered === libraryId}
+                              onDelete={handleDeleteLibrary}
                             />
                           ))}
                       </ScrollArea>
@@ -501,12 +512,12 @@ const LibraryDirectoryHeader = () => {
         submitLabel="Delete"
         destructive={true}
         options={[
-          ...(userProfile && !driveSyncLoading
+          ...(userProfile
             ? [
                 {
                   checked: deleteFromDrive,
                   label: "Delete from drive",
-                  onChange: (e) => setDeleteFromDrive(e.target.checked),
+                  onChange: () => setDeleteFromDrive(!deleteFromDrive),
                 },
               ]
             : []),

@@ -355,10 +355,8 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             if (deleteConfirmDontAskAgain) {
-              // Skip confirmation dialog and delete directly
               dataManagerSubdocs.deleteItem(ytree, itemId);
             } else {
-              // Show confirmation dialog
               setDeleteConfirmDialog({
                 open: true,
                 itemId: itemId,
@@ -426,18 +424,12 @@ const DirectoryItemNode = ({
             <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            if (deleteConfirmDontAskAgain) {
-              // Skip confirmation dialog and delete directly
-              dataManagerSubdocs.deleteItem(ytree, itemId);
-            } else {
-              // Show confirmation dialog
-              setDeleteConfirmDialog({
-                open: true,
-                itemId: itemId,
-                itemType: itemMapRef.current.get("type"),
-                itemTitle: itemMapState.item_properties.item_title,
-              });
-            }
+            setDeleteConfirmDialog({
+              open: true,
+              itemId: itemId,
+              itemType: itemMapRef.current.get("type"),
+              itemTitle: itemMapState.item_properties.item_title,
+            });
           },
         },
       ];
@@ -499,10 +491,8 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             if (deleteConfirmDontAskAgain) {
-              // Skip confirmation dialog and delete directly
               dataManagerSubdocs.deleteItem(ytree, itemId);
             } else {
-              // Show confirmation dialog
               setDeleteConfirmDialog({
                 open: true,
                 itemId: itemId,
@@ -521,6 +511,8 @@ const DirectoryItemNode = ({
     itemMode,
     onCreatePaperClick,
     onCreateSectionClick,
+    deleteConfirmDontAskAgain,
+    itemMapState.item_properties.item_title,
     onRenameClick,
     panelOpened,
     setItemId,
@@ -868,48 +860,28 @@ const DirectoryItemNode = ({
 
       <DialogWrapper
         open={deleteConfirmDialog.open}
-        onClose={() =>
-          setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false })
-        }
+        onOpenChange={(open) => {
+          if (!open) {
+            setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false });
+          }
+        }}
         title={`Delete ${deleteConfirmDialog.itemType}?`}
-      >
-        <div className="flex flex-col gap-4">
-          <p>
-            Are you sure you want to delete{" "}
-            <b>{deleteConfirmDialog.itemTitle}</b>? This action cannot be
-            undone.
-          </p>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={deleteConfirmDontAskAgain}
-              onCheckedChange={(val) => setDeleteConfirmDontAskAgain(val)}
-              label="Don't ask me again"
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <button
-              className="px-4 py-2 rounded bg-appLayoutBorder hover:bg-appLayoutHover"
-              onClick={() =>
-                setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false })
-              }
-            >
-              Cancel
-            </button>
-            <button
-              className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
-              onClick={() => {
-                dataManagerSubdocs.deleteItem(
-                  ytree,
-                  deleteConfirmDialog.itemId,
-                );
-                setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false });
-              }}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </DialogWrapper>
+        description={`Are you sure you want to delete "${deleteConfirmDialog.itemTitle}"? This action cannot be undone.`}
+        submitLabel="Delete"
+        destructive={true}
+        options={[
+          {
+            checked: deleteConfirmDontAskAgain,
+            label: "Don't ask me again",
+            onChange: () =>
+              setDeleteConfirmDontAskAgain(!deleteConfirmDontAskAgain),
+          },
+        ]}
+        onSubmit={() => {
+          dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+          setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false });
+        }}
+      />
     </ContextMenuWrapper>
   );
 };
