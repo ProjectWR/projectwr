@@ -29,9 +29,9 @@ export const DetailsPanelStatusProp = ({
     });
   };
   return (
-    <div className="w-full h-fit">
-      <div className="w-full h-fit px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
-        <h2 className="w-fit h-fit px-2 flex text-nowrap   justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+    <div className="w-full h-fit px-1 mt-1">
+      <div className="w-full h-fit px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-lg">
+        <h2 className="w-fit h-fit px-2 flex text-nowrap   justify-start items-center text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
           Book Status
         </h2>
         {progress_values.map((progress) => {
@@ -43,8 +43,9 @@ export const DetailsPanelStatusProp = ({
               style={{
                 flexGrow: progress.weight,
               }}
-              className={`basis-0 h-full text-detailsPanelPropsFontSize text-appBackground relative rounded-md bg-appBackground transition-colors duration-500 ${!selected && "hover:bg-appLayoutInverseHover text-appLayoutText"
-                }
+              className={`basis-0 h-full text-detailsPanelPropsFontSize text-appBackground relative rounded-md bg-appBackground transition-colors duration-500 ${
+                !selected && "hover:bg-appLayoutInverseHover text-appLayoutText"
+              }
               ${selected && ""}
           
               `}
@@ -59,9 +60,9 @@ export const DetailsPanelStatusProp = ({
                 <motion.div
                   className={`absolute h-full w-full top-0 left-0 z-[1] 
                                rounded-md shadow-none shadow-appLayoutShadow 
-                              ${progress.label == 'Drafting' ? 'bg-appLayoutHighlight/75' : ''}
-                              ${progress.label == 'Editing' ? 'bg-yellow-500/75' : ''}
-                              ${progress.label == 'Done' ? 'bg-green-500/65' : ''}
+                              ${progress.label == "Drafting" ? "bg-appLayoutHighlight/75" : ""}
+                              ${progress.label == "Editing" ? "bg-yellow-500/75" : ""}
+                              ${progress.label == "Done" ? "bg-green-500/65" : ""}
 
                               `}
                   layoutId="statusBackground"
@@ -82,22 +83,22 @@ export const DetailsPanelWordCountProp = ({
   onChange,
 }) => {
   return (
-    <div className="w-full h-fit">
-      <div className="w-full h-fit px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-md">
-        <h2 className="w-fit h-fit px-2 text-nowrap flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+    <div className="w-full px-1 h-fit mt-1">
+      <div className="w-full h-fit px-1 py-1 flex items-center gap-2 border border-appLayoutBorder rounded-lg">
+        <h2 className="w-fit h-fit px-2 text-nowrap flex justify-start items-center text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
           Word Count
         </h2>
-        <span className="grow basis-0 h-fit px-2 flex justify-center items-center text-detailsPanelPropLabelFontSize text-appLayoutText">
+        <span className="grow basis-0 h-fit px-2 flex justify-center items-center text-libraryDirectoryBookNodeFontSize text-appLayoutText">
           {currentWordCount}
         </span>
-        <span className="w-fit h-fit px-2 flex justify-center items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
+        <span className="w-fit h-fit px-2 flex justify-center items-center text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
           /
         </span>
         <input
           value={itemProperties.item_goal}
           name={"item_goal"}
           onChange={onChange}
-          className="grow basis-0 min-w-0 h-fit px-2 text-center focus:outline-none rounded-md text-detailsPanelPropLabelFontSize text-appLayoutTextMuted focus:text-appLayoutText focus:bg-appLayoutInputBackground transition-colors duration-200"
+          className="grow basis-0 min-w-0 h-fit px-2 text-center focus:outline-none rounded-md text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted focus:text-appLayoutText focus:bg-appLayoutInputBackground transition-colors duration-200"
         />
       </div>
     </div>
@@ -215,7 +216,7 @@ export const DetailsPanelDescriptionProp = ({
           ),
           disabled: true,
         },
-      ]
+      ],
     );
 
     return options;
@@ -229,14 +230,18 @@ export const DetailsPanelDescriptionProp = ({
       <div className="divider w-full px-1">
         <div className="w-full h-px bg-appLayoutBorder"></div>
       </div>
-      <ContextMenuWrapper options={options} triggerClassname="w-full grow px-1">
+      <ContextMenuWrapper
+        options={options}
+        triggerClassname="w-full grow px-1 mt-1"
+      >
         <RichTextEditor
           editor={editor}
           variant="subtle"
           classNames={{
             root: "bg-appBackground h-fit border border-appLayoutBorder rounded-lg px-px flex flex-col",
             Typography: "grow h-fit w-full",
-            toolbar: "bg-appBackground border-b h-fit rounded-t-lg border-appLayoutBorder",
+            toolbar:
+              "bg-appBackground border-b h-fit rounded-t-lg border-appLayoutBorder",
             content:
               "bg-appBackground rounded-b-lg text-appLayoutText max-h-detailsPanelDescriptionInputHeight h-fit overflow-y-scroll px-3 py-3 text-libraryDirectoryBookNodeFontSize DetailsPanelDescriptionProp",
             controlsGroup: "bg-appBackground gap-1 h-fit",

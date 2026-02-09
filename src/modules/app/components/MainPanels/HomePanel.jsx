@@ -24,10 +24,7 @@ import { StyledTooltip } from "../LayoutComponents/StyledTooltip";
 const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
   const [hover, setHover] = useState(false);
   return (
-    <StyledTooltip
-      label={type}
-      position="bottom"
-    >
+    <StyledTooltip label={type} position="bottom">
       <button
         id={itemId}
         onMouseEnter={() => setHover(true)}
@@ -38,7 +35,6 @@ const RecentlyOpenedItemButton = ({ onClick, name, itemId, props, type }) => {
         {name}
       </button>
     </StyledTooltip>
-
   );
 };
 
@@ -172,7 +168,7 @@ const HomePanel = () => {
       <AnimatePresence mode="wait">
         <div
           id="HomeContainer"
-          className={`h-full w-full flex flex-col items-center justify-start
+          className={`h-full w-full flex flex-col items-start justify-start
             ${deviceType === "mobile" && "w-full"}   
             ${deviceType === "desktop" && "mt-0 pb-20 px-8 pt-8"}       
           `}
@@ -182,30 +178,32 @@ const HomePanel = () => {
             minWidth: `calc(var(--detailsPanelWidth) * 0.5)`,
           }}
         >
-          <button
-            onClick={() => {
-              openUrl("https://www.sylvanite.app");
-            }}
-            id="HomeHeader"
-            className={`h-fit min-h-fit w-full flex items-center justify-start gap-4 cursor-pointer
+          <StyledTooltip label={"Open Website"}>
+            <button
+              onClick={() => {
+                openUrl("https://www.sylvanite.app");
+              }}
+              id="HomeHeader"
+              className={`h-fit min-h-fit w-fit flex items-center justify-start gap-4 cursor-pointer
             ${deviceType === "desktop" && "px-6"}
           `}
-          >
-            <img
-              src="/src/assets/pen.svg"
-              width={400}
-              height={400}
-              className="w-homePanelHeaderHeight h-homePanelHeaderHeight stroke-appLayoutText"
-            />
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ bounce: 0 }}
-              className="text-homePanelHeaderFontSize select-none pointer-events-none w100"
             >
-              Sylvanite
-            </motion.h1>
-          </button>
+              <img
+                src="/src/assets/pen.svg"
+                width={400}
+                height={400}
+                className="w-homePanelHeaderHeight h-homePanelHeaderHeight stroke-appLayoutText"
+              />
+              <motion.h1
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ bounce: 0 }}
+                className="text-homePanelHeaderFontSize select-none pointer-events-none w100"
+              >
+                Sylvanite
+              </motion.h1>
+            </button>
+          </StyledTooltip>
 
           <div
             id="HomeBody"
@@ -275,7 +273,8 @@ const HomePanel = () => {
 
                           let name = "";
 
-                          let type = itemId === libraryId ? "library" : "unknown";
+                          let type =
+                            itemId === libraryId ? "library" : "unknown";
 
                           try {
                             /**
@@ -323,10 +322,7 @@ const HomePanel = () => {
                           }
 
                           return (
-                            <div
-                              key={itemIdLibraryId}
-                              className="w-fit h-fit"
-                            >
+                            <div key={itemIdLibraryId} className="w-fit h-fit">
                               <RecentlyOpenedItemButton
                                 name={name}
                                 itemId={itemId}

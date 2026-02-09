@@ -227,19 +227,24 @@ const BookDetailsPanel = ({ ytree, bookId, libraryId }) => {
                 </div>
 
                 {/* Word Count and Status Section - Second Column */}
-                <div className="w-full lg:w-1/2 flex flex-col gap-3">
-                  <h2 className="w-fit h-fit px-2 pt-1  flex justify-start items-center text-detailsPanelPropLabelFontSize text-appLayoutTextMuted">
-                    &nbsp;
-                  </h2>
-                  <DetailsPanelWordCountProp
-                    currentWordCount={wordCount}
-                    itemProperties={itemProperties}
-                    onChange={handleChange}
-                  />
-                  <DetailsPanelStatusProp
-                    itemProperties={itemProperties}
-                    setItemProperties={setItemProperties}
-                  />
+                <div className="w-full lg:w-1/2 flex flex-col">
+                  <div className="w-full h-fit px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+                    <h2 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+                      Properties
+                    </h2>
+                    <div className="divider w-full px-1">
+                      <div className="w-full h-px bg-appLayoutBorder"></div>
+                    </div>
+                    <DetailsPanelWordCountProp
+                      currentWordCount={wordCount}
+                      itemProperties={itemProperties}
+                      onChange={handleChange}
+                    />
+                    <DetailsPanelStatusProp
+                      itemProperties={itemProperties}
+                      setItemProperties={setItemProperties}
+                    />
+                  </div>
                 </div>
               </div>
               {ytree && (
