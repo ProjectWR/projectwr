@@ -62,7 +62,7 @@ export const OauthComponent = ({}) => {
           </div>
         )}
 
-        <div className="h-fit py-2 grow basis-0 min-w-0 flex flex-col gap-2">
+        <div className="h-fit grow basis-0 min-w-0 flex flex-col gap-2">
           {" "}
           <AnimatePresence>
             {!loggedIn && (
@@ -93,16 +93,36 @@ export const OauthComponent = ({}) => {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `100%` }}
                 exit={{ opacity: 0, width: 0 }}
-                className="h-full flex flex-col justify-end items-start"
+                className="w-full flex flex-wrap px-4 mt-1 gap-1"
               >
                 <button
                   onClick={() => {
                     handleLogout();
                   }}
-                  className="px-2 py-1 flex w-fit items-center gap-2 text-appLayoutText border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 hover:bg-appLayoutInverseHover transition-colors duration-200"
+                  className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
                 >
                   <span className="icon-[ion--exit-outline]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
                   Log out of Google Drive
+                </button>
+
+                <button
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                  className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
+                >
+                  <span className="icon-[mdi--table-of-contents]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+                  View your drive libraries
+                </button>
+
+                <button
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                  className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
+                >
+                  <span className="icon-[material-symbols-light--cloud-outline]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+                  sync
                 </button>
                 {/* <GrainyElementButton
                   gradientSize={100}
