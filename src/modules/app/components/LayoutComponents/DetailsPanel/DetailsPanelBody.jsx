@@ -19,8 +19,6 @@ export const DetailsPanelProperties = ({ children, className }) => {
 
   return (
     <div className="h-full min-w-0 grow flex flex-col items-center">
-
-
       <section
         id="DetailsPanelPropertiesBody"
         className={`h-full overflow-y-hidden py-4 px-6 gap-4 relative ${className}`}

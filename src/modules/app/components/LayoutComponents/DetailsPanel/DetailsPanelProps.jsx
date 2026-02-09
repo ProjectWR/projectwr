@@ -223,7 +223,7 @@ export const DetailsPanelDescriptionProp = ({
   }, [editor, selectingError, setSearchQuery]);
 
   return (
-    <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+    <div className="w-full h-fit px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
       <h2 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
         {label}
       </h2>

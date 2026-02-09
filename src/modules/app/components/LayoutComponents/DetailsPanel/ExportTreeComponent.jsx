@@ -221,7 +221,7 @@ const ExportTreeComponent = forwardRef(
     const hasChildren = rootChildren && rootChildren.length > 0;
 
     return (
-      <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+      <div className="w-full h-fit px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
         <div className="w-full flex justify-between items-center">
           <h2 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
             Export
@@ -254,11 +254,11 @@ const ExportTreeComponent = forwardRef(
 
         <ScrollArea
           classNames={{
-            root: "w-full h-fit p-1 mt-1 overflow-y-auto border border-appLayoutBorder rounded-lg",
+            root: "w-full h-fit p-1",
             scrollbar: `bg-transparent hover:bg-transparent p-0 w-scrollbarWidthThin`,
             thumb: `bg-appLayoutBorder rounded-l-full hover:!bg-appLayoutInverseHover`,
             content:
-              "flex flex-col w-full h-fit max-h-detailsPanelDescriptionInputHeight",
+              "flex flex-col w-full h-fit p-1 max-h-detailsPanelDescriptionInputHeight border border-appLayoutBorder rounded-lg",
           }}
         >
           {itemId !== libraryId ? (
