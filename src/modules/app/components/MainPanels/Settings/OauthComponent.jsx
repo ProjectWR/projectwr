@@ -70,7 +70,7 @@ export const OauthComponent = ({}) => {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `100%` }}
                 exit={{ opacity: 0, width: 0 }}
-                className="h-full flex gap-2 justify-start items-center"
+                className="w-full flex flex-wrap py-2 gap-1"
               >
                 <button
                   onClick={() => {
@@ -78,12 +78,12 @@ export const OauthComponent = ({}) => {
                       handleLogin();
                     }
                   }}
-                  className="p-2 flex w-fit items-center gap-2 text-appLayoutText border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 hover:bg-appLayoutInverseHover transition-colors duration-200"
+                  className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
                 >
                   <span className="icon-[logos--google-drive]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
                   Sync via Google Drive
                 </button>
-                <span className="p-2 flex w-fit items-center gap-2 text-appLayoutTextMuted border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 transition-colors duration-200">
+                <span className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder text-appLayoutTextMuted">
                   More integrations coming soon...
                 </span>
               </motion.div>
