@@ -99,7 +99,7 @@ export const OauthComponent = ({}) => {
                   onClick={() => {
                     handleLogout();
                   }}
-                  className="p-2 flex w-fit items-center gap-2 text-appLayoutText border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 hover:bg-appLayoutInverseHover transition-colors duration-200"
+                  className="px-2 py-1 flex w-fit items-center gap-2 text-appLayoutText border text-libraryDirectoryBookNodeFontSize border-appLayoutBorder bg-transparent rounded-lg px-3 hover:bg-appLayoutInverseHover transition-colors duration-200"
                 >
                   <span className="icon-[ion--exit-outline]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
                   Log out of Google Drive
