@@ -28,13 +28,13 @@ export const OauthComponent = ({}) => {
   return (
     <ListShell className={`h-full w-full min-w-0 bg-appBackgroundAccent`}>
       <HoverListHeader className={"gap-4"}>
-        <span>Drive Backup</span>
+        <span>Periodic Drive Backup</span>
       </HoverListHeader>
 
       <HoverListDivider />
 
       <section className="flex items-start gap-2 w-full h-fit px-2">
-        {loggedIn && (
+        {!loggedIn && (
           <div className="h-fit grow basis-0 min-w-0 flex flex-col items-center justify-center gap-2">
             <div className="h-fit py-3 w-full flex flex-col items-center justify-center gap-2">
               <AnimatePresence>
@@ -65,7 +65,7 @@ export const OauthComponent = ({}) => {
         <div className="h-fit grow basis-0 min-w-0 flex flex-col gap-2">
           {" "}
           <AnimatePresence>
-            {!loggedIn && (
+            {loggedIn && (
               <motion.div
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `100%` }}
@@ -88,11 +88,11 @@ export const OauthComponent = ({}) => {
                 </span>
               </motion.div>
             )}
-            {loggedIn && (
+            {!loggedIn && (
               <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: `100%` }}
-                exit={{ opacity: 0, width: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className="w-full flex flex-wrap px-4 mt-1 gap-1"
               >
                 <button
@@ -112,17 +112,17 @@ export const OauthComponent = ({}) => {
                   className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
                 >
                   <span className="icon-[mdi--table-of-contents]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-                  View your drive libraries
+                  Manage your drive libraries
                 </button>
 
                 <button
                   onClick={() => {
                     handleLogout();
                   }}
-                  className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
+                  className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex text-nowrap items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
                 >
-                  <span className="icon-[material-symbols-light--cloud-outline]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-                  sync
+                  <span className="icon-[material-symbols-light--cloud-outline] text-nowrap  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+                  Get real-time sync across all devices
                 </button>
                 {/* <GrainyElementButton
                   gradientSize={100}

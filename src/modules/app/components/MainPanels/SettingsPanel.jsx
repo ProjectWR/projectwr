@@ -67,6 +67,7 @@ import { appThemeDefaultPreferences } from "../../lib/appThemeDefaultPreferences
 import useApplyTheme from "../../hooks/useApplyTheme";
 import { StyledTooltip } from "../LayoutComponents/StyledTooltip";
 import { openPath, openUrl } from "@tauri-apps/plugin-opener";
+import { AppAuthComponent } from "./Settings/AppAuthComponent";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -650,6 +651,10 @@ const SettingsPanel = () => {
           {/* <DetailsPanelDivider /> */}
 
           <div className="w-full h-fit">
+            <AppAuthComponent />
+          </div>
+
+          <div className="w-full h-fit">
             <OauthComponent />
           </div>
 
@@ -970,7 +975,10 @@ const SettingsPanel = () => {
                 className={`grow basis-0 w-full flex flex-col gap-0 items-center justify-start mt-1 px-3
               `}
               >
-                <div id="zoomSelector" className="w-full h-fit flex mt-1 gap-2 items-center justify-between">
+                <div
+                  id="zoomSelector"
+                  className="w-full h-fit flex mt-1 gap-2 items-center justify-between"
+                >
                   <h1 className="h-fit w-fit py-1 text-libraryDirectoryBookNodeFontSize text-appLayoutText">
                     Zoom
                   </h1>
