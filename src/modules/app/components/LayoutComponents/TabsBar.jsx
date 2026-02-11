@@ -272,6 +272,16 @@ export const TabButton = ({
             breadcrumbs,
           },
         };
+      } else if (panelType === "compileManuscript") {
+        return {
+          appItemType: "compileManuscript",
+          id: breadcrumbs[0],
+          tabProps: {
+            panelType,
+            mode,
+            breadcrumbs,
+          },
+        };
       } else if (panelType === "settings") {
         return {
           appItemType: "settings",
@@ -495,6 +505,11 @@ export const TabButton = ({
         <span className="icon-[material-symbols-light--match-word-rounded] w-full h-full"></span>,
       );
       setLabel("Dictionary");
+    } else if (panelType === "compileManuscript") {
+      setIcon(
+        <span className="icon-[mdi--script-text-outline] w-full h-full"></span>,
+      );
+      setLabel("Compile");
     } else if (panelType === "settings") {
       setIcon(
         <span className="icon-[material-symbols-light--settings] w-full h-full"></span>,

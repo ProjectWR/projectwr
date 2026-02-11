@@ -4,10 +4,13 @@ import PropTypes from "prop-types";
 import BinderView from "./BinderView";
 import ManuscriptView from "./ManuscriptView";
 import { load } from "@tauri-apps/plugin-store";
+import { appStore } from "../../../stores/appStore";
 
-const CompileManuscriptPanel = ({ libraryId }) => {
+const CompileManuscriptPanel = () => {
   const [store, setStore] = useState(null);
   const [manuscriptData, setManuscriptData] = useState([]);
+
+  const libraryId = appStore((state) => state.libraryId);
 
   useEffect(() => {
     const initStore = async () => {

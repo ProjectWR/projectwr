@@ -280,7 +280,7 @@ const MainPanel = ({ main = true }) => {
       return <HomePanel />;
     } else if (panelType === "compileManuscript") {
       key.current = "compileManuscript-" + rootId;
-      return <CompileManuscriptPanel libraryId={rootId} />;
+      return <CompileManuscriptPanel />;
     }
 
     return null;
