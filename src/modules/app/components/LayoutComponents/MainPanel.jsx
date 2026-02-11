@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { checkForYTree, YTree } from "yjs-orderedtree";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
 import { useDeviceType } from "../../ConfigProviders/DeviceTypeProvider";
@@ -28,6 +28,7 @@ import { mainPanelStore } from "../../stores/mainPanelStore";
 import { equalityDeep } from "lib0/function";
 import { getOrInitLibraryYTree } from "../../lib/ytree";
 import DictionaryPanel from "../MainPanels/DictionaryPanel";
+import CompileManuscriptPanel from "../MainPanels/CompileManuscript/CompileManuscriptPanel";
 
 const MainPanel = ({ main = true }) => {
   console.log("MainPanel rendering");
@@ -117,7 +118,11 @@ const MainPanel = ({ main = true }) => {
         key.current = "libraryDetails-" + rootId;
         return (
           <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
-            <LibraryDetailsPanel libraryId={rootId} ytree={libraryYTree} />{" "}
+            <LibraryDetailsPanel
+              libraryId={rootId}
+              ytree={libraryYTree}
+              activatePanel={activatePanel}
+            />{" "}
           </PrependBreadcrumbs>
         );
       }
@@ -273,6 +278,9 @@ const MainPanel = ({ main = true }) => {
     } else if (panelType === "home") {
       key.current = "home";
       return <HomePanel />;
+    } else if (panelType === "compileManuscript") {
+      key.current = "compileManuscript-" + rootId;
+      return <CompileManuscriptPanel libraryId={rootId} />;
     }
 
     return null;
@@ -284,7 +292,7 @@ const MainPanel = ({ main = true }) => {
     setLibraryId,
     main,
     splitMode,
-    splitPanelState
+    splitPanelState,
   ]);
 
   return (

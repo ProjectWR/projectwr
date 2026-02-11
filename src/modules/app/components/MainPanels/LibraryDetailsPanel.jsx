@@ -10,7 +10,6 @@ import GrainyButton from "../../../design-system/GrainyButton";
 import syncManager from "../../lib/sync";
 import { wait } from "lib0/promise";
 import persistenceManagerForSubdocs from "../../lib/persistenceSubDocs";
-import { Textarea } from "@mantine/core";
 import DetailsPanel, {
   formClassName,
 } from "../LayoutComponents/DetailsPanel/DetailsPanel";
@@ -39,7 +38,7 @@ import ContextMenuWrapper from "../LayoutComponents/ContextMenuWrapper";
 import DialogWrapper from "../LayoutComponents/DialogWrapper";
 import driveOrchestrator from "../../lib/drive/driveOrchestrator";
 
-const LibraryDetailsPanel = ({ libraryId, ytree }) => {
+const LibraryDetailsPanel = ({ libraryId, ytree, activatePanel }) => {
   const { deviceType } = useDeviceType();
   const isMd = appStore((state) => state.isMd);
 
@@ -292,6 +291,21 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
                       text={"Delete"}
                       loading={deleteLoading}
                     />
+                    <DetailsPanelButton
+                      onClick={() => {
+                        if (activatePanel) {
+                          activatePanel("compileManuscript", "default", [
+                            libraryId,
+                          ]);
+                        } else {
+                          console.error("activatePanel prop missing");
+                        }
+                      }}
+                      icon={
+                        <span className="icon-[mdi--script-text-outline] h-full w-full transition-colors duration-200"></span>
+                      }
+                      text={"Compile Manuscript"}
+                    />
                   </DetailsPanelButtonsShell>
                 </div>
               </div>
@@ -363,6 +377,9 @@ const LibraryDetailsPanel = ({ libraryId, ytree }) => {
 };
 LibraryDetailsPanel.propTypes = {
   libraryEntryReference: PropTypes.object.isRequired,
+  activatePanel: PropTypes.func,
+  libraryId: PropTypes.string.isRequired,
+  ytree: PropTypes.object.isRequired,
 };
 
 export default LibraryDetailsPanel;

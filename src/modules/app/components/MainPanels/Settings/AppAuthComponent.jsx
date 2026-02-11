@@ -4,7 +4,7 @@ import {
   ListShell,
 } from "../../LayoutComponents/HoverListShell";
 
-export const AppAuthComponent = ({ }) => {
+export const AppAuthComponent = () => {
   return (
     <ListShell className={`h-full w-full min-w-0 bg-appBackgroundAccent`}>
       <HoverListHeader className={"gap-4"}>
