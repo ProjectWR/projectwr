@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import BinderNode from "./BinderNode";
 import { getOrInitLibraryYTree } from "../../../lib/ytree";
 
-const BinderView = ({ libraryId }) => {
+const BinderView = ({ libraryId, onAdd }) => {
   const ytree = getOrInitLibraryYTree(libraryId);
 
   // Get root children directly
@@ -17,6 +17,7 @@ const BinderView = ({ libraryId }) => {
           itemId={childId}
           libraryId={libraryId}
           depth={0}
+          onAdd={onAdd}
         />
       ))}
     </div>
@@ -27,4 +28,5 @@ export default BinderView;
 
 BinderView.propTypes = {
   libraryId: PropTypes.string.isRequired,
+  onAdd: PropTypes.func.isRequired,
 };

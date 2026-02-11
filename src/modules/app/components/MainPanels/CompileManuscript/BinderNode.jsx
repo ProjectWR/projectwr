@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "motion/react";
 import useYMap from "../../../hooks/useYMap";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
-import { useDrag } from "react-dnd";
+import { DropdownMenu } from "radix-ui";
+import { v4 as uuidv4 } from "uuid";
 
-const BinderNode = ({ ytree, itemId, libraryId, depth = 0 }) => {
+const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
   const itemMapRef = useRef(
     itemId === "root"
       ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
@@ -21,6 +22,12 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0 }) => {
 
   const itemType =
     itemId === "root" ? "library" : itemMapRef.current.get("type");
+
+  // Don't render notes - they're not part of manuscript compilation
+  if (itemType === "note") {
+    return null;
+  }
+
   const hasChildren = nodeChildren && nodeChildren.length > 0;
   const canExpand =
     (itemType === "section" || itemType === "book" || itemType === "library") &&
@@ -46,21 +53,50 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0 }) => {
     }
   };
 
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: "BINDER_ITEM",
-      item: {
-        id: itemId,
-        type: itemType,
-        title: itemMapState.item_properties?.item_title || "Untitled",
+  const createNodeObject = (id, type, title, children = []) => {
+    return {
+      id: uuidv4(),
+      sourceId: id,
+      type: type || "document",
+      title: title || "Untitled",
+      children: children,
+      properties: {
+        level: 0,
+        include: true,
+        pageBreak: "none",
       },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-      canDrag: itemId !== "root",
-    }),
-    [itemId, itemType, itemMapState],
-  );
+    };
+  };
+
+  const handleAddToManuscript = (mode) => {
+    const title = itemMapState.item_properties?.item_title || "Untitled";
+
+    if (mode === "item") {
+      // Add as single item (no children)
+      onAdd(createNodeObject(itemId, itemType, title, []));
+    } else if (mode === "flat") {
+      // Add only direct paper children as flat list (no nesting, no notes/sections)
+      const childrenIds = ytree.getNodeChildrenFromKey(itemId);
+      const sortedChildIds = ytree.sortChildrenByOrder(childrenIds, itemId);
+
+      const flatItems = sortedChildIds
+        .map((childId) => {
+          const childMap = ytree.getNodeValueFromKey(childId);
+          const childType = childMap.get("type");
+          const childTitle =
+            childMap.get("item_properties")?.item_title || "Untitled";
+
+          // Only include papers (chapters), skip notes and sections
+          if (childType === "paper") {
+            return createNodeObject(childId, childType, childTitle, []); // No children - flat structure
+          }
+          return null;
+        })
+        .filter((item) => item !== null); // Remove null entries
+
+      onAdd(flatItems);
+    }
+  };
 
   // Get appropriate icon for item type
   const getIcon = () => {
@@ -81,8 +117,7 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0 }) => {
   return (
     <div className="w-full flex flex-col h-fit">
       <div
-        ref={drag}
-        className={`w-full flex items-center h-libraryDirectoryPaperNodeHeight ${isDragging ? "opacity-50" : "opacity-100"} cursor-grab active:cursor-grabbing`}
+        className={`w-full flex items-center h-libraryDirectoryPaperNodeHeight group`}
       >
         {/* Node Header */}
         <div
@@ -113,9 +148,52 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0 }) => {
           {/* Title */}
           <span
             className={`text-libraryDirectoryPaperNodeFontSize grow min-w-0 truncate text-appLayoutText select-none`}
+            title={itemMapState.item_properties?.item_title || "Untitled"}
           >
             {itemMapState.item_properties?.item_title || "Untitled"}
           </span>
+        </div>
+
+        {/* Add Button / Dropdown - Always visible, outside main button */}
+        <div className="flex items-center px-2 shrink-0">
+          {(itemType === "section" ||
+            itemType === "book" ||
+            itemType === "library") &&
+          itemId !== "root" ? (
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button className="p-1 rounded hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center outline-none">
+                  <span className="icon-[fluent--add-circle-24-regular] w-5 h-5" />
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content
+                className="contextMenuContent z-[1100] min-w-[200px]"
+                sideOffset={5}
+                align="start"
+              >
+                <DropdownMenu.Item
+                  className="contextMenuItem"
+                  onClick={() => handleAddToManuscript("item")}
+                >
+                  Add section as single file
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  className="contextMenuItem"
+                  onClick={() => handleAddToManuscript("flat")}
+                >
+                  Add section as list of chapters
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          ) : itemId !== "root" ? (
+            <button
+              onClick={() => handleAddToManuscript("item")}
+              className="p-1 rounded hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center"
+              title="Add to Manuscript"
+            >
+              <span className="icon-[fluent--add-circle-24-regular] w-5 h-5" />
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -131,11 +209,12 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0 }) => {
           >
             {ytree.sortChildrenByOrder(nodeChildren, itemId).map((childId) => (
               <BinderNode
-                key={childId}
+                key={`compile_manuscript-${childId}`}
                 ytree={ytree}
                 itemId={childId}
                 libraryId={libraryId}
                 depth={depth + 1}
+                onAdd={onAdd}
               />
             ))}
           </motion.div>
@@ -150,6 +229,7 @@ BinderNode.propTypes = {
   itemId: PropTypes.string.isRequired,
   libraryId: PropTypes.string,
   depth: PropTypes.number,
+  onAdd: PropTypes.func.isRequired,
 };
 
 export default BinderNode;

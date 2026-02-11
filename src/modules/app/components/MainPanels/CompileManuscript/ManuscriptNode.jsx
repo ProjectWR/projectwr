@@ -1,89 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import { useDrag, useDrop } from "react-dnd";
 import { motion, AnimatePresence } from "motion/react";
 
 const ManuscriptNode = ({
   item,
-  index,
+  // index, // Unused for now
   moveItem,
   removeItem,
   updateItem,
   onDrop,
   level = 0,
 }) => {
-  const ref = React.useRef(null);
   const [isExpanded, setIsExpanded] = useState(true);
-
-  const [{ handlerId }, drop] = useDrop({
-    accept: ["MANUSCRIPT_ITEM", "BINDER_ITEM"],
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
-    },
-    hover(draggedItem, monitor) {
-      if (!ref.current) {
-        return;
-      }
-
-      if (draggedItem.type !== "MANUSCRIPT_ITEM") {
-        return;
-      }
-
-      const dragIndex = draggedItem.index;
-      const hoverIndex = index;
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-
-      // Get pixels to the top
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      // Time to actually perform the action
-      moveItem(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      draggedItem.index = hoverIndex;
-    },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    type: "MANUSCRIPT_ITEM",
-    item: () => {
-      return { id: item.id, index, type: "MANUSCRIPT_ITEM" };
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  drag(drop(ref));
 
   const handleExpandToggle = (e) => {
     e.stopPropagation();
@@ -92,17 +20,10 @@ const ManuscriptNode = ({
 
   return (
     <div
-      ref={ref}
-      className={`relative flex flex-col ${isDragging ? "opacity-30" : "opacity-100"}`}
+      className={`relative flex flex-col`}
       style={{ marginLeft: `${level * 16}px` }}
-      data-handler-id={handlerId}
     >
       <div className="flex items-center gap-2 p-2 bg-appLayoutBackground border border-appLayoutBorder rounded hover:bg-appLayoutHover mb-1 group">
-        {/* Drag Handle */}
-        <div className="cursor-grab text-appLayoutTextMuted hover:text-appLayoutText">
-          <span className="icon-[fluent--drag-24-regular] w-4 h-4" />
-        </div>
-
         {/* Expand Toggle if has children */}
         {item.children && item.children.length > 0 ? (
           <button onClick={handleExpandToggle} className="p-1">
@@ -151,10 +72,7 @@ const ManuscriptNode = ({
                 removeItem={removeItem}
                 updateItem={updateItem}
                 onDrop={onDrop}
-                level={0} // Hierarchy handled by parent recursion in ManuscriptView usually,
-                // but here we might need recursive component logic.
-                // For simplicity, let's keep flat list in data for now or recurse?
-                // User request showed tree structure.
+                level={level + 1}
               />
             ))}
           </motion.div>
@@ -166,7 +84,7 @@ const ManuscriptNode = ({
 
 ManuscriptNode.propTypes = {
   item: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
+  // index: PropTypes.number.isRequired,
   moveItem: PropTypes.func,
   removeItem: PropTypes.func,
   updateItem: PropTypes.func,

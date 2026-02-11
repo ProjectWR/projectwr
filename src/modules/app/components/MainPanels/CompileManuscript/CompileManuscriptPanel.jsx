@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import BinderView from "./BinderView";
 import ManuscriptView from "./ManuscriptView";
-import { Store } from "@tauri-apps/plugin-store";
+import { load } from "@tauri-apps/plugin-store";
 
 const CompileManuscriptPanel = ({ libraryId }) => {
   const [store, setStore] = useState(null);
@@ -11,7 +11,7 @@ const CompileManuscriptPanel = ({ libraryId }) => {
 
   useEffect(() => {
     const initStore = async () => {
-      const newStore = new Store(`compile_manuscript_${libraryId}.json`);
+      const newStore = await load(`compile_manuscript_${libraryId}.json`);
       setStore(newStore);
 
       const savedData = await newStore.get("manuscript");
@@ -30,6 +30,16 @@ const CompileManuscriptPanel = ({ libraryId }) => {
     }
   };
 
+  const addItemsToManuscript = (items) => {
+    // Append new items to the end of the list
+    // If items are an array, spread them
+    const newItems = Array.isArray(items) ? items : [items];
+    const newData = [...manuscriptData, ...newItems];
+    setManuscriptData(newData);
+    store.set("manuscript", newData);
+    store.save();
+  };
+
   return (
     <div className="w-full h-full flex flex-row overflow-hidden bg-appBackground">
       {/* Binder View (Source) */}
@@ -38,7 +48,7 @@ const CompileManuscriptPanel = ({ libraryId }) => {
           <h3 className="font-semibold text-appLayoutText">Binder</h3>
         </div>
         <div className="flex-1 overflow-auto">
-          <BinderView libraryId={libraryId} />
+          <BinderView libraryId={libraryId} onAdd={addItemsToManuscript} />
         </div>
       </div>
 
