@@ -271,7 +271,21 @@ const MainPanel = ({ main = true }) => {
       );
     } else if (panelType === "dictionary") {
       key.current = "dictionary";
-      return <DictionaryPanel />;
+      const breadcrumbValues = [
+        {
+          label: "Tools",
+          action: () => {},
+        },
+        {
+          label: "Dictionary",
+          action: () => {},
+        },
+      ];
+      return (
+        <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+          <DictionaryPanel />
+        </PrependBreadcrumbs>
+      );
     } else if (panelType === "settings") {
       key.current = "settings";
       return <SettingsPanel />;
@@ -280,7 +294,22 @@ const MainPanel = ({ main = true }) => {
       return <HomePanel />;
     } else if (panelType === "compileManuscript") {
       key.current = "compileManuscript-" + rootId;
-      return <CompileManuscriptPanel />;
+
+      const breadcrumbValues = [
+        {
+          label: "Tools",
+          action: () => {},
+        },
+        {
+          label: "Compile Manuscript",
+          action: () => {},
+        },
+      ];
+      return (
+        <PrependBreadcrumbs breadcrumbValues={breadcrumbValues}>
+          <CompileManuscriptPanel />
+        </PrependBreadcrumbs>
+      );
     }
 
     return null;

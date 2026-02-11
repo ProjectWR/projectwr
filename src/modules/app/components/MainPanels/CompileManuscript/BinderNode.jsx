@@ -7,6 +7,17 @@ import { DropdownMenu } from "radix-ui";
 import { v4 as uuidv4 } from "uuid";
 
 const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
+  // Check item type early to filter out notes before any hooks
+  const itemType =
+    itemId === "root"
+      ? "library"
+      : ytree.getNodeValueFromKey(itemId).get("type");
+
+  // Don't render notes - they're not part of manuscript compilation
+  if (itemType === "note") {
+    return null;
+  }
+
   const itemMapRef = useRef(
     itemId === "root"
       ? dataManagerSubdocs.getLibrary(libraryId).getMap("library_props")
@@ -19,14 +30,6 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
   );
 
   const [isExpanded, setIsExpanded] = useState(false);
-
-  const itemType =
-    itemId === "root" ? "library" : itemMapRef.current.get("type");
-
-  // Don't render notes - they're not part of manuscript compilation
-  if (itemType === "note") {
-    return null;
-  }
 
   const hasChildren = nodeChildren && nodeChildren.length > 0;
   const canExpand =

@@ -11,6 +11,7 @@ import DetailsPanel, {
   formClassName,
 } from "../LayoutComponents/DetailsPanel/DetailsPanel";
 import DetailsPanelHeader from "../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import { DetailsPanelNameLabel } from "../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
 import DetailsPanelDivider from "../LayoutComponents/DetailsPanel/DetailsPanelDivider";
 import {
   DetailsPanelBody,
@@ -97,13 +98,10 @@ const DictionaryPanel = () => {
 
   return (
     <DetailsPanel>
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-        }}
-        className={formClassName}
-      >
+      <div id="DictionaryContent" className={formClassName}>
+        <DetailsPanelHeader>
+          <DetailsPanelNameLabel>Dictionary</DetailsPanelNameLabel>
+        </DetailsPanelHeader>
         <DetailsPanelBody>
           <DetailsPanelProperties>
             <div className="w-full h-full grid grid-cols-3 gap-0">
@@ -203,7 +201,7 @@ const DictionaryPanel = () => {
             </div>
           </DetailsPanelProperties>
         </DetailsPanelBody>
-      </form>
+      </div>
     </DetailsPanel>
   );
 };

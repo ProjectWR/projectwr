@@ -5,6 +5,15 @@ import BinderView from "./BinderView";
 import ManuscriptView from "./ManuscriptView";
 import { load } from "@tauri-apps/plugin-store";
 import { appStore } from "../../../stores/appStore";
+import DetailsPanel, {
+  formClassName,
+} from "../../LayoutComponents/DetailsPanel/DetailsPanel";
+import DetailsPanelHeader from "../../LayoutComponents/DetailsPanel/DetailsPanelHeader";
+import { DetailsPanelNameLabel } from "../../LayoutComponents/DetailsPanel/DetailsPanelNameInput";
+import {
+  DetailsPanelBody,
+  DetailsPanelProperties,
+} from "../../LayoutComponents/DetailsPanel/DetailsPanelBody";
 
 const CompileManuscriptPanel = () => {
   const [store, setStore] = useState(null);
@@ -44,26 +53,85 @@ const CompileManuscriptPanel = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-row overflow-hidden bg-appBackground">
+    <DetailsPanel>
+      <div id="CompileManuscriptContent" className={formClassName}>
+        <DetailsPanelHeader>
+          <DetailsPanelNameLabel>Compile Manuscript</DetailsPanelNameLabel>
+        </DetailsPanelHeader>
+        <DetailsPanelBody>
+          <DetailsPanelProperties>
+            <div className="w-full flex flex-col lg:flex-row gap-4">
+              {/* Binder View (Source) */}
+              <div className="w-full lg:w-1/2 flex flex-col">
+                <div className="w-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+                  <h3 className="w-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+                    Binder
+                  </h3>
+                  <div className="divider w-full px-1">
+                    <div className="w-full h-px bg-appLayoutBorder"></div>
+                  </div>
+                  <div className="flex-1 w-full overflow-auto">
+                    <BinderView
+                      libraryId={libraryId}
+                      onAdd={addItemsToManuscript}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Manuscript View (Destination) */}
+              <div className="w-full lg:w-1/2 flex flex-col">
+                <div className="w-full  px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+                  <h3 className="w-fit  min-h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+                    Manuscript Outline
+                  </h3>
+                  <div className="divider w-full px-1">
+                    <div className="w-full h-px bg-appLayoutBorder"></div>
+                  </div>
+                  <div className="flex-1 basis-0 min-h-0 overflow-auto">
+                    <ManuscriptView
+                      data={manuscriptData}
+                      onUpdate={handleSave}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </DetailsPanelProperties>
+        </DetailsPanelBody>
+      </div>
+    </DetailsPanel>
+  );
+
+  return (
+    <div className="w-full h-full flex flex-row justify-center gap-2 overflow-hidden bg-appBackground">
       {/* Binder View (Source) */}
-      <div className="w-1/3 h-full border-r border-appLayoutBorder flex flex-col">
-        <div className="p-2 border-b border-appLayoutBorder bg-appLayoutBackground">
-          <h3 className="font-semibold text-appLayoutText">Binder</h3>
-        </div>
-        <div className="flex-1 overflow-auto">
-          <BinderView libraryId={libraryId} onAdd={addItemsToManuscript} />
+      <div className="w-sidePanelWidth h-full flex flex-col">
+        <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+          <h3 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+            Binder
+          </h3>
+          <div className="divider w-full px-1">
+            <div className="w-full h-px bg-appLayoutBorder"></div>
+          </div>
+          <div className="flex-1 w-full overflow-auto">
+            <BinderView libraryId={libraryId} onAdd={addItemsToManuscript} />
+          </div>
         </div>
       </div>
 
       {/* Manuscript View (Destination) */}
-      <div className="w-2/3 h-full flex flex-col bg-appLayoutBackgroundSecondary">
-        <div className="p-2 border-b border-appLayoutBorder bg-appLayoutBackground">
-          <h3 className="font-semibold text-appLayoutText">
+      <div className="w-sidePanelWidth h-full flex flex-col">
+        <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
+          <h3 className="w-fit h-fit min-h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
             Manuscript Outline
           </h3>
-        </div>
-        <div className="flex-1 overflow-auto p-4">
-          <ManuscriptView data={manuscriptData} onUpdate={handleSave} />
+          <div className="divider w-full px-1">
+            <div className="w-full h-px bg-appLayoutBorder"></div>
+          </div>
+          <div className="flex-1 basis-0 min-h-0 overflow-auto">
+            <ManuscriptView data={manuscriptData} onUpdate={handleSave} />
+          </div>
         </div>
       </div>
     </div>

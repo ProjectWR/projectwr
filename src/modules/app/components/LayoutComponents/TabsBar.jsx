@@ -17,6 +17,7 @@ import driveOrchestrator from "../../lib/drive/driveOrchestrator";
 import { oauthStore } from "../../stores/oauthStore";
 import { exportItem } from "../../lib/importExport";
 import ContextMenuWrapper from "./ContextMenuWrapper";
+import { DropdownMenu } from "radix-ui";
 
 export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   /**
@@ -64,43 +65,55 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
         className={`border-b flex w-fit z-100 border-appLayoutBorder bg-appBackgroundAccent h-full min-h-full text-appLayoutText  px-1
           `}
       >
-        <ActionButton
-          onClick={() => {
-            activatePanel("dictionary", null, []);
-          }}
-        >
-          <StyledTooltip label="Dictionary">
-            <div className={`h-full pt-px w-actionBarButtonIconSize relative`}>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="searchButton"
-                className="icon-[material-symbols-light--match-word-rounded] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
+        {/* More Options Dropdown (Home & Dictionary) */}
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <div className="h-full py-1 w-fit">
+              <button className="h-full px-1 w-fit hover:bg-appLayoutInverseHover rounded-md flex items-center justify-center">
+                <StyledTooltip label="Pages" position="bottom">
+                  <div className={`h-full w-actionBarButtonIconSize relative`}>
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.1 }}
+                      key="moreButton"
+                      className="icon-[material-symbols-light--more-horiz] w-full h-full top-0 left-0 absolute bg-appLayoutText"
+                    ></motion.span>
+                  </div>
+                </StyledTooltip>
+              </button>
             </div>
-          </StyledTooltip>
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => {
-            activatePanel("home", null, []);
-          }}
-        >
-          <StyledTooltip label="Home" position="bottom">
-            <div className={`h-full w-actionBarButtonIconSize relative`}>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.1 }}
-                key="homeButton"
-                className="icon-[material-symbols-light--home] w-full h-full top-0 left-0 absolute bg-appLayoutText"
-              ></motion.span>
-            </div>
-          </StyledTooltip>
-        </ActionButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content
+            className="contextMenuContent z-[1100] rounded-t-none! rounded-bl-none!"
+            sideOffset={0}
+            alignOffset={-5}
+            align="start"
+          >
+            <DropdownMenu.Item
+              className="contextMenuItem"
+              onClick={() => activatePanel("home", null, [])}
+            >
+              <span className="icon-[material-symbols-light--home] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+              Home
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className="contextMenuItem"
+              onClick={() => activatePanel("dictionary", null, [])}
+            >
+              <span className="icon-[material-symbols-light--match-word-rounded] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+              Dictionary
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className="contextMenuItem"
+              onClick={() => activatePanel("compileManuscript", null, [])}
+            >
+              <span className="icon-[mdi--script-text-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
+              Manuscript Compiler
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
 
         <ActionButton
           onClick={() => {
@@ -161,7 +174,11 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
                 data-tauri-drag-region
                 key={
                   breadcrumbs.length >= 1
-                    ? breadcrumbs[0] + "-" + breadcrumbs[breadcrumbs.length - 1]
+                    ? panelType +
+                      "-" +
+                      breadcrumbs[0] +
+                      "-" +
+                      breadcrumbs[breadcrumbs.length - 1]
                     : panelType
                 }
                 layout

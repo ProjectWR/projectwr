@@ -295,7 +295,7 @@ const LibraryDetailsPanel = ({ libraryId, ytree, activatePanel }) => {
                       onClick={() => {
                         if (activatePanel) {
                           activatePanel("compileManuscript", "default", [
-                            libraryId,
+                            
                           ]);
                         } else {
                           console.error("activatePanel prop missing");
