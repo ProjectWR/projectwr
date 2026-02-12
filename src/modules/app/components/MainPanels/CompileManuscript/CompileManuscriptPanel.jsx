@@ -47,9 +47,12 @@ const CompileManuscriptPanel = () => {
     // If items are an array, spread them
     const newItems = Array.isArray(items) ? items : [items];
     const newData = [...manuscriptData, ...newItems];
+
     setManuscriptData(newData);
-    store.set("manuscript", newData);
-    store.save();
+    if (store) {
+      store.set("manuscript", newData);
+      store.save();
+    }
   };
 
   return (
@@ -70,7 +73,7 @@ const CompileManuscriptPanel = () => {
                   <div className="divider w-full px-1">
                     <div className="w-full h-px bg-appLayoutBorder"></div>
                   </div>
-                  <div className="flex-1 w-full overflow-auto">
+                  <div className="flex w-full overflow-auto">
                     <BinderView
                       libraryId={libraryId}
                       onAdd={addItemsToManuscript}
@@ -83,12 +86,12 @@ const CompileManuscriptPanel = () => {
               <div className="w-full lg:w-1/2 flex flex-col">
                 <div className="w-full  px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
                   <h3 className="w-fit  min-h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
-                    Manuscript Outline
+                    Manuscript Content
                   </h3>
                   <div className="divider w-full px-1">
                     <div className="w-full h-px bg-appLayoutBorder"></div>
                   </div>
-                  <div className="flex-1 basis-0 min-h-0 overflow-auto">
+                  <div className="flex w-full overflow-auto">
                     <ManuscriptView
                       data={manuscriptData}
                       onUpdate={handleSave}
@@ -101,40 +104,6 @@ const CompileManuscriptPanel = () => {
         </DetailsPanelBody>
       </div>
     </DetailsPanel>
-  );
-
-  return (
-    <div className="w-full h-full flex flex-row justify-center gap-2 overflow-hidden bg-appBackground">
-      {/* Binder View (Source) */}
-      <div className="w-sidePanelWidth h-full flex flex-col">
-        <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
-          <h3 className="w-fit h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
-            Binder
-          </h3>
-          <div className="divider w-full px-1">
-            <div className="w-full h-px bg-appLayoutBorder"></div>
-          </div>
-          <div className="flex-1 w-full overflow-auto">
-            <BinderView libraryId={libraryId} onAdd={addItemsToManuscript} />
-          </div>
-        </div>
-      </div>
-
-      {/* Manuscript View (Destination) */}
-      <div className="w-sidePanelWidth h-full flex flex-col">
-        <div className="w-full h-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
-          <h3 className="w-fit h-fit min-h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
-            Manuscript Outline
-          </h3>
-          <div className="divider w-full px-1">
-            <div className="w-full h-px bg-appLayoutBorder"></div>
-          </div>
-          <div className="flex-1 basis-0 min-h-0 overflow-auto">
-            <ManuscriptView data={manuscriptData} onUpdate={handleSave} />
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 

@@ -9,7 +9,7 @@ const BinderView = ({ libraryId, onAdd }) => {
   const rootChildren = ytree.getNodeChildrenFromKey("root");
 
   return (
-    <div className="p-2 flex flex-col gap-1">
+    <div className="flex w-full flex-col gap-1">
       {ytree.sortChildrenByOrder(rootChildren, "root").map((childId) => (
         <BinderNode
           key={`compile_manuscript-${childId}`}

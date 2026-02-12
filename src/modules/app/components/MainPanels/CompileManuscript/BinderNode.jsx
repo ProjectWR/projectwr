@@ -5,6 +5,7 @@ import useYMap from "../../../hooks/useYMap";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { DropdownMenu } from "radix-ui";
 import { v4 as uuidv4 } from "uuid";
+import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 
 const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
   // Check item type early to filter out notes before any hooks
@@ -12,11 +13,6 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
     itemId === "root"
       ? "library"
       : ytree.getNodeValueFromKey(itemId).get("type");
-
-  // Don't render notes - they're not part of manuscript compilation
-  if (itemType === "note") {
-    return null;
-  }
 
   const itemMapRef = useRef(
     itemId === "root"
@@ -30,6 +26,8 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
   );
 
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const [addHovered, setAddHovered] = useState(false);
 
   const hasChildren = nodeChildren && nodeChildren.length > 0;
   const canExpand =
@@ -76,7 +74,8 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
 
     if (mode === "item") {
       // Add as single item (no children)
-      onAdd(createNodeObject(itemId, itemType, title, []));
+      const item = createNodeObject(itemId, itemType, title, []);
+      onAdd(item);
     } else if (mode === "flat") {
       // Add only direct paper children as flat list (no nesting, no notes/sections)
       const childrenIds = ytree.getNodeChildrenFromKey(itemId);
@@ -117,14 +116,19 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
     }
   };
 
+  // Don't render notes - they're not part of manuscript compilation
+  if (itemType === "note") {
+    return null;
+  }
+
   return (
     <div className="w-full flex flex-col h-fit">
       <div
-        className={`w-full flex items-center h-libraryDirectoryPaperNodeHeight group`}
+        className={`w-full flex items-center gap-1 h-libraryDirectoryPaperNodeHeight group`}
       >
         {/* Node Header */}
         <div
-          className={`h-full grow flex items-center gap-2 py-1 px-2 rounded-md hover:bg-appLayoutHover transition-colors`}
+          className={`h-full grow flex items-center gap-2 py-1 px-2 rounded-md hover:bg-appLayoutHover transition-colors ${addHovered ? "bg-appLayoutHover" : ""}`}
         >
           {/* Expand/Collapse Button */}
           {canExpand ? (
@@ -157,47 +161,53 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
           </span>
         </div>
 
-        {/* Add Button / Dropdown - Always visible, outside main button */}
-        <div className="flex items-center px-2 shrink-0">
-          {(itemType === "section" ||
-            itemType === "book" ||
-            itemType === "library") &&
-          itemId !== "root" ? (
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <button className="p-1 rounded hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center outline-none">
-                  <span className="icon-[fluent--add-circle-24-regular] w-5 h-5" />
-                </button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content
-                className="contextMenuContent z-[1100] min-w-[200px]"
-                sideOffset={5}
-                align="start"
+        <StyledTooltip label={"add"}>
+          {/* Add Button / Dropdown - Always visible, outside main button */}
+          <div
+            className="flex items-center shrink-0"
+            onMouseOver={() => setAddHovered(true)}
+            onMouseOut={() => setAddHovered(false)}
+          >
+            {(itemType === "section" ||
+              itemType === "book" ||
+              itemType === "library") &&
+            itemId !== "root" ? (
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <button className="p-1 rounded-md w-libraryDirectoryPaperNodeHeight h-libraryDirectoryPaperNodeHeight hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center outline-none">
+                    <span className="icon-[ep--right] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
+                  </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content
+                  className="contextMenuContent z-[1100] min-w-[200px]"
+                  sideOffset={5}
+                  align="start"
+                >
+                  <DropdownMenu.Item
+                    className="contextMenuItem"
+                    onClick={() => handleAddToManuscript("item")}
+                  >
+                    Add section as single file
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    className="contextMenuItem"
+                    onClick={() => handleAddToManuscript("flat")}
+                  >
+                    Add section as list of chapters
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+            ) : itemId !== "root" ? (
+              <button
+                onClick={() => handleAddToManuscript("item")}
+                className="p-1 rounded-md w-libraryDirectoryPaperNodeHeight h-libraryDirectoryPaperNodeHeight hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center"
+                title="Add to Manuscript"
               >
-                <DropdownMenu.Item
-                  className="contextMenuItem"
-                  onClick={() => handleAddToManuscript("item")}
-                >
-                  Add section as single file
-                </DropdownMenu.Item>
-                <DropdownMenu.Item
-                  className="contextMenuItem"
-                  onClick={() => handleAddToManuscript("flat")}
-                >
-                  Add section as list of chapters
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-          ) : itemId !== "root" ? (
-            <button
-              onClick={() => handleAddToManuscript("item")}
-              className="p-1 rounded hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center"
-              title="Add to Manuscript"
-            >
-              <span className="icon-[fluent--add-circle-24-regular] w-5 h-5" />
-            </button>
-          ) : null}
-        </div>
+                <span className="icon-[ep--right] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
+              </button>
+            ) : null}
+          </div>
+        </StyledTooltip>
       </div>
 
       {/* Children */}

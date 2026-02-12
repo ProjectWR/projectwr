@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "motion/react";
+import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 
 const ManuscriptNode = ({
   item,
@@ -11,73 +12,33 @@ const ManuscriptNode = ({
   onDrop,
   level = 0,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
-
-  const handleExpandToggle = (e) => {
-    e.stopPropagation();
-    setIsExpanded(!isExpanded);
-  };
+  const [isRemoveHovered, setIsRemoveHovered] = useState(false);
 
   return (
-    <div
-      className={`relative flex flex-col`}
-      style={{ marginLeft: `${level * 16}px` }}
-    >
-      <div className="flex items-center gap-2 p-2 bg-appLayoutBackground border border-appLayoutBorder rounded hover:bg-appLayoutHover mb-1 group">
-        {/* Expand Toggle if has children */}
-        {item.children && item.children.length > 0 ? (
-          <button onClick={handleExpandToggle} className="p-1">
-            <motion.span
-              animate={{ rotate: isExpanded ? 90 : 0 }}
-              className="icon-[formkit--right] w-4 h-4 text-appLayoutTextMuted"
-            />
-          </button>
-        ) : (
-          <div className="w-6" /> // spacer
-        )}
-
+    <div className="flex items-center w-full gap-1 h-fit text-libraryDirectoryBookNodeFontSize  rounded ">
+      <div
+        className={`flex items-center h-libraryDirectoryPaperNodeHeight py-1 px-2 rounded-md grow gap-2 hover:bg-appLayoutHover group ${isRemoveHovered ? "bg-appLayoutHover" : ""}`}
+      >
         {/* Icon */}
         <span
-          className={`icon-[fluent--document-24-regular] w-4 h-4 text-appLayoutTextMuted`}
+          className={`icon-[fluent--document-24-regular] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted`}
         />
 
         <span className="flex-1 text-appLayoutText truncate select-none">
           {item.title}
         </span>
-
-        {/* Actions */}
-        <button
-          onClick={() => removeItem(item.id)}
-          className="opacity-0 group-hover:opacity-100 text-red-500 p-1 hover:bg-appLayoutInverseHover rounded"
-        >
-          <span className="icon-[fluent--delete-24-regular] w-4 h-4" />
-        </button>
       </div>
 
-      {/* Children */}
-      <AnimatePresence>
-        {isExpanded && item.children && item.children.length > 0 && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="flex flex-col"
-          >
-            {item.children.map((child, idx) => (
-              <ManuscriptNode
-                key={child.id}
-                item={child}
-                index={idx}
-                moveItem={moveItem}
-                removeItem={removeItem}
-                updateItem={updateItem}
-                onDrop={onDrop}
-                level={level + 1}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <StyledTooltip label="Remove">
+        <button
+          onClick={() => removeItem(item.id)}
+          className="p-1 rounded-md w-libraryDirectoryPaperNodeHeight h-libraryDirectoryPaperNodeHeight hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center"
+          onMouseOver={() => setIsRemoveHovered(true)}
+          onMouseOut={() => setIsRemoveHovered(false)}
+        >
+          <span className="icon-[mdi--remove] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
+        </button>
+      </StyledTooltip>
     </div>
   );
 };

@@ -28,13 +28,13 @@ const ManuscriptView = ({ data, onUpdate }) => {
   );
 
   return (
-    <div className={`w-full h-full min-h-[200px] flex flex-col gap-2`}>
+    <div className={`w-full h-fit flex flex-col gap-2`}>
       {data.length === 0 ? (
-        <div className="flex items-center justify-center h-full text-appLayoutTextMuted select-none pointer-events-none">
-          Add items from the Binder to build your manuscript
+        <div className="flex items-center justify-start px-3 h-full text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize mt-1 select-none pointer-events-none">
+          Add content from the Binder to build your manuscript, we will organize and format them in the next step.
         </div>
       ) : (
-        <div className="flex flex-col gap-1 pb-20">
+        <div className="flex flex-col w-full gap-1">
           {data.map((item, index) => (
             <ManuscriptNode
               key={item.id}
