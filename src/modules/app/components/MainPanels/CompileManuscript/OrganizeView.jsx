@@ -77,8 +77,8 @@ const OrganizeNode = ({
       ref={dndRef}
       className={`flex items-center w-full gap-1 h-fit text-libraryDirectoryBookNodeFontSize rounded ${isDragging ? "opacity-50" : ""} ${isOver ? "bg-appLayoutHover" : ""}
       
-      ${isOverCurrent && areaSelected === "top" ? "border-t border-appLayoutBorder" : ""}
-      ${isOverCurrent && areaSelected === "bottom" ? "border-b border-appLayoutBorder" : ""}
+      ${isOverCurrent && areaSelected === "top" ? "border-b-transparent border-y border-t-appLayoutHighlight/80" : "border-transparent border-y"}
+      ${isOverCurrent && areaSelected === "bottom" ? "border-t-transparent border-y border-b-appLayoutHighlight/80" : "border-transparent border-y"}
       `}
     >
       <div
@@ -170,7 +170,7 @@ const DropSection = ({ children, section, manuscriptData, handleSave }) => {
   return (
     <div
       ref={drop}
-      className={`flex w-full flex-col gap-1 min-h-[100px] transition-colors duration-100 ${isOver ? "bg-appLayoutHover/50" : ""}`}
+      className={`flex w-full flex-col gap-1 transition-colors duration-100 ${isOver ? "bg-appLayoutHover/50" : ""}`}
     >
       {children}
     </div>
@@ -263,7 +263,7 @@ const OrganizeView = ({ manuscriptData, handleSave }) => {
     const items = manuscriptData.filter((item) => item.section === section);
 
     return (
-      <div className="w-full flex flex-col">
+      <div className="grow min-w-0 basis-0 flex flex-col">
         <div className="w-full px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
           <div className="w-full flex justify-between items-center">
             <h3 className="w-fit px-2 flex justify-start items-center text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
@@ -303,7 +303,7 @@ const OrganizeView = ({ manuscriptData, handleSave }) => {
   };
 
   return (
-    <div className="organizeSectionContainer w-full flex flex-col lg:flex-row gap-4">
+    <div className="organizeSectionContainer w-full flex flex-col lg:flex-row gap-1">
       {renderSection("frontMatter", "Front Matter")}
       {renderSection("bodyMatter", "Body Matter")}
       {renderSection("backMatter", "Back Matter")}
