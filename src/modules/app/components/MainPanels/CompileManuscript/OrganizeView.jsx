@@ -72,11 +72,6 @@ const OrganizeNode = ({
           <div className="w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
         )}
 
-        {/* Dynamic Icon */}
-        <span
-          className={`${item.isVirtual ? "icon-[fluent--book-settings-24-regular] text-appLayoutText" : "icon-[fluent--document-24-regular] text-appLayoutTextMuted"} w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize`}
-        />
-
         <span
           className={`flex-1 truncate select-none ${item.isVirtual ? "text-appLayoutText font-medium" : "text-appLayoutText"}`}
         >
@@ -90,7 +85,7 @@ const OrganizeNode = ({
           <button
             onMouseOver={() => setIsRemoveHovered(true)}
             onMouseOut={() => setIsRemoveHovered(false)}
-            className="px-2 py-0.5 rounded-md text-libraryDirectoryBookNodeFontSize bg-appLayoutBackground border border-appLayoutBorder hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-2 py-0.5 rounded-md text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis bg-appLayoutBackground border border-appLayoutBorder hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={availableTypes.length <= 1}
           >
             {currentType?.label || "Select Type"}

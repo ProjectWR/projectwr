@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import BinderView from "./BinderView";
 import ManuscriptView from "./ManuscriptView";
 import OrganizeView from "./OrganizeView";
+import FormatView from "./FormatView";
 import { autoAssignType } from "./organizeConstants";
 import { load } from "@tauri-apps/plugin-store";
 import { appStore } from "../../../stores/appStore";
@@ -261,7 +262,7 @@ const CompileManuscriptPanel = () => {
               </button>
             </div>
 
-            <div className="w-full flex flex-col lg:flex-row gap-4">
+            <div className="w-full grow flex flex-col lg:flex-row gap-4">
               {stage === "select_content" && (
                 <>
                   {/* Binder View (Source) */}
@@ -309,6 +310,13 @@ const CompileManuscriptPanel = () => {
                   onUpdateConfig={handleUpdateConfig}
                   onRemove={handleRemoveFromManuscript}
                   onAddVirtual={handleAddVirtualItem}
+                />
+              )}
+
+              {stage === "format" && (
+                <FormatView
+                  manuscriptData={manuscriptData}
+                  compileConfig={compileConfig}
                 />
               )}
             </div>
