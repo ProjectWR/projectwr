@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import BinderView from "./BinderView";
 import ManuscriptView from "./ManuscriptView";
 import OrganizeView from "./OrganizeView";
-import FormatView from "./FormatView";
-import { autoAssignType } from "./organizeConstants";
 import { load } from "@tauri-apps/plugin-store";
 import { appStore } from "../../../stores/appStore";
 import DetailsPanel, {
@@ -21,7 +19,6 @@ import {
 const CompileManuscriptPanel = () => {
   const [store, setStore] = useState(null);
   const [manuscriptData, setManuscriptData] = useState([]);
-  const [compileConfig, setCompileConfig] = useState([]);
 
   const [stage, setStage] = useState("select_content");
 
@@ -35,11 +32,6 @@ const CompileManuscriptPanel = () => {
       const savedData = await newStore.get("manuscript");
       if (savedData) {
         setManuscriptData(savedData);
-      }
-
-      const savedConfig = await newStore.get("compileConfig");
-      if (savedConfig) {
-        setCompileConfig(savedConfig);
       }
     };
     initStore();
@@ -66,168 +58,28 @@ const CompileManuscriptPanel = () => {
     }
   };
 
+  const handleClearPersistence = async () => {
+    if (
+      confirm(
+        "Are you sure you want to completely clear the saved compilation data? This will reset everything to default.",
+      )
+    ) {
+      if (store) {
+        await store.clear();
+        await store.save();
+      }
+      setManuscriptData([]);
+      setStore(null);
+      // Reload the store to ensure clean state
+      const newStore = await load(`compile_manuscript_${libraryId}.json`);
+      setStore(newStore);
+      setStage("select_content");
+    }
+  };
+
   // Auto-assign types when transitioning to organize stage
   const handleStageChange = (newStage) => {
-    if (newStage === "organize") {
-      let newConfig = [...compileConfig];
-
-      if (newConfig.length === 0) {
-        // Auto-assign types for all manuscript items
-        newConfig = manuscriptData.map((item, index) => {
-          const assignment = autoAssignType(item.title);
-          return {
-            nodeId: item.id,
-            type: assignment.type,
-            section: assignment.section,
-            order: index,
-          };
-        });
-      }
-
-      // Ensure mandatory "Title Page" is present
-      if (!newConfig.find((c) => c.type === "title_page")) {
-        newConfig.unshift({
-          nodeId: "virtual:title-page",
-          type: "title_page",
-          section: "front",
-          order: -1, // Will be re-indexed below
-        });
-      }
-
-      // Re-index all items to ensure clean order numbers
-      const sections = ["front", "body", "back"];
-      sections.forEach((s) => {
-        const sectionItems = newConfig.filter((c) => c.section === s);
-        sectionItems
-          .sort((a, b) => a.order - b.order)
-          .forEach((item, idx) => {
-            item.order = idx;
-          });
-      });
-
-      setCompileConfig(newConfig);
-      if (store) {
-        store.set("compileConfig", newConfig);
-        store.save();
-      }
-    }
     setStage(newStage);
-  };
-
-  const handleAddVirtualItem = (type, section) => {
-    const newConfig = [...compileConfig];
-    const sectionItems = newConfig.filter((c) => c.section === section);
-
-    newConfig.push({
-      nodeId: `virtual:${type}-${Date.now()}`,
-      type: type,
-      section: section,
-      order: sectionItems.length,
-    });
-
-    setCompileConfig(newConfig);
-    if (store) {
-      store.set("compileConfig", newConfig);
-      store.save();
-    }
-  };
-
-  // Update compile config for a specific item
-  const handleUpdateConfig = (nodeId, updates) => {
-    let newConfig = [...compileConfig];
-
-    // Find the item being updated
-    const itemIndex = newConfig.findIndex((c) => c.nodeId === nodeId);
-    if (itemIndex === -1) return;
-
-    const oldConfig = newConfig[itemIndex];
-    const oldSection = oldConfig.section;
-    const newSection =
-      updates.section !== undefined ? updates.section : oldSection;
-    const sectionChanged = oldSection !== newSection;
-
-    // Update the item with new values
-    newConfig[itemIndex] = { ...oldConfig, ...updates };
-
-    // If section changed or order changed, we need to reorder
-    if (sectionChanged || updates.order !== undefined) {
-      // Remove the item from the array temporarily
-      const [movedItem] = newConfig.splice(itemIndex, 1);
-
-      // Get all items in the target section (excluding the moved item)
-      const targetSectionItems = newConfig.filter(
-        (c) => c.section === newSection,
-      );
-
-      // Determine the insert position
-      const targetOrder =
-        updates.order !== undefined ? updates.order : targetSectionItems.length;
-      const insertIndex = Math.min(targetOrder, targetSectionItems.length);
-
-      // Find the actual index in newConfig where we should insert
-      let actualInsertIndex = 0;
-      let sectionItemCount = 0;
-      for (let i = 0; i < newConfig.length; i++) {
-        if (newConfig[i].section === newSection) {
-          if (sectionItemCount === insertIndex) {
-            actualInsertIndex = i;
-            break;
-          }
-          sectionItemCount++;
-        }
-      }
-
-      // If we didn't find the position (inserting at end), find the last item of the section
-      if (sectionItemCount < insertIndex || targetSectionItems.length === 0) {
-        actualInsertIndex = newConfig.length;
-        for (let i = newConfig.length - 1; i >= 0; i--) {
-          if (newConfig[i].section === newSection) {
-            actualInsertIndex = i + 1;
-            break;
-          }
-        }
-      }
-
-      // Insert the item at the correct position
-      newConfig.splice(actualInsertIndex, 0, movedItem);
-
-      // Reorder all items in all affected sections
-      const sectionsToReorder = sectionChanged
-        ? [oldSection, newSection]
-        : [newSection];
-      sectionsToReorder.forEach((section) => {
-        const sectionItems = newConfig.filter((c) => c.section === section);
-        sectionItems.forEach((item, idx) => {
-          const configIndex = newConfig.findIndex(
-            (c) => c.nodeId === item.nodeId,
-          );
-          newConfig[configIndex].order = idx;
-        });
-      });
-    }
-
-    setCompileConfig(newConfig);
-    if (store) {
-      store.set("compileConfig", newConfig);
-      store.save();
-    }
-  };
-
-  // Remove item from manuscript and config
-  const handleRemoveFromManuscript = (nodeId) => {
-    const newData = manuscriptData.filter((item) => item.id !== nodeId);
-    const newConfig = compileConfig.filter(
-      (config) => config.nodeId !== nodeId,
-    );
-
-    setManuscriptData(newData);
-    setCompileConfig(newConfig);
-
-    if (store) {
-      store.set("manuscript", newData);
-      store.set("compileConfig", newConfig);
-      store.save();
-    }
   };
 
   return (
@@ -286,9 +138,18 @@ const CompileManuscriptPanel = () => {
                   {/* Manuscript View (Destination) */}
                   <div className="w-full lg:w-1/2 flex flex-col">
                     <div className="w-full  px-1 pt-1 flex flex-col items-start gap-1 border border-transparent rounded-md overflow-hidden">
-                      <h3 className="w-fit  min-h-fit px-2 flex justify-start items-center   text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
-                        Manuscript Content
-                      </h3>
+                      <div className="flex items-center gap-1">
+                        <h3 className="w-fit min-h-fit px-1 flex justify-start items-center text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
+                          Manuscript Content
+                        </h3>
+                        <button
+                          onClick={handleClearPersistence}
+                          className="px-2 py-0.5 text-xs text-red-500 hover:bg-red-50 rounded border border-transparent hover:border-red-200 transition-colors"
+                          title="Clear all persistence"
+                        >
+                          Reset
+                        </button>
+                      </div>
                       <div className="divider w-full px-1">
                         <div className="w-full h-px bg-appLayoutBorder"></div>
                       </div>
@@ -305,20 +166,12 @@ const CompileManuscriptPanel = () => {
 
               {stage === "organize" && (
                 <OrganizeView
-                  data={manuscriptData}
-                  compileConfig={compileConfig}
-                  onUpdateConfig={handleUpdateConfig}
-                  onRemove={handleRemoveFromManuscript}
-                  onAddVirtual={handleAddVirtualItem}
+                  handleSave={handleSave}
+                  manuscriptData={manuscriptData}
                 />
               )}
 
-              {stage === "format" && (
-                <FormatView
-                  manuscriptData={manuscriptData}
-                  compileConfig={compileConfig}
-                />
-              )}
+              {stage === "format" && <div></div>}
             </div>
 
             {(stage === "select_content" ||

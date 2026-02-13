@@ -5,72 +5,86 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DropdownMenu } from "radix-ui";
 import { StyledTooltip } from "../../LayoutComponents/StyledTooltip";
 import { TYPE_CATEGORIES } from "./organizeConstants";
+import { useCallback } from "react";
+import { useRef } from "react";
 
 const OrganizeNode = ({
   item,
-  config,
-  onUpdateConfig,
-  onRemove,
-  index,
   section,
+  changeItemCategory,
+  moveBeforeItem,
+  moveAfterItem,
 }) => {
   const [isRemoveHovered, setIsRemoveHovered] = useState(false);
 
+  const dndRef = useRef();
+
+  const [areaSelected, setAreaSelected] = useState("top");
+
   const [{ isDragging }, drag] = useDrag({
     type: "ORGANIZE_ITEM",
-    item: { id: item.id, index, section, config },
-    canDrag: () => config.type !== "title_page",
+    item: item,
+    canDrag: () => item != null,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: "ORGANIZE_ITEM",
-    hover: (draggedItem) => {
+    hover: (draggedItem, monitor) => {
       if (draggedItem.id === item.id) return;
 
-      // Move item to this position
-      onUpdateConfig(draggedItem.id, {
-        section,
-        order: index,
-      });
+      const hoverClientOffset = monitor.getClientOffset();
+      if (!hoverClientOffset) return;
+
+      const hoverBoundingRect =
+        monitor.getItemType() === "ORGANIZE_ITEM"
+          ? dndRef.current?.getBoundingClientRect()
+          : null;
+
+      if (!hoverBoundingRect) return;
+
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverClientY = hoverClientOffset.y - hoverBoundingRect.top;
+
+      if (hoverClientY > hoverMiddleY) {
+        setAreaSelected("bottom");
+      } else {
+        setAreaSelected("top");
+      }
+    },
+    drop: (draggedItem) => {
+      if (draggedItem.id === item.id) return;
+
+      if (areaSelected === "top") {
+        moveBeforeItem(item.id, draggedItem.id);
+      } else {
+        moveAfterItem(item.id, draggedItem.id);
+      }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
     }),
   });
 
-  const handleTypeChange = (newType) => {
-    onUpdateConfig(item.id, { type: newType });
-  };
-
-  const currentType = TYPE_CATEGORIES[section].find(
-    (t) => t.value === config.type,
-  );
-
-  // Filter available types based on whether the item is virtual
-  const availableTypes = TYPE_CATEGORIES[section].filter((type) => {
-    if (item.isVirtual) return type.isSystem;
-    return type.isUser;
-  });
-
-  const isTitlePage = config.type === "title_page";
+  drag(drop(dndRef));
 
   return (
     <div
-      ref={(node) => !isTitlePage && drag(drop(node))}
-      className={`flex items-center w-full gap-1 h-fit text-libraryDirectoryBookNodeFontSize rounded ${isDragging ? "opacity-50" : ""} ${isOver ? "bg-appLayoutHover" : ""}`}
+      ref={dndRef}
+      className={`flex items-center w-full gap-1 h-fit text-libraryDirectoryBookNodeFontSize rounded ${isDragging ? "opacity-50" : ""} ${isOver ? "bg-appLayoutHover" : ""}
+      
+      ${isOverCurrent && areaSelected === "top" ? "border-t border-appLayoutBorder" : ""}
+      ${isOverCurrent && areaSelected === "bottom" ? "border-b border-appLayoutBorder" : ""}
+      `}
     >
       <div
         className={`flex items-center h-libraryDirectoryPaperNodeHeight py-1 px-2 rounded-md grow gap-2 hover:bg-appLayoutHover group ${isRemoveHovered ? "bg-appLayoutHover" : ""}`}
       >
-        {/* Drag Handle */}
-        {!isTitlePage ? (
-          <span className="icon-[mdi--drag-vertical] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted cursor-move" />
-        ) : (
-          <div className="w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
-        )}
+        <span className="icon-[mdi--drag-vertical] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted cursor-move" />
 
         <span
           className={`flex-1 truncate select-none ${item.isVirtual ? "text-appLayoutText font-medium" : "text-appLayoutText"}`}
@@ -86,62 +100,66 @@ const OrganizeNode = ({
             onMouseOver={() => setIsRemoveHovered(true)}
             onMouseOut={() => setIsRemoveHovered(false)}
             className="px-2 py-0.5 rounded-md text-libraryDirectoryBookNodeFontSize text-nowrap overflow-x-hidden overflow-ellipsis bg-appLayoutBackground border border-appLayoutBorder hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={availableTypes.length <= 1}
           >
-            {currentType?.label || "Select Type"}
+            {TYPE_CATEGORIES[section][item.category]?.label || "Select Type"}
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content
-          className="contextMenuContent z-1100 min-w-[180px]"
+          className="contextMenuContent z-1100"
           sideOffset={5}
           align="start"
         >
-          {availableTypes.map((type) => (
+          {Object.values(TYPE_CATEGORIES[section]).map((category) => (
             <DropdownMenu.Item
-              key={type.value}
+              key={category.value}
               className="contextMenuItem"
-              onClick={() => handleTypeChange(type.value)}
+              onClick={() => changeItemCategory(item.id, category.value)}
             >
-              {type.label}
+              {category.label}
             </DropdownMenu.Item>
           ))}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
-
-      <StyledTooltip label="Remove">
-        <button
-          onClick={() => onRemove(item.id)}
-          className="p-1 rounded-md w-libraryDirectoryPaperNodeHeight h-libraryDirectoryPaperNodeHeight hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText flex items-center justify-center disabled:opacity-20 disabled:cursor-not-allowed"
-          onMouseOver={() => setIsRemoveHovered(true)}
-          onMouseOut={() => setIsRemoveHovered(false)}
-          disabled={config.type === "title_page"}
-        >
-          <span className="icon-[mdi--remove] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
-        </button>
-      </StyledTooltip>
     </div>
   );
 };
 
-OrganizeNode.propTypes = {
-  item: PropTypes.object.isRequired,
-  config: PropTypes.object.isRequired,
-  onUpdateConfig: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
-  section: PropTypes.string.isRequired,
-};
+const DropSection = ({ children, section, manuscriptData, handleSave }) => {
+  console.log("Rendering Drop Section: ", section);
 
-const DropSection = ({ children, section, onUpdateConfig }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "ORGANIZE_ITEM",
     drop: (draggedItem) => {
       // If we drop on the section itself (not on a specific node), move to end of section
       if (draggedItem.section !== section) {
-        onUpdateConfig(draggedItem.id, {
-          section,
-          order: 9999, // Move to end
-        });
+        // Find indices
+        const draggedIndex = manuscriptData.findIndex(
+          (item) => item.id === draggedItem.id,
+        );
+
+        if (draggedIndex === -1) return;
+
+        const updatedManuscriptData = [...manuscriptData];
+
+        // Remove dragged item
+        const [itemToMove] = updatedManuscriptData.splice(draggedIndex, 1);
+
+        // Update section
+        itemToMove.section = section;
+
+        // Find last index of this section to insert after
+        let insertIndex = updatedManuscriptData.length;
+        for (let i = updatedManuscriptData.length - 1; i >= 0; i--) {
+          if (updatedManuscriptData[i].section === section) {
+            insertIndex = i + 1;
+            break;
+          }
+        }
+
+        // Insert at end of section
+        updatedManuscriptData.splice(insertIndex, 0, itemToMove);
+
+        handleSave(updatedManuscriptData);
       }
     },
     collect: (monitor) => ({
@@ -159,51 +177,90 @@ const DropSection = ({ children, section, onUpdateConfig }) => {
   );
 };
 
-DropSection.propTypes = {
-  children: PropTypes.node,
-  section: PropTypes.string.isRequired,
-  onUpdateConfig: PropTypes.func.isRequired,
-};
+const OrganizeView = ({ manuscriptData, handleSave }) => {
+  const changeItemCategory = useCallback(
+    (id, newCategory) => {
+      const updatedManuscriptData = manuscriptData.map((item) => {
+        if (item.id === id) {
+          return { ...item, category: newCategory };
+        }
+        return item;
+      });
+      handleSave(updatedManuscriptData);
+    },
+    [manuscriptData, handleSave],
+  );
 
-const OrganizeView = ({
-  data,
-  compileConfig,
-  onUpdateConfig,
-  onRemove,
-  onAddVirtual,
-}) => {
-  // Group items by section
-  const itemsBySection = {
-    front: [],
-    body: [],
-    back: [],
-  };
+  const moveBeforeItem = useCallback(
+    (targetId, draggedId) => {
+      // Find indices
+      const draggedIndex = manuscriptData.findIndex(
+        (item) => item.id === draggedId,
+      );
+      const targetIndex = manuscriptData.findIndex(
+        (item) => item.id === targetId,
+      );
 
-  const formatTitle = (type) => {
-    return type
-      .split("_")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
+      if (draggedIndex === -1 || targetIndex === -1) return;
 
-  // Reconstruct list from compileConfig
-  compileConfig.forEach((config) => {
-    const binderItem = data.find((d) => d.id === config.nodeId);
-    const item = binderItem || {
-      id: config.nodeId,
-      title: formatTitle(config.type),
-      isVirtual: true,
-    };
-    itemsBySection[config.section].push({ item, config });
-  });
+      const updatedManuscriptData = [...manuscriptData];
 
-  // Sort by order within each section
-  Object.keys(itemsBySection).forEach((section) => {
-    itemsBySection[section].sort((a, b) => a.config.order - b.config.order);
-  });
+      // Remove dragged item
+      const [draggedItem] = updatedManuscriptData.splice(draggedIndex, 1);
+
+      // Update section to match target
+      const targetItem = manuscriptData[targetIndex];
+      draggedItem.section = targetItem.section;
+
+      // Calculate new target index (since removal might have shifted it)
+      const newTargetIndex = updatedManuscriptData.findIndex(
+        (item) => item.id === targetId,
+      );
+
+      // Insert before target
+      updatedManuscriptData.splice(newTargetIndex, 0, draggedItem);
+
+      handleSave(updatedManuscriptData);
+    },
+    [manuscriptData, handleSave],
+  );
+
+  const moveAfterItem = useCallback(
+    (targetId, draggedId) => {
+      // Find indices
+      const draggedIndex = manuscriptData.findIndex(
+        (item) => item.id === draggedId,
+      );
+      const targetIndex = manuscriptData.findIndex(
+        (item) => item.id === targetId,
+      );
+
+      if (draggedIndex === -1 || targetIndex === -1) return;
+
+      const updatedManuscriptData = [...manuscriptData];
+
+      // Remove dragged item
+      const [draggedItem] = updatedManuscriptData.splice(draggedIndex, 1);
+
+      // Update section to match target
+      const targetItem = manuscriptData[targetIndex];
+      draggedItem.section = targetItem.section;
+
+      // Calculate new target index (since removal might have shifted it)
+      const newTargetIndex = updatedManuscriptData.findIndex(
+        (item) => item.id === targetId,
+      );
+
+      // Insert after target
+      updatedManuscriptData.splice(newTargetIndex + 1, 0, draggedItem);
+
+      handleSave(updatedManuscriptData);
+    },
+    [manuscriptData, handleSave],
+  );
 
   const renderSection = (section, title) => {
-    const items = itemsBySection[section];
+    const items = manuscriptData.filter((item) => item.section === section);
 
     return (
       <div className="w-full flex flex-col">
@@ -212,62 +269,30 @@ const OrganizeView = ({
             <h3 className="w-fit px-2 flex justify-start items-center text-libraryDirectoryBookNodeFontSize text-appLayoutTextMuted">
               {title}
             </h3>
-
-            {/* Header Actions for Front and Body */}
-            {(section === "front" || section === "body") && (
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild>
-                  <button className="flex items-center justify-center w-fit h-fit py-px px-1 rounded-md hover:bg-appLayoutHover text-appLayoutTextMuted hover:text-appLayoutText">
-                    <span className="icon-[mdi--plus] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
-                  </button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content
-                  className="contextMenuContent z-1100 min-w-[150px]"
-                  sideOffset={5}
-                  align="end"
-                >
-                  {section === "front" && (
-                    <DropdownMenu.Item
-                      className="contextMenuItem"
-                      onClick={() => onAddVirtual("table_of_contents", "front")}
-                      disabled={compileConfig.some(
-                        (c) => c.type === "table_of_contents",
-                      )}
-                    >
-                      Table of Contents
-                    </DropdownMenu.Item>
-                  )}
-                  {section === "body" && (
-                    <DropdownMenu.Item
-                      className="contextMenuItem"
-                      onClick={() => onAddVirtual("part_divider", "body")}
-                    >
-                      Part Divider
-                    </DropdownMenu.Item>
-                  )}
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            )}
           </div>
 
           <div className="divider w-full px-1">
             <div className="w-full h-px bg-appLayoutBorder"></div>
           </div>
-          <DropSection section={section} onUpdateConfig={onUpdateConfig}>
+
+          <DropSection
+            section={section}
+            manuscriptData={manuscriptData}
+            handleSave={handleSave}
+          >
             {items.length === 0 ? (
               <div className="flex items-center justify-start px-3 py-1 rounded-md text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize select-none pointer-events-none italic opacity-50">
                 Drop items here for {title.toLowerCase()}
               </div>
             ) : (
-              items.map(({ item, config }, index) => (
+              items.map((item) => (
                 <OrganizeNode
                   key={item.id}
                   item={item}
-                  config={config}
-                  onUpdateConfig={onUpdateConfig}
-                  onRemove={onRemove}
-                  index={index}
                   section={section}
+                  changeItemCategory={changeItemCategory}
+                  moveAfterItem={moveAfterItem}
+                  moveBeforeItem={moveBeforeItem}
                 />
               ))
             )}
@@ -278,22 +303,17 @@ const OrganizeView = ({
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="w-full flex flex-col lg:flex-row gap-4">
-        {renderSection("front", "Front Matter")}
-        {renderSection("body", "Body Matter")}
-        {renderSection("back", "Back Matter")}
-      </div>
-    </DndProvider>
+    <div className="organizeSectionContainer w-full flex flex-col lg:flex-row gap-4">
+      {renderSection("frontMatter", "Front Matter")}
+      {renderSection("bodyMatter", "Body Matter")}
+      {renderSection("backMatter", "Back Matter")}
+    </div>
   );
 };
 
 OrganizeView.propTypes = {
-  data: PropTypes.array.isRequired,
-  compileConfig: PropTypes.array.isRequired,
-  onUpdateConfig: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  onAddVirtual: PropTypes.func.isRequired,
+  manuscriptData: PropTypes.array.isRequired,
+  handleSave: PropTypes.func.isRequired,
 };
 
 export default OrganizeView;

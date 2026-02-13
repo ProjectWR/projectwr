@@ -34,7 +34,7 @@ export const OauthComponent = ({}) => {
       <HoverListDivider />
 
       <section className="flex items-start gap-2 w-full h-fit px-2">
-        {!loggedIn && (
+        {loggedIn && (
           <div className="h-fit grow basis-0 min-w-0 flex flex-col items-center justify-center gap-2">
             <div className="h-fit py-3 w-full flex flex-col items-center justify-center gap-2">
               <AnimatePresence>
@@ -65,7 +65,7 @@ export const OauthComponent = ({}) => {
         <div className="h-fit grow basis-0 min-w-0 flex flex-col gap-2">
           {" "}
           <AnimatePresence>
-            {loggedIn && (
+            {!loggedIn && (
               <motion.div
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: `100%` }}
@@ -88,7 +88,7 @@ export const OauthComponent = ({}) => {
                 </span>
               </motion.div>
             )}
-            {!loggedIn && (
+            {loggedIn && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

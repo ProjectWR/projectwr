@@ -54,27 +54,23 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
     }
   };
 
-  const createNodeObject = (id, type, title, children = []) => {
+  const createNodeObject = (id, type, title) => {
     return {
       id: uuidv4(),
       sourceId: id,
-      type: type || "document",
-      title: title || "Untitled",
-      children: children,
-      properties: {
-        level: 0,
-        include: true,
-        pageBreak: "none",
-      },
+      type: type || null,
+      title: title || null,
+      section: "bodyMatter",
+      category: "chapter"
     };
   };
 
   const handleAddToManuscript = (mode) => {
-    const title = itemMapState.item_properties?.item_title || "Untitled";
+    const title = itemMapState.item_properties?.item_title || null;
 
     if (mode === "item") {
       // Add as single item (no children)
-      const item = createNodeObject(itemId, itemType, title, []);
+      const item = createNodeObject(itemId, itemType, title);
       onAdd(item);
     } else if (mode === "flat") {
       // Add only direct paper children as flat list (no nesting, no notes/sections)
@@ -90,7 +86,7 @@ const BinderNode = ({ ytree, itemId, libraryId, depth = 0, onAdd }) => {
 
           // Only include papers (chapters), skip notes and sections
           if (childType === "paper") {
-            return createNodeObject(childId, childType, childTitle, []); // No children - flat structure
+            return createNodeObject(childId, childType, childTitle); 
           }
           return null;
         })
