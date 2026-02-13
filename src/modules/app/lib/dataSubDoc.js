@@ -1,4 +1,4 @@
-import { Editor } from "@tiptap/core";
+import { Editor, mergeAttributes } from "@tiptap/core";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -21,9 +21,9 @@ import Image from "@tiptap/extension-image";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Typography from "@tiptap/extension-typography";
 import TextAlign from "@tiptap/extension-text-align";
+import suggestion from "../../editor/TIpTapEditor/Extensions/MentionExtension/suggestion";
 
 import * as Y from "yjs";
-import { YKeyValue } from "y-utility/y-keyvalue";
 import { generateUUID } from "../utils/uuidUtil";
 import { getHighestOrderIndex, insertBetween } from "../utils/orderUtil";
 import { YTree } from "yjs-orderedtree";
@@ -42,6 +42,9 @@ import { Buffer } from "buffer/";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeFile } from "@tauri-apps/plugin-fs";
 import { Packer } from "docx";
+import { getOrInitLibraryYTree } from "./ytree";
+import { appStore } from "../stores/appStore";
+import Mention from "@tiptap/extension-mention";
 
 let instance;
 
@@ -450,6 +453,109 @@ class DataManagerSubdocs {
         Typography,
         TextAlign.configure({
           types: ["heading", "paragraph"],
+        }),
+        Mention.configure({
+          HTMLAttributes: {
+            class: "mention",
+          },
+          suggestion,
+          renderText({ options, node }) {
+            console.log("NODE ATTRS: ", node.attrs);
+
+            const libraryId = appStore.getState().libraryId;
+
+            const id = node.attrs.id;
+
+            if (!id) {
+              return "-error-";
+            }
+
+            const libraryYTree = getOrInitLibraryYTree(libraryId);
+
+            let label = "";
+
+            try {
+              label =
+                libraryId === id
+                  ? dataManagerSubdocs
+                      .getLibrary(libraryId)
+                      ?.getMap("library_props")
+                      ?.toJSON().item_properties.item_title
+                  : libraryYTree.getNodeValueFromKey(id)?.toJSON()
+                      ?.item_properties?.item_title;
+            } catch {
+              label = "Error fetching link label";
+            }
+
+            return label;
+
+            // return [
+            //   "button",
+            //   mergeAttributes(
+            //     {
+            //       onclick: `console.log("Clicked mention button");`,
+            //     },
+            //     options.HTMLAttributes
+            //   ),
+            //   `${options.suggestion.char}${label}`,
+            // ];
+          },
+          renderHTML({ options, node }) {
+            console.log("NODE ATTRS: ", node.attrs);
+
+            const libraryId = appStore.getState().libraryId;
+
+            const id = node.attrs.id;
+
+            if (!id) {
+              return ["span", mergeAttributes(options.HTMLAttributes), `Error`];
+            }
+
+            const libraryYTree = getOrInitLibraryYTree(libraryId);
+            let label = "";
+
+            try {
+              label =
+                libraryId === id
+                  ? dataManagerSubdocs
+                      .getLibrary(libraryId)
+                      ?.getMap("library_props")
+                      ?.toJSON().item_properties.item_title
+                  : libraryYTree.getNodeValueFromKey(id)?.toJSON()
+                      ?.item_properties?.item_title;
+            } catch {
+              label = "Error rendering label";
+            }
+
+            const elem = document.createElement("span");
+
+            elem.innerText = `${label}`;
+
+            elem.wordBreak = `break-word`;
+
+            elem.whiteSpace = `normal`;
+
+            elem.className = "mention";
+
+            node.attrs.label = label;
+
+            elem.dataset.id = id;
+            elem.dataset.label = label;
+            elem.dataset.type = "mention";
+
+            return elem;
+
+            // return [
+            //   "button",
+            //   mergeAttributes(
+            //     {
+            //       onclick: `console.log("Clicked mention button");`,
+            //     },
+            //     options.HTMLAttributes
+            //   ),
+            //   `${options.suggestion.char}${label}`,
+            // ];
+          },
         }),
       ],
     });
