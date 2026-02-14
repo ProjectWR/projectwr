@@ -170,7 +170,7 @@ const DropSection = ({ children, section, manuscriptData, handleSave }) => {
   return (
     <div
       ref={drop}
-      className={`flex w-full flex-col gap-1 transition-colors duration-100 ${isOver ? "bg-appLayoutHover/50" : ""}`}
+      className={`flex w-full min-h-sidePanelWidth flex-col gap-1 transition-colors duration-100 ${isOver ? "bg-appLayoutHover/50" : ""}`}
     >
       {children}
     </div>
