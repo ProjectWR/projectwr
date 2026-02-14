@@ -55,9 +55,7 @@ export const isMainPanelStateValid = (state) => {
     }
 
     if (panelType === "compileManuscript") {
-      if (dataManagerSubdocs.getLibrary(breadcrumbs[0])) {
-        return true
-      }
+      return true;
     }
 
   } catch {

@@ -154,11 +154,9 @@ const DirectoryItemNode = ({
   const handleDelete = useCallback(() => {
     console.log("Deleting tab from: ", tabs);
     closeTab("libraries", "details", [libraryId, itemId]);
-    dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+    dataManagerSubdocs.deleteItem(ytree, itemId);
 
     console.log("Tab closed: ", tabs);
-
-
   }, [closeTab, libraryId, itemId, ytree, deleteConfirmDialog.itemId]);
 
   // "areaSelected" determines the hover area: top, middle, or bottom.
