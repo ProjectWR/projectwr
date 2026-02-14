@@ -50,7 +50,11 @@ const ExportTreeNode = ({
   // Update children when ytree changes
   useEffect(() => {
     const updateNodeChildren = () => {
-      setNodeChildren(ytree.getNodeChildrenFromKey(itemId));
+      try {
+        setNodeChildren(ytree.getNodeChildrenFromKey(itemId));
+      } catch (error) {
+        console.warn("Error updating node children for itemId:", itemId, error);
+      }
     };
 
     ytree.observe(updateNodeChildren);

@@ -13,6 +13,7 @@ import { exportItem } from "../../../lib/importExport";
 import Checkbox from "../../LayoutComponents/Checkbox";
 import useTabs from "../../../hooks/useTabs";
 import { equalityDeep } from "lib0/function";
+import { mainPanelStore } from "../../../stores/mainPanelStore";
 
 /**
  *
@@ -37,6 +38,8 @@ const DirectoryItemNode = ({
   const panelOpened = appStore((state) => state.panelOpened);
 
   const { closeTab } = useTabs();
+
+  const tabs = mainPanelStore((state) => state.tabs);
 
   const setItemId = appStore((state) => state.setItemId);
   const appStoreItemId = appStore((state) => state.appStoreItemId);
@@ -149,9 +152,14 @@ const DirectoryItemNode = ({
   }));
 
   const handleDelete = useCallback(() => {
-    handleDelete();
+    console.log("Deleting tab from: ", tabs);
     closeTab("libraries", "details", [libraryId, itemId]);
-  }, [closeTab, libraryId, itemId, ytree]);
+    dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
+
+    console.log("Tab closed: ", tabs);
+
+
+  }, [closeTab, libraryId, itemId, ytree, deleteConfirmDialog.itemId]);
 
   // "areaSelected" determines the hover area: top, middle, or bottom.
   const [areaSelected, setAreaSelected] = useState("top");
@@ -433,12 +441,16 @@ const DirectoryItemNode = ({
             <span className="icon-[mdi--delete-outline] h-optionsDropdownIconHeight w-optionsDropdownIconHeight"></span>
           ),
           action: () => {
-            setDeleteConfirmDialog({
-              open: true,
-              itemId: itemId,
-              itemType: itemMapRef.current.get("type"),
-              itemTitle: itemMapState.item_properties.item_title,
-            });
+            if (deleteConfirmDontAskAgain) {
+              handleDelete();
+            } else {
+              setDeleteConfirmDialog({
+                open: true,
+                itemId: itemId,
+                itemType: itemMapRef.current.get("type"),
+                itemTitle: itemMapState.item_properties.item_title,
+              });
+            }
           },
         },
       ];
@@ -523,6 +535,7 @@ const DirectoryItemNode = ({
     deleteConfirmDontAskAgain,
     itemMapState.item_properties.item_title,
     onRenameClick,
+    handleDelete,
     panelOpened,
     setItemId,
     setFocusedItemId,
@@ -887,8 +900,8 @@ const DirectoryItemNode = ({
           },
         ]}
         onSubmit={() => {
-          dataManagerSubdocs.deleteItem(ytree, deleteConfirmDialog.itemId);
           setDeleteConfirmDialog({ ...deleteConfirmDialog, open: false });
+          handleDelete();
         }}
       />
     </ContextMenuWrapper>

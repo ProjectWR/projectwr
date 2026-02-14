@@ -16,7 +16,7 @@ export const isMainPanelStateValid = (state) => {
       if (dataManagerSubdocs.getLibrary(breadcrumbs[0])) {
         if (breadcrumbs.length > 1 && breadcrumbs[breadcrumbs.length - 1] != breadcrumbs[0]) {
           const ytree = getOrInitLibraryYTree(breadcrumbs[0]);
-          if (ytree.getNodeValueFromKey(breadcrumbs)) {
+          if (ytree.getNodeValueFromKey(breadcrumbs[1])) {
             return true;
           }
         }

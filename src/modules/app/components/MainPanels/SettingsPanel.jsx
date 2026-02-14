@@ -68,6 +68,7 @@ import useApplyTheme from "../../hooks/useApplyTheme";
 import { StyledTooltip } from "../LayoutComponents/StyledTooltip";
 import { openPath, openUrl } from "@tauri-apps/plugin-opener";
 import { AppAuthComponent } from "./Settings/AppAuthComponent";
+import useTabs from "../../hooks/useTabs";
 
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const uppercaseRegex = /[A-Z]/;
@@ -187,6 +188,9 @@ const SettingsPanel = () => {
   // console.log("videos: ", videos);
 
   const [templates, setTemplates] = useState({});
+
+  const { closeTab } = useTabs();
+
 
   const appThemesList = useAppThemesList();
   const currentAppThemeData = useMemo(() => {
@@ -909,6 +913,9 @@ const SettingsPanel = () => {
                             className={`w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-100 p-1 rounded-full hover:bg-appLayoutInverseHover text-appLayoutTextMuted hover:text-appLayoutHighlight flex items-center justify-center`}
                             onClick={async () => {
                               await templateManager.deleteTemplate(templateId);
+
+                              closeTab("templates", "details", [templateId]);
+
                             }}
                           >
                             <span className="icon-[typcn--delete] w-full h-full"></span>
@@ -942,6 +949,9 @@ const SettingsPanel = () => {
                               if (appThemeId === themeId) {
                                 setAppThemeId("unselected");
                               }
+
+                              closeTab("templates", "details", [themeId]);
+
                             }}
                           >
                             <span className="icon-[typcn--delete] w-full h-full"></span>

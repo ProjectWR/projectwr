@@ -150,9 +150,7 @@ export const MainPanelFrame = () => {
           } ${splitMode == "y" ? "w-full" : ""} ${splitMode == "none" ? "h-full w-full" : ""
           }`}
       >
-        <ErrorBoundary key={"Main Panel Error Boundary"} fallback={<div className="h-full w-full flex items-center justify-center">The cake is a lie</div>}>
-          <MainPanel main={true} />
-        </ErrorBoundary>
+        <MainPanel main={true} />
       </div>
 
       {splitMode != "none" && (
@@ -202,10 +200,8 @@ export const MainPanelFrame = () => {
             } ${splitMode == "y" ? "w-full" : ""} `}
         >
 
-          <ErrorBoundary key={"Main Panel Error Boundary"} fallback={<div className="h-full w-full flex items-center justify-center">The cake is a lie</div>}>
-            <MainPanel main={false} />
+          <MainPanel main={false} />
 
-          </ErrorBoundary>
 
           {/* Hovering Split Panel Tab */}
           {splitPanelState && (

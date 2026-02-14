@@ -499,6 +499,7 @@ const LibraryDirectoryHeader = () => {
           );
 
           closeTab("libraries", "details", [deleteConfirmDialog.libraryId]);
+          setLibraryId("unselected");
 
           console.log("userProfile:", userProfile, deleteFromDrive);
           if (userProfile && deleteFromDrive) {

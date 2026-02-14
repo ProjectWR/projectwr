@@ -13,6 +13,7 @@ const useTabs = () => {
 
     const closeTab = useCallback(
         (panelType, mode, breadcrumbs) => {
+            console.log("closeTab called with: ", panelType, mode, breadcrumbs);
             const newTabs = [...tabs];
             const index = newTabs.findIndex((x) => equalityDeep(x, { panelType, mode, breadcrumbs }));
             if (index === -1) return;

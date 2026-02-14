@@ -18,6 +18,7 @@ import { oauthStore } from "../../stores/oauthStore";
 import { exportItem } from "../../lib/importExport";
 import ContextMenuWrapper from "./ContextMenuWrapper";
 import { DropdownMenu } from "radix-ui";
+import useTabs from "../../hooks/useTabs";
 
 export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
   /**
@@ -39,11 +40,14 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
 
   const { activatePanel } = useMainPanel();
 
+  const { closeTab } = useTabs();
+
   useEffect(() => {
     const newState = JSON.parse(JSON.stringify(mainPanelState));
 
     if (!isMainPanelStateValid(newState)) {
       console.warn("Attempted to add invalid main panel state to tabs:", newState);
+      closeTab(newState);
       return;
     }
 

@@ -15,7 +15,7 @@ import TemplateDetailsPanel from "../MainPanels/TemplateDetailsPanel";
 import HomePanel from "../MainPanels/HomePanel";
 import AppThemeDetailsPanel from "../MainPanels/AppThemeDetailsPanel";
 
-import useMainPanel from "../../hooks/useMainPanel";
+import useMainPanel, { isMainPanelStateValid } from "../../hooks/useMainPanel";
 import useStoreHistory from "../../hooks/useStoreHistory";
 import { Breadcrumbs } from "./Breadcrumbs";
 import templateManager from "../../lib/templates";
@@ -92,6 +92,16 @@ const MainPanel = ({ main = true }) => {
     const youngestId = breadcrumbs[breadcrumbs.length - 1];
 
     if (panelType === "libraries") {
+
+      if (!isMainPanelStateValid({ panelType, mode, breadcrumbs })) {
+        console.warn("Invalid main panel state detected:", { panelType, mode, breadcrumbs });
+        return (
+          <div className="w-full h-full flex items-center justify-center">
+            Something went wrong
+          </div>
+        );
+      }
+
       const breadcrumbValues = [
         {
           label: "Your Libraries",
@@ -224,7 +234,7 @@ const MainPanel = ({ main = true }) => {
       const breadcrumbValues = [
         {
           label: "Your Editor Styles",
-          action: () => {},
+          action: () => { },
         },
         {
           label: rootId,
@@ -254,7 +264,7 @@ const MainPanel = ({ main = true }) => {
       const breadcrumbValues = [
         {
           label: "Your App Themes",
-          action: () => {},
+          action: () => { },
         },
         {
           label: rootId,
@@ -274,11 +284,11 @@ const MainPanel = ({ main = true }) => {
       const breadcrumbValues = [
         {
           label: "Tools",
-          action: () => {},
+          action: () => { },
         },
         {
           label: "Dictionary",
-          action: () => {},
+          action: () => { },
         },
       ];
       return (
@@ -298,11 +308,11 @@ const MainPanel = ({ main = true }) => {
       const breadcrumbValues = [
         {
           label: "Tools",
-          action: () => {},
+          action: () => { },
         },
         {
           label: "Compile Manuscript",
-          action: () => {},
+          action: () => { },
         },
       ];
       return (
