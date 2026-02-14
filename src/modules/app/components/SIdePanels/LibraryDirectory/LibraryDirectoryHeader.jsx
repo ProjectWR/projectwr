@@ -28,6 +28,7 @@ import DialogWrapper from "../../LayoutComponents/DialogWrapper";
 import driveOrchestrator from "../../../lib/drive/driveOrchestrator";
 import { oauthStore } from "../../../stores/oauthStore";
 import useOuterClick from "../../../../design-system/useOuterClick";
+import useTabs from "../../../hooks/useTabs";
 
 const LibraryDirectoryHeader = () => {
   const { deviceType } = useDeviceType();
@@ -44,6 +45,9 @@ const LibraryDirectoryHeader = () => {
   const [libraryHovered, setLibraryHovered] = useState(null);
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameValue, setRenameValue] = useState("");
+
+  const { closeTab } = useTabs();
+
 
   const libraryDropdownRef = useRef(null);
   const [libraryDropdownHeight, setLibraryDropdownHeight] = useState(0);
@@ -187,8 +191,8 @@ const LibraryDirectoryHeader = () => {
     if (
       renameValue.trim() &&
       renameValue !==
-        libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
-          ?.item_properties?.item_title
+      libraryIdsWithProps.find((library) => library[0] === appLibraryId)?.[1]
+        ?.item_properties?.item_title
     ) {
       const libraryYdoc = dataManagerSubdocs.getLibrary(appLibraryId);
       const libraryProps = libraryYdoc.getMap("library_props");
@@ -287,11 +291,10 @@ const LibraryDirectoryHeader = () => {
       id="LibraryDirectoryHeader"
       key="LibraryDirectoryHeader"
       ref={libraryManagerRef}
-      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${
-        libraryManagerOpened
-          ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
-          : "border-transparent bg-transparent"
-      }`}
+      className={`flex items-center hide-scrollbar justify-start w-full overflow-x-hidden overflow-ellipsis h-fit border flex-col transition-all duration-200 ease-in-out ${libraryManagerOpened
+        ? "border-b-appLayoutBorder border-t-transparent border-x-transparent bg-appBackground shadow-appLayoutGentleShadow"
+        : "border-transparent bg-transparent"
+        }`}
     >
       <div className="h-fit relative min-h-fit w-full flex items-center justify-center ">
         <div
@@ -495,6 +498,8 @@ const LibraryDirectoryHeader = () => {
             deleteConfirmDialog.libraryId,
           );
 
+          closeTab("libraries", "details", [deleteConfirmDialog.libraryId]);
+
           console.log("userProfile:", userProfile, deleteFromDrive);
           if (userProfile && deleteFromDrive) {
             console.log("Deleting from Drive too");
@@ -514,12 +519,12 @@ const LibraryDirectoryHeader = () => {
         options={[
           ...(userProfile
             ? [
-                {
-                  checked: deleteFromDrive,
-                  label: "Delete from drive",
-                  onChange: () => setDeleteFromDrive(!deleteFromDrive),
-                },
-              ]
+              {
+                checked: deleteFromDrive,
+                label: "Delete from drive",
+                onChange: () => setDeleteFromDrive(!deleteFromDrive),
+              },
+            ]
             : []),
         ]}
       />

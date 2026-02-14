@@ -6,6 +6,7 @@ import { max, min } from "lib0/math";
 import ActivityBar from "./ActivityBar";
 import SidePanel from "./SidePanel";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { ErrorBoundary } from "react-error-boundary";
 
 export const SidePanelContainer = ({ loading }) => {
   const [isPanelAwake, refreshPanel, keepAwake] = useRefreshableTimer({ time: 500 });
@@ -148,7 +149,9 @@ export const SidePanelContainer = ({ loading }) => {
             }}
           >
             <div id="SidePanelWrapper" className="h-full w-full relative">
-              <SidePanel />
+              <ErrorBoundary key={"Side Panel Error Boundary"} fallback={<div className="h-full w-full flex items-center justify-center">The cake is a lie</div>}>
+                <SidePanel />
+              </ErrorBoundary>
               <motion.div
                 className={`absolute h-full w-[6px] top-0 z-[50] hover:bg-sidePanelDragHandle ${sidePanelSliderActive
                   ? "bg-sidePanelDragHandle"

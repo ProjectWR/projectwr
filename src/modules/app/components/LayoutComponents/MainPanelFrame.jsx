@@ -5,6 +5,7 @@ import MainPanel from "./MainPanel";
 import { max, min } from "lib0/math";
 import { useDrop } from "react-dnd";
 import { TabButton } from "./TabsBar";
+import { ErrorBoundary } from "react-error-boundary";
 
 export const MainPanelFrame = () => {
   const splitMode = mainPanelStore((state) => state.splitMode);
@@ -116,9 +117,8 @@ export const MainPanelFrame = () => {
     <div
       ref={ref}
       id="MainPanelContainer"
-      className={`grow min-w-0 basis-0 h-full overflow-hidden flex relative ${
-        splitMode == "x" ? "flex-row" : "flex-col"
-      }`}
+      className={`grow min-w-0 basis-0 h-full overflow-hidden flex relative ${splitMode == "x" ? "flex-row" : "flex-col"
+        }`}
     >
       {/* Drop Zone Overlays */}
       <AnimatePresence>
@@ -146,36 +146,32 @@ export const MainPanelFrame = () => {
 
       <div
         style={splitMode != "none" ? { flexGrow: splitRatio } : {}}
-        className={`min-w-0 grow-1 min-h-0 basis-0  ${
-          splitMode == "x" ? "h-full" : ""
-        } ${splitMode == "y" ? "w-full" : ""} ${
-          splitMode == "none" ? "h-full w-full" : ""
-        }`}
+        className={`min-w-0 grow-1 min-h-0 basis-0  ${splitMode == "x" ? "h-full" : ""
+          } ${splitMode == "y" ? "w-full" : ""} ${splitMode == "none" ? "h-full w-full" : ""
+          }`}
       >
-        <MainPanel main={true} />
+        <ErrorBoundary key={"Main Panel Error Boundary"} fallback={<div className="h-full w-full flex items-center justify-center">The cake is a lie</div>}>
+          <MainPanel main={true} />
+        </ErrorBoundary>
       </div>
 
       {splitMode != "none" && (
         <>
           <div
-            className={`spltiPanelDivider bg-appLayoutBorder ${
-              splitMode == "x" ? "w-px min-w-px h-full" : "h-px min-h-px w-full"
-            }`}
+            className={`spltiPanelDivider bg-appLayoutBorder ${splitMode == "x" ? "w-px min-w-px h-full" : "h-px min-h-px w-full"
+              }`}
           ></div>
 
           {/* Drag Handle */}
           <motion.div
-            className={`absolute z-[50] hover:bg-sidePanelDragHandle ${
-              isDragging ? "bg-sidePanelDragHandle" : "bg-transparent"
-            } ${
-              splitMode === "x"
+            className={`absolute z-[50] hover:bg-sidePanelDragHandle ${isDragging ? "bg-sidePanelDragHandle" : "bg-transparent"
+              } ${splitMode === "x"
                 ? "w-[6px] h-full cursor-col-resize"
                 : "h-[6px] w-full cursor-row-resize"
-            }`}
+              }`}
             style={{
-              [splitMode == "x" ? "left" : "top"]: `calc(${
-                splitRatio * 100
-              }% - 3px)`,
+              [splitMode == "x" ? "left" : "top"]: `calc(${splitRatio * 100
+                }% - 3px)`,
               [splitMode == "x" ? "top" : "left"]: "0",
             }}
             drag={splitMode}
@@ -190,11 +186,11 @@ export const MainPanelFrame = () => {
             onDragStart={handleDragStart}
             onDrag={handleDragAlt}
             onDragEnd={handleDragEndAlt}
-            // Alternative: using drag listeners for more control
-            // dragListener={false}
-            // onPointerDown={handleDragStart}
-            // onPointerMove={handleDrag}
-            // onPointerUp={handleDragEnd}
+          // Alternative: using drag listeners for more control
+          // dragListener={false}
+          // onPointerDown={handleDragStart}
+          // onPointerMove={handleDrag}
+          // onPointerUp={handleDragEnd}
           ></motion.div>
         </>
       )}
@@ -202,11 +198,14 @@ export const MainPanelFrame = () => {
       {splitMode != "none" && (
         <div
           style={{ flexGrow: 1 - splitRatio }}
-          className={`min-w-0 min-h-0 basis-0 relative ${
-            splitMode == "x" ? "h-full" : ""
-          } ${splitMode == "y" ? "w-full" : ""} `}
+          className={`min-w-0 min-h-0 basis-0 relative ${splitMode == "x" ? "h-full" : ""
+            } ${splitMode == "y" ? "w-full" : ""} `}
         >
-          <MainPanel main={false} />
+
+          <ErrorBoundary key={"Main Panel Error Boundary"} fallback={<div className="h-full w-full flex items-center justify-center">The cake is a lie</div>}>
+            <MainPanel main={false} />
+
+          </ErrorBoundary>
 
           {/* Hovering Split Panel Tab */}
           {splitPanelState && (

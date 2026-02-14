@@ -11,6 +11,8 @@ import DialogWrapper from "../../LayoutComponents/DialogWrapper";
 import useMainPanel from "../../../hooks/useMainPanel";
 import { exportItem } from "../../../lib/importExport";
 import Checkbox from "../../LayoutComponents/Checkbox";
+import useTabs from "../../../hooks/useTabs";
+import { equalityDeep } from "lib0/function";
 
 /**
  *
@@ -33,6 +35,8 @@ const DirectoryItemNode = ({
 
   const setPanelOpened = appStore((state) => state.setPanelOpened);
   const panelOpened = appStore((state) => state.panelOpened);
+
+  const { closeTab } = useTabs();
 
   const setItemId = appStore((state) => state.setItemId);
   const appStoreItemId = appStore((state) => state.appStoreItemId);
@@ -143,6 +147,11 @@ const DirectoryItemNode = ({
       isDragging: monitor.isDragging(),
     }),
   }));
+
+  const handleDelete = useCallback(() => {
+    handleDelete();
+    closeTab("libraries", "details", [libraryId, itemId]);
+  }, [closeTab, libraryId, itemId, ytree]);
 
   // "areaSelected" determines the hover area: top, middle, or bottom.
   const [areaSelected, setAreaSelected] = useState("top");
@@ -355,7 +364,7 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             if (deleteConfirmDontAskAgain) {
-              dataManagerSubdocs.deleteItem(ytree, itemId);
+              handleDelete();
             } else {
               setDeleteConfirmDialog({
                 open: true,
@@ -491,7 +500,7 @@ const DirectoryItemNode = ({
           ),
           action: () => {
             if (deleteConfirmDontAskAgain) {
-              dataManagerSubdocs.deleteItem(ytree, itemId);
+              handleDelete();
             } else {
               setDeleteConfirmDialog({
                 open: true,
@@ -540,16 +549,16 @@ const DirectoryItemNode = ({
         border-y-transparent
 
         ${(() => {
-          if (!isSelfSelected && !isAncestor && isOverCurrent) {
-            if (areaSelected === "top")
-              return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
-            if (areaSelected === "bottom")
-              return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
-            if (areaSelected === "middle")
-              return "bg-appLayoutDirectoryNodeHover border-y-0";
-          }
-          return "";
-        })()}
+            if (!isSelfSelected && !isAncestor && isOverCurrent) {
+              if (areaSelected === "top")
+                return "border-y-2 border-t-appLayoutDirectoryNodeHover border-b-transparent";
+              if (areaSelected === "bottom")
+                return "border-y-2 border-b-appLayoutDirectoryNodeHover border-t-transparent";
+              if (areaSelected === "middle")
+                return "bg-appLayoutDirectoryNodeHover border-y-0";
+            }
+            return "";
+          })()}
 
           `}
       >
@@ -569,14 +578,14 @@ const DirectoryItemNode = ({
             ${isChildOfRoot && "rounded-l-sm"}
 
             ${(() => {
-              const type = itemMapRef.current.get("type");
-              if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
-              if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
-              if (type === "section")
-                return "h-libraryDirectorySectionNodeHeight ";
-              if (type === "book") return "h-libraryDirectoryBookNodeHeight";
-              return "";
-            })()}
+                const type = itemMapRef.current.get("type");
+                if (type === "paper") return "h-libraryDirectoryPaperNodeHeight ";
+                if (type === "note") return "h-libraryDirectoryPaperNodeHeight ";
+                if (type === "section")
+                  return "h-libraryDirectorySectionNodeHeight ";
+                if (type === "book") return "h-libraryDirectoryBookNodeHeight";
+                return "";
+              })()}
 
               transition-colors
               duration-0
@@ -815,13 +824,13 @@ const DirectoryItemNode = ({
             >
               {(itemMapRef.current.get("type") === "section" ||
                 itemMapRef.current.get("type") === "book") && (
-                <button
-                  className="h-libraryDirectoryActionIconSize w-libraryDirectoryActionIconSize rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center"
-                  onClick={onCreatePaperClick}
-                >
-                  <span className="icon-[fluent--document-add-24-regular] w-full h-full"></span>
-                </button>
-              )}
+                  <button
+                    className="h-libraryDirectoryActionIconSize w-libraryDirectoryActionIconSize rounded-full hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight flex items-center justify-center"
+                    onClick={onCreatePaperClick}
+                  >
+                    <span className="icon-[fluent--document-add-24-regular] w-full h-full"></span>
+                  </button>
+                )}
             </div>
           </motion.div>
         </AnimatePresence>

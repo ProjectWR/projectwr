@@ -8,8 +8,10 @@ import TemplateManager from "../SidePanels/TemplateManager/TemplateManager";
 import DictionaryManager from "../SidePanels/DictionaryManager/DictionaryManager";
 import SearchSidePanel from "../SIdePanels/Search/SearchSidePanel";
 import LibraryDirectoryHeader from "../SIdePanels/LibraryDirectory/LibraryDirectoryHeader";
+import { ErrorBoundary } from "react-error-boundary";
+import dataManagerSubdocs from "../../lib/dataSubDoc";
 
-const SidePanel = ({}) => {
+const SidePanel = ({ }) => {
   const { deviceType } = useDeviceType();
   const libraryId = appStore((state) => state.libraryId);
   const activity = appStore((state) => state.activity);
@@ -18,12 +20,12 @@ const SidePanel = ({}) => {
   const key = useRef("empty");
 
   const renderSidePanel = () => {
-    if (activity === "libraries") {
+    if (activity === "libraries" && dataManagerSubdocs.getLibrary(libraryId)) {
       key.current = "librarySelected-" + libraryId;
-      return <LibraryDirectory libraryId={libraryId} />;
-    } else if (activity === "search") {
-      key.current = "searchSelected-" + libraryId;
 
+      return <LibraryDirectory libraryId={libraryId} />;
+    } else if (activity === "search" && dataManagerSubdocs.getLibrary(libraryId)) {
+      key.current = "searchSelected-" + libraryId;
       return <SearchSidePanel libraryId={libraryId} />;
     } else if (activity === "templates") {
       key.current = "templateManager";
@@ -62,7 +64,9 @@ const SidePanel = ({}) => {
           transition={{ duration: 0.1, bounce: 0 }}
           className="w-full grow z-[49]"
         >
+
           {renderSidePanel()}
+
         </motion.div>
       </div>
     </AnimatePresence>

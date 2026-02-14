@@ -1,5 +1,5 @@
 import { equalityDeep } from "lib0/function";
-import useMainPanel from "../../hooks/useMainPanel";
+import useMainPanel, { isMainPanelStateValid } from "../../hooks/useMainPanel";
 import PropTypes from "prop-types";
 import { mainPanelStore } from "../../stores/mainPanelStore";
 import dataManagerSubdocs from "../../lib/dataSubDoc";
@@ -41,6 +41,11 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
 
   useEffect(() => {
     const newState = JSON.parse(JSON.stringify(mainPanelState));
+
+    if (!isMainPanelStateValid(newState)) {
+      console.warn("Attempted to add invalid main panel state to tabs:", newState);
+      return;
+    }
 
     if (
       !tabs?.find((value) => {
@@ -169,16 +174,21 @@ export const TabsBar = ({ isNotesPanelAwake, refreshNotesPanel }) => {
           {tabs?.map((tab) => {
             const { panelType, mode, breadcrumbs } = tab;
 
+            if (!isMainPanelStateValid(tab)) {
+              console.warn("Invalid main panel state in tabs:", tab);
+              return null;
+            }
+
             return (
               <motion.div
                 data-tauri-drag-region
                 key={
                   breadcrumbs.length >= 1
                     ? panelType +
-                      "-" +
-                      breadcrumbs[0] +
-                      "-" +
-                      breadcrumbs[breadcrumbs.length - 1]
+                    "-" +
+                    breadcrumbs[0] +
+                    "-" +
+                    breadcrumbs[breadcrumbs.length - 1]
                     : panelType
                 }
                 layout
@@ -480,8 +490,8 @@ export const TabButton = ({
         return () => {
           dataManagerSubdocs
             .getLibrary(rootId)
-            .getMap("library_props")
-            .unobserve(callback);
+            ?.getMap("library_props")
+            ?.unobserve(callback);
         };
       }
 
@@ -944,28 +954,24 @@ export const TabButton = ({
 
           ${(!isOverCurrent || (isOverCurrent && areaSelected === "")) && ""}
           
-          ${
-            isOverCurrent &&
-            areaSelected === "left" &&
-            `border-r-appLayoutBorder border-l-appLayoutHighlight`
-          }
+          ${isOverCurrent &&
+        areaSelected === "left" &&
+        `border-r-appLayoutBorder border-l-appLayoutHighlight`
+        }
           
-          ${
-            isOverCurrent &&
-            areaSelected === "right" &&
-            `border-l-appLayoutBorder border-r-appLayoutHighlight`
-          }
+          ${isOverCurrent &&
+        areaSelected === "right" &&
+        `border-l-appLayoutBorder border-r-appLayoutHighlight`
+        }
          
-          ${
-            tabIsSelected
-              ? "border-appLayoutBorder bg-appBackground"
-              : "border-transparent hover:bg-appLayoutInverseHover "
-          }
+          ${tabIsSelected
+          ? "border-appLayoutBorder bg-appBackground"
+          : "border-transparent hover:bg-appLayoutInverseHover "
+        }
 
-        ${
-          splitTab
-            ? "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
-            : ""
+        ${splitTab
+          ? "border border-appLayoutBorder! bg-appBackground shadow-sm shadow-appLayoutGentleShadow"
+          : ""
         }
         `}
     >
@@ -1071,15 +1077,15 @@ export const TabButton = ({
         destructive={true}
         options={[
           ...(userProfile &&
-          !driveSyncLoading &&
-          deleteConfirmDialog.itemType === "library"
+            !driveSyncLoading &&
+            deleteConfirmDialog.itemType === "library"
             ? [
-                {
-                  checked: deleteFromDrive,
-                  label: "Delete from drive",
-                  onChange: (e) => setDeleteFromDrive(e.target.checked),
-                },
-              ]
+              {
+                checked: deleteFromDrive,
+                label: "Delete from drive",
+                onChange: (e) => setDeleteFromDrive(e.target.checked),
+              },
+            ]
             : []),
         ]}
       />
@@ -1116,11 +1122,10 @@ export const TabButton = ({
               }
             }
           }}
-          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${
-            !tabIsSelected
-              ? "hover:bg-appBackgroundAccent"
-              : "hover:bg-appLayoutInverseHover"
-          }`}
+          className={`min-w-tabsIconSize w-tabsIconSize h-tabsIconSize py-px  px-1 rounded-l-md hover:text-appLayoutHighlight ${!tabIsSelected
+            ? "hover:bg-appBackgroundAccent"
+            : "hover:bg-appLayoutInverseHover"
+            }`}
         >
           <span className="icon-[iwwa--delete] w-full h-full"></span>
         </button>
@@ -1220,10 +1225,9 @@ const UnusedSpace = ({ offset = false }) => {
         height: "100%",
       }}
       className={`
-        ${
-          isOverCurrent && isHovering
-            ? ` border-l border-l-appLayoutHighlight`
-            : ""
+        ${isOverCurrent && isHovering
+          ? ` border-l border-l-appLayoutHighlight`
+          : ""
         }
 
         

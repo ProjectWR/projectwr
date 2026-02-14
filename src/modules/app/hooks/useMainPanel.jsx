@@ -4,6 +4,69 @@ import useStoreHistory from "./useStoreHistory";
 import { appStore } from "../stores/appStore";
 import { getOrInitLibraryYTree } from "../lib/ytree";
 import localStateManager from "../lib/localState";
+import dataManagerSubdocs from "../lib/dataSubDoc";
+import templateManager from "../lib/templates";
+import appThemeManager from "../lib/appTheme";
+
+export const isMainPanelStateValid = (state) => {
+  const { panelType, mode, breadcrumbs } = state;
+
+  try {
+    if (panelType === "libraries") {
+      if (dataManagerSubdocs.getLibrary(breadcrumbs[0])) {
+        if (breadcrumbs.length > 1 && breadcrumbs[breadcrumbs.length - 1] != breadcrumbs[0]) {
+          const ytree = getOrInitLibraryYTree(breadcrumbs[0]);
+          if (ytree.getNodeValueFromKey(breadcrumbs)) {
+            return true;
+          }
+        }
+
+        if (breadcrumbs.length === 2 && breadcrumbs[0] == breadcrumbs[1]) {
+          return true;
+        }
+
+        return true;
+      }
+    }
+
+    if (panelType === "templates") {
+      if (templateManager.getTemplate(breadcrumbs[0])) {
+        return true;
+      }
+    }
+
+    if (panelType === "appThemes") {
+      const appThemes = appThemeManager.getTheme(breadcrumbs[0]);
+      if (appThemes[breadcrumbs[0]]) {
+        return true;
+      }
+    }
+
+    if (panelType === "home") {
+      return true;
+    }
+
+    if (panelType === "settings") {
+      return true;
+    }
+
+    if (panelType === "dictionary") {
+      return true
+    }
+
+    if (panelType === "compileManuscript") {
+      if (dataManagerSubdocs.getLibrary(breadcrumbs[0])) {
+        return true
+      }
+    }
+
+  } catch {
+    return false;
+  }
+
+  return false;
+
+}
 
 const useMainPanel = () => {
   /**
@@ -33,6 +96,11 @@ const useMainPanel = () => {
 
   const activatePanel = useCallback(
     async (panelType, mode, breadcrumbs) => {
+      if (!isMainPanelStateValid({ panelType, mode, breadcrumbs })) {
+        console.warn("Attempted to activate invalid panel state:", { panelType, mode, breadcrumbs });
+        return;
+      }
+
       saveStateInHistory();
       clearFuture();
 
