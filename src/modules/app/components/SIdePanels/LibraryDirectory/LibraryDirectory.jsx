@@ -515,37 +515,39 @@ const LibraryDirectory = ({ libraryId }) => {
               console.log("create section button");
               let sectionId;
 
-              if (focusedItemId) {
-                const focusedItemType = libraryYTreeRef.current
-                  ?.getNodeValueFromKey(focusedItemId)
-                  ?.get("type");
+              try {
+                if (focusedItemId && libraryYTreeRef.current?.getNodeValueFromKey(focusedItemId)) {
+                  const focusedItemType = libraryYTreeRef.current
+                    ?.getNodeValueFromKey(focusedItemId)
+                    ?.get("type");
 
-                if (
-                  focusedItemType === "book" ||
-                  focusedItemType === "section"
-                ) {
-                  sectionId = dataManagerSubdocs.createEmptySection(
-                    libraryYTreeRef.current,
-                    focusedItemId || "root",
-                  );
-                } else if (
-                  focusedItemType === "paper" ||
-                  focusedItemType === "note"
-                ) {
-                  sectionId = dataManagerSubdocs.createEmptySection(
-                    libraryYTreeRef.current,
-                    libraryYTreeRef.current?.getNodeParentFromKey(
-                      focusedItemId,
-                    ) || "root",
-                  );
+                  if (
+                    focusedItemType === "book" ||
+                    focusedItemType === "section"
+                  ) {
+                    sectionId = dataManagerSubdocs.createEmptySection(
+                      libraryYTreeRef.current,
+                      focusedItemId || "root",
+                    );
+                  } else if (
+                    focusedItemType === "paper" ||
+                    focusedItemType === "note"
+                  ) {
+                    sectionId = dataManagerSubdocs.createEmptySection(
+                      libraryYTreeRef.current,
+                      libraryYTreeRef.current?.getNodeParentFromKey(
+                        focusedItemId,
+                      ) || "root",
+                    );
+                  }
                 }
-              } else {
+              } finally {
                 sectionId = dataManagerSubdocs.createEmptySection(
                   libraryYTreeRef.current,
                   "root",
                 );
               }
-
+              
               setItemId(sectionId);
 
               activatePanel("libraries", "details", [libraryId, sectionId]);
@@ -569,36 +571,39 @@ const LibraryDirectory = ({ libraryId }) => {
               console.log("create paper button");
               let paperId;
 
-              if (focusedItemId) {
-                const focusedItemType = libraryYTreeRef.current
-                  ?.getNodeValueFromKey(focusedItemId)
-                  ?.get("type");
+              try {
+                if (focusedItemId && libraryYTreeRef.current?.getNodeValueFromKey(focusedItemId)) {
+                  const focusedItemType = libraryYTreeRef.current
+                    ?.getNodeValueFromKey(focusedItemId)
+                    ?.get("type");
 
-                if (
-                  focusedItemType === "book" ||
-                  focusedItemType === "section"
-                ) {
-                  paperId = dataManagerSubdocs.createEmptyPaper(
-                    libraryYTreeRef.current,
-                    focusedItemId || "root",
-                  );
-                } else if (
-                  focusedItemType === "paper" ||
-                  focusedItemType === "note"
-                ) {
-                  paperId = dataManagerSubdocs.createEmptyPaper(
-                    libraryYTreeRef.current,
-                    libraryYTreeRef.current?.getNodeParentFromKey(
-                      focusedItemId,
-                    ) || "root",
-                  );
+                  if (
+                    focusedItemType === "book" ||
+                    focusedItemType === "section"
+                  ) {
+                    paperId = dataManagerSubdocs.createEmptyPaper(
+                      libraryYTreeRef.current,
+                      focusedItemId || "root",
+                    );
+                  } else if (
+                    focusedItemType === "paper" ||
+                    focusedItemType === "note"
+                  ) {
+                    paperId = dataManagerSubdocs.createEmptyPaper(
+                      libraryYTreeRef.current,
+                      libraryYTreeRef.current?.getNodeParentFromKey(
+                        focusedItemId,
+                      ) || "root",
+                    );
+                  }
                 }
-              } else {
+              } finally {
                 paperId = dataManagerSubdocs.createEmptyPaper(
                   libraryYTreeRef.current,
                   "root",
                 );
               }
+
 
               setItemId(paperId);
 
@@ -624,36 +629,40 @@ const LibraryDirectory = ({ libraryId }) => {
               console.log("create note button");
               let noteId;
 
-              if (focusedItemId) {
-                const focusedItemType = libraryYTreeRef.current
-                  ?.getNodeValueFromKey(focusedItemId)
-                  ?.get("type");
+              try {
+                if (focusedItemId && libraryYTreeRef.current?.getNodeValueFromKey(focusedItemId)) {
+                  const focusedItemType = libraryYTreeRef.current
+                    ?.getNodeValueFromKey(focusedItemId)
+                    ?.get("type");
 
-                if (
-                  focusedItemType === "book" ||
-                  focusedItemType === "section"
-                ) {
-                  noteId = dataManagerSubdocs.createEmptyNote(
-                    libraryYTreeRef.current,
-                    focusedItemId || "root",
-                  );
-                } else if (
-                  focusedItemType === "paper" ||
-                  focusedItemType === "note"
-                ) {
-                  noteId = dataManagerSubdocs.createEmptyNote(
-                    libraryYTreeRef.current,
-                    libraryYTreeRef.current?.getNodeParentFromKey(
-                      focusedItemId,
-                    ) || "root",
-                  );
+                  if (
+                    focusedItemType === "book" ||
+                    focusedItemType === "section"
+                  ) {
+                    noteId = dataManagerSubdocs.createEmptyNote(
+                      libraryYTreeRef.current,
+                      focusedItemId || "root",
+                    );
+                  } else if (
+                    focusedItemType === "paper" ||
+                    focusedItemType === "note"
+                  ) {
+                    noteId = dataManagerSubdocs.createEmptyNote(
+                      libraryYTreeRef.current,
+                      libraryYTreeRef.current?.getNodeParentFromKey(
+                        focusedItemId,
+                      ) || "root",
+                    );
+                  }
                 }
-              } else {
+              } finally {
                 noteId = dataManagerSubdocs.createEmptyNote(
                   libraryYTreeRef.current,
                   "root",
                 );
               }
+
+
 
               setItemId(noteId);
 
@@ -779,11 +788,10 @@ const OptionsButton = ({
       ref={buttonContainerRef}
       className={`relative w-libraryManagerAddButtonSize min-w-libraryManagerAddButtonSize h-libraryManagerAddButtonSize transition-colors duration-0 p-1 mr-1 rounded-full 
                   text-appLayoutText
-                  ${
-                    isOpened
-                      ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
-                      : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
-                  }
+                  ${isOpened
+          ? "bg-appLayoutPressed text-appLayoutHighlight shadow-inner shadow-appLayoutShadow"
+          : "hover:bg-appLayoutInverseHover hover:text-appLayoutHighlight"
+        }
 
                   flex items-center justify-center
 
@@ -810,21 +818,18 @@ const OptionsButton = ({
             transition={{ ease: "easeOut", duration: 0.1 }}
             className={`absolute h-fit w-optionsDropdownWidth max-w-optionsDropdownWidth overflow-hidden flex flex-col items-center 
                        rounded-md bg-appBackground border border-appLayoutBorder shadow-md shadow-appLayoutGentleShadow 
-                       ${
-                         shouldDropdownGoUp
-                           ? `                      
-                              ${
-                                origin === "topRight" &&
-                                "origin-bottom-right right-0"
-                              } 
+                       ${shouldDropdownGoUp
+                ? `                      
+                              ${origin === "topRight" &&
+                "origin-bottom-right right-0"
+                } 
                               ${origin === "topMiddle" && "origin-bottom"}`
-                           : `                       
-                              ${
-                                origin === "topRight" &&
-                                "origin-top-right right-0"
-                              } 
+                : `                       
+                              ${origin === "topRight" &&
+                "origin-top-right right-0"
+                } 
                               ${origin === "topMiddle" && "origin-top"}`
-                       }
+              }
 
                        `}
           >
