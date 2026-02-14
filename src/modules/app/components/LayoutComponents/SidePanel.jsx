@@ -22,17 +22,10 @@ const SidePanel = ({ }) => {
   const renderSidePanel = () => {
     if (activity === "libraries" && dataManagerSubdocs.getLibrary(libraryId)) {
       key.current = "librarySelected-" + libraryId;
-
       return <LibraryDirectory libraryId={libraryId} />;
     } else if (activity === "search" && dataManagerSubdocs.getLibrary(libraryId)) {
       key.current = "searchSelected-" + libraryId;
       return <SearchSidePanel libraryId={libraryId} />;
-    } else if (activity === "templates") {
-      key.current = "templateManager";
-      return <TemplateManager />;
-    } else if (activity === "dictionary") {
-      key.current = "dictionaryManager";
-      return <DictionaryManager />;
     } else {
       key.current = "empty";
       return (
