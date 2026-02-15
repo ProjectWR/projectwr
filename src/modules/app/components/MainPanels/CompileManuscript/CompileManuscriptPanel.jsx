@@ -172,37 +172,42 @@ const CompileManuscriptPanel = () => {
                 />
               )}
 
-              {stage === "format" && <FormatView />}
+              {stage === "format" && (
+                <FormatView
+                  manuscriptData={manuscriptData}
+                  libraryId={libraryId}
+                />
+              )}
             </div>
 
             {(stage === "select_content" ||
               stage === "organize" ||
               stage === "format") && (
-                <div className="flex items-center w-full px-2 justify-end text-libraryDirectoryBookNodeFontSize ">
-                  <button
-                    onClick={() => {
-                      if (stage === "select_content") {
-                        handleStageChange("organize");
-                      } else if (stage === "organize") {
-                        handleStageChange("format");
-                      } else if (stage === "format") {
-                        // create publishing package .zip and save to system
-                      }
-                    }}
-                    className="flex items-center gap-2 pl-3 pr-2 py-1 w-fit h-fit rounded-md cursor-pointer transition-colors duration-100 hover:bg-appLayoutHover hover:text-appLayoutText border border-appLayoutBorder"
-                  >
-                    I am done with{" "}
-                    {stage === "select_content"
-                      ? "selecting"
-                      : stage === "organize"
-                        ? "organizing"
-                        : stage === "format"
-                          ? "formatting"
-                          : ""}
-                    <span className="icon-[ep--right] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
-                  </button>
-                </div>
-              )}
+              <div className="flex items-center w-full px-2 justify-end text-libraryDirectoryBookNodeFontSize ">
+                <button
+                  onClick={() => {
+                    if (stage === "select_content") {
+                      handleStageChange("organize");
+                    } else if (stage === "organize") {
+                      handleStageChange("format");
+                    } else if (stage === "format") {
+                      // create publishing package .zip and save to system
+                    }
+                  }}
+                  className="flex items-center gap-2 pl-3 pr-2 py-1 w-fit h-fit rounded-md cursor-pointer transition-colors duration-100 hover:bg-appLayoutHover hover:text-appLayoutText border border-appLayoutBorder"
+                >
+                  I am done with{" "}
+                  {stage === "select_content"
+                    ? "selecting"
+                    : stage === "organize"
+                      ? "organizing"
+                      : stage === "format"
+                        ? "formatting"
+                        : ""}
+                  <span className="icon-[ep--right] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize" />
+                </button>
+              </div>
+            )}
           </DetailsPanelProperties>
         </DetailsPanelBody>
       </div>
