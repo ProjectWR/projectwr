@@ -5,9 +5,9 @@ const FormatView = ({ manuscriptData, libraryId }) => {
   return (
     <div
       id="FormatViewContainer"
-      className="grow min-w-0 w-full basis-0 flex gap-2 border border-appLayoutBorder rounded-lg p-2"
+      className="grow min-h-0 overflow-hidden w-full basis-0 flex gap-2 border border-appLayoutBorder rounded-lg p-2"
     >
-      <div id="FormatEditorContainer" className="w-1/3 h-full">
+      <div id="FormatEditorContainer" className="w-1/3 h-full max-h-full">
         <FormatEditor manuscriptData={manuscriptData} libraryId={libraryId} />
       </div>
 

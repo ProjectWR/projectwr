@@ -115,7 +115,7 @@ const CompileManuscriptPanel = () => {
               </button>
             </div>
 
-            <div className="w-full grow flex flex-col lg:flex-row gap-4">
+            <div className="w-full grow overflow-hidden min-h-0 flex flex-col lg:flex-row gap-4">
               {stage === "select_content" && (
                 <>
                   {/* Binder View (Source) */}

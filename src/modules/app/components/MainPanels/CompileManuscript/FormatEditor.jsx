@@ -25,7 +25,7 @@ import {
 } from "./formatConstants";
 import { TYPE_CATEGORIES } from "./organizeConstants";
 import { DropdownMenu } from "radix-ui";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 const FormatDropdown = ({
   value,
@@ -87,6 +87,73 @@ FormatDropdown.propTypes = {
   disabled: PropTypes.bool,
 };
 
+const FormatCategory = ({ category, categoryKey, settings, renderField }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div key={categoryKey} className="">
+      <h3
+        onClick={() => setIsOpen(!isOpen)}
+        className={`text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutText ${isOpen ? "border-b  border-appLayoutBorder rounded-t-md" : "border-b border-transparent rounded-md"} py-1 flex items-center gap-2 cursor-pointer hover:bg-appLayoutHover/50 select-none transition-colors px-1`}
+      >
+        <motion.span
+          animate={{ rotate: isOpen ? 90 : 0 }}
+          className="icon-[formkit--right] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize text-appLayoutTextMuted"
+        />
+        <span className={category.icon}></span>
+        {category.label}
+      </h3>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-2 px-1 pt-2">
+              {Object.keys(settings).map((key) => {
+                if (
+                  typeof settings[key] === "object" &&
+                  settings[key] !== null
+                ) {
+                  return (
+                    <div
+                      key={key}
+                      className="pl-2 border-l border-appLayoutBorder mt-1"
+                    >
+                      <h4 className="text-libraryDirectoryBookNodeFontSize font-medium text-appLayoutTextMuted mb-1 capitalize">
+                        {key.replace(/([A-Z])/g, " $1")}
+                      </h4>
+                      {Object.keys(settings[key]).map((subKey) =>
+                        renderField(
+                          categoryKey,
+                          `${key}.${subKey}`,
+                          settings[key][subKey],
+                          {},
+                        ),
+                      )}
+                    </div>
+                  );
+                }
+                return renderField(categoryKey, key, settings[key], {});
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+FormatCategory.propTypes = {
+  category: PropTypes.object.isRequired,
+  categoryKey: PropTypes.string.isRequired,
+  settings: PropTypes.object.isRequired,
+  renderField: PropTypes.func.isRequired,
+};
+
 const SettingsList = ({
   scope,
   id,
@@ -109,8 +176,9 @@ const SettingsList = ({
     const displayValue = resolved.value;
 
     // Determine label for inheritance
+    const displayInheritance = isInherited && scope !== "global";
     let inheritedLabel = "";
-    if (isInherited) {
+    if (displayInheritance) {
       if (resolved.source === "default") inheritedLabel = "(Default)";
       else if (resolved.source === "global") inheritedLabel = "(Global)";
       else if (resolved.source === "type")
@@ -156,7 +224,7 @@ const SettingsList = ({
                 .replace(/([A-Z])/g, " $1")
                 .replace(/^./, (str) => str.toUpperCase())}
             </span>
-            {isInherited && (
+            {displayInheritance && (
               <span className="text-[10px] text-appLayoutTextMuted italic ml-1">
                 Inherited {inheritedLabel}
               </span>
@@ -184,7 +252,7 @@ const SettingsList = ({
                 .replace(/([A-Z])/g, " $1")
                 .replace(/^./, (str) => str.toUpperCase())}
             </label>
-            {isInherited && (
+            {displayInheritance && (
               <span className="text-[10px] text-appLayoutTextMuted italic">
                 Inherited {inheritedLabel}
               </span>
@@ -203,12 +271,12 @@ const SettingsList = ({
     return (
       <div key={key} className="flex flex-col gap-1 py-1">
         <div className="flex justify-between items-baseline">
-          <label className="text-xs text-appLayoutText">
+          <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText">
             {key
               .replace(/([A-Z])/g, " $1")
               .replace(/^./, (str) => str.toUpperCase())}
           </label>
-          {isInherited && (
+          {displayInheritance && (
             <span className="text-[10px] text-appLayoutTextMuted italic">
               Inherited {inheritedLabel}
             </span>
@@ -238,42 +306,18 @@ const SettingsList = ({
     if (!settings) return null;
 
     return (
-      <div key={categoryKey} className="">
-        <h3 className="text-sm font-semibold text-appLayoutText border-b border-appLayoutBorder pb-1 flex items-center gap-2">
-          <span className={category.icon}></span>
-          {category.label}
-        </h3>
-        <div className="flex flex-col gap-2 pl-2">
-          {Object.keys(settings).map((key) => {
-            if (typeof settings[key] === "object" && settings[key] !== null) {
-              return (
-                <div
-                  key={key}
-                  className="pl-2 border-l border-appLayoutBorder mt-1"
-                >
-                  <h4 className="text-xs font-medium text-appLayoutTextMuted mb-1 capitalize">
-                    {key.replace(/([A-Z])/g, " $1")}
-                  </h4>
-                  {Object.keys(settings[key]).map((subKey) =>
-                    renderField(
-                      categoryKey,
-                      `${key}.${subKey}`,
-                      settings[key][subKey],
-                      {},
-                    ),
-                  )}
-                </div>
-              );
-            }
-            return renderField(categoryKey, key, settings[key], {});
-          })}
-        </div>
-      </div>
+      <FormatCategory
+        key={categoryKey}
+        category={category}
+        categoryKey={categoryKey}
+        settings={settings}
+        renderField={renderField}
+      />
     );
   };
 
   return (
-    <div className="flex-grow overflow-y-auto p-4 custom-scrollbar h-full">
+    <div className="grow overflow-y-auto pt-1 flex flex-col gap-3 custom-scrollbar h-full">
       {loading ? (
         <div className="flex items-center justify-center h-full text-appLayoutTextMuted">
           Loading format settings...
@@ -381,7 +425,10 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
 
         <div className="h-px w-full bg-appLayoutBorder"></div>
 
-        <TabsContent value="global" className="grow min-h-0 flex flex-col gap-1 mt-1">
+        <TabsContent
+          value="global"
+          className="grow min-h-0 flex flex-col gap-1 mt-1"
+        >
           <SettingsList
             scope="global"
             id={null}
@@ -392,7 +439,10 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
           />
         </TabsContent>
 
-        <TabsContent value="type" className="grow min-h-0 flex flex-col gap-1 mt-1">
+        <TabsContent
+          value="type"
+          className="grow min-h-0 flex flex-col gap-1 mt-1"
+        >
           <div className="px-2 flex items-center gap-2 bg-appLayoutBgSecondary">
             <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText shrink-0">
               Select Type:
@@ -418,7 +468,10 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
           />
         </TabsContent>
 
-        <TabsContent value="page" className="grow min-h-0 flex flex-col gap-1 mt-1">
+        <TabsContent
+          value="page"
+          className="grow min-h-0 flex flex-col gap-1 mt-1"
+        >
           <div className="px-2  flex items-center gap-2 bg-appLayoutBgSecondary">
             <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText shrink-0">
               Select Page:
