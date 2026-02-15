@@ -81,7 +81,7 @@ export const OauthComponent = ({}) => {
                   className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder hover:bg-appLayoutInverseHover"
                 >
                   <span className="icon-[logos--google-drive]  w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-                  Sync via Google Drive
+                  Google Drive
                 </button>
                 <span className="w-fit h-fit text-libraryDirectoryBookNodeFontSize flex items-center gap-2 px-2 py-1 border rounded-md border-appLayoutBorder text-appLayoutTextMuted">
                   More integrations coming soon...

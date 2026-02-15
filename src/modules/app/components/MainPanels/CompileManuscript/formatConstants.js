@@ -7,7 +7,7 @@ export const PAGE_SIZE_PRESETS = {
   CUSTOM: { width: 210, height: 297, label: "Custom" },
 };
 
-// Default formatting settings
+// Default formatting settings (global)
 export const DEFAULT_FORMAT_SETTINGS = {
   layout: {
     pageSize: "A4",
@@ -38,6 +38,23 @@ export const DEFAULT_FORMAT_SETTINGS = {
     dropCaps: false,
     dropCapsLines: 3,
     dropCapsFont: "Georgia, serif",
+    // New list styling
+    list: {
+      bulletChar: "•", // •, –, *, etc.
+      listIndent: 20, // in points
+      orderedListStyle: "decimal", // decimal | lower-roman | upper-roman | lower-alpha | upper-alpha
+    },
+    // New block quote styling
+    blockQuote: {
+      indentLeft: 30,
+      indentRight: 30,
+      fontStyle: "italic", // normal | italic | oblique
+      borderLeft: {
+        style: "solid", // none | solid | dashed | dotted
+        width: 2,
+        color: "#cccccc",
+      },
+    },
   },
   headersFooters: {
     headerEnabled: false,
@@ -67,6 +84,17 @@ export const DEFAULT_FORMAT_SETTINGS = {
   sectionBreaks: {
     pageBreakBefore: "auto", // auto | always | odd | even | none
     pageBreakAfter: "auto", // auto | always | odd | even | none
+    // New blank page insertion
+    insertBlankPageBefore: false,
+    insertBlankPageAfter: false,
+  },
+  // New title formatting (applies to any page type unless overridden)
+  titleFormat: {
+    prefix: "", // e.g., "Chapter "
+    numberStyle: "arabic", // arabic | roman | word
+    suffix: ": ",
+    includeTitle: true,
+    titleCase: "as-is", // as-is | uppercase | capitalize
   },
   advanced: {
     borderStyle: "none", // none | solid | dashed | dotted
@@ -75,14 +103,28 @@ export const DEFAULT_FORMAT_SETTINGS = {
     borderRadius: 0,
     backgroundColor: "#ffffff",
     backgroundImage: "",
-    footnoteStyle: "superscript", // superscript | bracket | paren
-    footnoteNumberFormat: "decimal", // decimal | roman | letter
+    // Enhanced footnotes
+    footnotes: {
+      style: "superscript", // superscript | bracket | paren
+      placement: "footnote", // footnote | endnote
+      numberFormat: "decimal", // decimal | roman | letter
+      separatorLine: "partial", // none | partial | full
+      continuationNotices: true,
+    },
+    // Table of Contents
     tocInclude: true,
     tocDepth: 3,
     tocLeaderDots: true,
+    // Images
     imageMaxWidth: 100, // percentage
     imageAlignment: "center", // left | center | right
     imageCaptionStyle: "italic",
+    // Text transforms (smart punctuation)
+    transforms: {
+      smartQuotes: true,
+      replaceDashes: true, // -- → em dash
+      ellipsis: true, // ... → …
+    },
   },
   specialElements: {
     // Title page specific
@@ -100,7 +142,7 @@ export const DEFAULT_FORMAT_SETTINGS = {
   },
 };
 
-// Font options
+// Font options (unchanged, but included for completeness)
 export const FONT_FAMILIES = [
   { value: "Georgia, serif", label: "Georgia" },
   { value: "'Times New Roman', serif", label: "Times New Roman" },
@@ -164,33 +206,40 @@ export const HEADER_FOOTER_VARIABLES = [
   { value: "{date}", label: "Date" },
 ];
 
-// Settings categories for organization
+// Settings categories for UI organization
 export const SETTINGS_CATEGORIES = [
   { key: "layout", label: "Page Layout", icon: "icon-[mdi--page-layout-body]" },
-  {
-    key: "typography",
-    label: "Typography",
-    icon: "icon-[mdi--format-text]",
-  },
-  {
-    key: "headersFooters",
-    label: "Headers & Footers",
-    icon: "icon-[mdi--page-layout-header-footer]",
-  },
-  {
-    key: "pageNumbers",
-    label: "Page Numbers",
-    icon: "icon-[mdi--numeric]",
-  },
-  {
-    key: "sectionBreaks",
-    label: "Section Breaks",
-    icon: "icon-[mdi--page-next-outline]",
-  },
+  { key: "typography", label: "Typography", icon: "icon-[mdi--format-text]" },
+  { key: "headersFooters", label: "Headers & Footers", icon: "icon-[mdi--page-layout-header-footer]" },
+  { key: "pageNumbers", label: "Page Numbers", icon: "icon-[mdi--numeric]" },
+  { key: "sectionBreaks", label: "Section Breaks", icon: "icon-[mdi--page-next-outline]" },
+  { key: "titleFormat", label: "Title Format", icon: "icon-[mdi--format-title]" },
   { key: "advanced", label: "Advanced", icon: "icon-[mdi--cog]" },
-  {
-    key: "specialElements",
-    label: "Special Elements",
-    icon: "icon-[mdi--star]",
-  },
+  { key: "specialElements", label: "Special Elements", icon: "icon-[mdi--star]" },
+];
+
+// Additional constants for new options
+export const NUMBER_STYLE_OPTIONS = [
+  { value: "arabic", label: "1, 2, 3" },
+  { value: "roman", label: "I, II, III" },
+  { value: "word", label: "One, Two, Three" },
+];
+
+export const TITLE_CASE_OPTIONS = [
+  { value: "as-is", label: "As in document" },
+  { value: "uppercase", label: "ALL CAPS" },
+  { value: "capitalize", label: "Capitalize Each Word" },
+];
+
+export const FOOTNOTE_PLACEMENT_OPTIONS = [
+  { value: "footnote", label: "Bottom of page" },
+  { value: "endnote", label: "End of document/chapter" },
+];
+
+export const LIST_STYLE_OPTIONS = [
+  { value: "decimal", label: "1, 2, 3" },
+  { value: "lower-roman", label: "i, ii, iii" },
+  { value: "upper-roman", label: "I, II, III" },
+  { value: "lower-alpha", label: "a, b, c" },
+  { value: "upper-alpha", label: "A, B, C" },
 ];
