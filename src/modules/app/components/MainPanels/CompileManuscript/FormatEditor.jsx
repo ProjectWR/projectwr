@@ -157,20 +157,17 @@ FormatCategory.propTypes = {
 const SettingsList = ({
   scope,
   id,
-  pageType,
+  itemCategory,
   loading,
   updateFormatValue,
   getResolvedValue,
 }) => {
-  const getCurrentContext = () => ({ scope, id, pageType });
-
   const handleSettingChange = (section, key, value) => {
     updateFormatValue(scope, id, section, key, value);
   };
 
   const renderField = (section, key, value, config) => {
-    // const { scope, id, pageType } = getCurrentContext();
-    const resolved = getResolvedValue(scope, id, pageType, section, key);
+    const resolved = getResolvedValue(scope, id, itemCategory, section, key);
 
     const isInherited = resolved.isInherited;
     const displayValue = resolved.value;
@@ -181,8 +178,8 @@ const SettingsList = ({
     if (displayInheritance) {
       if (resolved.source === "default") inheritedLabel = "(Default)";
       else if (resolved.source === "global") inheritedLabel = "(Global)";
-      else if (resolved.source === "type")
-        inheritedLabel = `(Type: ${pageType || "Type"})`;
+      else if (resolved.source === "category")
+        inheritedLabel = `(Category: ${itemCategory || "Category"})`;
     }
 
     // Select inputs
@@ -332,7 +329,7 @@ const SettingsList = ({
 SettingsList.propTypes = {
   scope: PropTypes.string.isRequired,
   id: PropTypes.string,
-  pageType: PropTypes.string,
+  itemCategory: PropTypes.string,
   loading: PropTypes.bool,
   updateFormatValue: PropTypes.func.isRequired,
   getResolvedValue: PropTypes.func.isRequired,
@@ -341,26 +338,23 @@ SettingsList.propTypes = {
 const FormatEditor = ({ manuscriptData, libraryId }) => {
   const { loading, updateFormatValue, getResolvedValue } =
     useFormatInfo(libraryId);
-  // activeTab state is handled by Tabs component implicitly if we don't control it,
-  // but we can set a default.
-  // We don't need activeTab state anymore for rendering logic if we use TabsContent.
 
-  const [selectedTypeId, setSelectedTypeId] = useState("chapter");
-  const [selectedPageId, setSelectedPageId] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("chapter");
+  const [selectedItemId, setSelectedItemId] = useState("");
 
-  // Flatten Types for Dropdown
-  const allTypes = useMemo(() => {
-    const types = [];
-    Object.values(TYPE_CATEGORIES).forEach((category) => {
-      Object.values(category).forEach((type) => {
-        types.push(type);
+  // Flatten Categories for Dropdown
+  const allCategories = useMemo(() => {
+    const categories = [];
+    Object.values(TYPE_CATEGORIES).forEach((group) => {
+      Object.values(group).forEach((cat) => {
+        categories.push(cat);
       });
     });
-    return types;
+    return categories;
   }, []);
 
-  // Use passed manuscriptData for Pages Dropdown
-  const flatPages = useMemo(() => {
+  // Use passed manuscriptData for Items Dropdown
+  const flatItems = useMemo(() => {
     if (!manuscriptData) return [];
 
     const flatten = (items) => {
@@ -370,7 +364,7 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
           result.push({
             id: item.sourceId || item.id,
             title: item.title || "Untitled",
-            type: item.category || "chapter",
+            category: item.category || "chapter",
           });
         }
       });
@@ -380,18 +374,18 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
     return flatten(manuscriptData);
   }, [manuscriptData]);
 
-  // Set default page selection if available
+  // Set default item selection if available
   useMemo(() => {
-    if (flatPages.length > 0 && !selectedPageId) {
-      setSelectedPageId(flatPages[0].id);
+    if (flatItems.length > 0 && !selectedItemId) {
+      setSelectedItemId(flatItems[0].id);
     }
-  }, [flatPages]);
+  }, [flatItems]);
 
-  // Helper to get page type for selected page
-  const selectedPageType = useMemo(() => {
-    const page = flatPages.find((p) => p.id === selectedPageId);
-    return page?.type || "chapter";
-  }, [flatPages, selectedPageId]);
+  // Helper to get item category for selected item
+  const selectedItemCategory = useMemo(() => {
+    const item = flatItems.find((p) => p.id === selectedItemId);
+    return item?.category || "chapter";
+  }, [flatItems, selectedItemId]);
 
   return (
     <div className="w-full h-full flex flex-col px-1">
@@ -419,8 +413,8 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
       >
         <TabsList className="h-fit flex gap-1">
           <TabsTrigger value="global">Global</TabsTrigger>
-          <TabsTrigger value="type">Type</TabsTrigger>
-          <TabsTrigger value="page">Page</TabsTrigger>
+          <TabsTrigger value="category">Category</TabsTrigger>
+          <TabsTrigger value="item">Item</TabsTrigger>
         </TabsList>
 
         <div className="h-px w-full bg-appLayoutBorder"></div>
@@ -432,7 +426,7 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
           <SettingsList
             scope="global"
             id={null}
-            pageType={null}
+            itemCategory={null}
             loading={loading}
             updateFormatValue={updateFormatValue}
             getResolvedValue={getResolvedValue}
@@ -440,18 +434,18 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
         </TabsContent>
 
         <TabsContent
-          value="type"
+          value="category"
           className="grow min-h-0 flex flex-col gap-1 mt-1"
         >
           <div className="px-2 flex items-center gap-2 bg-appLayoutBgSecondary">
             <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText shrink-0">
-              Select Type:
+              Select Category:
             </label>
             <div className="w-full">
               <FormatDropdown
-                value={selectedTypeId}
-                options={allTypes}
-                onChange={setSelectedTypeId}
+                value={selectedCategoryId}
+                options={allCategories}
+                onChange={setSelectedCategoryId}
               />
             </div>
           </div>
@@ -459,9 +453,9 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
           <div className="h-px w-full bg-appLayoutBorder"></div>
 
           <SettingsList
-            scope="type"
-            id={selectedTypeId}
-            pageType={null}
+            scope="category"
+            id={selectedCategoryId}
+            itemCategory={null}
             loading={loading}
             updateFormatValue={updateFormatValue}
             getResolvedValue={getResolvedValue}
@@ -469,29 +463,29 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
         </TabsContent>
 
         <TabsContent
-          value="page"
+          value="item"
           className="grow min-h-0 flex flex-col gap-1 mt-1"
         >
           <div className="px-2  flex items-center gap-2 bg-appLayoutBgSecondary">
             <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText shrink-0">
-              Select Page:
+              Select Item:
             </label>
             <div className="w-full">
-              {flatPages.length === 0 ? (
+              {flatItems.length === 0 ? (
                 <div
                   className={`flex items-center justify-between w-fit italic px-2 py-1 h-fit text-appLayoutTextMuted text-libraryDirectoryBookNodeFontSize bg-transparent border border-appLayoutBorder rounded hover:border-appLayoutAccent transition-colors `}
                 >
-                  No pages available
+                  No items available
                 </div>
               ) : (
                 <FormatDropdown
-                  value={selectedPageId}
-                  options={flatPages.map((p) => ({
+                  value={selectedItemId}
+                  options={flatItems.map((p) => ({
                     value: p.id,
                     label: p.title,
                   }))}
-                  onChange={setSelectedPageId}
-                  placeholder="Select a page..."
+                  onChange={setSelectedItemId}
+                  placeholder="Select an item..."
                 />
               )}
             </div>
@@ -500,9 +494,9 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
           <div className="h-px w-full bg-appLayoutBorder"></div>
 
           <SettingsList
-            scope="page"
-            id={selectedPageId}
-            pageType={selectedPageType}
+            scope="item"
+            id={selectedItemId}
+            itemCategory={selectedItemCategory}
             loading={loading}
             updateFormatValue={updateFormatValue}
             getResolvedValue={getResolvedValue}

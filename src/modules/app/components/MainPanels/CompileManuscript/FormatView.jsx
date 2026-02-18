@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import FormatEditor from "./FormatEditor";
+import FormatPreview from "./FormatPreview";
 
 const FormatView = ({ manuscriptData, libraryId }) => {
   return (
@@ -15,8 +16,10 @@ const FormatView = ({ manuscriptData, libraryId }) => {
 
       <div
         id="FormatViewPreviewContainer"
-        className="h-full grow bg-neutral-800 rounded-lg overflow-hidden"
-      ></div>
+        className="h-full grow min-w-0 basis-0 bg-neutral-800 rounded-lg overflow-hidden"
+      >
+        <FormatPreview manuscriptData={manuscriptData} libraryId={libraryId} />
+      </div>
     </div>
   );
 };

@@ -6,8 +6,8 @@ const useFormatInfo = (libraryId) => {
   const [store, setStore] = useState(null);
   const [formatData, setFormatData] = useState({
     global: {},
-    type: {},
-    page: {},
+    category: {},
+    item: {},
   });
   const [loading, setLoading] = useState(true);
 
@@ -23,8 +23,8 @@ const useFormatInfo = (libraryId) => {
           // Merge with default structure to ensure all keys exist
           setFormatData({
             global: savedFormatData.global || {},
-            type: savedFormatData.type || {},
-            page: savedFormatData.page || {},
+            category: savedFormatData.category || {},
+            item: savedFormatData.item || {},
           });
         }
       } catch (err) {
@@ -62,25 +62,26 @@ const useFormatInfo = (libraryId) => {
           } else {
             newData.global[key] = value;
           }
-        } else if (scope === "type") {
-          if (!newData.type) newData.type = {};
-          if (!newData.type[id]) newData.type[id] = {};
+        } else if (scope === "category") {
+          if (!newData.category) newData.category = {};
+          if (!newData.category[id]) newData.category[id] = {};
 
           if (section) {
-            if (!newData.type[id][section]) newData.type[id][section] = {};
-            newData.type[id][section][key] = value;
+            if (!newData.category[id][section])
+              newData.category[id][section] = {};
+            newData.category[id][section][key] = value;
           } else {
-            newData.type[id][key] = value;
+            newData.category[id][key] = value;
           }
-        } else if (scope === "page") {
-          if (!newData.page) newData.page = {};
-          if (!newData.page[id]) newData.page[id] = {};
+        } else if (scope === "item") {
+          if (!newData.item) newData.item = {};
+          if (!newData.item[id]) newData.item[id] = {};
 
           if (section) {
-            if (!newData.page[id][section]) newData.page[id][section] = {};
-            newData.page[id][section][key] = value;
+            if (!newData.item[id][section]) newData.item[id][section] = {};
+            newData.item[id][section][key] = value;
           } else {
-            newData.page[id][key] = value;
+            newData.item[id][key] = value;
           }
         }
 
@@ -109,31 +110,36 @@ const useFormatInfo = (libraryId) => {
   };
 
   const getResolvedValue = useCallback(
-    (scope, id, pageType, section, key) => {
+    (scope, id, itemCategory, section, key) => {
       // Returns { value, source, isInherited }
-      // scope: 'global', 'type', 'page' (current view)
-      // id: itemId (for type or page)
-      // pageType: type of the page (required if scope is 'page')
+      // scope: 'global', 'category', 'item' (current view)
+      // id: itemId (for category or item)
+      // itemCategory: category of the item (required if scope is 'item')
       // section: e.g. 'layout', 'typography'
       // key: e.g. 'fontSize'
 
       let val;
 
-      // 1. Check Page Level
-      if (scope === "page" && id) {
-        val = getNestedValue(formatData.page[id], section, key);
+      // 1. Check Item Level
+      if (scope === "item" && id) {
+        val = getNestedValue(formatData.item[id], section, key);
         if (val !== undefined)
-          return { value: val, source: "page", isInherited: false };
+          return { value: val, source: "item", isInherited: false };
       }
 
-      // 2. Check Type Level
-      // If we are in 'page' scope, we check its type. If in 'type' scope, we check the current type id.
-      const typeId = scope === "page" ? pageType : scope === "type" ? id : null;
+      // 2. Check Category Level
+      // If we are in 'item' scope, we check its category. If in 'category' scope, we check the current category id.
+      const categoryId =
+        scope === "item" ? itemCategory : scope === "category" ? id : null;
 
-      if (typeId) {
-        val = getNestedValue(formatData.type[typeId], section, key);
+      if (categoryId) {
+        val = getNestedValue(formatData.category[categoryId], section, key);
         if (val !== undefined)
-          return { value: val, source: "type", isInherited: scope === "page" };
+          return {
+            value: val,
+            source: "category",
+            isInherited: scope === "item",
+          };
       }
 
       // 3. Check Global Level
