@@ -91,7 +91,7 @@ const FormatCategory = ({ category, categoryKey, settings, renderField }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div key={categoryKey} className="">
+    <div key={categoryKey} className="pb-0">
       <h3
         onClick={() => setIsOpen(!isOpen)}
         className={`text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutText ${isOpen ? "border-b  border-appLayoutBorder rounded-t-md" : "border-b border-transparent rounded-md"} py-1 flex items-center gap-2 cursor-pointer hover:bg-appLayoutHover/50 select-none transition-colors px-1`}
@@ -112,7 +112,7 @@ const FormatCategory = ({ category, categoryKey, settings, renderField }) => {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="flex flex-col gap-2 px-1 pt-2">
+            <div className="flex flex-col gap-2 px-1 pt-2 pb-4">
               {Object.keys(settings).map((key) => {
                 if (
                   typeof settings[key] === "object" &&
@@ -421,7 +421,7 @@ const SettingsList = ({
   };
 
   return (
-    <div className="grow overflow-y-auto pt-1 flex flex-col gap-3 custom-scrollbar h-full">
+    <div className="grow overflow-y-auto pt-1 flex flex-col  custom-scrollbar h-full">
       {loading ? (
         <div className="flex items-center justify-center h-full text-appLayoutTextMuted">
           Loading format settings...

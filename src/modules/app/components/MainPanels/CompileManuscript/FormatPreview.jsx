@@ -263,7 +263,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       #FormatPreviewContent [data-category="title_page"] {
           text-align: ${resolve("specialElements.titlePageCentered") ? "center" : "inherit"};
           font-size: ${resolve("specialElements.titlePageFontSize")}pt;
-          margin-top: ${resolve("specialElements.titlePageSpacing")}pt; /* Approx vertical center or spacing */
+          ${resolve("layout.isSeparatePage", "title_page") ? `margin-top: ${resolve("specialElements.titlePageSpacing")}pt;` : ""}
       }
       /* Part Divider */
       #FormatPreviewContent [data-category="part_divider"] {
@@ -325,36 +325,24 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
     if (formatData.category) {
       Object.keys(formatData.category).forEach((category) => {
         // Layout Overrides (Named Page)
-        const tLayout = {
-          marginTop: resolve("layout.marginTop", category),
-          marginBottom: resolve("layout.marginBottom", category),
-          marginLeft: resolve("layout.marginLeft", category),
-          marginRight: resolve("layout.marginRight", category),
-          pageSize: resolve("layout.pageSize", category),
-          customWidth: resolve("layout.customWidth", category),
-          customHeight: resolve("layout.customHeight", category),
-          orientation: resolve("layout.orientation", category),
-        };
-
-        // We always generate named page for categories that have an entry to ensure specific styles apply
-        // ONLY if isSeparatePage is true
         const isSeparatePage = resolve("layout.isSeparatePage", category);
-        if (!isSeparatePage) return;
+        if (isSeparatePage) {
+          const tLayout = {
+            marginTop: resolve("layout.marginTop", category),
+            marginBottom: resolve("layout.marginBottom", category),
+            marginLeft: resolve("layout.marginLeft", category),
+            marginRight: resolve("layout.marginRight", category),
+          };
 
-        let tSizeRule = `size: ${tLayout.pageSize} ${tLayout.orientation};`;
-        if (tLayout.pageSize === "CUSTOM") {
-          tSizeRule = `size: ${tLayout.customWidth}mm ${tLayout.customHeight}mm;`;
+          css += `
+            @page category-${category} {
+              margin-top: ${tLayout.marginTop}mm;
+              margin-bottom: ${tLayout.marginBottom}mm;
+              margin-left: ${tLayout.marginLeft}mm;
+              margin-right: ${tLayout.marginRight}mm;
+            }
+          `;
         }
-
-        css += `
-          @page category-${category} {
-            ${tSizeRule}
-            margin-top: ${tLayout.marginTop}mm;
-            margin-bottom: ${tLayout.marginBottom}mm;
-            margin-left: ${tLayout.marginLeft}mm;
-            margin-right: ${tLayout.marginRight}mm;
-          }
-        `;
 
         // Typography Overrides (Class)
         const tTypography = {
@@ -399,34 +387,25 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           category,
           itemId,
         );
-        if (!isSeparatePage) return;
 
         // Layout
-        const iLayout = {
-          marginTop: resolve("layout.marginTop", category, itemId),
-          marginBottom: resolve("layout.marginBottom", category, itemId),
-          marginLeft: resolve("layout.marginLeft", category, itemId),
-          marginRight: resolve("layout.marginRight", category, itemId),
-          pageSize: resolve("layout.pageSize", category, itemId),
-          customWidth: resolve("layout.customWidth", category, itemId),
-          customHeight: resolve("layout.customHeight", category, itemId),
-          orientation: resolve("layout.orientation", category, itemId),
-        };
+        if (isSeparatePage) {
+          const iLayout = {
+            marginTop: resolve("layout.marginTop", category, itemId),
+            marginBottom: resolve("layout.marginBottom", category, itemId),
+            marginLeft: resolve("layout.marginLeft", category, itemId),
+            marginRight: resolve("layout.marginRight", category, itemId),
+          };
 
-        let iSizeRule = `size: ${iLayout.pageSize} ${iLayout.orientation};`;
-        if (iLayout.pageSize === "CUSTOM") {
-          iSizeRule = `size: ${iLayout.customWidth}mm ${iLayout.customHeight}mm;`;
+          css += `
+               @page item-${itemId} {
+                 margin-top: ${iLayout.marginTop}mm;
+                 margin-bottom: ${iLayout.marginBottom}mm;
+                 margin-left: ${iLayout.marginLeft}mm;
+                 margin-right: ${iLayout.marginRight}mm;
+               }
+             `;
         }
-
-        css += `
-             [data-id="${itemId}"] {
-               ${iSizeRule}
-               margin-top: ${iLayout.marginTop}mm;
-               margin-bottom: ${iLayout.marginBottom}mm;
-               margin-left: ${iLayout.marginLeft}mm;
-               margin-right: ${iLayout.marginRight}mm;
-             }
-           `;
 
         // Typography
         const iTypography = {
@@ -577,8 +556,18 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
   useLayoutEffect(() => {
     if (!previewHtml || !containerRef.current) return;
 
+    const purgePagedJsStyles = () => {
+      const styles = document.querySelectorAll(
+        'style[data-pagedjs-inserted="true"], .pagedjs_styles',
+      );
+      styles.forEach((style) => style.remove());
+      console.log(`Purged ${styles.length} Paged.js style tags.`);
+    };
+
     const render = async () => {
+      // Clear previous content
       containerRef.current.innerHTML = "";
+      purgePagedJsStyles();
 
       const css = generateCss();
       // Create CSS Blob URL
@@ -600,6 +589,10 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
     };
 
     render();
+
+    return () => {
+      purgePagedJsStyles();
+    };
   }, [previewHtml, generateCss]);
 
   // Calculate Scale to fit width

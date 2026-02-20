@@ -1,8 +1,57 @@
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import { load } from "@tauri-apps/plugin-store";
 import FormatEditor from "./FormatEditor";
 import FormatPreview from "./FormatPreview";
 
 const FormatView = ({ manuscriptData, libraryId }) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+  const debounceTimerRef = useRef(null);
+
+  useEffect(() => {
+    if (!libraryId) return;
+
+    let unlisten = null;
+
+    const setupObserver = async () => {
+      try {
+        const store = await load(`compile_manuscript_${libraryId}.json`);
+
+        // onKeyChange returns an unlisten function
+        unlisten = await store.onKeyChange("formatData", () => {
+          console.log("Store change detected for formatData. Debouncing...");
+
+          // Clear existing timer (True Debounce)
+          if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+          }
+
+          // Set new timer
+          debounceTimerRef.current = setTimeout(() => {
+            console.log("Debounce timeout complete. Remounting Preview...");
+            setRefreshKey((prev) => prev + 1);
+            debounceTimerRef.current = null;
+          }, 5000);
+        });
+
+        console.log("Format store observer active.");
+      } catch (err) {
+        console.error("Failed to setup store observer:", err);
+      }
+    };
+
+    setupObserver();
+
+    return () => {
+      if (typeof unlisten === "function") {
+        unlisten();
+      }
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [libraryId]);
+
   return (
     <div
       id="FormatViewContainer"
@@ -18,7 +67,11 @@ const FormatView = ({ manuscriptData, libraryId }) => {
         id="FormatViewPreviewContainer"
         className="h-full grow min-w-0 basis-0 bg-neutral-800 rounded-lg overflow-hidden"
       >
-        <FormatPreview manuscriptData={manuscriptData} libraryId={libraryId} />
+        <FormatPreview
+          key={refreshKey}
+          manuscriptData={manuscriptData}
+          libraryId={libraryId}
+        />
       </div>
     </div>
   );
