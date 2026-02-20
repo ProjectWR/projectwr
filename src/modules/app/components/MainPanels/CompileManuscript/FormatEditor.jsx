@@ -154,6 +154,11 @@ FormatCategory.propTypes = {
   renderField: PropTypes.func.isRequired,
 };
 
+const LABEL_OVERRIDES = {
+  "layout.isSeparatePage": "Is a Separate Page",
+  "layout.columnRule": "Column Rule",
+};
+
 const SettingsList = ({
   scope,
   id,
@@ -167,7 +172,89 @@ const SettingsList = ({
   };
 
   const renderField = (section, key, value, config) => {
+    // Restrict certain fields to global scope only
+    const restrictedGlobalFields = [
+      "layout.pageSize",
+      "layout.orientation",
+      "layout.customWidth",
+      "layout.customHeight",
+    ];
+
+    if (
+      scope !== "global" &&
+      (restrictedGlobalFields.includes(key) ||
+        restrictedGlobalFields.includes(`${section}.${key}`))
+    ) {
+      return null;
+    }
+
     const resolved = getResolvedValue(scope, id, itemCategory, section, key);
+
+    // Deactivation logic based on isSeparatePage
+    const isSeparatePage = getResolvedValue(
+      scope,
+      id,
+      itemCategory,
+      "layout",
+      "isSeparatePage",
+    ).value;
+
+    if (scope !== "global" && !isSeparatePage) {
+      // Hide headersFooters, pageNumbers, and specific layout fields
+      const hiddenNonPageFields = [
+        "layout.columns",
+        "layout.columnGap",
+        "layout.columnRule",
+        "layout.marginGutter",
+        "layout.marginTop",
+        "layout.marginBottom",
+        "layout.marginLeft",
+        "layout.marginRight",
+      ];
+
+      if (
+        section === "headersFooters" ||
+        section === "pageNumbers" ||
+        hiddenNonPageFields.includes(`${section}.${key}`) ||
+        hiddenNonPageFields.includes(key)
+      ) {
+        return null;
+      }
+    }
+
+    // Special Elements category-specific filtering
+    if (scope !== "global" && section === "specialElements") {
+      const fieldCategoryMap = {
+        titlePageCentered: "title_page",
+        titlePageFontSize: "title_page",
+        titlePageSpacing: "title_page",
+        partDividerCentered: "part_divider",
+        partDividerFontSize: "part_divider",
+        partDividerPageBreak: "part_divider",
+        epigraphAlignment: "epigraph",
+        epigraphFontSize: "epigraph",
+        epigraphItalic: "epigraph",
+        tocInclude: "table_of_contents",
+        tocDepth: "table_of_contents",
+        tocLeaderDots: "table_of_contents",
+      };
+
+      const requiredCategory = fieldCategoryMap[key];
+      // If the field is one of the mapped ones, and category doesn't match, hide it
+      if (requiredCategory && itemCategory !== requiredCategory) {
+        // Also check if we are in category scope and the ID matches
+        if (scope === "category" && id !== requiredCategory) {
+          return null;
+        }
+        if (scope === "item" && itemCategory !== requiredCategory) {
+          return null;
+        }
+      } else if (requiredCategory === undefined) {
+        // If it's a special element not in our map (if any future ones added),
+        // we might want to hide it by default in non-global scopes?
+        // But for now, just filtering the known ones is safer.
+      }
+    }
 
     const isInherited = resolved.isInherited;
     const displayValue = resolved.value;
@@ -217,9 +304,11 @@ const SettingsList = ({
         <div key={key} className="flex items-center justify-between py-1">
           <label className="text-xs text-appLayoutText flex flex-col">
             <span>
-              {key
-                .replace(/([A-Z])/g, " $1")
-                .replace(/^./, (str) => str.toUpperCase())}
+              {LABEL_OVERRIDES[`${section}.${key}`] ||
+                LABEL_OVERRIDES[key] ||
+                key
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
             </span>
             {displayInheritance && (
               <span className="text-[10px] text-appLayoutTextMuted italic ml-1">
@@ -245,9 +334,11 @@ const SettingsList = ({
         <div key={key} className="flex flex-col gap-1 py-1">
           <div className="flex justify-between items-baseline">
             <label className="text-xs text-appLayoutText">
-              {key
-                .replace(/([A-Z])/g, " $1")
-                .replace(/^./, (str) => str.toUpperCase())}
+              {LABEL_OVERRIDES[`${section}.${key}`] ||
+                LABEL_OVERRIDES[key] ||
+                key
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
             </label>
             {displayInheritance && (
               <span className="text-[10px] text-appLayoutTextMuted italic">
@@ -269,9 +360,11 @@ const SettingsList = ({
       <div key={key} className="flex flex-col gap-1 py-1">
         <div className="flex justify-between items-baseline">
           <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText">
-            {key
-              .replace(/([A-Z])/g, " $1")
-              .replace(/^./, (str) => str.toUpperCase())}
+            {LABEL_OVERRIDES[`${section}.${key}`] ||
+              LABEL_OVERRIDES[key] ||
+              key
+                .replace(/([A-Z])/g, " $1")
+                .replace(/^./, (str) => str.toUpperCase())}
           </label>
           {displayInheritance && (
             <span className="text-[10px] text-appLayoutTextMuted italic">
@@ -320,7 +413,39 @@ const SettingsList = ({
           Loading format settings...
         </div>
       ) : (
-        SETTINGS_CATEGORIES.map((cat) => renderCategory(cat, cat.key))
+        SETTINGS_CATEGORIES.filter((cat) => {
+          if (cat.key === "sectionBreaks") return false;
+          if (scope === "global" && cat.key === "specialElements") return false;
+          if (scope === "global" && cat.key === "titleFormat") return false;
+          return true;
+        }).map((cat) => {
+          // Check if category should be hidden based on isSeparatePage
+          if (scope !== "global") {
+            const isSeparatePage = getResolvedValue(
+              scope,
+              id,
+              itemCategory,
+              "layout",
+              "isSeparatePage",
+            ).value;
+
+            if (
+              !isSeparatePage &&
+              (cat.key === "headersFooters" || cat.key === "pageNumbers")
+            ) {
+              return null;
+            }
+
+            // Restrict Chapter Title Format to chapters
+            if (cat.key === "titleFormat") {
+              const currentCategory = scope === "category" ? id : itemCategory;
+              if (currentCategory !== "chapter") {
+                return null;
+              }
+            }
+          }
+          return renderCategory(cat, cat.key);
+        })
       )}
     </div>
   );
@@ -362,7 +487,7 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
       items.forEach((item) => {
         if (item.type === "paper") {
           result.push({
-            id: item.sourceId || item.id,
+            id: item.id,
             title: item.title || "Untitled",
             category: item.category || "chapter",
           });

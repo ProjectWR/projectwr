@@ -277,20 +277,51 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           font-size: ${resolve("specialElements.epigraphFontSize")}pt;
       }
 
-      /* Page Break Utilities */
-      .break-before-auto { break-before: auto !important; page-break-before: auto !important; }
-      .break-before-page { break-before: page !important; page-break-before: always !important; }
-      .break-before-left { break-before: left !important; page-break-before: left !important; }
-      .break-before-right { break-before: right !important; page-break-before: right !important; }
-
-      .break-after-auto { break-after: auto !important; page-break-after: auto !important; }
-      .break-after-page { break-after: page !important; page-break-after: always !important; }
-      .break-after-left { break-after: left !important; page-break-after: left !important; }
-      .break-after-right { break-after: right !important; page-break-after: right !important; }
-      .break-after-avoid { break-after: avoid !important; page-break-after: avoid !important; }
+      /* Page Break Utilities removed - handled by dynamic CSS */
     `;
 
-    // 2. CATEGORY-SPECIFIC STYLES
+    // 2. ITEM BREAK STYLES
+    const firstPaperIndex = sortedData.findIndex(
+      (item) => item.type === "paper",
+    );
+
+    sortedData.forEach((item, index) => {
+      if (item.type !== "paper") return;
+
+      const isSeparatePage = resolve(
+        "layout.isSeparatePage",
+        item.category,
+        item.id,
+      );
+
+      let breakRules = "";
+
+      // Handle Break Before
+      if (index === firstPaperIndex) {
+        breakRules += "break-before: auto !important;";
+      } else if (isSeparatePage) {
+        breakRules += "break-before: page !important;";
+      } else {
+        breakRules += "break-before: auto !important;";
+      }
+
+      // Handle Break After
+      if (isSeparatePage) {
+        breakRules += "break-after: page !important;";
+      } else {
+        // No explicit break after if not a separate page
+      }
+
+      if (breakRules) {
+        css += `
+          [data-id="${item.id}"] {
+            ${breakRules}
+          }
+        `;
+      }
+    });
+
+    // 3. CATEGORY-SPECIFIC STYLES
     if (formatData.category) {
       Object.keys(formatData.category).forEach((category) => {
         // Layout Overrides (Named Page)
@@ -306,6 +337,10 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         };
 
         // We always generate named page for categories that have an entry to ensure specific styles apply
+        // ONLY if isSeparatePage is true
+        const isSeparatePage = resolve("layout.isSeparatePage", category);
+        if (!isSeparatePage) return;
+
         let tSizeRule = `size: ${tLayout.pageSize} ${tLayout.orientation};`;
         if (tLayout.pageSize === "CUSTOM") {
           tSizeRule = `size: ${tLayout.customWidth}mm ${tLayout.customHeight}mm;`;
@@ -337,13 +372,13 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         };
 
         css += `
-          #FormatPreviewContent [data-category="${category}"] {
+          .manuscript-item [data-category="${category}"] {
              font-family: ${tTypography.fontFamily};
              font-size: ${tTypography.fontSize}pt;
              line-height: ${tTypography.lineHeight};
              text-align: ${tTypography.alignment};
           }
-          #FormatPreviewContent [data-category="${category}"] p {
+          .manuscript-item [data-category="${category}"] p {
              margin-top: ${tTypography.pSpaceBefore}pt;
              margin-bottom: ${tTypography.pSpaceAfter}pt;
              text-indent: ${tTypography.firstLineIndent ? `${tTypography.firstLineIndentValue}pt` : "0"};
@@ -358,6 +393,13 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         // Find category for this item to allow getResolvedValue to work its fallback magic
         const item = sortedData.find((i) => i.id === itemId);
         const category = item ? item.category : null;
+
+        const isSeparatePage = resolve(
+          "layout.isSeparatePage",
+          category,
+          itemId,
+        );
+        if (!isSeparatePage) return;
 
         // Layout
         const iLayout = {
@@ -377,7 +419,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         }
 
         css += `
-             @page item-${itemId} {
+             [data-id="${itemId}"] {
                ${iSizeRule}
                margin-top: ${iLayout.marginTop}mm;
                margin-bottom: ${iLayout.marginBottom}mm;
@@ -415,18 +457,20 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         };
 
         css += `
-             #FormatPreviewContent [data-id="${itemId}"] {
+             [data-id="${itemId}"] {
                 font-family: ${iTypography.fontFamily};
                 font-size: ${iTypography.fontSize}pt;
                 line-height: ${iTypography.lineHeight};
                 text-align: ${iTypography.alignment};
              }
-             #FormatPreviewContent [data-id="${itemId}"] p {
+             [data-id="${itemId}"] p {
                 margin-top: ${iTypography.pSpaceBefore}pt;
                 margin-bottom: ${iTypography.pSpaceAfter}pt;
                 text-indent: ${iTypography.firstLineIndent ? `${iTypography.firstLineIndentValue}pt` : "0"};
              }
            `;
+
+        console.log("Generated CSS for item:", itemId, css);
       });
     }
 
@@ -444,55 +488,12 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       try {
         const libraryYTree = await getOrInitLibraryYTree(libraryId);
 
-        const firstPaperIndex = sortedData.findIndex(
-          (item) => item.type === "paper",
-        );
-
-        const itemPromises = sortedData.map(async (item, index) => {
+        const itemPromises = sortedData.map(async (item) => {
           if (item.type !== "paper") return null;
-
-          // Resolve page breaks
-          const breakBeforeVal = getResolvedValue(
-            "item",
-            item.id,
-            item.category,
-            "sectionBreaks",
-            "pageBreakBefore",
-          ).value;
-
-          const breakAfterVal = getResolvedValue(
-            "item",
-            item.id,
-            item.category,
-            "sectionBreaks",
-            "pageBreakAfter",
-          ).value;
 
           let classes = [
             `manuscript-item section-${item.section} category-${item.category}`,
           ];
-
-          // Handle Break Before (Default to page if auto/undefined)
-          // Exception: First item shouldn't break page
-          if (index === firstPaperIndex) {
-            classes.push("break-before-auto");
-          } else if (breakBeforeVal === "none") {
-            classes.push("break-before-auto");
-          } else if (breakBeforeVal === "odd") {
-            classes.push("break-before-right");
-          } else if (breakBeforeVal === "even") {
-            classes.push("break-before-left");
-          }
-          // Handle Break After
-          if (breakAfterVal === "always") {
-            classes.push("break-after-page");
-          } else if (breakAfterVal === "odd") {
-            classes.push("break-after-right");
-          } else if (breakAfterVal === "even") {
-            classes.push("break-after-left");
-          } else if (breakAfterVal === "avoid") {
-            classes.push("break-after-avoid");
-          }
 
           const html = await dataManagerSubdocs.getHtmlFromPaper(
             libraryYTree,
@@ -501,21 +502,33 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
 
           // Determine Named Page
           let namedPage = null;
-          if (
-            formatData.item &&
-            formatData.item[item.id] &&
-            formatData.item[item.id].layout
-          ) {
-            namedPage = `item-${item.id}`;
-          } else if (
-            formatData.category &&
-            formatData.category[item.category] &&
-            formatData.category[item.category].layout
-          ) {
-            namedPage = `category-${item.category}`;
+          const isSeparatePage = getResolvedValue(
+            "item",
+            item.id,
+            item.category,
+            "layout",
+            "isSeparatePage",
+          ).value;
+
+          if (isSeparatePage) {
+            if (
+              formatData.item &&
+              formatData.item[item.id] &&
+              formatData.item[item.id].layout
+            ) {
+              namedPage = `item-${item.id}`;
+            } else if (
+              formatData.category &&
+              formatData.category[item.category] &&
+              formatData.category[item.category].layout
+            ) {
+              namedPage = `category-${item.category}`;
+            }
           }
 
           let styleAttr = namedPage ? `style="page: ${namedPage};"` : "";
+
+          console.log("item: ", item);
 
           return `
                 <div class="${classes.join(" ")}" 

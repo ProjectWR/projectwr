@@ -10,6 +10,7 @@ export const PAGE_SIZE_PRESETS = {
 // Default formatting settings (global)
 export const DEFAULT_FORMAT_SETTINGS = {
   layout: {
+    isSeparatePage: true,
     pageSize: "A4",
     customWidth: 210,
     customHeight: 297,
@@ -102,7 +103,6 @@ export const DEFAULT_FORMAT_SETTINGS = {
     borderColor: "#000000",
     borderRadius: 0,
     backgroundColor: "#ffffff",
-    backgroundImage: "",
     // Enhanced footnotes
     footnotes: {
       style: "superscript", // superscript | bracket | paren
@@ -111,14 +111,6 @@ export const DEFAULT_FORMAT_SETTINGS = {
       separatorLine: "partial", // none | partial | full
       continuationNotices: true,
     },
-    // Table of Contents
-    tocInclude: true,
-    tocDepth: 3,
-    tocLeaderDots: true,
-    // Images
-    imageMaxWidth: 100, // percentage
-    imageAlignment: "center", // left | center | right
-    imageCaptionStyle: "italic",
     // Text transforms (smart punctuation)
     transforms: {
       smartQuotes: true,
@@ -139,6 +131,10 @@ export const DEFAULT_FORMAT_SETTINGS = {
     epigraphAlignment: "right",
     epigraphFontSize: 11,
     epigraphItalic: true,
+    // Table of Contents specific
+    tocInclude: true,
+    tocDepth: 3,
+    tocLeaderDots: true,
   },
 };
 
@@ -210,12 +206,28 @@ export const HEADER_FOOTER_VARIABLES = [
 export const SETTINGS_CATEGORIES = [
   { key: "layout", label: "Page Layout", icon: "icon-[mdi--page-layout-body]" },
   { key: "typography", label: "Typography", icon: "icon-[mdi--format-text]" },
-  { key: "headersFooters", label: "Headers & Footers", icon: "icon-[mdi--page-layout-header-footer]" },
+  {
+    key: "headersFooters",
+    label: "Headers & Footers",
+    icon: "icon-[mdi--page-layout-header-footer]",
+  },
   { key: "pageNumbers", label: "Page Numbers", icon: "icon-[mdi--numeric]" },
-  { key: "sectionBreaks", label: "Section Breaks", icon: "icon-[mdi--page-next-outline]" },
-  { key: "titleFormat", label: "Title Format", icon: "icon-[mdi--format-title]" },
+  {
+    key: "sectionBreaks",
+    label: "Section Breaks",
+    icon: "icon-[mdi--page-next-outline]",
+  },
+  {
+    key: "titleFormat",
+    label: "Chapter Title Format",
+    icon: "icon-[mdi--format-title]",
+  },
   { key: "advanced", label: "Advanced", icon: "icon-[mdi--cog]" },
-  { key: "specialElements", label: "Special Elements", icon: "icon-[mdi--star]" },
+  {
+    key: "specialElements",
+    label: "Special Elements",
+    icon: "icon-[mdi--star]",
+  },
 ];
 
 // Additional constants for new options
