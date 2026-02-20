@@ -12,7 +12,6 @@ import {
   DEFAULT_FORMAT_SETTINGS,
   FONT_FAMILIES,
   ALIGNMENT_OPTIONS,
-  PAGE_NUMBER_POSITIONS,
   NUMBER_FORMATS,
   PAGE_BREAK_OPTIONS,
   BORDER_STYLES,
@@ -22,6 +21,13 @@ import {
   FOOTNOTE_PLACEMENT_OPTIONS,
   LIST_STYLE_OPTIONS,
   PAGE_SIZE_PRESETS,
+  METADATA_IDENTIFIER_SCHEMES,
+  METADATA_TITLE_TYPES,
+  METADATA_ROLES,
+  METADATA_SUBJECT_AUTHORITIES,
+  METADATA_PROGRESSION_DIRECTIONS,
+  METADATA_IBOOKS_ORIENTATION,
+  METADATA_IBOOKS_SCROLL,
 } from "./formatConstants";
 import { TYPE_CATEGORIES } from "./organizeConstants";
 import { DropdownMenu } from "radix-ui";
@@ -60,6 +66,12 @@ const FormatDropdown = ({
         align="start"
         sideOffset={4}
       >
+        <DropdownMenu.Item
+          onClick={() => onChange("")}
+          className="contextMenuItem italic opacity-70 border-b border-appLayoutBorder/50 mb-1"
+        >
+          Clear Selection
+        </DropdownMenu.Item>
         {options.map((opt) => (
           <DropdownMenu.Item
             key={opt.value}
@@ -157,6 +169,12 @@ FormatCategory.propTypes = {
 const LABEL_OVERRIDES = {
   "layout.isSeparatePage": "Is a Separate Page",
   "layout.columnRule": "Column Rule",
+  "metadata.publication.language": "Language",
+  "metadata.visual.coverImage": "Cover Image Path",
+  "metadata.visual.pageProgressionDirection": "Page Progression",
+  "metadata.accessibility.accessModes": "Access Modes",
+  "metadata.ibooks.ipadOrientationLock": "iPad Orientation",
+  "metadata.ibooks.iphoneOrientationLock": "iPhone Orientation",
 };
 
 const SettingsList = ({
@@ -211,7 +229,6 @@ const SettingsList = ({
 
       if (
         section === "headersFooters" ||
-        section === "pageNumbers" ||
         hiddenNonPageFields.includes(`${section}.${key}`) ||
         hiddenNonPageFields.includes(key)
       ) {
@@ -251,6 +268,11 @@ const SettingsList = ({
       }
     }
 
+    // 5. Metadata restriction (Global only)
+    if (scope !== "global" && section === "metadata") {
+      return false;
+    }
+
     return true;
   };
 
@@ -275,9 +297,13 @@ const SettingsList = ({
     const optionsMap = {
       fontFamily: FONT_FAMILIES,
       alignment: ALIGNMENT_OPTIONS,
-      "pageNumbers.position": PAGE_NUMBER_POSITIONS,
-      "pageNumbers.format": NUMBER_FORMATS,
+      "headersFooters.pageNumberFormat": NUMBER_FORMATS,
       "headersFooters.headerLeft": HEADER_FOOTER_VARIABLES,
+      "headersFooters.headerCenter": HEADER_FOOTER_VARIABLES,
+      "headersFooters.headerRight": HEADER_FOOTER_VARIABLES,
+      "headersFooters.footerLeft": HEADER_FOOTER_VARIABLES,
+      "headersFooters.footerCenter": HEADER_FOOTER_VARIABLES,
+      "headersFooters.footerRight": HEADER_FOOTER_VARIABLES,
       "sectionBreaks.pageBreakBefore": PAGE_BREAK_OPTIONS,
       "sectionBreaks.pageBreakAfter": PAGE_BREAK_OPTIONS,
       "titleFormat.numberStyle": NUMBER_STYLE_OPTIONS,
@@ -297,6 +323,16 @@ const SettingsList = ({
       ],
       "typography.list.orderedListStyle": LIST_STYLE_OPTIONS,
       "advanced.borderStyle": BORDER_STYLES,
+      "metadata.identifier.scheme": METADATA_IDENTIFIER_SCHEMES,
+      "metadata.title.type": METADATA_TITLE_TYPES,
+      "metadata.creator.role": METADATA_ROLES,
+      "metadata.contributor.role": METADATA_ROLES,
+      "metadata.subject.authority": METADATA_SUBJECT_AUTHORITIES,
+      "metadata.visual.pageProgressionDirection":
+        METADATA_PROGRESSION_DIRECTIONS,
+      "metadata.ibooks.ipadOrientationLock": METADATA_IBOOKS_ORIENTATION,
+      "metadata.ibooks.iphoneOrientationLock": METADATA_IBOOKS_ORIENTATION,
+      "metadata.ibooks.scrollAxis": METADATA_IBOOKS_SCROLL,
     };
 
     let options = optionsMap[key] || optionsMap[`${section}.${key}`];

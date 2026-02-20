@@ -66,8 +66,8 @@ export const DEFAULT_FORMAT_SETTINGS = {
     footerLeft: "{author}",
     footerCenter: "",
     footerRight: "{pageNumber}",
-    differentFirstPage: true,
     differentOddEven: false,
+    pageNumberFormat: "decimal",
     headerFontFamily: "Georgia, serif",
     headerFontSize: 10,
     footerFontFamily: "Georgia, serif",
@@ -75,13 +75,7 @@ export const DEFAULT_FORMAT_SETTINGS = {
     headerMarginFromEdge: 15,
     footerMarginFromEdge: 15,
   },
-  pageNumbers: {
-    enabled: true,
-    position: "bottom-right", // top-left, top-center, top-right, bottom-left, bottom-center, bottom-right
-    format: "decimal", // decimal | roman | letter
-    startAt: 1,
-    showOnFirstPage: false,
-  },
+
   sectionBreaks: {
     pageBreakBefore: "auto", // auto | always | odd | even | none
     pageBreakAfter: "auto", // auto | always | odd | even | none
@@ -136,6 +130,68 @@ export const DEFAULT_FORMAT_SETTINGS = {
     tocDepth: 3,
     tocLeaderDots: true,
   },
+  metadata: {
+    identifier: {
+      text: "",
+      scheme: "ISBN-13",
+    },
+    title: {
+      text: "",
+      fileAs: "",
+      type: "main",
+    },
+    creator: {
+      text: "",
+      role: "author",
+      fileAs: "",
+    },
+    contributor: {
+      text: "",
+      role: "editor",
+      fileAs: "",
+    },
+    publication: {
+      date: "",
+      language: "en",
+      description: "",
+      type: "",
+      format: "",
+    },
+    subject: {
+      text: "",
+      authority: "",
+      term: "",
+    },
+    rights: {
+      rights: "",
+      relation: "",
+      coverage: "",
+    },
+    collection: {
+      belongsTo: "",
+      groupPosition: "",
+    },
+    visual: {
+      coverImage: "",
+      pageProgressionDirection: "ltr",
+    },
+    accessibility: {
+      accessModes: "textual",
+      accessModeSufficient: "textual",
+      hazards: "none",
+      features:
+        "alternativeText, readingOrder, structuralNavigation, tableOfContents",
+      summary: "",
+    },
+    ibooks: {
+      version: "1.0.0",
+      specifiedFonts: false,
+      ipadOrientationLock: "none",
+      iphoneOrientationLock: "none",
+      binding: true,
+      scrollAxis: "default",
+    },
+  },
 };
 
 // Font options (unchanged, but included for completeness)
@@ -156,16 +212,6 @@ export const ALIGNMENT_OPTIONS = [
   { value: "right", label: "Right" },
   { value: "center", label: "Center" },
   { value: "justify", label: "Justify" },
-];
-
-// Page number positions
-export const PAGE_NUMBER_POSITIONS = [
-  { value: "top-left", label: "Top Left" },
-  { value: "top-center", label: "Top Center" },
-  { value: "top-right", label: "Top Right" },
-  { value: "bottom-left", label: "Bottom Left" },
-  { value: "bottom-center", label: "Bottom Center" },
-  { value: "bottom-right", label: "Bottom Right" },
 ];
 
 // Number format options
@@ -211,7 +257,7 @@ export const SETTINGS_CATEGORIES = [
     label: "Headers & Footers",
     icon: "icon-[mdi--page-layout-header-footer]",
   },
-  { key: "pageNumbers", label: "Page Numbers", icon: "icon-[mdi--numeric]" },
+
   {
     key: "sectionBreaks",
     label: "Section Breaks",
@@ -227,6 +273,11 @@ export const SETTINGS_CATEGORIES = [
     key: "specialElements",
     label: "Special Elements",
     icon: "icon-[mdi--star]",
+  },
+  {
+    key: "metadata",
+    label: "Metadata",
+    icon: "icon-[mdi--information-outline]",
   },
 ];
 
@@ -254,4 +305,72 @@ export const LIST_STYLE_OPTIONS = [
   { value: "upper-roman", label: "I, II, III" },
   { value: "lower-alpha", label: "a, b, c" },
   { value: "upper-alpha", label: "A, B, C" },
+];
+
+export const METADATA_IDENTIFIER_SCHEMES = [
+  "ISBN-10",
+  "GTIN-13",
+  "UPC",
+  "ISMN-10",
+  "DOI",
+  "LCCN",
+  "GTIN-14",
+  "ISBN-13",
+  "Legal deposit number",
+  "URN",
+  "OCLC",
+  "ISMN-13",
+  "ISBN-A",
+  "JP",
+  "OLCC",
+].map((s) => ({ value: s, label: s }));
+
+export const METADATA_TITLE_TYPES = [
+  { value: "main", label: "Main Title" },
+  { value: "subtitle", label: "Subtitle" },
+  { value: "short", label: "Short Title" },
+  { value: "collection", label: "Collection Title" },
+  { value: "edition", label: "Edition Title" },
+  { value: "extended", label: "Extended Title" },
+];
+
+export const METADATA_ROLES = [
+  { value: "author", label: "Author" },
+  { value: "editor", label: "Editor" },
+  { value: "translator", label: "Translator" },
+  { value: "illustrator", label: "Illustrator" },
+  { value: "contributor", label: "Contributor" },
+].map((r) => ({ value: r.value, label: r.label }));
+
+export const METADATA_SUBJECT_AUTHORITIES = [
+  "AAT",
+  "BIC",
+  "BISAC",
+  "CLC",
+  "DDC",
+  "CLIL",
+  "EuroVoc",
+  "MEDTOP",
+  "LCSH",
+  "NDC",
+  "Thema",
+  "UDC",
+  "WGS",
+].map((a) => ({ value: a, label: a }));
+
+export const METADATA_PROGRESSION_DIRECTIONS = [
+  { value: "ltr", label: "Left-to-Right" },
+  { value: "rtl", label: "Right-to-Left" },
+];
+
+export const METADATA_IBOOKS_ORIENTATION = [
+  { value: "none", label: "None" },
+  { value: "portrait-only", label: "Portrait Only" },
+  { value: "landscape-only", label: "Landscape Only" },
+];
+
+export const METADATA_IBOOKS_SCROLL = [
+  { value: "default", label: "Default" },
+  { value: "vertical", label: "Vertical" },
+  { value: "horizontal", label: "Horizontal" },
 ];

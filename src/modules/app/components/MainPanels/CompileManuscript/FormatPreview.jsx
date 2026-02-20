@@ -117,8 +117,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       footerLeft: resolve("headersFooters.footerLeft"),
       footerCenter: resolve("headersFooters.footerCenter"),
       footerRight: resolve("headersFooters.footerRight"),
-      differentFirstPage: resolve("headersFooters.differentFirstPage"),
       differentOddEven: resolve("headersFooters.differentOddEven"),
+      pageNumberFormat: resolve("headersFooters.pageNumberFormat") || "decimal",
       headerFont: resolve("headersFooters.headerFontFamily"),
       headerSize: resolve("headersFooters.headerFontSize"),
       footerFont: resolve("headersFooters.footerFontFamily"),
@@ -135,10 +135,14 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       const parts = text.split(/({[^}]+})/g);
       const cssParts = parts
         .map((part) => {
-          if (part === "{pageNumber}") return "counter(page)";
-          if (part === "{totalPages}") return "counter(pages)";
-          if (part === "{title}") return "string(title)"; // Requires string-set: title content(text)
+          if (part === "{pageNumber}")
+            return `counter(page, ${hf.pageNumberFormat})`;
+          if (part === "{totalPages}")
+            return `counter(pages, ${hf.pageNumberFormat})`;
+          if (part === "{title}") return "string(title)";
           if (part === "{author}") return "string(author)";
+          if (part === "{chapterTitle}") return "string(chapterTitle)";
+          if (part === "{date}") return "string(date)";
           if (part.match(/^{.*}$/)) return `"${part}"`; // Unknown variable
           if (part === "") return null;
           return `"${part}"`;
@@ -188,26 +192,13 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         ${generateMarginBoxes(true)}
         ${generateMarginBoxes(false)}
       }
-    `;
 
-    // Different First Page
-    if (hf.differentFirstPage) {
-      css += `
-        @page:first {
-          /* Often first page has no header/footer or different ones. 
-             For now, we assume "different" implies clearing them unless specified otherwise? 
-             Or does formatConstants have specific first page settings? 
-             It doesn't seem to have explicit "firstPageHeaderLeft". 
-             So usually "Different First Page" means NO header/footer on first page. */
-          @top-left { content: none; }
-          @top-center { content: none; }
-          @top-right { content: none; }
-          @bottom-left { content: none; }
-          @bottom-center { content: none; }
-          @bottom-right { content: none; }
-        }
-      `;
-    }
+      /* Running Headers Setup */
+      h1 { string-set: chapterTitle content(text); }
+      .metadata-title { string-set: title content(text); }
+      .metadata-author { string-set: author content(text); }
+      .metadata-date { string-set: date content(text); }
+    `;
 
     // Different Odd/Even (Left/Right)
     if (hf.differentOddEven) {
@@ -522,11 +513,20 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         const results = await Promise.all(itemPromises);
 
         if (active) {
-          // const css = generateCss(); // Moved to render effect
+          const metadata = formatData?.global?.metadata || {};
+          const bookTitle = metadata.title?.text || "";
+          const bookAuthor = metadata.creator?.text || "";
+          const pubDate = metadata.publication?.date || "";
+
           const fullHtml = `
-              
+              <div class="pagedjs-content">
+                    <div class="metadata-store" style="visibility: hidden; height: 0; overflow: hidden; position: absolute;">
+                      <div class="metadata-title">${bookTitle}</div>
+                      <div class="metadata-author">${bookAuthor}</div>
+                      <div class="metadata-date">${pubDate}</div>
+                    </div>
                     ${results.filter(Boolean).join("")}
-              
+              </div>
             `;
           setPreviewHtml(fullHtml);
           setPagedJsReady(false); // Reset ready state when content updates
