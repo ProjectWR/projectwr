@@ -171,8 +171,8 @@ const SettingsList = ({
     updateFormatValue(scope, id, section, key, value);
   };
 
-  const renderField = (section, key, value, config) => {
-    // Restrict certain fields to global scope only
+  const isFieldVisible = (section, key) => {
+    // 1. Restrict certain fields to global scope only
     const restrictedGlobalFields = [
       "layout.pageSize",
       "layout.orientation",
@@ -185,12 +185,10 @@ const SettingsList = ({
       (restrictedGlobalFields.includes(key) ||
         restrictedGlobalFields.includes(`${section}.${key}`))
     ) {
-      return null;
+      return false;
     }
 
-    const resolved = getResolvedValue(scope, id, itemCategory, section, key);
-
-    // Deactivation logic based on isSeparatePage
+    // 2. Deactivation logic based on isSeparatePage
     const isSeparatePage = getResolvedValue(
       scope,
       id,
@@ -200,7 +198,6 @@ const SettingsList = ({
     ).value;
 
     if (scope !== "global" && !isSeparatePage) {
-      // Hide headersFooters, pageNumbers, and specific layout fields
       const hiddenNonPageFields = [
         "layout.columns",
         "layout.columnGap",
@@ -218,11 +215,11 @@ const SettingsList = ({
         hiddenNonPageFields.includes(`${section}.${key}`) ||
         hiddenNonPageFields.includes(key)
       ) {
-        return null;
+        return false;
       }
     }
 
-    // Special Elements category-specific filtering
+    // 3. Special Elements category-specific filtering
     if (scope !== "global" && section === "specialElements") {
       const fieldCategoryMap = {
         titlePageCentered: "title_page",
@@ -240,24 +237,29 @@ const SettingsList = ({
       };
 
       const requiredCategory = fieldCategoryMap[key];
-      // If the field is one of the mapped ones, and category doesn't match, hide it
-      if (requiredCategory && itemCategory !== requiredCategory) {
-        // Also check if we are in category scope and the ID matches
-        if (scope === "category" && id !== requiredCategory) {
-          return null;
-        }
-        if (scope === "item" && itemCategory !== requiredCategory) {
-          return null;
-        }
-      } else if (requiredCategory === undefined) {
-        // If it's a special element not in our map (if any future ones added),
-        // we might want to hide it by default in non-global scopes?
-        // But for now, just filtering the known ones is safer.
+      if (requiredCategory) {
+        if (scope === "category" && id !== requiredCategory) return false;
+        if (scope === "item" && itemCategory !== requiredCategory) return false;
       }
     }
 
-    const isInherited = resolved.isInherited;
+    // 4. Chapter Title Format restriction
+    if (scope !== "global" && section === "titleFormat") {
+      const currentCategory = scope === "category" ? id : itemCategory;
+      if (currentCategory !== "chapter") {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const renderField = (section, key, value, config) => {
+    if (!isFieldVisible(section, key)) return null;
+
+    const resolved = getResolvedValue(scope, id, itemCategory, section, key);
     const displayValue = resolved.value;
+    const isInherited = resolved.isInherited;
 
     // Determine label for inheritance
     const displayInheritance = isInherited && scope !== "global";
@@ -395,6 +397,18 @@ const SettingsList = ({
     const settings = DEFAULT_FORMAT_SETTINGS[categoryKey];
     if (!settings) return null;
 
+    // Check if at least one field is visible
+    const hasVisibleFields = Object.keys(settings).some((key) => {
+      if (typeof settings[key] === "object" && settings[key] !== null) {
+        return Object.keys(settings[key]).some((subKey) =>
+          isFieldVisible(categoryKey, `${key}.${subKey}`),
+        );
+      }
+      return isFieldVisible(categoryKey, key);
+    });
+
+    if (!hasVisibleFields) return null;
+
     return (
       <FormatCategory
         key={categoryKey}
@@ -418,34 +432,7 @@ const SettingsList = ({
           if (scope === "global" && cat.key === "specialElements") return false;
           if (scope === "global" && cat.key === "titleFormat") return false;
           return true;
-        }).map((cat) => {
-          // Check if category should be hidden based on isSeparatePage
-          if (scope !== "global") {
-            const isSeparatePage = getResolvedValue(
-              scope,
-              id,
-              itemCategory,
-              "layout",
-              "isSeparatePage",
-            ).value;
-
-            if (
-              !isSeparatePage &&
-              (cat.key === "headersFooters" || cat.key === "pageNumbers")
-            ) {
-              return null;
-            }
-
-            // Restrict Chapter Title Format to chapters
-            if (cat.key === "titleFormat") {
-              const currentCategory = scope === "category" ? id : itemCategory;
-              if (currentCategory !== "chapter") {
-                return null;
-              }
-            }
-          }
-          return renderCategory(cat, cat.key);
-        })
+        }).map((cat) => renderCategory(cat, cat.key))
       )}
     </div>
   );
