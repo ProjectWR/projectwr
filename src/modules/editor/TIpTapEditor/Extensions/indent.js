@@ -1,5 +1,5 @@
 import { Extension } from '@tiptap/core';
-import { AllSelection, TextSelection, Transaction } from 'prosemirror-state';
+import { AllSelection, TextSelection } from 'prosemirror-state';
 
 
 export const Indent = Extension.create({

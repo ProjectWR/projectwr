@@ -45,6 +45,7 @@ import { Packer } from "docx";
 import { getOrInitLibraryYTree } from "./ytree";
 import { appStore } from "../stores/appStore";
 import Mention from "@tiptap/extension-mention";
+import { Indent } from "../../editor/TipTapEditor/Extensions/indent";
 
 let instance;
 
@@ -400,6 +401,11 @@ class DataManagerSubdocs {
         Heading.configure({
           levels: [1, 2, 3, 4, 5],
         }),
+        Indent.configure({
+          types: ["listItem", "paragraph"],
+          minLevel: 0,
+          maxLevel: 4,
+        }),
         HorizontalRule,
         Image,
         Typography,
@@ -478,11 +484,11 @@ class DataManagerSubdocs {
               label =
                 libraryId === id
                   ? dataManagerSubdocs
-                      .getLibrary(libraryId)
-                      ?.getMap("library_props")
-                      ?.toJSON().item_properties.item_title
+                    .getLibrary(libraryId)
+                    ?.getMap("library_props")
+                    ?.toJSON().item_properties.item_title
                   : libraryYTree.getNodeValueFromKey(id)?.toJSON()
-                      ?.item_properties?.item_title;
+                    ?.item_properties?.item_title;
             } catch {
               label = "Error fetching link label";
             }
@@ -518,11 +524,11 @@ class DataManagerSubdocs {
               label =
                 libraryId === id
                   ? dataManagerSubdocs
-                      .getLibrary(libraryId)
-                      ?.getMap("library_props")
-                      ?.toJSON().item_properties.item_title
+                    .getLibrary(libraryId)
+                    ?.getMap("library_props")
+                    ?.toJSON().item_properties.item_title
                   : libraryYTree.getNodeValueFromKey(id)?.toJSON()
-                      ?.item_properties?.item_title;
+                    ?.item_properties?.item_title;
             } catch {
               label = "Error rendering label";
             }

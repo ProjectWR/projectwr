@@ -88,6 +88,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       customWidth: resolve("layout.customWidth"),
       customHeight: resolve("layout.customHeight"),
       orientation: resolve("layout.orientation"),
+      indentSpacingValue: resolve("layout.indentSpacingValue"),
     };
 
     const globalTypography = {
@@ -269,6 +270,33 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       }
 
       /* Page Break Utilities removed - handled by dynamic CSS */
+      .manuscript-title-block {
+          margin-bottom: 2em;
+          text-align: center;
+      }
+      .manuscript-title {
+          font-size: 2em;
+          font-weight: bold;
+      }
+      .manuscript-subtitle {
+          font-size: 1.2em;
+          font-style: italic;
+          margin-top: 0.5em;
+      }
+
+      .manuscript-normal-title-block {
+          margin-bottom: 1.5em;
+          text-align: left;
+      }
+      .manuscript-normal-title {
+          font-size: 1.5em;
+          font-weight: bold;
+      }
+      .manuscript-normal-subtitle {
+          font-size: 1.1em;
+          font-style: italic;
+          margin-top: 0.25em;
+      }
     `;
 
     // 2. ITEM BREAK STYLES
@@ -458,8 +486,20 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       try {
         const libraryYTree = await getOrInitLibraryYTree(libraryId);
 
+        // Pre-calculate chapter numbering to avoid async issues
+        const chapterIndices = {};
+        let currentChapterCount = 0;
+        sortedData.forEach((item) => {
+          if (item.type === "paper" && item.category === "chapter") {
+            currentChapterCount++;
+            chapterIndices[item.id] = currentChapterCount;
+          }
+        });
+
         const itemPromises = sortedData.map(async (item) => {
           if (item.type !== "paper") return null;
+
+          const chapterNum = chapterIndices[item.id];
 
           let classes = [
             `manuscript-item section-${item.section} category-${item.category}`,
@@ -469,6 +509,97 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
             libraryYTree,
             item.sourceId,
           );
+
+          // Get resolved title format and other settings
+          const getVal = (key) =>
+            getResolvedValue("item", item.id, item.category, "titleFormat", key)
+              .value;
+
+          const tConfig = {
+            prefix: getVal("prefix"),
+            useAsPrefix: getVal("useItemTitleAsPrefix"),
+            numberStyle: getVal("numberStyle"),
+            suffix: getVal("suffix"),
+            useAsSuffix: getVal("useItemTitleAsSuffix"),
+            subtitle: getVal("subtitle"),
+            useAsSubtitle: getVal("useItemTitleAsSubtitle"),
+            includeNumber: getVal("includeNumber"),
+            includeTitle: getVal("includeTitle"),
+          };
+
+          // Get indent spacing value
+          const indentSpacing = getResolvedValue(
+            "item",
+            item.id,
+            item.category,
+            "layout",
+            "indentSpacingValue",
+          ).value;
+
+          // Inject manual spaces based on data-indent
+          let processedHtml = html.replace(
+            /<p([^>]*)data-indent="(\d+)"([^>]*)>/g,
+            (match, p1, p2, p3) => {
+              const level = parseInt(p2, 10);
+              const totalSpaces = level * indentSpacing;
+              const spaces = "&nbsp;".repeat(totalSpaces);
+              return `<p${p1}data-indent="${p2}"${p3}>${spaces}`;
+            },
+          );
+
+          // Generate Title Block
+          let titleBlock = "";
+          if (item.category === "chapter") {
+            const prefix = tConfig.useAsPrefix ? item.title : tConfig.prefix;
+            const suffix = tConfig.useAsSuffix ? item.title : tConfig.suffix;
+            const subtitle = tConfig.useAsSubtitle
+              ? item.title
+              : tConfig.subtitle;
+
+            // Simple numbering for now (could be expanded to roman/word)
+            let num =
+              tConfig.numberStyle === "none" || !tConfig.includeNumber
+                ? ""
+                : ` ${chapterNum}`;
+
+            titleBlock = `
+              <div class="manuscript-title-block">
+                ${tConfig.includeTitle ? `<h1 class="manuscript-title">${`${prefix}${num}${suffix}`.trim()}</h1>` : ""}
+                ${subtitle ? `<h2 class="manuscript-subtitle">${subtitle}</h2>` : ""}
+              </div>
+            `;
+          } else {
+            // Normal Title Format for non-chapters
+            const ntGetVal = (key) =>
+              getResolvedValue(
+                "item",
+                item.id,
+                item.category,
+                "normalTitleFormat",
+                key,
+              ).value;
+
+            const ntConfig = {
+              title: ntGetVal("title"),
+              useAsTitle: ntGetVal("useItemTitleAsTitle"),
+              subtitle: ntGetVal("subtitle"),
+              useAsSubtitle: ntGetVal("useItemTitleAsSubtitle"),
+            };
+
+            const title = ntConfig.useAsTitle ? item.title : ntConfig.title;
+            const subtitle = ntConfig.useAsSubtitle
+              ? item.title
+              : ntConfig.subtitle;
+
+            if (title || subtitle) {
+              titleBlock = `
+                <div class="manuscript-title-block">
+                  ${title ? `<h1 class="manuscript-title">${title}</h1>` : ""}
+                  ${subtitle ? `<p class="manuscript-subtitle">${subtitle}</p>` : ""}
+                </div>
+              `;
+            }
+          }
 
           // Determine Named Page
           let namedPage = null;
@@ -498,14 +629,13 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
 
           let styleAttr = namedPage ? `style="page: ${namedPage};"` : "";
 
-          console.log("item: ", item);
-
           return `
                 <div class="${classes.join(" ")}" 
                      data-category="${item.category}"
                      data-id="${item.id}"
                      ${styleAttr}>
-                    ${html}
+                    ${titleBlock}
+                    ${processedHtml}
                 </div>
             `;
         });
@@ -528,6 +658,9 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
                     ${results.filter(Boolean).join("")}
               </div>
             `;
+
+          console.log("Generated Preview HTML: ", fullHtml);
+
           setPreviewHtml(fullHtml);
           setPagedJsReady(false); // Reset ready state when content updates
         }

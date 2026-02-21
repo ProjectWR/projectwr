@@ -36,6 +36,7 @@ export const StatisticsPanel = ({ mode, editor, toolbarPreferences }) => {
       <div className="h-fit w-fit flex z-[100] ">
         {/* Trigger Button */}
         <button
+          tabIndex={-1}
           className={`rounded-lg transition-all duration-200 ${
             statsPinned ? "opacity-100" : "opacity-50 hover:opacity-75"
           }`}

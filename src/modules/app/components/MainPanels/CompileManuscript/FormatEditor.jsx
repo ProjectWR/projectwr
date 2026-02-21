@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
   Tabs,
@@ -17,7 +17,6 @@ import {
   BORDER_STYLES,
   HEADER_FOOTER_VARIABLES,
   NUMBER_STYLE_OPTIONS,
-  TITLE_CASE_OPTIONS,
   FOOTNOTE_PLACEMENT_OPTIONS,
   LIST_STYLE_OPTIONS,
   PAGE_SIZE_PRESETS,
@@ -39,6 +38,7 @@ const FormatDropdown = ({
   onChange,
   placeholder,
   disabled,
+  hideClear,
 }) => {
   const [open, setOpen] = useState(false);
   const selectedOption = options.find(
@@ -66,12 +66,14 @@ const FormatDropdown = ({
         align="start"
         sideOffset={4}
       >
-        <DropdownMenu.Item
-          onClick={() => onChange("")}
-          className="contextMenuItem italic opacity-70 border-b border-appLayoutBorder/50 mb-1"
-        >
-          Clear Selection
-        </DropdownMenu.Item>
+        {!hideClear && (
+          <DropdownMenu.Item
+            onClick={() => onChange("")}
+            className="contextMenuItem italic opacity-70 border-b border-appLayoutBorder/50 mb-1"
+          >
+            Clear Selection
+          </DropdownMenu.Item>
+        )}
         {options.map((opt) => (
           <DropdownMenu.Item
             key={opt.value}
@@ -97,13 +99,21 @@ FormatDropdown.propTypes = {
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   disabled: PropTypes.bool,
+  hideClear: PropTypes.bool,
 };
 
-const FormatCategory = ({ category, categoryKey, settings, renderField }) => {
+const FormatCategory = ({
+  category,
+  categoryKey,
+  settings,
+  renderField,
+  fieldKeys: passedFieldKeys,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const fieldKeys = passedFieldKeys || Object.keys(settings);
 
   return (
-    <div key={categoryKey} className="pb-0">
+    <div className="pb-0">
       <h3
         onClick={() => setIsOpen(!isOpen)}
         className={`text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutText ${isOpen ? "border-b  border-appLayoutBorder rounded-t-md" : "border-b border-transparent rounded-md"} py-1 flex items-center gap-2 cursor-pointer hover:bg-appLayoutHover/50 select-none transition-colors px-1`}
@@ -125,7 +135,7 @@ const FormatCategory = ({ category, categoryKey, settings, renderField }) => {
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-2 px-1 pt-2 pb-4">
-              {Object.keys(settings).map((key) => {
+              {fieldKeys.map((key) => {
                 if (
                   typeof settings[key] === "object" &&
                   settings[key] !== null
@@ -139,17 +149,12 @@ const FormatCategory = ({ category, categoryKey, settings, renderField }) => {
                         {key.replace(/([A-Z])/g, " $1")}
                       </h4>
                       {Object.keys(settings[key]).map((subKey) =>
-                        renderField(
-                          categoryKey,
-                          `${key}.${subKey}`,
-                          settings[key][subKey],
-                          {},
-                        ),
+                        renderField(categoryKey, `${key}.${subKey}`),
                       )}
                     </div>
                   );
                 }
-                return renderField(categoryKey, key, settings[key], {});
+                return renderField(categoryKey, key);
               })}
             </div>
           </motion.div>
@@ -164,6 +169,7 @@ FormatCategory.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   settings: PropTypes.object.isRequired,
   renderField: PropTypes.func.isRequired,
+  fieldKeys: PropTypes.array,
 };
 
 const LABEL_OVERRIDES = {
@@ -175,6 +181,19 @@ const LABEL_OVERRIDES = {
   "metadata.accessibility.accessModes": "Access Modes",
   "metadata.ibooks.ipadOrientationLock": "iPad Orientation",
   "metadata.ibooks.iphoneOrientationLock": "iPhone Orientation",
+  "layout.indentSpacingValue": "Indent Spacing (chars)",
+  "titleFormat.includeTitle": "Include Title",
+  "titleFormat.prefix": "Prefix",
+  "titleFormat.useItemTitleAsPrefix": "Use Item Title as Prefix",
+  "titleFormat.suffix": "Suffix",
+  "titleFormat.useItemTitleAsSuffix": "Use Item Title as Suffix",
+  "titleFormat.subtitle": "Subtitle",
+  "titleFormat.useItemTitleAsSubtitle": "Use Item Title as Subtitle",
+  "normalTitleFormat.title": "Title",
+  "normalTitleFormat.useItemTitleAsTitle": "Use Item Title as Title",
+  "normalTitleFormat.subtitle": "Subtitle",
+  "normalTitleFormat.useItemTitleAsSubtitle": "Use Item Title as Subtitle",
+  "titleFormat.includeNumber": "Include Chapter Number",
 };
 
 const SettingsList = ({
@@ -260,12 +279,16 @@ const SettingsList = ({
       }
     }
 
-    // 4. Chapter Title Format restriction
-    if (scope !== "global" && section === "titleFormat") {
-      const currentCategory = scope === "category" ? id : itemCategory;
-      if (currentCategory !== "chapter") {
-        return false;
-      }
+    // 4. Chapter vs Normal Title Format restriction
+    const currentCategory = scope === "category" ? id : itemCategory;
+    const isChapter = currentCategory === "chapter";
+
+    if (section === "titleFormat") {
+      if (scope !== "global" && !isChapter) return false;
+    }
+
+    if (section === "normalTitleFormat") {
+      if (scope !== "global" && isChapter) return false;
     }
 
     // 5. Metadata restriction (Global only)
@@ -273,15 +296,137 @@ const SettingsList = ({
       return false;
     }
 
+    // 6. Hide fields if they are disabled by a toggle
+    if (section === "titleFormat") {
+      if (
+        key === "prefix" &&
+        getResolvedValue(
+          scope,
+          id,
+          itemCategory,
+          section,
+          "useItemTitleAsPrefix",
+        ).value
+      )
+        return false;
+      if (
+        key === "suffix" &&
+        getResolvedValue(
+          scope,
+          id,
+          itemCategory,
+          section,
+          "useItemTitleAsSuffix",
+        ).value
+      )
+        return false;
+      if (
+        key === "subtitle" &&
+        getResolvedValue(
+          scope,
+          id,
+          itemCategory,
+          section,
+          "useItemTitleAsSubtitle",
+        ).value
+      )
+        return false;
+    }
+
+    if (section === "normalTitleFormat") {
+      if (
+        key === "title" &&
+        getResolvedValue(
+          scope,
+          id,
+          itemCategory,
+          section,
+          "useItemTitleAsTitle",
+        ).value
+      )
+        return false;
+      if (
+        key === "subtitle" &&
+        getResolvedValue(
+          scope,
+          id,
+          itemCategory,
+          section,
+          "useItemTitleAsSubtitle",
+        ).value
+      )
+        return false;
+    }
+
     return true;
   };
 
-  const renderField = (section, key, value, config) => {
+  const renderField = (section, key) => {
     if (!isFieldVisible(section, key)) return null;
 
     const resolved = getResolvedValue(scope, id, itemCategory, section, key);
     const displayValue = resolved.value;
     const isInherited = resolved.isInherited;
+
+    // Disabling logic for titleFormat
+    let isFieldDisabled = loading;
+    if (section === "titleFormat") {
+      if (key === "prefix") {
+        isFieldDisabled =
+          isFieldDisabled ||
+          getResolvedValue(
+            scope,
+            id,
+            itemCategory,
+            "titleFormat",
+            "useItemTitleAsPrefix",
+          ).value;
+      } else if (key === "suffix") {
+        isFieldDisabled =
+          isFieldDisabled ||
+          getResolvedValue(
+            scope,
+            id,
+            itemCategory,
+            "titleFormat",
+            "useItemTitleAsSuffix",
+          ).value;
+      } else if (key === "subtitle") {
+        isFieldDisabled =
+          isFieldDisabled ||
+          getResolvedValue(
+            scope,
+            id,
+            itemCategory,
+            "titleFormat",
+            "useItemTitleAsSubtitle",
+          ).value;
+      }
+    }
+
+    if (section === "normalTitleFormat") {
+      if (key === "title") {
+        isFieldDisabled =
+          isFieldDisabled ||
+          getResolvedValue(
+            scope,
+            id,
+            itemCategory,
+            "normalTitleFormat",
+            "useItemTitleAsTitle",
+          ).value;
+      } else if (key === "subtitle") {
+        isFieldDisabled =
+          isFieldDisabled ||
+          getResolvedValue(
+            scope,
+            id,
+            itemCategory,
+            "normalTitleFormat",
+            "useItemTitleAsSubtitle",
+          ).value;
+      }
+    }
 
     // Determine label for inheritance
     const displayInheritance = isInherited && scope !== "global";
@@ -304,10 +449,8 @@ const SettingsList = ({
       "headersFooters.footerLeft": HEADER_FOOTER_VARIABLES,
       "headersFooters.footerCenter": HEADER_FOOTER_VARIABLES,
       "headersFooters.footerRight": HEADER_FOOTER_VARIABLES,
-      "sectionBreaks.pageBreakBefore": PAGE_BREAK_OPTIONS,
       "sectionBreaks.pageBreakAfter": PAGE_BREAK_OPTIONS,
       "titleFormat.numberStyle": NUMBER_STYLE_OPTIONS,
-      "titleFormat.titleCase": TITLE_CASE_OPTIONS,
       "advanced.footnotes.style": [
         { value: "superscript", label: "Superscript" },
         { value: "bracket", label: "Bracket" },
@@ -361,7 +504,7 @@ const SettingsList = ({
               handleSettingChange(section, key, e.target.checked)
             }
             className="accent-appLayoutAccent"
-            disabled={loading}
+            disabled={isFieldDisabled}
           />
         </div>
       );
@@ -388,7 +531,7 @@ const SettingsList = ({
             value={displayValue}
             options={options}
             onChange={(val) => handleSettingChange(section, key, val)}
-            disabled={loading}
+            disabled={isFieldDisabled}
           />
         </div>
       );
@@ -413,6 +556,7 @@ const SettingsList = ({
         <input
           type={typeof displayValue === "number" ? "number" : "text"}
           value={displayValue || ""}
+          disabled={isFieldDisabled}
           onChange={(e) =>
             handleSettingChange(
               section,
@@ -423,7 +567,6 @@ const SettingsList = ({
             )
           }
           className="w-full bg-appLayoutBg px-2 py-1 rounded border border-appLayoutBorder text-xs focus:border-appLayoutAccent outline-none"
-          disabled={loading}
         />
       </div>
     );
@@ -433,8 +576,22 @@ const SettingsList = ({
     const settings = DEFAULT_FORMAT_SETTINGS[categoryKey];
     if (!settings) return null;
 
+    // Custom Field Sorting for Title Formats
+    let fieldKeys = Object.keys(settings);
+    if (categoryKey === "titleFormat") {
+      fieldKeys = [
+        "includeTitle",
+        ...fieldKeys.filter((k) => k !== "includeTitle"),
+      ];
+    } else if (categoryKey === "normalTitleFormat") {
+      fieldKeys = [
+        "useItemTitleAsTitle",
+        ...fieldKeys.filter((k) => k !== "useItemTitleAsTitle"),
+      ];
+    }
+
     // Check if at least one field is visible
-    const hasVisibleFields = Object.keys(settings).some((key) => {
+    const hasVisibleFields = fieldKeys.some((key) => {
       if (typeof settings[key] === "object" && settings[key] !== null) {
         return Object.keys(settings[key]).some((subKey) =>
           isFieldVisible(categoryKey, `${key}.${subKey}`),
@@ -452,6 +609,7 @@ const SettingsList = ({
         categoryKey={categoryKey}
         settings={settings}
         renderField={renderField}
+        fieldKeys={fieldKeys}
       />
     );
   };
@@ -527,7 +685,7 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
     if (flatItems.length > 0 && !selectedItemId) {
       setSelectedItemId(flatItems[0].id);
     }
-  }, [flatItems]);
+  }, [flatItems, selectedItemId]);
 
   // Helper to get item category for selected item
   const selectedItemCategory = useMemo(() => {

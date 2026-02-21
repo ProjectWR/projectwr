@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { FocusTrap } from "@mantine/core";
 import localStateManager from "../../app/lib/localState";
 import TipTapToolbar from "./TipTapToolbar";
 
@@ -374,11 +375,11 @@ const TiptapEditor = ({
           label =
             libraryId === id
               ? dataManagerSubdocs
-                  .getLibrary(libraryId)
-                  ?.getMap("library_props")
-                  ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
               : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                  ?.item_title;
+                ?.item_title;
         } catch {
           label = "Error fetching link label";
         }
@@ -414,11 +415,11 @@ const TiptapEditor = ({
           label =
             libraryId === id
               ? dataManagerSubdocs
-                  .getLibrary(libraryId)
-                  ?.getMap("library_props")
-                  ?.toJSON().item_properties.item_title
+                .getLibrary(libraryId)
+                ?.getMap("library_props")
+                ?.toJSON().item_properties.item_title
               : libraryYTree.getNodeValueFromKey(id)?.toJSON()?.item_properties
-                  ?.item_title;
+                ?.item_title;
         } catch {
           label = "Error rendering label";
         }
@@ -694,12 +695,13 @@ const TiptapEditor = ({
 
   return (
     <ContextMenuWrapper options={options}>
-      <div
-        id="EditorContainer"
-        className="h-full EditorStyles w-full max-w-full flex flex-col items-center relative"
-      >
-        <style>
-          {`
+      <FocusTrap active={true}>
+        <div
+          id="EditorContainer"
+          className="h-full EditorStyles w-full max-w-full flex flex-col items-center relative"
+        >
+          <style>
+            {`
 
           #EditableToolbar * {
             pointer-events: auto !important;
@@ -710,37 +712,31 @@ const TiptapEditor = ({
           }
 
           #EditorContainer {
-            background-color: color-mix(in srgb, ${backgroundColor} ${
-              backgroundColorOpacity !== undefined
+            background-color: color-mix(in srgb, ${backgroundColor} ${backgroundColorOpacity !== undefined
                 ? backgroundColorOpacity
                 : 100
-            }%, transparent);
-            ${
-              resolvedBackgroundImage
+              }%, transparent);
+            ${resolvedBackgroundImage
                 ? `background-image: url(${resolvedBackgroundImage});`
                 : ""
-            }
+              }
             background-size: ${backgroundSize || "auto"};
             background-position: ${backgroundPosition || "center"};
             background-repeat: ${backgroundRepeat || "repeat"};
           }
 
           #EditableUtilityToolbarWrapper {
-            height: calc(${
-              toolbarPreferences.toolbarHeight
-            }px * var(--uiScale));
+            height: calc(${toolbarPreferences.toolbarHeight
+              }px * var(--uiScale));
           }
 
           #EditableUtilityToolbar {
-            height: calc(${
-              toolbarPreferences.toolbarHeight
-            }px * var(--uiScale));
-            min-height: calc(${
-              toolbarPreferences.toolbarHeight
-            }px * var(--uiScale));
-            background-color: color-mix(in srgb, ${toolbarBgColor} ${
-              toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
-            }%, transparent);
+            height: calc(${toolbarPreferences.toolbarHeight
+              }px * var(--uiScale));
+            min-height: calc(${toolbarPreferences.toolbarHeight
+              }px * var(--uiScale));
+            background-color: color-mix(in srgb, ${toolbarBgColor} ${toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
+              }%, transparent);
             backdrop-filter: blur(${toolbarBlur || 0}px);
             border-color: ${borderColor};
             color: ${toolbarFontColor};
@@ -752,15 +748,12 @@ const TiptapEditor = ({
           }
 
           #EditableToolbar {
-            height: calc(${
-              toolbarPreferences.toolbarHeight
-            }px * var(--uiScale));
-            min-height: calc(${
-              toolbarPreferences.toolbarHeight
-            }px * var(--uiScale));
-            background-color: color-mix(in srgb, ${toolbarBgColor} ${
-              toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
-            }%, transparent);
+            height: calc(${toolbarPreferences.toolbarHeight
+              }px * var(--uiScale));
+            min-height: calc(${toolbarPreferences.toolbarHeight
+              }px * var(--uiScale));
+            background-color: color-mix(in srgb, ${toolbarBgColor} ${toolbarBgOpacity !== undefined ? toolbarBgOpacity : 100
+              }%, transparent);
             backdrop-filter: blur(${toolbarBlur || 0}px);
             border-color: ${borderColor};
             box-shadow: 0px 0px 0.5px ${paperShadowColor};
@@ -805,240 +798,199 @@ const TiptapEditor = ({
           .paper-border-bottom,
           .paper-border-bottom-left,
           .paper-border-bottom-right {
-            ${
-              borderImageKeepBottomFixed
+            ${borderImageKeepBottomFixed
                 ? "position: absolute !important; bottom: 0 !important; z-index: 2 !important;"
                 : ""
-            }
+              }
           }
 
           #BottomBorderImageContainer {
             position: sticky;
             width: calc(var(--uiScale) * ${scale} * max(400px, ${width}));
             max-width: 100%;
-            height: calc(${
-              String(borderImageWidth).split(" ")[2] ||
+            height: calc(${String(borderImageWidth).split(" ")[2] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            border-right-width: calc(${
+              }px * ${scale} * var(--uiScale));
+            border-right-width: calc(${String(paperBorderWidth).split(" ")[1] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
+              }px * ${scale} * var(--uiScale))!important;
+            border-bottom-width: calc(${String(paperBorderWidth).split(" ")[2] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
+              }px * ${scale} * var(--uiScale))!important;
+            border-left-width: calc(${String(paperBorderWidth).split(" ")[3] ||
               String(paperBorderWidth).split(" ")[1] ||
               String(paperBorderWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale))!important;
-            border-bottom-width: calc(${
-              String(paperBorderWidth).split(" ")[2] ||
-              String(paperBorderWidth).split(" ")[0] ||
-              0
-            }px * ${scale} * var(--uiScale))!important;
-            border-left-width: calc(${
-              String(paperBorderWidth).split(" ")[3] ||
-              String(paperBorderWidth).split(" ")[1] ||
-              String(paperBorderWidth).split(" ")[0] ||
-              0
-            }px * ${scale} * var(--uiScale))!important;
+              }px * ${scale} * var(--uiScale))!important;
           }
 
           .paper-border-top-left {
-            top: calc(-1 * ${
-              String(borderImageOutset).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale));
-            left: calc(-1 * ${
-              String(borderImageOutset).split(" ")[3] ||
+            top: calc(-1 * ${String(borderImageOutset).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale));
+            left: calc(-1 * ${String(borderImageOutset).split(" ")[3] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            width: calc(${
-              String(borderImageWidth).split(" ")[3] ||
+              }px * ${scale} * var(--uiScale));
+            width: calc(${String(borderImageWidth).split(" ")[3] ||
               String(borderImageWidth).split(" ")[1] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            height: calc(${
-              String(borderImageWidth).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
+            height: calc(${String(borderImageWidth).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.topLeft});
             background-size: 100% 100%;
             background-repeat: no-repeat;
           }
 
           .paper-border-top {
-            top: calc(-1 * ${
-              String(borderImageOutset).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale));
+            top: calc(-1 * ${String(borderImageOutset).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale));
             left: 0;
             right: 0;
-            height: calc(${
-              String(borderImageWidth).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale));
+            height: calc(${String(borderImageWidth).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.top});
-            background-repeat: ${
-              borderImageRepeat === "stretch"
+            background-repeat: ${borderImageRepeat === "stretch"
                 ? "no-repeat"
                 : borderImageRepeat || "repeat"
-            }-x;
-            background-size: ${
-              borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
-            };
+              }-x;
+            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
+              };
             background-position: top;
           }
 
           .paper-border-top-right {
-            top: calc(-1 * ${
-              String(borderImageOutset).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale));
-            right: calc(-1 * ${
-              String(borderImageOutset).split(" ")[1] ||
+            top: calc(-1 * ${String(borderImageOutset).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale));
+            right: calc(-1 * ${String(borderImageOutset).split(" ")[1] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            width: calc(${
-              String(borderImageWidth).split(" ")[1] ||
+              }px * ${scale} * var(--uiScale));
+            width: calc(${String(borderImageWidth).split(" ")[1] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            height: calc(${
-              String(borderImageWidth).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
+            height: calc(${String(borderImageWidth).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.topRight});
             background-size: 100% 100%;
             background-repeat: no-repeat;
           }
 
           .paper-border-right {
-            top: calc((-1 * ${
-              String(borderImageOutset).split(" ")[0] || 0
-            }px + ${
-              String(borderImageWidth).split(" ")[0] || 0
-            }px) * ${scale} * var(--uiScale));
+            top: calc((-1 * ${String(borderImageOutset).split(" ")[0] || 0
+              }px + ${String(borderImageWidth).split(" ")[0] || 0
+              }px) * ${scale} * var(--uiScale));
             bottom: 0;
-            right: calc(-1 * ${
-              String(borderImageOutset).split(" ")[1] ||
+            right: calc(-1 * ${String(borderImageOutset).split(" ")[1] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            width: calc(${
-              String(borderImageWidth).split(" ")[1] ||
+              }px * ${scale} * var(--uiScale));
+            width: calc(${String(borderImageWidth).split(" ")[1] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.right});
-            background-repeat: ${
-              borderImageRepeat === "stretch"
+            background-repeat: ${borderImageRepeat === "stretch"
                 ? "no-repeat"
                 : borderImageRepeat || "repeat"
-            }-y;
-            background-size: ${
-              borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
-            };
+              }-y;
+            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
+              };
             background-position: top;
           }
 
           .paper-border-bottom-right {
-            bottom: calc(-1 * ${
-              String(borderImageOutset).split(" ")[2] ||
+            bottom: calc(-1 * ${String(borderImageOutset).split(" ")[2] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            right: calc(-1 * ${
-              String(borderImageOutset).split(" ")[1] ||
+              }px * ${scale} * var(--uiScale));
+            right: calc(-1 * ${String(borderImageOutset).split(" ")[1] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            width: calc(${
-              String(borderImageWidth).split(" ")[1] ||
+              }px * ${scale} * var(--uiScale));
+            width: calc(${String(borderImageWidth).split(" ")[1] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            height: calc(${
-              String(borderImageWidth).split(" ")[2] ||
+              }px * ${scale} * var(--uiScale));
+            height: calc(${String(borderImageWidth).split(" ")[2] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.bottomRight});
             background-size: 100% 100%;
             background-repeat: no-repeat;
           }
 
           .paper-border-bottom {
-            bottom: calc(-1 * ${
-              String(borderImageOutset).split(" ")[2] ||
+            bottom: calc(-1 * ${String(borderImageOutset).split(" ")[2] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
             left: 0;
             right: 0;
-            height: calc(${
-              String(borderImageWidth).split(" ")[2] ||
+            height: calc(${String(borderImageWidth).split(" ")[2] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.bottom});
-            background-repeat: ${
-              borderImageRepeat === "stretch"
+            background-repeat: ${borderImageRepeat === "stretch"
                 ? "no-repeat"
                 : borderImageRepeat || "repeat"
-            }-x;
-            background-size: ${
-              borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
-            };
+              }-x;
+            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "auto 100%"
+              };
             background-position: bottom;
           }
 
           .paper-border-bottom-left {
-            bottom: calc(-1 * ${
-              String(borderImageOutset).split(" ")[2] ||
+            bottom: calc(-1 * ${String(borderImageOutset).split(" ")[2] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            left: calc(-1 * ${
-              String(borderImageOutset).split(" ")[3] ||
+              }px * ${scale} * var(--uiScale));
+            left: calc(-1 * ${String(borderImageOutset).split(" ")[3] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            width: calc(${
-              String(borderImageWidth).split(" ")[3] ||
+              }px * ${scale} * var(--uiScale));
+            width: calc(${String(borderImageWidth).split(" ")[3] ||
               String(borderImageWidth).split(" ")[1] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            height: calc(${
-              String(borderImageWidth).split(" ")[2] ||
+              }px * ${scale} * var(--uiScale));
+            height: calc(${String(borderImageWidth).split(" ")[2] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.bottomLeft});
             background-size: 100% 100%;
             background-repeat: no-repeat;
           }
 
           .paper-border-left {
-            top: calc((-1 * ${
-              String(borderImageOutset).split(" ")[0] || 0
-            }px + ${
-              String(borderImageWidth).split(" ")[0] || 0
-            }px) * ${scale} * var(--uiScale));
+            top: calc((-1 * ${String(borderImageOutset).split(" ")[0] || 0
+              }px + ${String(borderImageWidth).split(" ")[0] || 0
+              }px) * ${scale} * var(--uiScale));
             bottom: 0;
-            left: calc(-1 * ${
-              String(borderImageOutset).split(" ")[3] ||
+            left: calc(-1 * ${String(borderImageOutset).split(" ")[3] ||
               String(borderImageOutset).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
-            width: calc(${
-              String(borderImageWidth).split(" ")[3] ||
+              }px * ${scale} * var(--uiScale));
+            width: calc(${String(borderImageWidth).split(" ")[3] ||
               String(borderImageWidth).split(" ")[1] ||
               String(borderImageWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale));
+              }px * ${scale} * var(--uiScale));
             background-image: url(${resolvedBorderImages.left});
-            background-repeat: ${
-              borderImageRepeat === "stretch"
+            background-repeat: ${borderImageRepeat === "stretch"
                 ? "no-repeat"
                 : borderImageRepeat || "repeat"
-            }-y;
-            background-size: ${
-              borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
-            };
+              }-y;
+            background-size: ${borderImageRepeat === "stretch" ? "100% 100%" : "100% auto"
+              };
             background-position: top;
           }
 
@@ -1054,41 +1006,34 @@ const TiptapEditor = ({
             z-index: 1;
             width: calc(var(--uiScale) * ${scale} * max(400px, ${width}));
             max-width: 100%;
-            background-color: color-mix(in srgb, ${paperColor} ${
-              paperColorOpacity !== undefined ? paperColorOpacity : 100
-            }%, transparent);
+            background-color: color-mix(in srgb, ${paperColor} ${paperColorOpacity !== undefined ? paperColorOpacity : 100
+              }%, transparent);
             backdrop-filter: blur(${paperBlur || 0}px);
-            border-top-width: calc(${
-              String(paperBorderWidth).split(" ")[0] || 0
-            }px * ${scale} * var(--uiScale))!important;
+            border-top-width: calc(${String(paperBorderWidth).split(" ")[0] || 0
+              }px * ${scale} * var(--uiScale))!important;
             caret-color: ${caretColor || "currentColor"};
-            border-right-width: calc(${
+            border-right-width: calc(${String(paperBorderWidth).split(" ")[1] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
+              }px * ${scale} * var(--uiScale))!important;
+            border-bottom-width: calc(${String(paperBorderWidth).split(" ")[2] ||
+              String(paperBorderWidth).split(" ")[0] ||
+              0
+              }px * ${scale} * var(--uiScale))!important;
+            border-left-width: calc(${String(paperBorderWidth).split(" ")[3] ||
               String(paperBorderWidth).split(" ")[1] ||
               String(paperBorderWidth).split(" ")[0] ||
               0
-            }px * ${scale} * var(--uiScale))!important;
-            border-bottom-width: calc(${
-              String(paperBorderWidth).split(" ")[2] ||
-              String(paperBorderWidth).split(" ")[0] ||
-              0
-            }px * ${scale} * var(--uiScale))!important;
-            border-left-width: calc(${
-              String(paperBorderWidth).split(" ")[3] ||
-              String(paperBorderWidth).split(" ")[1] ||
-              String(paperBorderWidth).split(" ")[0] ||
-              0
-            }px * ${scale} * var(--uiScale))!important;
+              }px * ${scale} * var(--uiScale))!important;
             border-color: ${paperBorderColor}!important;
             border-style: solid!important;
             border-top-right-radius: calc(${roundRadius}px * ${scale} * var(--uiScale));
             border-top-left-radius: calc(${roundRadius}px * ${scale} * var(--uiScale));
-            box-shadow: ${
-              paperShadow
-                ? `0 0 calc(${paperShadow}px * ${scale} * var(--uiScale)) ${
-                    paperShadowColor || "transparent"
-                  }`
+            box-shadow: ${paperShadow
+                ? `0 0 calc(${paperShadow}px * ${scale} * var(--uiScale)) ${paperShadowColor || "transparent"
+                }`
                 : "none"
-            };
+              };
             
 
             height: fit-content !important;
@@ -1279,114 +1224,113 @@ const TiptapEditor = ({
           }
 
         `}
-        </style>
+          </style>
 
-        {editor && (
-          <>
+          {editor && (
+            <>
+              <div
+                id="EditorTopPanelsContainer"
+                className="absolute top-0 left-0 -translate-y-full w-full z-2 h-[20rem] flex gap-1 justify-center items-center"
+              >
+                {mode == "editPaper" && (
+                  <SearchReplacePanel
+                    visible={isSearchReplacePanelAwake}
+                    refreshSearchReplacePanel={refreshSearchReplacePanel}
+                    keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
+                    editor={editor}
+                    toolbarPreferences={toolbarPreferences}
+                  />
+                )}
+              </div>
+
+              <div
+                id="EditorSidePanelsContainer"
+                className="absolute top-0 right-0 translate-x-full w-[20rem] z-2 h-full flex flex-col gap-1 justify-center items-center"
+              ></div>
+            </>
+          )}
+
+          {editor && (
             <div
-              id="EditorTopPanelsContainer"
-              className="absolute top-0 left-0 -translate-y-full w-full z-2 h-[20rem] flex gap-1 justify-center items-center"
+              id="EditableUtilityToolbarWrapper"
+              className="w-fit h-fit absolute top-2 left-2 z-2"
             >
-              {mode == "editPaper" && (
-                <SearchReplacePanel
-                  visible={isSearchReplacePanelAwake}
-                  refreshSearchReplacePanel={refreshSearchReplacePanel}
-                  keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
-                  editor={editor}
-                  toolbarPreferences={toolbarPreferences}
-                />
-              )}
-            </div>
-
-            <div
-              id="EditorSidePanelsContainer"
-              className="absolute top-0 right-0 translate-x-full w-[20rem] z-2 h-full flex flex-col gap-1 justify-center items-center"
-            ></div>
-          </>
-        )}
-
-        {editor && (
-          <div
-            id="EditableUtilityToolbarWrapper"
-            className="w-fit h-fit absolute top-2 left-2 z-2"
-          >
-            <div
-              id="EditableUtilityToolbar"
-              className="w-fit rounded-lg border"
-              style={{
-                boxShadow: toolbarPreferences.toolbarShadow
-                  ? `0 0 calc(${toolbarPreferences.toolbarShadow}px * ${scale} * var(--uiScale)) ${
-                      toolbarPreferences.toolbarShadowColor || "transparent"
+              <div
+                id="EditableUtilityToolbar"
+                className="w-fit rounded-lg border"
+                style={{
+                  boxShadow: toolbarPreferences.toolbarShadow
+                    ? `0 0 calc(${toolbarPreferences.toolbarShadow}px * ${scale} * var(--uiScale)) ${toolbarPreferences.toolbarShadowColor || "transparent"
                     }`
-                  : "none",
-              }}
-            >
-              <TiptapUtilityToolbar
-                editor={editor}
-                yXmlFragment={yXmlFragment}
-                toolbarPreferences={toolbarPreferences}
-                keepTOCPanelAwake={keepTOCPanelAwake}
-                isTOCPanelAwake={isTOCPanelAwake}
-                forceCloseTOCPanel={forceCloseTOCPanel}
-                refreshTOCPanel={refreshTOCPanel}
-                keepStatsPanelAwake={keepStatsPanelAwake}
-                isStatsPanelAwake={isStatsPanelAwake}
-                forceCloseStatsPanel={forceCloseStatsPanel}
-                refreshStatsPanel={refreshStatsPanel}
-                keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
-                isSearchReplacePanelAwake={isSearchReplacePanelAwake}
-                forceCloseSearchReplacePanel={forceCloseSearchReplacePanel}
-                refreshSearchReplacePanel={refreshSearchReplacePanel}
-              />
+                    : "none",
+                }}
+              >
+                <TiptapUtilityToolbar
+                  editor={editor}
+                  yXmlFragment={yXmlFragment}
+                  toolbarPreferences={toolbarPreferences}
+                  keepTOCPanelAwake={keepTOCPanelAwake}
+                  isTOCPanelAwake={isTOCPanelAwake}
+                  forceCloseTOCPanel={forceCloseTOCPanel}
+                  refreshTOCPanel={refreshTOCPanel}
+                  keepStatsPanelAwake={keepStatsPanelAwake}
+                  isStatsPanelAwake={isStatsPanelAwake}
+                  forceCloseStatsPanel={forceCloseStatsPanel}
+                  refreshStatsPanel={refreshStatsPanel}
+                  keepSearchReplacePanelAwake={keepSearchReplacePanelAwake}
+                  isSearchReplacePanelAwake={isSearchReplacePanelAwake}
+                  forceCloseSearchReplacePanel={forceCloseSearchReplacePanel}
+                  refreshSearchReplacePanel={refreshSearchReplacePanel}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {editor && (
-          <BubbleMenu
-            tippyOptions={{
-              duration: 200,
-            }}
-            className="h-fit p-2 z-[10000] bg-transparent"
-            editor={editor}
-          >
-            <div
-              id="EditableToolbar"
-              className={`
+          {editor && (
+            <BubbleMenu
+              tippyOptions={{
+                duration: 200,
+              }}
+              className="h-fit p-2 z-[10000] bg-transparent"
+              editor={editor}
+            >
+              <div
+                id="EditableToolbar"
+                className={`
                 overflow-y-hidden
                 min-w-0 sticky
                 z-[10000]
-                order-0 w-fit rounded-lg border z-[10000]
+                order-0 w-fit max-w-[99%] rounded-lg border z-[10000]
               `}
-            >
-              <TipTapToolbar
-                editor={editor}
-                toolbarPreferences={toolbarPreferences}
-              />
-            </div>
-          </BubbleMenu>
-        )}
+              >
+                <TipTapToolbar
+                  editor={editor}
+                  toolbarPreferences={toolbarPreferences}
+                />
+              </div>
+            </BubbleMenu>
+          )}
 
-        {resolvedBackgroundVideo && (
-          <video
-            ref={videoRef}
-            id="BackgroundVideo"
-            src={resolvedBackgroundVideo}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none z-[-1]"
-          />
-        )}
+          {resolvedBackgroundVideo && (
+            <video
+              ref={videoRef}
+              id="BackgroundVideo"
+              src={resolvedBackgroundVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none z-[-1]"
+            />
+          )}
 
-        <div
-          id="EditableContainer"
-          className={`h-full w-full max-w-full z-1 flex justify-start flex-col items-center relative
+          <div
+            id="EditableContainer"
+            className={`h-full w-full max-w-full z-1 flex justify-start flex-col items-center relative
            overflow-y-scroll min-h-0 text-neutral-200 hide-scrollbar translate-z-0 bg-transparent
           `}
-        >
-          {/* <div
+          >
+            {/* <div
             id="EditableToolbar"
             style={{
               height: `calc(${toolbarPreferences.toolbarHeight}rem * var(--uiScale))`,
@@ -1410,76 +1354,77 @@ const TiptapEditor = ({
             />
           </div> */}
 
-          {editor && (
-            <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
+            {editor && (
+              <FloatingMenu editor={editor} tippyOptions={{ duration: 200 }}>
+                <div
+                  id="FloatingMenuToolbar"
+                  className="h-full w-fit bg-transparent border-transparent min-w-0"
+                >
+                  <TiptapFloatingToolbar
+                    editor={editor}
+                    toolbarPreferences={toolbarPreferences}
+                  />
+                </div>
+              </FloatingMenu>
+            )}
+
+            <div className="PaperContentContainer h-fit w-full grow flex flex-col items-center outline-none focus:outline-none z-1 transition-all duration-200">
               <div
-                id="FloatingMenuToolbar"
-                className="h-full w-fit bg-transparent border-transparent min-w-0"
+                id="PaperContentWrapper"
+                className="relative h-fit grow w-fit transition-all z-1 duration-200 flex flex-col"
               >
-                <TiptapFloatingToolbar
+                <div className="paper-border paper-border-top-left z-2" />
+                <div className="paper-border paper-border-top z-1" />
+                <div className="paper-border paper-border-top-right z-2" />
+                <div className="paper-border paper-border-right z-1" />
+                {!borderImageKeepBottomFixed && (
+                  <>
+                    <div className="paper-border paper-border-bottom-right z-2" />
+                    <div className="paper-border paper-border-bottom z-1" />
+                    <div className="paper-border paper-border-bottom-left z-2" />
+                  </>
+                )}
+                <div className="paper-border paper-border-left z-1" />
+                <EditorContent
+                  spellCheck={false}
                   editor={editor}
-                  toolbarPreferences={toolbarPreferences}
+                  id="PaperEditorContent"
+                  className={`h-fit w-fit grow flex justify-center outline-none focus:outline-none z-0 transition-all duration-200`}
                 />
               </div>
-            </FloatingMenu>
+            </div>
+          </div>
+
+          {borderImageKeepBottomFixed && (
+            <div
+              id="BottomBorderImageContainer"
+              className="bottom-0 left-0 right-0"
+            >
+              <div
+                id="BottomBorderImageInnerWrapper"
+                className="relative w-full h-full top-0"
+              >
+                <div className="paper-border paper-border-bottom-right z-2" />
+                <div className="paper-border paper-border-bottom z-2" />
+                <div className="paper-border paper-border-bottom-left z-2" />
+              </div>
+            </div>
           )}
-
-          <div className="PaperContentContainer h-fit w-full grow flex flex-col items-center outline-none focus:outline-none z-1 transition-all duration-200">
-            <div
-              id="PaperContentWrapper"
-              className="relative h-fit grow w-fit transition-all z-1 duration-200 flex flex-col"
-            >
-              <div className="paper-border paper-border-top-left z-2" />
-              <div className="paper-border paper-border-top z-1" />
-              <div className="paper-border paper-border-top-right z-2" />
-              <div className="paper-border paper-border-right z-1" />
-              {!borderImageKeepBottomFixed && (
-                <>
-                  <div className="paper-border paper-border-bottom-right z-2" />
-                  <div className="paper-border paper-border-bottom z-1" />
-                  <div className="paper-border paper-border-bottom-left z-2" />
-                </>
-              )}
-              <div className="paper-border paper-border-left z-1" />
-              <EditorContent
-                spellCheck={false}
-                editor={editor}
-                id="PaperEditorContent"
-                className={`h-fit w-fit grow flex justify-center outline-none focus:outline-none z-0 transition-all duration-200`}
-              />
-            </div>
-          </div>
+          {editor && (
+            <TableOfContentsPanel
+              editor={editor}
+              toolbarPreferences={toolbarPreferences}
+            />
+          )}
+          {editor && (
+            <StatisticsPanel
+              mode={mode}
+              editor={editor}
+              toolbarPreferences={toolbarPreferences}
+            />
+          )}
         </div>
-
-        {borderImageKeepBottomFixed && (
-          <div
-            id="BottomBorderImageContainer"
-            className="bottom-0 left-0 right-0"
-          >
-            <div
-              id="BottomBorderImageInnerWrapper"
-              className="relative w-full h-full top-0"
-            >
-              <div className="paper-border paper-border-bottom-right z-2" />
-              <div className="paper-border paper-border-bottom z-2" />
-              <div className="paper-border paper-border-bottom-left z-2" />
-            </div>
-          </div>
-        )}
-        {editor && (
-          <TableOfContentsPanel
-            editor={editor}
-            toolbarPreferences={toolbarPreferences}
-          />
-        )}
-        {editor && (
-          <StatisticsPanel
-            mode={mode}
-            editor={editor}
-            toolbarPreferences={toolbarPreferences}
-          />
-        )}
-      </div>
+      </FocusTrap>
     </ContextMenuWrapper>
   );
 };

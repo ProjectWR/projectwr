@@ -23,16 +23,17 @@ export const DEFAULT_FORMAT_SETTINGS = {
     columns: 1,
     columnGap: 10,
     columnRule: false,
+    indentSpacingValue: 2,
   },
   typography: {
-    fontFamily: "Georgia, serif",
+    fontFamily: "Times New Roman, sans",
     fontSize: 12,
-    lineHeight: 1.5,
+    lineHeight: 2.0,
     paragraphSpaceBefore: 0,
-    paragraphSpaceAfter: 12,
+    paragraphSpaceAfter: 0,
     firstLineIndent: true,
     firstLineIndentValue: 15,
-    alignment: "justify", // left | right | center | justify
+    alignment: "left", // left | right | center | justify
     hyphenation: true,
     widowOrphanControl: true,
     widowOrphanLines: 2,
@@ -85,11 +86,21 @@ export const DEFAULT_FORMAT_SETTINGS = {
   },
   // New title formatting (applies to any page type unless overridden)
   titleFormat: {
+    includeTitle: true,
     prefix: "", // e.g., "Chapter "
+    useItemTitleAsPrefix: false,
     numberStyle: "arabic", // arabic | roman | word
     suffix: ": ",
-    includeTitle: true,
-    titleCase: "as-is", // as-is | uppercase | capitalize
+    useItemTitleAsSuffix: false,
+    subtitle: "",
+    useItemTitleAsSubtitle: false,
+    includeNumber: true,
+  },
+  normalTitleFormat: {
+    title: "",
+    useItemTitleAsTitle: true,
+    subtitle: "",
+    useItemTitleAsSubtitle: false,
   },
   advanced: {
     borderStyle: "none", // none | solid | dashed | dotted
@@ -268,6 +279,11 @@ export const SETTINGS_CATEGORIES = [
     label: "Chapter Title Format",
     icon: "icon-[mdi--format-title]",
   },
+  {
+    key: "normalTitleFormat",
+    label: "Normal Title Format",
+    icon: "icon-[mdi--format-header-pound]",
+  },
   { key: "advanced", label: "Advanced", icon: "icon-[mdi--cog]" },
   {
     key: "specialElements",
@@ -289,7 +305,6 @@ export const NUMBER_STYLE_OPTIONS = [
 ];
 
 export const TITLE_CASE_OPTIONS = [
-  { value: "as-is", label: "As in document" },
   { value: "uppercase", label: "ALL CAPS" },
   { value: "capitalize", label: "Capitalize Each Word" },
 ];

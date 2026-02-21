@@ -200,9 +200,9 @@ export const TableOfContentsPanel = ({
       <div className="h-fit w-fit flex z-[100]">
         {/* Trigger Button */}
         <button
-          className={`rounded-lg transition-all duration-200 ${
-            tocPinned ? "opacity-100" : "opacity-50 hover:opacity-75"
-          }`}
+          tabIndex={-1}
+          className={`rounded-lg transition-all duration-200  ${tocPinned ? "opacity-100" : "opacity-50 hover:opacity-75"
+            }`}
           style={{
             height: `calc(${buttonHeight}px * var(--uiScale))`,
             borderRadius: `0 0 0 ${buttonRadius}px`,
@@ -242,16 +242,14 @@ export const TableOfContentsPanel = ({
               className="absolute left-1/2 -translate-x-1/2 w-scrollbarWidthThin min-h-5 z-[99] rounded-xl  transition-colors cursor-grab active:cursor-grabbing"
               style={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
-                height: `${
-                  (viewportHeight / documentHeight) * containerHeight
-                }px`,
+                height: `${(viewportHeight / documentHeight) * containerHeight
+                  }px`,
               }}
               initial={false}
               animate={{
                 top: `${(scrollTop / documentHeight) * containerHeight}px`,
-                height: `${
-                  (viewportHeight / documentHeight) * containerHeight
-                }px`,
+                height: `${(viewportHeight / documentHeight) * containerHeight
+                  }px`,
               }}
               transition={{ duration: 0.1 }}
               onMouseDown={handleThumbMouseDown}
