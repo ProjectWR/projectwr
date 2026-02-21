@@ -8,6 +8,8 @@ const FormatView = ({ manuscriptData, libraryId }) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const debounceTimerRef = useRef(null);
 
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     if (!libraryId) return;
 
@@ -21,6 +23,8 @@ const FormatView = ({ manuscriptData, libraryId }) => {
         unlisten = await store.onKeyChange("formatData", () => {
           console.log("Store change detected for formatData. Debouncing...");
 
+          setRefreshing(true);
+
           // Clear existing timer (True Debounce)
           if (debounceTimerRef.current) {
             clearTimeout(debounceTimerRef.current);
@@ -30,6 +34,7 @@ const FormatView = ({ manuscriptData, libraryId }) => {
           debounceTimerRef.current = setTimeout(() => {
             console.log("Debounce timeout complete. Remounting Preview...");
             setRefreshKey((prev) => prev + 1);
+            setRefreshing(false)
             debounceTimerRef.current = null;
           }, 5000);
         });
@@ -65,13 +70,22 @@ const FormatView = ({ manuscriptData, libraryId }) => {
 
       <div
         id="FormatViewPreviewContainer"
-        className="h-full grow min-w-0 basis-0 bg-neutral-800 rounded-lg overflow-hidden"
+        className="h-full grow min-w-0 basis-0 bg-neutral-800 rounded-lg overflow-hidden relative"
       >
+
+        {refreshing && (
+          <div id="PreviewLoadingIndicator" className="absolute flex items-center justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30">
+            <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+          </div>
+        )}
+
         <FormatPreview
           key={refreshKey}
           manuscriptData={manuscriptData}
           libraryId={libraryId}
         />
+
+
       </div>
     </div>
   );
