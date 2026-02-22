@@ -189,11 +189,29 @@ const LABEL_OVERRIDES = {
   "titleFormat.useItemTitleAsSuffix": "Use Item Title as Suffix",
   "titleFormat.subtitle": "Subtitle",
   "titleFormat.useItemTitleAsSubtitle": "Use Item Title as Subtitle",
+  "titleFormat.includeNumber": "Include Chapter Number",
+  "titleFormat.fontFamily": "Title Font Family",
+  "titleFormat.fontSize": "Title Font Size (pt)",
+  "titleFormat.lineHeight": "Title Line Height",
+  "titleFormat.spacingBefore": "Title Spacing Before (pt)",
+  "titleFormat.spacingAfter": "Title Spacing After (pt)",
+  "titleFormat.subtitleItalic": "Italic Subtitle",
+  "titleFormat.subtitleFontFamily": "Subtitle Font Family",
+  "titleFormat.subtitleFontSize": "Subtitle Font Size (pt)",
+  "titleFormat.subtitleLineHeight": "Subtitle Line Height",
   "normalTitleFormat.title": "Title",
   "normalTitleFormat.useItemTitleAsTitle": "Use Item Title as Title",
   "normalTitleFormat.subtitle": "Subtitle",
   "normalTitleFormat.useItemTitleAsSubtitle": "Use Item Title as Subtitle",
-  "titleFormat.includeNumber": "Include Chapter Number",
+  "normalTitleFormat.fontFamily": "Title Font Family",
+  "normalTitleFormat.fontSize": "Title Font Size (pt)",
+  "normalTitleFormat.lineHeight": "Title Line Height",
+  "normalTitleFormat.spacingBefore": "Title Spacing Before (pt)",
+  "normalTitleFormat.spacingAfter": "Title Spacing After (pt)",
+  "normalTitleFormat.subtitleItalic": "Italic Subtitle",
+  "normalTitleFormat.subtitleFontFamily": "Subtitle Font Family",
+  "normalTitleFormat.subtitleFontSize": "Subtitle Font Size (pt)",
+  "normalTitleFormat.subtitleLineHeight": "Subtitle Line Height",
 };
 
 const SettingsList = ({
@@ -441,6 +459,7 @@ const SettingsList = ({
     // Select inputs
     const optionsMap = {
       fontFamily: FONT_FAMILIES,
+      subtitleFontFamily: FONT_FAMILIES,
       alignment: ALIGNMENT_OPTIONS,
       "headersFooters.pageNumberFormat": NUMBER_FORMATS,
       "headersFooters.headerLeft": HEADER_FOOTER_VARIABLES,

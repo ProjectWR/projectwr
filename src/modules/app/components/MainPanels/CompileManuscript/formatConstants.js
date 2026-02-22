@@ -1,87 +1,198 @@
-// Page size presets in mm
+export const FONT_FAMILIES = [
+  { value: "inherit", label: "Inherit (Global Typography)" },
+  { value: "Inter", label: "Inter" },
+  { value: "Libre Baskerville", label: "Libre Baskerville" },
+  { value: "Merriweather", label: "Merriweather" },
+  { value: "Lora", label: "Lora" },
+  { value: "Playfair Display", label: "Playfair Display" },
+  { value: "Roboto", label: "Roboto" },
+  { value: "Open Sans", label: "Open Sans" },
+  { value: "Montserrat", label: "Montserrat" },
+  { value: "Courier New", label: "Courier New" },
+  { value: "Georgia", label: "Georgia" },
+  { value: "Times New Roman", label: "Times New Roman" },
+  { value: "Arial", label: "Arial" },
+];
+
+export const ALIGNMENT_OPTIONS = [
+  { value: "left", label: "Left" },
+  { value: "center", label: "Center" },
+  { value: "right", label: "Right" },
+  { value: "justify", label: "Justified" },
+];
+
+export const NUMBER_FORMATS = [
+  { value: "arabic", label: "1, 2, 3" },
+  { value: "roman-upper", label: "I, II, III" },
+  { value: "roman-lower", label: "i, ii, iii" },
+  { value: "alpha-upper", label: "A, B, C" },
+  { value: "alpha-lower", label: "a, b, c" },
+];
+
+export const HEADER_FOOTER_VARIABLES = [
+  { value: "", label: "None" },
+  { value: "{title}", label: "Manuscript Title" },
+  { value: "{author}", label: "Author Name" },
+  { value: "{chapterTitle}", label: "Chapter Title" },
+  { value: "{page}", label: "Page Number" },
+  { value: "{pages}", label: "Total Pages" },
+  { value: "{date}", label: "Current Date" },
+];
+
+export const PAGE_BREAK_OPTIONS = [
+  { value: "auto", label: "Auto" },
+  { value: "page", label: "Always" },
+  { value: "avoid", label: "Avoid" },
+  { value: "left", label: "Always (Left Page)" },
+  { value: "right", label: "Always (Right Page)" },
+];
+
+export const NUMBER_STYLE_OPTIONS = [
+  { value: "arabic", label: "Arabic (1, 2, 3)" },
+  { value: "roman", label: "Roman (I, II, III)" },
+  { value: "word", label: "Word (One, Two, Three)" },
+  { value: "none", label: "No Numbering" },
+];
+
+export const FOOTNOTE_PLACEMENT_OPTIONS = [
+  { value: "page-bottom", label: "Bottom of Page" },
+  { value: "section-end", label: "End of Section" },
+];
+
+export const LIST_STYLE_OPTIONS = [
+  { value: "decimal", label: "1, 2, 3" },
+  { value: "upper-roman", label: "I, II, III" },
+  { value: "lower-roman", label: "i, ii, iii" },
+  { value: "upper-alpha", label: "A, B, C" },
+  { value: "lower-alpha", label: "a, b, c" },
+];
+
 export const PAGE_SIZE_PRESETS = {
-  A4: { width: 210, height: 297, label: "A4 (210 × 297 mm)" },
-  A5: { width: 148, height: 210, label: "A5 (148 × 210 mm)" },
-  LETTER: { width: 215.9, height: 279.4, label: "Letter (8.5 × 11 in)" },
-  LEGAL: { width: 215.9, height: 355.6, label: "Legal (8.5 × 14 in)" },
-  CUSTOM: { width: 210, height: 297, label: "Custom" },
+  a4: { width: 210, height: 297, label: "A4 (210 x 297 mm)" },
+  letter: { width: 215.9, height: 279.4, label: "Letter (8.5 x 11 in)" },
+  legal: { width: 215.9, height: 355.6, label: "Legal (8.5 x 14 in)" },
+  trade: { width: 152.4, height: 228.6, label: "Trade Paperback (6 x 9 in)" },
+  digest: { width: 139.7, height: 215.9, label: "Digest (5.5 x 8.5 in)" },
+  pocket: { width: 107.95, height: 171.45, label: "Pocket (4.25 x 6.75 in)" },
+  custom: { width: 210, height: 297, label: "Custom Size" },
 };
 
-// Default formatting settings (global)
+export const BORDER_STYLES = [
+  { value: "none", label: "None" },
+  { value: "solid", label: "Solid" },
+  { value: "dashed", label: "Dashed" },
+  { value: "dotted", label: "Dotted" },
+];
+
+export const METADATA_IDENTIFIER_SCHEMES = [
+  { value: "uuid", label: "UUID" },
+  { value: "isbn", label: "ISBN" },
+  { value: "doi", label: "DOI" },
+  { value: "uri", label: "URI" },
+];
+
+export const METADATA_TITLE_TYPES = [
+  { value: "main", label: "Main Title" },
+  { value: "subtitle", label: "Subtitle" },
+  { value: "short", label: "Short Title" },
+  { value: "collection", label: "Collection Title" },
+  { value: "edition", label: "Edition Title" },
+  { value: "extended", label: "Extended Title" },
+];
+
+export const METADATA_ROLES = [
+  { value: "aut", label: "Author" },
+  { value: "edt", label: "Editor" },
+  { value: "trl", label: "Translator" },
+  { value: "ill", label: "Illustrator" },
+  { value: "pht", label: "Photographer" },
+  { value: "ctb", label: "Contributor" },
+];
+
+export const METADATA_SUBJECT_AUTHORITIES = [
+  { value: "bisac", label: "BISAC" },
+  { value: "bic", label: "BIC" },
+  { value: "lcc", label: "LCC" },
+  { value: "ddc", label: "DDC" },
+];
+
+export const METADATA_PROGRESSION_DIRECTIONS = [
+  { value: "ltr", label: "Left-to-Right" },
+  { value: "rtl", label: "Right-to-Left" },
+  { value: "default", label: "Default" },
+];
+
+export const METADATA_IBOOKS_ORIENTATION = [
+  { value: "none", label: "None" },
+  { value: "portrait-only", label: "Portrait Only" },
+  { value: "landscape-only", label: "Landscape Only" },
+];
+
+export const METADATA_IBOOKS_SCROLL = [
+  { value: "vertical", label: "Vertical" },
+  { value: "horizontal", label: "Horizontal" },
+  { value: "default", label: "Default" },
+];
+
 export const DEFAULT_FORMAT_SETTINGS = {
   layout: {
-    isSeparatePage: true,
-    pageSize: "A4",
-    customWidth: 210,
-    customHeight: 297,
-    orientation: "portrait", // portrait | landscape
-    marginTop: 25,
-    marginBottom: 25,
-    marginLeft: 25,
-    marginRight: 25,
-    marginGutter: 0,
+    pageSize: "trade",
+    orientation: "portrait",
+    customWidth: 152.4, // mm
+    customHeight: 228.6, // mm
+    marginTop: 20, // mm
+    marginBottom: 20, // mm
+    marginLeft: 20, // mm
+    marginRight: 20, // mm
+    marginGutter: 0, // mm
     columns: 1,
-    columnGap: 10,
-    columnRule: false,
-    indentSpacingValue: 2,
+    columnGap: 5, // mm
+    columnRule: "none", // none | solid | dashed | dotted
+    isSeparatePage: true,
+    indentSpacingValue: 4,
   },
   typography: {
-    fontFamily: "Times New Roman, sans",
-    fontSize: 12,
-    lineHeight: 2.0,
-    paragraphSpaceBefore: 0,
-    paragraphSpaceAfter: 0,
-    firstLineIndent: true,
-    firstLineIndentValue: 15,
-    alignment: "left", // left | right | center | justify
+    fontFamily: "Libre Baskerville",
+    fontSize: 11, // pt
+    lineHeight: 1.5,
+    alignment: "justify", // left | center | right | justify
     hyphenation: true,
-    widowOrphanControl: true,
-    widowOrphanLines: 2,
-    dropCaps: false,
-    dropCapsLines: 3,
-    dropCapsFont: "Georgia, serif",
-    // New list styling
-    list: {
-      bulletChar: "•", // •, –, *, etc.
-      listIndent: 20, // in points
-      orderedListStyle: "decimal", // decimal | lower-roman | upper-roman | lower-alpha | upper-alpha
-    },
-    // New block quote styling
+    firstLineIndent: true,
+    firstLineIndentValue: 20, // pt
+    pSpaceBefore: 0, // pt
+    pSpaceAfter: 0, // pt
     blockQuote: {
       indentLeft: 30,
       indentRight: 30,
-      fontStyle: "italic", // normal | italic | oblique
-      borderLeft: {
-        style: "solid", // none | solid | dashed | dotted
-        width: 2,
-        color: "#cccccc",
-      },
+      fontStyle: "italic",
+      borderLeft: { style: "none", width: 0, color: "#000000" },
+    },
+    list: {
+      listIndent: 20,
+      orderedListStyle: "decimal",
     },
   },
   headersFooters: {
-    headerEnabled: false,
-    footerEnabled: true,
+    headerEnabled: true,
+    headerFont: "Inter",
+    headerSize: 9,
     headerLeft: "",
-    headerCenter: "{title}",
-    headerRight: "",
-    footerLeft: "{author}",
-    footerCenter: "",
-    footerRight: "{pageNumber}",
+    headerCenter: "",
+    headerRight: "{title}",
+    footerEnabled: true,
+    footerFont: "Inter",
+    footerSize: 9,
+    footerLeft: "",
+    footerCenter: "{page}",
+    footerRight: "",
     differentOddEven: false,
-    pageNumberFormat: "decimal",
-    headerFontFamily: "Georgia, serif",
-    headerFontSize: 10,
-    footerFontFamily: "Georgia, serif",
-    footerFontSize: 10,
-    headerMarginFromEdge: 15,
-    footerMarginFromEdge: 15,
+    differentFirstPage: false,
+    pageNumberFormat: "arabic",
+    startPageNumber: 1,
   },
-
   sectionBreaks: {
-    pageBreakBefore: "auto", // auto | always | odd | even | none
-    pageBreakAfter: "auto", // auto | always | odd | even | none
-    // New blank page insertion
-    insertBlankPageBefore: false,
+    pageBreakBefore: "page",
+    pageBreakAfter: "auto",
     insertBlankPageAfter: false,
   },
   // New title formatting (applies to any page type unless overridden)
@@ -94,185 +205,116 @@ export const DEFAULT_FORMAT_SETTINGS = {
     useItemTitleAsSuffix: false,
     subtitle: "",
     useItemTitleAsSubtitle: false,
+    subtitleItalic: true,
+    subtitleFontFamily: "inherit",
+    subtitleFontSize: 16,
+    subtitleLineHeight: 1.2,
     includeNumber: true,
+    fontFamily: "inherit",
+    fontSize: 24,
+    lineHeight: 1.2,
+    spacingBefore: 0,
+    spacingAfter: 30,
   },
   normalTitleFormat: {
     title: "",
     useItemTitleAsTitle: true,
     subtitle: "",
     useItemTitleAsSubtitle: false,
+    subtitleItalic: true,
+    subtitleFontFamily: "inherit",
+    subtitleFontSize: 14,
+    subtitleLineHeight: 1.2,
+    fontFamily: "inherit",
+    fontSize: 18,
+    lineHeight: 1.2,
+    spacingBefore: 0,
+    spacingAfter: 20,
   },
   advanced: {
     borderStyle: "none", // none | solid | dashed | dotted
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#000000",
     borderRadius: 0,
-    backgroundColor: "#ffffff",
-    // Enhanced footnotes
+    backgroundColor: "transparent",
+    padding: 0,
     footnotes: {
-      style: "superscript", // superscript | bracket | paren
-      placement: "footnote", // footnote | endnote
-      numberFormat: "decimal", // decimal | roman | letter
-      separatorLine: "partial", // none | partial | full
-      continuationNotices: true,
-    },
-    // Text transforms (smart punctuation)
-    transforms: {
-      smartQuotes: true,
-      replaceDashes: true, // -- → em dash
-      ellipsis: true, // ... → …
+      style: "superscript",
+      placement: "page-bottom",
     },
   },
   specialElements: {
-    // Title page specific
     titlePageCentered: true,
-    titlePageFontSize: 24,
-    titlePageSpacing: 30,
-    // Part divider specific
+    titlePageFontSize: 36,
+    titlePageSpacing: 50,
     partDividerCentered: true,
-    partDividerFontSize: 18,
+    partDividerFontSize: 28,
     partDividerPageBreak: true,
-    // Epigraph specific
     epigraphAlignment: "right",
-    epigraphFontSize: 11,
+    epigraphFontSize: 10,
     epigraphItalic: true,
-    // Table of Contents specific
     tocInclude: true,
-    tocDepth: 3,
+    tocDepth: 2,
     tocLeaderDots: true,
   },
   metadata: {
+    publication: {
+      language: "en-US",
+      date: "",
+      publisher: "",
+    },
     identifier: {
-      text: "",
-      scheme: "ISBN-13",
+      scheme: "uuid",
+      value: "",
     },
     title: {
-      text: "",
-      fileAs: "",
+      main: "",
+      subtitle: "",
       type: "main",
     },
     creator: {
-      text: "",
-      role: "author",
+      name: "",
+      role: "aut",
       fileAs: "",
     },
     contributor: {
-      text: "",
-      role: "editor",
-      fileAs: "",
-    },
-    publication: {
-      date: "",
-      language: "en",
-      description: "",
-      type: "",
-      format: "",
+      name: "",
+      role: "ctb",
     },
     subject: {
-      text: "",
-      authority: "",
-      term: "",
+      value: "",
+      authority: "bisac",
     },
-    rights: {
-      rights: "",
-      relation: "",
-      coverage: "",
-    },
-    collection: {
-      belongsTo: "",
-      groupPosition: "",
-    },
+    description: "",
+    rights: "",
     visual: {
       coverImage: "",
-      pageProgressionDirection: "ltr",
-    },
-    accessibility: {
-      accessModes: "textual",
-      accessModeSufficient: "textual",
-      hazards: "none",
-      features:
-        "alternativeText, readingOrder, structuralNavigation, tableOfContents",
-      summary: "",
+      pageProgressionDirection: "default",
     },
     ibooks: {
-      version: "1.0.0",
-      specifiedFonts: false,
       ipadOrientationLock: "none",
       iphoneOrientationLock: "none",
-      binding: true,
       scrollAxis: "default",
+    },
+    accessibility: {
+      accessModes: ["textual", "visual"],
+      accessibilitySummary: "",
     },
   },
 };
 
-// Font options (unchanged, but included for completeness)
-export const FONT_FAMILIES = [
-  { value: "Georgia, serif", label: "Georgia" },
-  { value: "'Times New Roman', serif", label: "Times New Roman" },
-  { value: "Garamond, serif", label: "Garamond" },
-  { value: "'Palatino Linotype', serif", label: "Palatino" },
-  { value: "Arial, sans-serif", label: "Arial" },
-  { value: "Helvetica, sans-serif", label: "Helvetica" },
-  { value: "'Courier New', monospace", label: "Courier New" },
-  { value: "Verdana, sans-serif", label: "Verdana" },
-];
-
-// Alignment options
-export const ALIGNMENT_OPTIONS = [
-  { value: "left", label: "Left" },
-  { value: "right", label: "Right" },
-  { value: "center", label: "Center" },
-  { value: "justify", label: "Justify" },
-];
-
-// Number format options
-export const NUMBER_FORMATS = [
-  { value: "decimal", label: "1, 2, 3..." },
-  { value: "roman", label: "i, ii, iii..." },
-  { value: "letter", label: "a, b, c..." },
-];
-
-// Page break options
-export const PAGE_BREAK_OPTIONS = [
-  { value: "auto", label: "Auto" },
-  { value: "always", label: "Always" },
-  { value: "odd", label: "Odd Page" },
-  { value: "even", label: "Even Page" },
-  { value: "none", label: "None" },
-];
-
-// Border style options
-export const BORDER_STYLES = [
-  { value: "none", label: "None" },
-  { value: "solid", label: "Solid" },
-  { value: "dashed", label: "Dashed" },
-  { value: "dotted", label: "Dotted" },
-];
-
-// Helper variables for header/footer
-export const HEADER_FOOTER_VARIABLES = [
-  { value: "{title}", label: "Title" },
-  { value: "{author}", label: "Author" },
-  { value: "{pageNumber}", label: "Page Number" },
-  { value: "{totalPages}", label: "Total Pages" },
-  { value: "{chapterTitle}", label: "Chapter Title" },
-  { value: "{date}", label: "Date" },
-];
-
-// Settings categories for UI organization
 export const SETTINGS_CATEGORIES = [
-  { key: "layout", label: "Page Layout", icon: "icon-[mdi--page-layout-body]" },
+  { key: "layout", label: "Layout", icon: "icon-[mdi--layout-outline]" },
   { key: "typography", label: "Typography", icon: "icon-[mdi--format-text]" },
   {
     key: "headersFooters",
     label: "Headers & Footers",
     icon: "icon-[mdi--page-layout-header-footer]",
   },
-
   {
     key: "sectionBreaks",
-    label: "Section Breaks",
-    icon: "icon-[mdi--page-next-outline]",
+    label: "Breaks",
+    icon: "icon-[mdi--format-page-break]",
   },
   {
     key: "titleFormat",
@@ -288,104 +330,7 @@ export const SETTINGS_CATEGORIES = [
   {
     key: "specialElements",
     label: "Special Elements",
-    icon: "icon-[mdi--star]",
+    icon: "icon-[mdi--star-outline]",
   },
-  {
-    key: "metadata",
-    label: "Metadata",
-    icon: "icon-[mdi--information-outline]",
-  },
-];
-
-// Additional constants for new options
-export const NUMBER_STYLE_OPTIONS = [
-  { value: "arabic", label: "1, 2, 3" },
-  { value: "roman", label: "I, II, III" },
-  { value: "word", label: "One, Two, Three" },
-];
-
-export const TITLE_CASE_OPTIONS = [
-  { value: "uppercase", label: "ALL CAPS" },
-  { value: "capitalize", label: "Capitalize Each Word" },
-];
-
-export const FOOTNOTE_PLACEMENT_OPTIONS = [
-  { value: "footnote", label: "Bottom of page" },
-  { value: "endnote", label: "End of document/chapter" },
-];
-
-export const LIST_STYLE_OPTIONS = [
-  { value: "decimal", label: "1, 2, 3" },
-  { value: "lower-roman", label: "i, ii, iii" },
-  { value: "upper-roman", label: "I, II, III" },
-  { value: "lower-alpha", label: "a, b, c" },
-  { value: "upper-alpha", label: "A, B, C" },
-];
-
-export const METADATA_IDENTIFIER_SCHEMES = [
-  "ISBN-10",
-  "GTIN-13",
-  "UPC",
-  "ISMN-10",
-  "DOI",
-  "LCCN",
-  "GTIN-14",
-  "ISBN-13",
-  "Legal deposit number",
-  "URN",
-  "OCLC",
-  "ISMN-13",
-  "ISBN-A",
-  "JP",
-  "OLCC",
-].map((s) => ({ value: s, label: s }));
-
-export const METADATA_TITLE_TYPES = [
-  { value: "main", label: "Main Title" },
-  { value: "subtitle", label: "Subtitle" },
-  { value: "short", label: "Short Title" },
-  { value: "collection", label: "Collection Title" },
-  { value: "edition", label: "Edition Title" },
-  { value: "extended", label: "Extended Title" },
-];
-
-export const METADATA_ROLES = [
-  { value: "author", label: "Author" },
-  { value: "editor", label: "Editor" },
-  { value: "translator", label: "Translator" },
-  { value: "illustrator", label: "Illustrator" },
-  { value: "contributor", label: "Contributor" },
-].map((r) => ({ value: r.value, label: r.label }));
-
-export const METADATA_SUBJECT_AUTHORITIES = [
-  "AAT",
-  "BIC",
-  "BISAC",
-  "CLC",
-  "DDC",
-  "CLIL",
-  "EuroVoc",
-  "MEDTOP",
-  "LCSH",
-  "NDC",
-  "Thema",
-  "UDC",
-  "WGS",
-].map((a) => ({ value: a, label: a }));
-
-export const METADATA_PROGRESSION_DIRECTIONS = [
-  { value: "ltr", label: "Left-to-Right" },
-  { value: "rtl", label: "Right-to-Left" },
-];
-
-export const METADATA_IBOOKS_ORIENTATION = [
-  { value: "none", label: "None" },
-  { value: "portrait-only", label: "Portrait Only" },
-  { value: "landscape-only", label: "Landscape Only" },
-];
-
-export const METADATA_IBOOKS_SCROLL = [
-  { value: "default", label: "Default" },
-  { value: "vertical", label: "Vertical" },
-  { value: "horizontal", label: "Horizontal" },
+  { key: "metadata", label: "E-book Metadata", icon: "icon-[mdi--database]" },
 ];

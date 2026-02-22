@@ -270,33 +270,6 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       }
 
       /* Page Break Utilities removed - handled by dynamic CSS */
-      .manuscript-title-block {
-          margin-bottom: 2em;
-          text-align: center;
-      }
-      .manuscript-title {
-          font-size: 2em;
-          font-weight: bold;
-      }
-      .manuscript-subtitle {
-          font-size: 1.2em;
-          font-style: italic;
-          margin-top: 0.5em;
-      }
-
-      .manuscript-normal-title-block {
-          margin-bottom: 1.5em;
-          text-align: left;
-      }
-      .manuscript-normal-title {
-          font-size: 1.5em;
-          font-weight: bold;
-      }
-      .manuscript-normal-subtitle {
-          font-size: 1.1em;
-          font-style: italic;
-          margin-top: 0.25em;
-      }
     `;
 
     // 2. ITEM BREAK STYLES
@@ -432,16 +405,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           fontSize: resolve("typography.fontSize", category, itemId),
           lineHeight: resolve("typography.lineHeight", category, itemId),
           alignment: resolve("typography.alignment", category, itemId),
-          pSpaceBefore: resolve(
-            "typography.paragraphSpaceBefore",
-            category,
-            itemId,
-          ),
-          pSpaceAfter: resolve(
-            "typography.paragraphSpaceAfter",
-            category,
-            itemId,
-          ),
+          pSpaceBefore: resolve("typography.pSpaceBefore", category, itemId),
+          pSpaceAfter: resolve("typography.pSpaceAfter", category, itemId),
           firstLineIndent: resolve(
             "typography.firstLineIndent",
             category,
@@ -449,6 +414,45 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           ),
           firstLineIndentValue: resolve(
             "typography.firstLineIndentValue",
+            category,
+            itemId,
+          ),
+        };
+
+        // Title Block Typography & Spacing
+        const titleSection =
+          category === "chapter" ? "titleFormat" : "normalTitleFormat";
+        const tTypography = {
+          fontFamily: resolve(`${titleSection}.fontFamily`, category, itemId),
+          fontSize: resolve(`${titleSection}.fontSize`, category, itemId),
+          lineHeight: resolve(`${titleSection}.lineHeight`, category, itemId),
+          spacingBefore: resolve(
+            `${titleSection}.spacingBefore`,
+            category,
+            itemId,
+          ),
+          spacingAfter: resolve(
+            `${titleSection}.spacingAfter`,
+            category,
+            itemId,
+          ),
+          subtitleItalic: resolve(
+            `${titleSection}.subtitleItalic`,
+            category,
+            itemId,
+          ),
+          subtitleFontFamily: resolve(
+            `${titleSection}.subtitleFontFamily`,
+            category,
+            itemId,
+          ),
+          subtitleFontSize: resolve(
+            `${titleSection}.subtitleFontSize`,
+            category,
+            itemId,
+          ),
+          subtitleLineHeight: resolve(
+            `${titleSection}.subtitleLineHeight`,
             category,
             itemId,
           ),
@@ -465,6 +469,24 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
                 margin-top: ${iTypography.pSpaceBefore}pt;
                 margin-bottom: ${iTypography.pSpaceAfter}pt;
                 text-indent: ${iTypography.firstLineIndent ? `${iTypography.firstLineIndentValue}pt` : "0"};
+             }
+             [data-id="${itemId}"] .manuscript-title-block {
+                margin-top: ${tTypography.spacingBefore}pt;
+                margin-bottom: ${tTypography.spacingAfter}pt;
+                text-align: center;
+             }
+             [data-id="${itemId}"] .manuscript-title {
+                font-family: ${tTypography.fontFamily === "inherit" ? iTypography.fontFamily : tTypography.fontFamily};
+                font-size: ${tTypography.fontSize}pt !important;
+                line-height: ${tTypography.lineHeight};
+                font-weight: bold;
+             }
+             [data-id="${itemId}"] .manuscript-subtitle {
+                font-family: ${tTypography.subtitleFontFamily === "inherit" ? iTypography.fontFamily : tTypography.subtitleFontFamily};
+                font-size: ${tTypography.subtitleFontSize}pt !important;
+                line-height: ${tTypography.subtitleLineHeight};
+                font-style: ${tTypography.subtitleItalic ? "italic" : "normal"};
+                margin-top: 0.5em;
              }
            `;
 
@@ -565,7 +587,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
             titleBlock = `
               <div class="manuscript-title-block">
                 ${tConfig.includeTitle ? `<h1 class="manuscript-title">${`${prefix}${num}${suffix}`.trim()}</h1>` : ""}
-                ${subtitle ? `<h2 class="manuscript-subtitle">${subtitle}</h2>` : ""}
+                ${subtitle ? `<p class="manuscript-subtitle">${subtitle}</p>` : ""}
               </div>
             `;
           } else {
