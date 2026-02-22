@@ -76,8 +76,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         .value;
     };
 
-    // ─── PART 1: GLOBAL RULES ──────────────────────────────────────────────────
-    // Page size & margins  (global only – Paged.js @page rules can't be scoped)
+    // ─── PART 1: GLOBAL RULES & SETUP ──────────────────────────────────────────
     const globalLayout = {
       pageSize: resolve("layout.pageSize"),
       orientation: resolve("layout.orientation"),
@@ -95,10 +94,6 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       lineHeight: resolve("typography.lineHeight"),
       alignment: resolve("typography.alignment"),
       hyphenation: resolve("typography.hyphenation"),
-      pSpaceBefore: resolve("typography.pSpaceBefore"),
-      pSpaceAfter: resolve("typography.pSpaceAfter"),
-      firstLineIndent: resolve("typography.firstLineIndent"),
-      firstLineIndentValue: resolve("typography.firstLineIndentValue"),
     };
 
     let globalSizeRule = `size: ${globalLayout.pageSize} ${globalLayout.orientation};`;
@@ -106,87 +101,46 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       globalSizeRule = `size: ${globalLayout.customWidth}mm ${globalLayout.customHeight}mm;`;
     }
 
-    // Headers & footers
-    const hf = {
-      headerEnabled: resolve("headersFooters.headerEnabled"),
-      footerEnabled: resolve("headersFooters.footerEnabled"),
-      headerLeft: resolve("headersFooters.headerLeft"),
-      headerCenter: resolve("headersFooters.headerCenter"),
-      headerRight: resolve("headersFooters.headerRight"),
-      footerLeft: resolve("headersFooters.footerLeft"),
-      footerCenter: resolve("headersFooters.footerCenter"),
-      footerRight: resolve("headersFooters.footerRight"),
-      differentOddEven: resolve("headersFooters.differentOddEven"),
-      pageNumberFormat: resolve("headersFooters.pageNumberFormat") || "decimal",
-      headerFont: resolve("headersFooters.headerFont"),
-      headerSize: resolve("headersFooters.headerSize"),
-      footerFont: resolve("headersFooters.footerFont"),
-      footerSize: resolve("headersFooters.footerSize"),
-    };
-
-    const processContent = (text) => {
-      if (!text) return '""';
-      if (!text.includes("{")) return `"${text}"`;
-      const parts = text.split(/({[^}]+})/g);
-      const cssParts = parts
-        .map((part) => {
-          if (part === "{page}") return `counter(page, ${hf.pageNumberFormat})`;
-          if (part === "{pages}")
-            return `counter(pages, ${hf.pageNumberFormat})`;
-          if (part === "{title}") return "string(title)";
-          if (part === "{author}") return "string(author)";
-          if (part === "{chapterTitle}") return "string(chapterTitle)";
-          if (part === "{date}") return "string(date)";
-          if (part.match(/^{.*}$/)) return `"${part}"`;
-          if (part === "") return null;
-          return `"${part}"`;
-        })
-        .filter(Boolean);
-      return cssParts.join(" ");
-    };
-
-    const generateMarginBoxes = (isHeader) => {
-      let rules = "";
-      if (isHeader && !hf.headerEnabled) return "";
-      if (!isHeader && !hf.footerEnabled) return "";
-      if (isHeader) {
-        if (hf.headerLeft)
-          rules += `@top-left   { content: ${processContent(hf.headerLeft)};   font-family: ${hf.headerFont}; font-size: ${hf.headerSize}pt; }`;
-        if (hf.headerCenter)
-          rules += `@top-center { content: ${processContent(hf.headerCenter)}; font-family: ${hf.headerFont}; font-size: ${hf.headerSize}pt; }`;
-        if (hf.headerRight)
-          rules += `@top-right  { content: ${processContent(hf.headerRight)};  font-family: ${hf.headerFont}; font-size: ${hf.headerSize}pt; }`;
-      } else {
-        if (hf.footerLeft)
-          rules += `@bottom-left   { content: ${processContent(hf.footerLeft)};   font-family: ${hf.footerFont}; font-size: ${hf.footerSize}pt; }`;
-        if (hf.footerCenter)
-          rules += `@bottom-center { content: ${processContent(hf.footerCenter)}; font-family: ${hf.footerFont}; font-size: ${hf.footerSize}pt; }`;
-        if (hf.footerRight)
-          rules += `@bottom-right  { content: ${processContent(hf.footerRight)};  font-family: ${hf.footerFont}; font-size: ${hf.footerSize}pt; }`;
+    // Word count calculation for variable replacement
+    let totalWords = 0;
+    manuscriptData?.forEach((item) => {
+      if (item.content) {
+        const text = item.content.replace(/<[^>]*>/g, " ").trim();
+        if (text) totalWords += text.split(/\s+/).length;
       }
-      return rules;
-    };
+    });
 
-    // Global page + base stylesheet
+    const manualWordCount = resolve("metadata.wordCount") || 0;
+    const wordCountToDisplay =
+      manualWordCount > 0 ? manualWordCount : totalWords;
+    const formattedWordCount = new Intl.NumberFormat().format(
+      wordCountToDisplay,
+    );
+    const formattedWordCount100 = new Intl.NumberFormat().format(
+      Math.round(wordCountToDisplay / 100) * 100,
+    );
+    const contactInfo = resolve("metadata.contactInfo") || "";
+
+    // Base Global Style
     css += `
       @page {
         ${globalSizeRule}
-        margin-top: ${globalLayout.marginTop}mm;
+        margin-top:    ${globalLayout.marginTop}mm;
         margin-bottom: ${globalLayout.marginBottom}mm;
-        margin-left: ${globalLayout.marginLeft}mm;
-        margin-right: ${globalLayout.marginRight}mm;
+        margin-left:   ${globalLayout.marginLeft}mm;
+        margin-right:  ${globalLayout.marginRight}mm;
         background-color: white;
-        ${generateMarginBoxes(true)}
-        ${generateMarginBoxes(false)}
       }
 
-      /* Running string setup */
-      h1 { string-set: chapterTitle content(text); }
-      .metadata-title  { string-set: title  content(text); }
-      .metadata-author { string-set: author content(text); }
-      .metadata-date   { string-set: date   content(text); }
+      /* Manual string-set overrides to bypass Paged.js autofill */
+      ${sortedData
+        .map((item) => {
+          const itemTitle = (item.title || "").replace(/"/g, '\\"');
+          return `[data-id="${item.id}"] { string-set: chapterTitle "${itemTitle}"; }`;
+        })
+        .join("\n")}
 
-      /* Reset browser heading defaults – our scoped rules take over */
+      /* Reset browser heading defaults */
       h1, h2, h3, h4, h5, h6 {
         font-size: inherit;
         font-weight: inherit;
@@ -207,7 +161,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       }
 
       /* Lists */
-      #FormatPreviewContent ul { list-style-type: disc;                                     margin-left: ${resolve("typography.list.listIndent")}pt; }
+      #FormatPreviewContent ul { list-style-type: disc; margin-left: ${resolve("typography.list.listIndent")}pt; }
       #FormatPreviewContent ol { list-style-type: ${resolve("typography.list.orderedListStyle")}; margin-left: ${resolve("typography.list.listIndent")}pt; }
 
       /* Media safety */
@@ -216,7 +170,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         height: auto;
       }
 
-      /* Special elements – global because these categories don't vary per-item */
+      /* Global Special elements */
       #FormatPreviewContent [data-category="title_page"] {
         text-align: ${resolve("specialElements.titlePageCentered") ? "center" : "inherit"};
         font-size:  ${resolve("specialElements.titlePageFontSize")}pt;
@@ -233,96 +187,281 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       }
     `;
 
-    // ─── PART 2: SINGLE ITEM-BY-ITEM PASS ─────────────────────────────────────
-    // resolve() already handles the full item > category > global > default chain.
+    // ─── PART 2: ITEM-SPECIFIC PASS ───────────────────────────────────────────
     const firstPaperIndex = sortedData.findIndex((i) => i.type === "paper");
 
     sortedData.forEach((item, index) => {
       if (item.type !== "paper") return;
+      const { id, category } = item;
+      const resolveItem = (p) => resolve(p, category, id);
 
-      const cat = item.category;
-      const id = item.id;
+      // Item Headers & Footers
+      const hf = {
+        enabled: resolveItem("headersFooters.enabled") ?? true,
+        font: resolveItem("headersFooters.fontFamily") || "Inter",
+        size: resolveItem("headersFooters.fontSize") || 9,
+        vAlign: resolveItem("headersFooters.verticalAlign") || "middle",
+        topLeftCorner: resolveItem("headersFooters.topLeftCorner"),
+        topLeft: resolveItem("headersFooters.topLeft"),
+        topCenter: resolveItem("headersFooters.topCenter"),
+        topRight: resolveItem("headersFooters.topRight"),
+        topRightCorner: resolveItem("headersFooters.topRightCorner"),
+        bottomLeftCorner: resolveItem("headersFooters.bottomLeftCorner"),
+        bottomLeft: resolveItem("headersFooters.bottomLeft"),
+        bottomCenter: resolveItem("headersFooters.bottomCenter"),
+        bottomRight: resolveItem("headersFooters.bottomRight"),
+        bottomRightCorner: resolveItem("headersFooters.bottomRightCorner"),
+        leftTop: resolveItem("headersFooters.leftTop"),
+        leftMiddle: resolveItem("headersFooters.leftMiddle"),
+        leftBottom: resolveItem("headersFooters.leftBottom"),
+        rightTop: resolveItem("headersFooters.rightTop"),
+        rightMiddle: resolveItem("headersFooters.rightMiddle"),
+        rightBottom: resolveItem("headersFooters.rightBottom"),
+        pageNumberFormat:
+          resolveItem("headersFooters.pageNumberFormat") || "decimal",
+      };
 
-      // ── Layout ──────────────────────────────────────────────────────────────
-      const isSeparatePage = resolve("layout.isSeparatePage", cat, id);
+      const msTitle = resolveItem("metadata.title.main") || "Untitled";
+      const msAuthor = resolveItem("metadata.creator.name") || "Unknown Author";
+      const msDate = resolveItem("metadata.publication.date") || "";
 
-      // Named @page for margin overrides when isSeparatePage
-      if (isSeparatePage) {
-        css += `
-          @page item-${id} {
-            margin-top:    ${resolve("layout.marginTop", cat, id)}mm;
-            margin-bottom: ${resolve("layout.marginBottom", cat, id)}mm;
-            margin-left:   ${resolve("layout.marginLeft", cat, id)}mm;
-            margin-right:  ${resolve("layout.marginRight", cat, id)}mm;
+      const processContent = (text) => {
+        if (!text) return '""';
+        if (!text.includes("{")) return `"${text.replace(/"/g, '\\"')}"`;
+        const parts = text.split(/({[^}]+})/g);
+        const cssParts = parts
+          .map((part) => {
+            if (part === "{page}")
+              return `counter(page, ${hf.pageNumberFormat})`;
+            if (part === "{pages}")
+              return `counter(pages, ${hf.pageNumberFormat})`;
+            if (part === "{title}") return `"${msTitle.replace(/"/g, '\\"')}"`;
+            if (part === "{author}")
+              return `"${msAuthor.replace(/"/g, '\\"')}"`;
+            if (part === "{chapterTitle}") return "string(chapterTitle)";
+            if (part === "{date}") return `"${msDate.replace(/"/g, '\\"')}"`;
+            if (part === "{contact}")
+              return `"${contactInfo.replace(/\n/g, "\\A ")}"`;
+            if (part === "{words}")
+              return `"about ${formattedWordCount} words"`;
+            if (part === "{words100}")
+              return `"about ${formattedWordCount100} words"`;
+            if (part === "{newline}") return '"\\A"';
+            if (part === "{sep}") return '"/"';
+            if (part.match(/^{.*}$/)) return `"${part.replace(/"/g, '\\"')}"`;
+            if (part === "") return null;
+            return `"${part.replace(/"/g, '\\"')}"`;
+          })
+          .filter(Boolean);
+        return cssParts.join(" ");
+      };
+
+      const generateMarginBoxes = () => {
+        if (!hf.enabled) return "";
+        const boxMap = {
+          "@top-left-corner": {
+            content: hf.topLeftCorner,
+            h: "left",
+            v: "middle",
+            key: "topLeftCorner",
+          },
+          "@top-left": {
+            content: hf.topLeft,
+            h: "left",
+            v: "middle",
+            key: "topLeft",
+          },
+          "@top-center": {
+            content: hf.topCenter,
+            h: "center",
+            v: "middle",
+            key: "topCenter",
+          },
+          "@top-right": {
+            content: hf.topRight,
+            h: "right",
+            v: "middle",
+            key: "topRight",
+          },
+          "@top-right-corner": {
+            content: hf.topRightCorner,
+            h: "right",
+            v: "middle",
+            key: "topRightCorner",
+          },
+          "@bottom-left-corner": {
+            content: hf.bottomLeftCorner,
+            h: "left",
+            v: "middle",
+            key: "bottomLeftCorner",
+          },
+          "@bottom-left": {
+            content: hf.bottomLeft,
+            h: "left",
+            v: "middle",
+            key: "bottomLeft",
+          },
+          "@bottom-center": {
+            content: hf.bottomCenter,
+            h: "center",
+            v: "middle",
+            key: "bottomCenter",
+          },
+          "@bottom-right": {
+            content: hf.bottomRight,
+            h: "right",
+            v: "middle",
+            key: "bottomRight",
+          },
+          "@bottom-right-corner": {
+            content: hf.bottomRightCorner,
+            h: "right",
+            v: "middle",
+            key: "bottomRightCorner",
+          },
+          "@left-top": {
+            content: hf.leftTop,
+            h: "left",
+            v: "top",
+            key: "leftTop",
+          },
+          "@left-middle": {
+            content: hf.leftMiddle,
+            h: "left",
+            v: "middle",
+            key: "leftMiddle",
+          },
+          "@left-bottom": {
+            content: hf.leftBottom,
+            h: "left",
+            v: "bottom",
+            key: "leftBottom",
+          },
+          "@right-top": {
+            content: hf.rightTop,
+            h: "right",
+            v: "top",
+            key: "rightTop",
+          },
+          "@right-middle": {
+            content: hf.rightMiddle,
+            h: "right",
+            v: "middle",
+            key: "rightMiddle",
+          },
+          "@right-bottom": {
+            content: hf.rightBottom,
+            h: "right",
+            v: "bottom",
+            key: "rightBottom",
+          },
+        };
+
+        let rules = "";
+        Object.entries(boxMap).forEach(([selector, config]) => {
+          if (config.content) {
+            const hAlign = resolveItem(`headersFooters.${config.key}HAlign`);
+            const vAlign = resolveItem(`headersFooters.${config.key}VAlign`);
+
+            const finalH = hAlign === "inherit" || !hAlign ? config.h : hAlign;
+            const finalV = vAlign === "inherit" || !vAlign ? hf.vAlign : vAlign;
+
+            rules += `
+            ${selector} {
+              content: ${processContent(config.content)};
+              font-family: "${hf.font}";
+              font-size: ${hf.size}pt;
+              vertical-align: ${finalV};
+              text-align: ${finalH};
+              white-space: pre-wrap;
+            }
+          `;
           }
-        `;
-      }
+        });
+        return rules;
+      };
 
-      // ── Typography ──────────────────────────────────────────────────────────
-      const fontFamily = resolve("typography.fontFamily", cat, id);
-      const fontSize = resolve("typography.fontSize", cat, id);
-      const lineHeight = resolve("typography.lineHeight", cat, id);
-      const alignment = resolve("typography.alignment", cat, id);
-      const hyphenation = resolve("typography.hyphenation", cat, id);
-      const pSpaceBefore = resolve("typography.pSpaceBefore", cat, id);
-      const pSpaceAfter = resolve("typography.pSpaceAfter", cat, id);
-      const firstLineIndent = resolve("typography.firstLineIndent", cat, id);
-      const indentWidthValue = resolve("typography.indentWidthValue", cat, id);
+      // Typography
+      const fontFamily = resolveItem("typography.fontFamily");
+      const fontSize = resolveItem("typography.fontSize");
+      const lineHeight = resolveItem("typography.lineHeight");
+      const alignment = resolveItem("typography.alignment");
+      const hyphenation = resolveItem("typography.hyphenation");
+      const pSpaceBefore = resolveItem("typography.pSpaceBefore");
+      const pSpaceAfter = resolveItem("typography.pSpaceAfter");
+      const firstLineIndent = resolveItem("typography.firstLineIndent");
+      const indentWidthValue = resolveItem("typography.indentWidthValue");
 
-      // ── Advanced (border / background) ──────────────────────────────────────
-      const borderStyle = resolve("advanced.borderStyle", cat, id);
-      const borderWidth = resolve("advanced.borderWidth", cat, id);
-      const borderColor = resolve("advanced.borderColor", cat, id);
-      const borderRadius = resolve("advanced.borderRadius", cat, id);
-      const bgColor = resolve("advanced.backgroundColor", cat, id);
-      const padding = resolve("advanced.padding", cat, id);
+      // Advanced
+      const borderStyle = resolveItem("advanced.borderStyle");
+      const borderWidth = resolveItem("advanced.borderWidth");
+      const borderColor = resolveItem("advanced.borderColor");
+      const borderRadius = resolveItem("advanced.borderRadius");
+      const bgColor = resolveItem("advanced.backgroundColor");
+      const padding = resolveItem("advanced.padding");
 
-      // ── Title format ────────────────────────────────────────────────────────
+      // Title Styling
       const titleSection =
-        cat === "chapter" ? "titleFormat" : "normalTitleFormat";
-      const titleFontFamily = resolve(`${titleSection}.fontFamily`, cat, id);
-      const titleFontSize = resolve(`${titleSection}.fontSize`, cat, id);
-      const titleLineHeight = resolve(`${titleSection}.lineHeight`, cat, id);
-      const titleAlignment = resolve(`${titleSection}.titleAlignment`, cat, id);
-      const subtitleAlignment = resolve(
+        category === "chapter" ? "titleFormat" : "normalTitleFormat";
+      const titleFontFamily = resolve(
+        `${titleSection}.fontFamily`,
+        category,
+        id,
+      );
+      const titleFontSize = resolve(`${titleSection}.fontSize`, category, id);
+      const titleLineHeight = resolve(
+        `${titleSection}.lineHeight`,
+        category,
+        id,
+      );
+      const titleAlign = resolve(
+        `${titleSection}.titleAlignment`,
+        category,
+        id,
+      );
+      const subAlign = resolve(
         `${titleSection}.subtitleAlignment`,
-        cat,
+        category,
         id,
       );
-      const titleSpacingBefore = resolve(
+      const titleSBefore = resolve(
         `${titleSection}.spacingBefore`,
-        cat,
+        category,
         id,
       );
-      const titleSpacingAfter = resolve(
-        `${titleSection}.spacingAfter`,
-        cat,
-        id,
-      );
-      const subtitleItalic = resolve(`${titleSection}.subtitleItalic`, cat, id);
-      const subtitleFontFamily = resolve(
+      const titleSAfter = resolve(`${titleSection}.spacingAfter`, category, id);
+      const subItalic = resolve(`${titleSection}.subtitleItalic`, category, id);
+      const subFont = resolve(
         `${titleSection}.subtitleFontFamily`,
-        cat,
+        category,
         id,
       );
-      const subtitleFontSize = resolve(
-        `${titleSection}.subtitleFontSize`,
-        cat,
-        id,
-      );
-      const subtitleLineHeight = resolve(
+      const subSize = resolve(`${titleSection}.subtitleFontSize`, category, id);
+      const subLine = resolve(
         `${titleSection}.subtitleLineHeight`,
-        cat,
+        category,
         id,
       );
 
       const resolvedTitleFont =
-        titleFontFamily === "inherit" ? fontFamily : titleFontFamily;
-      const resolvedSubtitleFont =
-        subtitleFontFamily === "inherit" ? fontFamily : subtitleFontFamily;
+        titleFontFamily === "inherit" || !titleFontFamily
+          ? fontFamily
+          : titleFontFamily;
+      const resolvedSubFont =
+        subFont === "inherit" || !subFont ? fontFamily : subFont;
+
+      const isSepPage = resolveItem("layout.isSeparatePage") ?? true;
 
       css += `
-        /* ── Item: ${id} (${cat}) ── */
+        @page item-${id} {
+          margin-top:    ${resolveItem("layout.marginTop")}mm;
+          margin-bottom: ${resolveItem("layout.marginBottom")}mm;
+          margin-left:   ${resolveItem("layout.marginLeft")}mm;
+          margin-right:  ${resolveItem("layout.marginRight")}mm;
+          ${generateMarginBoxes()}
+        }
+
+        /* ── Item: ${id} (${category}) ── */
         [data-id="${id}"] {
           font-family:      ${fontFamily};
           font-size:        ${fontSize}pt;
@@ -335,8 +474,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           border-radius:    ${borderRadius}px;
           background-color: ${bgColor};
           padding:          ${padding}pt;
-          break-before:     ${index === firstPaperIndex ? "avoid" : isSeparatePage ? "page" : "auto"} !important;
-          ${isSeparatePage ? `break-after: page !important; page: item-${id};` : ""}
+          break-before:     ${index === firstPaperIndex ? "avoid" : isSepPage ? "page" : "auto"} !important;
+          ${isSepPage ? `break-after: page !important; page: item-${id};` : ""}
         }
 
         [data-id="${id}"] p {
@@ -345,36 +484,43 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           text-indent:   ${firstLineIndent ? `${indentWidthValue}pt` : "0"};
         }
 
+        /* Nested indents */
+        [data-id="${id}"] p[data-indent="1"] { padding-left: ${indentWidthValue * 0}pt; }
+        [data-id="${id}"] p[data-indent="2"] { padding-left: ${indentWidthValue * 1}pt; }
+        [data-id="${id}"] p[data-indent="3"] { padding-left: ${indentWidthValue * 2}pt; }
+        [data-id="${id}"] p[data-indent="4"] { padding-left: ${indentWidthValue * 3}pt; }
+        [data-id="${id}"] p[data-indent="5"] { padding-left: ${indentWidthValue * 4}pt; }
+
         [data-id="${id}"] p:first-of-type {
           text-indent: 0 !important;
         }
 
         [data-id="${id}"] .manuscript-title-block {
-          margin-top:    ${titleSpacingBefore}pt;
-          margin-bottom: ${titleSpacingAfter}pt;
+          margin-top:    ${titleSBefore}pt;
+          margin-bottom: ${titleSAfter}pt;
         }
 
         [data-id="${id}"] .manuscript-title {
           font-family:  ${resolvedTitleFont};
           font-size:    ${titleFontSize}pt !important;
           line-height:  ${titleLineHeight};
-          text-align:   ${titleAlignment} !important;
+          text-align:   ${titleAlign} !important;
           font-weight:  bold;
         }
 
         [data-id="${id}"] .manuscript-subtitle {
-          font-family: ${resolvedSubtitleFont};
-          font-size:   ${subtitleFontSize}pt !important;
-          line-height: ${subtitleLineHeight};
-          text-align:  ${subtitleAlignment} !important;
-          font-style:  ${subtitleItalic ? "italic" : "normal"};
+          font-family: ${resolvedSubFont};
+          font-size:   ${subSize}pt !important;
+          line-height: ${subLine};
+          text-align:  ${subAlign} !important;
+          font-style:  ${subItalic ? "italic" : "normal"};
           margin-top:  0.5em;
         }
       `;
     });
 
     return css;
-  }, [getResolvedValue, sortedData]);
+  }, [getResolvedValue, sortedData, manuscriptData]);
 
   // Fetch Usage
   useEffect(() => {
@@ -442,25 +588,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
             includeTitle: getVal("includeTitle"),
           };
 
-          // Get indent spacing value
-          const indentSpacing = getResolvedValue(
-            "item",
-            item.id,
-            item.category,
-            "layout",
-            "indentSpacingValue",
-          ).value;
-
-          // Inject manual spaces based on data-indent
-          let processedHtml = html.replace(
-            /<p([^>]*)data-indent="(\d+)"([^>]*)>/g,
-            (match, p1, p2, p3) => {
-              const level = parseInt(p2, 10);
-              const totalSpaces = level * indentSpacing;
-              const spaces = "&nbsp;".repeat(totalSpaces);
-              return `<p${p1}data-indent="${p2}"${p3}>${spaces}`;
-            },
-          );
+          // Manual indent replacement is replaced by CSS rules using data-indent
+          let processedHtml = html;
 
           // Generate Title Block
           let titleBlock = "";

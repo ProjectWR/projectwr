@@ -6,12 +6,15 @@ import {
   TabsTrigger,
   TabsContent,
 } from "../../LayoutComponents/Tabs";
+import { TagsInput } from "@mantine/core";
 import useFormatInfo from "../../../hooks/useFormatInfo";
 import {
   SETTINGS_CATEGORIES,
   DEFAULT_FORMAT_SETTINGS,
   FONT_FAMILIES,
   ALIGNMENT_OPTIONS,
+  ALIGN_V_OPTIONS,
+  ALIGN_H_OPTIONS,
   NUMBER_FORMATS,
   PAGE_BREAK_OPTIONS,
   BORDER_STYLES,
@@ -102,6 +105,87 @@ FormatDropdown.propTypes = {
   hideClear: PropTypes.bool,
 };
 
+const RadixTextarea = ({ value, onChange, disabled, placeholder }) => {
+  return (
+    <textarea
+      value={value || ""}
+      disabled={disabled}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full bg-transparent p-2 text-libraryDirectoryBookNodeFontSize text-appLayoutText border border-appLayoutBorder rounded hover:border-appLayoutAccent focus:border-appLayoutAccent transition-colors outline-none min-h-[100px] resize-y"
+    />
+  );
+};
+
+RadixTextarea.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+  placeholder: PropTypes.string,
+};
+
+const HEADER_TAG_MAP = {
+  "{author}": "Creator Name",
+  "{words}": "Total Word Count",
+  "{words100}": "Total Word Count rounded to 100",
+  "{contact}": "Contact Information",
+  "{page}": "Current Page",
+  "{pages}": "Total Pages",
+  "{sep}": "/ separator",
+  "{newline}": "newline separator",
+};
+
+const HeaderTagInput = ({ value = "", onChange, disabled }) => {
+  const suggestions = Object.values(HEADER_TAG_MAP);
+
+  // Convert string to tags
+  const tags = useMemo(() => {
+    if (!value) return [];
+    // Split by {tokens}
+    const parts = value.split(/({[^}]+})/g).filter((p) => p && p.trim() !== "");
+    return parts.map((part) => HEADER_TAG_MAP[part] || part.trim());
+  }, [value]);
+
+  const handleTagsChange = (newTags) => {
+    const reverseMap = Object.entries(HEADER_TAG_MAP).reduce(
+      (acc, [k, v]) => ({ ...acc, [v]: k }),
+      {},
+    );
+    const newValue = newTags.map((tag) => reverseMap[tag] || tag).join("");
+    onChange(newValue);
+  };
+
+  return (
+    <TagsInput
+      value={tags}
+      onChange={handleTagsChange}
+      data={suggestions}
+      disabled={disabled}
+      placeholder="Type or select tags..."
+      splitChars={[",", "|"]}
+      classNames={{
+        input:
+          "text-libraryDirectoryBookNodeFontSize text-appLayoutText w-full bg-appBackground border border-appLayoutBorder focus:border-appLayoutInverseHover",
+        root: "h-fit w-full border-none rounded",
+        pill: "text-libraryDirectoryBookNodeFontSize bg-appBackground text-appLayoutText border border-appLayoutBorder rounded",
+        pillRemoveIcon: "text-appLayoutTextMuted bg-appBackground",
+        pillRemoveIconHover: "text-appLayoutText",
+        dropdown:
+          "border border-appLayoutBorder bg-appBackground text-appLayoutText text-libraryDirectoryBookNodeFontSize",
+        option:
+          "hover:bg-appLayoutInverseHover h-fit px-2 py-1 text-libraryDirectoryBookNodeFontSize",
+        options: "w-full h-fit",
+      }}
+    />
+  );
+};
+
+HeaderTagInput.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
 const FormatCategory = ({
   category,
   categoryKey,
@@ -116,7 +200,7 @@ const FormatCategory = ({
     <div className="pb-0">
       <h3
         onClick={() => setIsOpen(!isOpen)}
-        className={`text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutText ${isOpen ? "border-b  border-appLayoutBorder rounded-t-md" : "border-b border-transparent rounded-md"} py-1 flex items-center gap-2 cursor-pointer hover:bg-appLayoutHover/50 select-none transition-colors px-1`}
+        className={`text-libraryDirectoryBookNodeFontSize font-semibold text-appLayoutText ${isOpen ? "border-b  border-appLayoutBorder rounded-t-md" : "border-b border-transparent rounded-md"} py-1 flex items-center gap-2 cursor-pointer hover:bg-appLayoutHover/50 select-none transition-colors`}
       >
         <motion.span
           animate={{ rotate: isOpen ? 90 : 0 }}
@@ -143,7 +227,7 @@ const FormatCategory = ({
                   return (
                     <div
                       key={key}
-                      className="pl-2 border-l border-appLayoutBorder mt-1"
+                      className="px-2 py-1 border border-appLayoutBorder rounded-md mt-1"
                     >
                       <h4 className="text-libraryDirectoryBookNodeFontSize font-medium text-appLayoutTextMuted mb-1 capitalize">
                         {key.replace(/([A-Z])/g, " $1")}
@@ -174,15 +258,32 @@ FormatCategory.propTypes = {
 
 const LABEL_OVERRIDES = {
   "layout.isSeparatePage": "Is a Separate Page",
-  "layout.columnRule": "Column Rule",
+  "layout.pageSize": "Page Size",
+  "layout.orientation": "Orientation",
+  "layout.customWidth": "Custom Width (mm)",
+  "layout.customHeight": "Custom Height (mm)",
+  "layout.marginTop": "Margin Top (mm)",
+  "layout.marginBottom": "Margin Bottom (mm)",
+  "layout.marginLeft": "Margin Left (mm)",
+  "layout.marginRight": "Margin Right (mm)",
+  "layout.marginGutter": "Margin Gutter (mm)",
   "metadata.publication.language": "Language",
   "metadata.visual.coverImage": "Cover Image Path",
   "metadata.visual.pageProgressionDirection": "Page Progression",
   "metadata.accessibility.accessModes": "Access Modes",
   "metadata.ibooks.ipadOrientationLock": "iPad Orientation",
   "metadata.ibooks.iphoneOrientationLock": "iPhone Orientation",
-  "layout.indentSpacingValue": "Indent Spacing (chars)",
+  "typography.fontSize": "Font Size (pt)",
   "typography.indentWidthValue": "Indent Width (pt)",
+  "typography.pSpaceBefore": "Paragraph Spacing Before (pt)",
+  "typography.pSpaceAfter": "Paragraph Spacing After (pt)",
+  "typography.list.listIndent": "List Indent (pt)",
+  "headersFooters.headerSize": "Header Font Size (pt)",
+  "headersFooters.footerSize": "Footer Font Size (pt)",
+  "headersFooters.startPageNumber": "Start Page Number",
+  "advanced.borderWidth": "Border Width (px)",
+  "advanced.borderRadius": "Border Radius (px)",
+  "advanced.padding": "Padding (pt)",
   "titleFormat.includeTitle": "Include Title",
   "titleFormat.prefix": "Prefix",
   "titleFormat.useItemTitleAsPrefix": "Use Item Title as Prefix",
@@ -217,6 +318,32 @@ const LABEL_OVERRIDES = {
   "normalTitleFormat.subtitleFontFamily": "Subtitle Font Family",
   "normalTitleFormat.subtitleFontSize": "Subtitle Font Size (pt)",
   "normalTitleFormat.subtitleLineHeight": "Subtitle Line Height",
+  "headersFooters.enabled": "Headers & Footers Enabled",
+  "headersFooters.fontFamily": "Header/Footer Font",
+  "headersFooters.fontSize": "Header/Footer Size (pt)",
+  "headersFooters.verticalAlign": "Vertical Alignment",
+  "headersFooters.topLeftCorner": "Top Left Corner",
+  "headersFooters.topLeft": "Top Left",
+  "headersFooters.topCenter": "Top Center",
+  "headersFooters.topRight": "Top Right",
+  "headersFooters.topRightCorner": "Top Right Corner",
+  "headersFooters.bottomLeftCorner": "Bottom Left Corner",
+  "headersFooters.bottomLeft": "Bottom Left",
+  "headersFooters.bottomCenter": "Bottom Center",
+  "headersFooters.bottomRight": "Bottom Right",
+  "headersFooters.bottomRightCorner": "Bottom Right Corner",
+  "headersFooters.leftTop": "Left Side (Top)",
+  "headersFooters.leftMiddle": "Left Side (Middle)",
+  "headersFooters.leftBottom": "Left Side (Bottom)",
+  "headersFooters.rightTop": "Right Side (Top)",
+  "headersFooters.rightMiddle": "Right Side (Middle)",
+  "headersFooters.rightBottom": "Right Side (Bottom)",
+  "metadata.contactInfo": "Contact Information",
+  "metadata.wordCount": "Manually Override Word Count",
+  "specialElements.titlePageFontSize": "Title Page Font Size (pt)",
+  "specialElements.titlePageSpacing": "Title Page Spacing (pt)",
+  "specialElements.partDividerFontSize": "Part Divider Font Size (pt)",
+  "specialElements.epigraphFontSize": "Epigraph Font Size (pt)",
 };
 
 const SettingsList = ({
@@ -248,6 +375,21 @@ const SettingsList = ({
       return false;
     }
 
+    // 1b. Hide custom dimensions unless pageSize is 'custom'
+    if (
+      section === "layout" &&
+      (key === "customWidth" || key === "customHeight")
+    ) {
+      const pageSize = getResolvedValue(
+        scope,
+        id,
+        itemCategory,
+        "layout",
+        "pageSize",
+      ).value;
+      if (pageSize !== "custom") return false;
+    }
+
     // 2. Deactivation logic based on isSeparatePage
     const isSeparatePage = getResolvedValue(
       scope,
@@ -259,9 +401,6 @@ const SettingsList = ({
 
     if (scope !== "global" && !isSeparatePage) {
       const hiddenNonPageFields = [
-        "layout.columns",
-        "layout.columnGap",
-        "layout.columnRule",
         "layout.marginGutter",
         "layout.marginTop",
         "layout.marginBottom",
@@ -381,6 +520,14 @@ const SettingsList = ({
         return false;
     }
 
+    // 7. Hide per-field alignments from the main loop (they are rendered inline)
+    if (
+      section === "headersFooters" &&
+      (key.endsWith("HAlign") || key.endsWith("VAlign"))
+    ) {
+      return false;
+    }
+
     return true;
   };
 
@@ -463,11 +610,16 @@ const SettingsList = ({
 
     // Select inputs
     const optionsMap = {
-      fontFamily: FONT_FAMILIES,
       subtitleFontFamily: FONT_FAMILIES,
       alignment: ALIGNMENT_OPTIONS,
       titleAlignment: ALIGNMENT_OPTIONS,
       subtitleAlignment: ALIGNMENT_OPTIONS,
+      verticalAlign: [
+        { value: "top", label: "Top" },
+        { value: "middle", label: "Middle" },
+        { value: "bottom", label: "Bottom" },
+      ],
+      "headersFooters.fontFamily": FONT_FAMILIES,
       "headersFooters.pageNumberFormat": NUMBER_FORMATS,
       "headersFooters.headerLeft": HEADER_FOOTER_VARIABLES,
       "headersFooters.headerCenter": HEADER_FOOTER_VARIABLES,
@@ -558,6 +710,114 @@ const SettingsList = ({
             options={options}
             onChange={(val) => handleSettingChange(section, key, val)}
             disabled={isFieldDisabled}
+          />
+        </div>
+      );
+    }
+
+    // Special cases for margin boxes (Header/Footer areas)
+    const marginBoxFields = [
+      "topLeftCorner",
+      "topLeft",
+      "topCenter",
+      "topRight",
+      "topRightCorner",
+      "bottomLeftCorner",
+      "bottomLeft",
+      "bottomCenter",
+      "bottomRight",
+      "bottomRightCorner",
+      "leftTop",
+      "leftMiddle",
+      "leftBottom",
+      "rightTop",
+      "rightMiddle",
+      "rightBottom",
+    ];
+
+    if (section === "headersFooters" && marginBoxFields.includes(key)) {
+      return (
+        <div
+          key={key}
+          className="flex flex-col gap-1 py-1 border-b border-appLayoutBorder/30 pb-2 mb-1"
+        >
+          <div className="flex justify-between items-baseline mb-1">
+            <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText font-medium">
+              {LABEL_OVERRIDES[`${section}.${key}`] ||
+                LABEL_OVERRIDES[key] ||
+                key}
+            </label>
+          </div>
+          <HeaderTagInput
+            value={displayValue}
+            onChange={(val) => handleSettingChange(section, key, val)}
+            disabled={isFieldDisabled}
+          />
+          <div className="flex gap-2 mt-1">
+            <div className="flex-1 flex flex-col gap-0.5">
+              <span className="text-[10px] text-appLayoutTextMuted">
+                Horiz. Align
+              </span>
+              <FormatDropdown
+                value={
+                  getResolvedValue(
+                    scope,
+                    id,
+                    itemCategory,
+                    section,
+                    `${key}HAlign`,
+                  ).value
+                }
+                options={ALIGN_H_OPTIONS}
+                onChange={(val) =>
+                  handleSettingChange(section, `${key}HAlign`, val)
+                }
+                disabled={isFieldDisabled}
+                hideClear={true}
+              />
+            </div>
+            <div className="flex-1 flex flex-col gap-0.5">
+              <span className="text-[10px] text-appLayoutTextMuted">
+                Vert. Align
+              </span>
+              <FormatDropdown
+                value={
+                  getResolvedValue(
+                    scope,
+                    id,
+                    itemCategory,
+                    section,
+                    `${key}VAlign`,
+                  ).value
+                }
+                options={ALIGN_V_OPTIONS}
+                onChange={(val) =>
+                  handleSettingChange(section, `${key}VAlign`, val)
+                }
+                disabled={isFieldDisabled}
+                hideClear={true}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (key === "contactInfo") {
+      return (
+        <div key={key} className="flex flex-col gap-1 py-1">
+          <div className="flex justify-between items-baseline">
+            <label className="text-libraryDirectoryBookNodeFontSize text-appLayoutText">
+              {LABEL_OVERRIDES[`${section}.${key}`] ||
+                LABEL_OVERRIDES[key] ||
+                key}
+            </label>
+          </div>
+          <RadixTextarea
+            value={displayValue}
+            disabled={isFieldDisabled}
+            onChange={(val) => handleSettingChange(section, key, val)}
+            placeholder="Name, Address, Phone, Email..."
           />
         </div>
       );

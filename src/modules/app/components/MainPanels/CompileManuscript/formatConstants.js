@@ -21,12 +21,26 @@ export const ALIGNMENT_OPTIONS = [
   { value: "justify", label: "Justified" },
 ];
 
+export const ALIGN_H_OPTIONS = [
+  { value: "inherit", label: "Inherit (Default)" },
+  { value: "left", label: "Left" },
+  { value: "center", label: "Center" },
+  { value: "right", label: "Right" },
+];
+
+export const ALIGN_V_OPTIONS = [
+  { value: "inherit", label: "Inherit (Default)" },
+  { value: "top", label: "Top" },
+  { value: "middle", label: "Middle" },
+  { value: "bottom", label: "Bottom" },
+];
+
 export const NUMBER_FORMATS = [
-  { value: "arabic", label: "1, 2, 3" },
-  { value: "roman-upper", label: "I, II, III" },
-  { value: "roman-lower", label: "i, ii, iii" },
-  { value: "alpha-upper", label: "A, B, C" },
-  { value: "alpha-lower", label: "a, b, c" },
+  { value: "decimal", label: "1, 2, 3" },
+  { value: "upper-roman", label: "I, II, III" },
+  { value: "lower-roman", label: "i, ii, iii" },
+  { value: "upper-alpha", label: "A, B, C" },
+  { value: "lower-alpha", label: "a, b, c" },
 ];
 
 export const HEADER_FOOTER_VARIABLES = [
@@ -37,6 +51,9 @@ export const HEADER_FOOTER_VARIABLES = [
   { value: "{page}", label: "Page Number" },
   { value: "{pages}", label: "Total Pages" },
   { value: "{date}", label: "Current Date" },
+  { value: "{contact}", label: "Contact Info" },
+  { value: "{words}", label: "Word Count" },
+  { value: "{words100}", label: "Word Count (rounded to 100)" },
 ];
 
 export const PAGE_BREAK_OPTIONS = [
@@ -145,11 +162,7 @@ export const DEFAULT_FORMAT_SETTINGS = {
     marginLeft: 20, // mm
     marginRight: 20, // mm
     marginGutter: 0, // mm
-    columns: 1,
-    columnGap: 5, // mm
-    columnRule: "none", // none | solid | dashed | dotted
     isSeparatePage: true,
-    indentSpacingValue: 4,
   },
   typography: {
     fontFamily: "Libre Baskerville",
@@ -168,18 +181,62 @@ export const DEFAULT_FORMAT_SETTINGS = {
     },
   },
   headersFooters: {
-    headerEnabled: true,
-    headerFont: "Inter",
-    headerSize: 9,
-    headerLeft: "",
-    headerCenter: "",
-    headerRight: "{title}",
-    footerEnabled: true,
-    footerFont: "Inter",
-    footerSize: 9,
-    footerLeft: "",
-    footerCenter: "{page}",
-    footerRight: "",
+    enabled: true,
+    fontFamily: "Inter",
+    fontSize: 9,
+    verticalAlign: "middle", // top | middle | bottom
+    // Top boxes
+    topLeftCorner: "",
+    topLeftCornerHAlign: "inherit",
+    topLeftCornerVAlign: "inherit",
+    topLeft: "",
+    topLeftHAlign: "inherit",
+    topLeftVAlign: "inherit",
+    topCenter: "",
+    topCenterHAlign: "inherit",
+    topCenterVAlign: "inherit",
+    topRight: "",
+    topRightHAlign: "inherit",
+    topRightVAlign: "inherit",
+    topRightCorner: "",
+    topRightCornerHAlign: "inherit",
+    topRightCornerVAlign: "inherit",
+    // Bottom boxes
+    bottomLeftCorner: "",
+    bottomLeftCornerHAlign: "inherit",
+    bottomLeftCornerVAlign: "inherit",
+    bottomLeft: "",
+    bottomLeftHAlign: "inherit",
+    bottomLeftVAlign: "inherit",
+    bottomCenter: "{page}",
+    bottomCenterHAlign: "inherit",
+    bottomCenterVAlign: "inherit",
+    bottomRight: "",
+    bottomRightHAlign: "inherit",
+    bottomRightVAlign: "inherit",
+    bottomRightCorner: "",
+    bottomRightCornerHAlign: "inherit",
+    bottomRightCornerVAlign: "inherit",
+    // Left boxes
+    leftTop: "",
+    leftTopHAlign: "inherit",
+    leftTopVAlign: "inherit",
+    leftMiddle: "",
+    leftMiddleHAlign: "inherit",
+    leftMiddleVAlign: "inherit",
+    leftBottom: "",
+    leftBottomHAlign: "inherit",
+    leftBottomVAlign: "inherit",
+    // Right boxes
+    rightTop: "",
+    rightTopHAlign: "inherit",
+    rightTopVAlign: "inherit",
+    rightMiddle: "",
+    rightMiddleHAlign: "inherit",
+    rightMiddleVAlign: "inherit",
+    rightBottom: "",
+    rightBottomHAlign: "inherit",
+    rightBottomVAlign: "inherit",
     differentOddEven: false,
     differentFirstPage: false,
     pageNumberFormat: "arabic",
@@ -286,6 +343,8 @@ export const DEFAULT_FORMAT_SETTINGS = {
     },
     description: "",
     rights: "",
+    contactInfo: "",
+    wordCount: 0,
     visual: {
       coverImage: "",
       pageProgressionDirection: "default",
