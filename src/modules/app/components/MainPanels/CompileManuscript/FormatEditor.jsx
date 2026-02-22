@@ -713,7 +713,7 @@ const FormatEditor = ({ manuscriptData, libraryId }) => {
   }, [flatItems, selectedItemId]);
 
   return (
-    <div className="w-full h-full flex flex-col px-1">
+    <div className="w-full h-full flex flex-col px-1 ">
       <div className="text-libraryDirectoryBookNodeFontSize px-1 py-1 text-appLayoutText flex items-center gap-2">
         Presets:
       </div>
