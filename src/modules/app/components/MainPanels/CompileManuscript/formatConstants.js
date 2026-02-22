@@ -159,14 +159,9 @@ export const DEFAULT_FORMAT_SETTINGS = {
     hyphenation: true,
     firstLineIndent: true,
     firstLineIndentValue: 20, // pt
+    indentWidthValue: 20, // pt (general indent)
     pSpaceBefore: 0, // pt
     pSpaceAfter: 0, // pt
-    blockQuote: {
-      indentLeft: 30,
-      indentRight: 30,
-      fontStyle: "italic",
-      borderLeft: { style: "none", width: 0, color: "#000000" },
-    },
     list: {
       listIndent: 20,
       orderedListStyle: "decimal",
@@ -213,6 +208,8 @@ export const DEFAULT_FORMAT_SETTINGS = {
     fontFamily: "inherit",
     fontSize: 24,
     lineHeight: 1.2,
+    titleAlignment: "center",
+    subtitleAlignment: "center",
     spacingBefore: 0,
     spacingAfter: 30,
   },
@@ -228,6 +225,8 @@ export const DEFAULT_FORMAT_SETTINGS = {
     fontFamily: "inherit",
     fontSize: 18,
     lineHeight: 1.2,
+    titleAlignment: "center",
+    subtitleAlignment: "center",
     spacingBefore: 0,
     spacingAfter: 20,
   },

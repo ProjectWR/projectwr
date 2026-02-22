@@ -210,17 +210,6 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       #FormatPreviewContent ul { list-style-type: disc;                                     margin-left: ${resolve("typography.list.listIndent")}pt; }
       #FormatPreviewContent ol { list-style-type: ${resolve("typography.list.orderedListStyle")}; margin-left: ${resolve("typography.list.listIndent")}pt; }
 
-      /* Blockquotes */
-      #FormatPreviewContent blockquote {
-        margin-left:       ${resolve("typography.blockQuote.indentLeft")}pt;
-        margin-right:      ${resolve("typography.blockQuote.indentRight")}pt;
-        font-style:        ${resolve("typography.blockQuote.fontStyle")};
-        border-left-style: ${resolve("typography.blockQuote.borderLeft.style")};
-        border-left-width: ${resolve("typography.blockQuote.borderLeft.width")}px;
-        border-left-color: ${resolve("typography.blockQuote.borderLeft.color")};
-        padding-left: 10px;
-      }
-
       /* Media safety */
       #FormatPreviewContent img, #FormatPreviewContent video, #FormatPreviewContent svg {
         max-width: 100%;
@@ -278,11 +267,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       const pSpaceBefore = resolve("typography.pSpaceBefore", cat, id);
       const pSpaceAfter = resolve("typography.pSpaceAfter", cat, id);
       const firstLineIndent = resolve("typography.firstLineIndent", cat, id);
-      const firstLineIndentValue = resolve(
-        "typography.firstLineIndentValue",
-        cat,
-        id,
-      );
+      const indentWidthValue = resolve("typography.indentWidthValue", cat, id);
 
       // ── Advanced (border / background) ──────────────────────────────────────
       const borderStyle = resolve("advanced.borderStyle", cat, id);
@@ -298,6 +283,12 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       const titleFontFamily = resolve(`${titleSection}.fontFamily`, cat, id);
       const titleFontSize = resolve(`${titleSection}.fontSize`, cat, id);
       const titleLineHeight = resolve(`${titleSection}.lineHeight`, cat, id);
+      const titleAlignment = resolve(`${titleSection}.titleAlignment`, cat, id);
+      const subtitleAlignment = resolve(
+        `${titleSection}.subtitleAlignment`,
+        cat,
+        id,
+      );
       const titleSpacingBefore = resolve(
         `${titleSection}.spacingBefore`,
         cat,
@@ -351,27 +342,31 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         [data-id="${id}"] p {
           margin-top:    ${pSpaceBefore}pt;
           margin-bottom: ${pSpaceAfter}pt;
-          text-indent:   ${firstLineIndent ? `${firstLineIndentValue}pt` : "0"};
+          text-indent:   ${firstLineIndent ? `${indentWidthValue}pt` : "0"};
+        }
+
+        [data-id="${id}"] p:first-of-type {
+          text-indent: 0 !important;
         }
 
         [data-id="${id}"] .manuscript-title-block {
           margin-top:    ${titleSpacingBefore}pt;
           margin-bottom: ${titleSpacingAfter}pt;
-          text-align:    center;
         }
 
         [data-id="${id}"] .manuscript-title {
           font-family:  ${resolvedTitleFont};
           font-size:    ${titleFontSize}pt !important;
           line-height:  ${titleLineHeight};
+          text-align:   ${titleAlignment} !important;
           font-weight:  bold;
-
         }
 
         [data-id="${id}"] .manuscript-subtitle {
           font-family: ${resolvedSubtitleFont};
           font-size:   ${subtitleFontSize}pt !important;
           line-height: ${subtitleLineHeight};
+          text-align:  ${subtitleAlignment} !important;
           font-style:  ${subtitleItalic ? "italic" : "normal"};
           margin-top:  0.5em;
         }
