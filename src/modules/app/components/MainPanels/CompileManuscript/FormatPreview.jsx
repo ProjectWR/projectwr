@@ -173,8 +173,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       #FormatPreviewContent [data-category="title_page"] {
         text-align: ${resolve("specialElements.titlePageCentered") ? "center" : "inherit"};
         font-size:  ${resolve("specialElements.titlePageFontSize")}pt;
-        ${resolve("layout.breakBefore", "title_page") !== "auto" || resolve("layout.breakAfter", "title_page") !== "auto" ? `margin-top: ${resolve("specialElements.titlePageSpacing")}pt;` : ""}
       }
+        
       #FormatPreviewContent [data-category="part_divider"] {
         text-align: ${resolve("specialElements.partDividerCentered") ? "center" : "inherit"};
         font-size:  ${resolve("specialElements.partDividerFontSize")}pt;
@@ -519,8 +519,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           border-radius:    ${borderRadius}px;
           background-color: ${bgColor};
           padding:          ${padding}pt;
-          break-before:     ${index === firstPaperIndex ? "avoid" : breakBefore} !important;
-          break-after:      ${breakAfter} !important;
+          break-before:     avoid;
+          break-after:      avoid;
           page:             item-${id};
         }
 
