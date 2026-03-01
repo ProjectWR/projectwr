@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { load } from "@tauri-apps/plugin-store";
 import FormatEditor from "./FormatEditor";
 import FormatPreview from "./FormatPreview";
+import DocxPreview from "./DocxPreview";
 import {
   Tabs,
   TabsList,
@@ -124,6 +125,11 @@ const FormatView = ({ manuscriptData, libraryId }) => {
             )}
 
             {/* insert docx preview here */}
+            <DocxPreview
+              key={refreshKey}
+              manuscriptData={manuscriptData}
+              libraryId={libraryId}
+            />
           </TabsContent>
 
           <TabsContent

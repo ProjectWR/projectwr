@@ -422,6 +422,58 @@ class DataManagerSubdocs {
    *
    * @param {YTree} ytree
    * @param {string} paperId
+   *
+   * @returns {Object} JSON object representing ProseMirror document
+   */
+  getJsonFromPaper(ytree, paperId) {
+    const paperMap = ytree.getNodeValueFromKey(paperId);
+
+    const editor = new Editor({
+      content: "<p>Getting JSON from paper</p>",
+      extensions: [
+        Collaboration.configure({
+          fragment: paperMap.get("paper_xml"),
+        }),
+        Document,
+        Paragraph,
+        Text,
+        Strike,
+        Bold,
+        Italic,
+        Underline,
+        Subscript,
+        Superscript,
+        TextStyle.configure({ mergeNestedSpanStyles: true }),
+        Highlight.configure({ multicolor: true }),
+        Blockquote,
+        ListItem,
+        BulletList,
+        OrderedList,
+        HardBreak,
+        Heading.configure({
+          levels: [1, 2, 3, 4, 5],
+        }),
+        Indent.configure({
+          types: ["listItem", "paragraph"],
+          minLevel: 0,
+          maxLevel: 4,
+        }),
+        HorizontalRule,
+        Image,
+        Typography,
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+      ],
+    });
+
+    return editor.getJSON();
+  }
+
+  /**
+   *
+   * @param {YTree} ytree
+   * @param {string} paperId
    * @param {string} html
    *
    * @returns {string}
@@ -484,11 +536,11 @@ class DataManagerSubdocs {
               label =
                 libraryId === id
                   ? dataManagerSubdocs
-                    .getLibrary(libraryId)
-                    ?.getMap("library_props")
-                    ?.toJSON().item_properties.item_title
+                      .getLibrary(libraryId)
+                      ?.getMap("library_props")
+                      ?.toJSON().item_properties.item_title
                   : libraryYTree.getNodeValueFromKey(id)?.toJSON()
-                    ?.item_properties?.item_title;
+                      ?.item_properties?.item_title;
             } catch {
               label = "Error fetching link label";
             }
@@ -524,11 +576,11 @@ class DataManagerSubdocs {
               label =
                 libraryId === id
                   ? dataManagerSubdocs
-                    .getLibrary(libraryId)
-                    ?.getMap("library_props")
-                    ?.toJSON().item_properties.item_title
+                      .getLibrary(libraryId)
+                      ?.getMap("library_props")
+                      ?.toJSON().item_properties.item_title
                   : libraryYTree.getNodeValueFromKey(id)?.toJSON()
-                    ?.item_properties?.item_title;
+                      ?.item_properties?.item_title;
             } catch {
               label = "Error rendering label";
             }
