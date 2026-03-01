@@ -3,6 +3,12 @@ import PropTypes from "prop-types";
 import { load } from "@tauri-apps/plugin-store";
 import FormatEditor from "./FormatEditor";
 import FormatPreview from "./FormatPreview";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../../LayoutComponents/Tabs";
 
 const FormatView = ({ manuscriptData, libraryId }) => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -34,7 +40,7 @@ const FormatView = ({ manuscriptData, libraryId }) => {
           debounceTimerRef.current = setTimeout(() => {
             console.log("Debounce timeout complete. Remounting Preview...");
             setRefreshKey((prev) => prev + 1);
-            setRefreshing(false)
+            setRefreshing(false);
             debounceTimerRef.current = null;
           }, 5000);
         });
@@ -70,22 +76,72 @@ const FormatView = ({ manuscriptData, libraryId }) => {
 
       <div
         id="FormatViewPreviewContainer"
-        className="h-full grow min-w-0 basis-0 bg-neutral-800 rounded-lg overflow-hidden relative"
+        className="h-full flex flex-col grow min-w-0 basis-0 rounded-lg overflow-hidden relative"
       >
+        <Tabs
+          defaultValue="pdf"
+          className="w-full flex grow gap-0 mt-px flex-col overflow-hidden"
+        >
+          <TabsList className="h-fit flex gap-1">
+            <TabsTrigger value="pdf">PDF</TabsTrigger>
+            <TabsTrigger value="docx">DOCX</TabsTrigger>
+            <TabsTrigger value="epub">epub</TabsTrigger>
+          </TabsList>
 
-        {refreshing && (
-          <div id="PreviewLoadingIndicator" className="absolute flex items-center justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30">
-            <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-          </div>
-        )}
+          <div className="h-px w-full bg-appLayoutBorder"></div>
 
-        <FormatPreview
-          key={refreshKey}
-          manuscriptData={manuscriptData}
-          libraryId={libraryId}
-        />
+          <TabsContent
+            value="pdf"
+            className="grow min-h-0 flex flex-col gap-1 mt-2"
+          >
+            {refreshing && (
+              <div
+                id="PreviewLoadingIndicator"
+                className="absolute flex items-center bg-neutral-800   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30"
+              >
+                <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+              </div>
+            )}
 
+            <FormatPreview
+              key={refreshKey}
+              manuscriptData={manuscriptData}
+              libraryId={libraryId}
+            />
+          </TabsContent>
 
+          <TabsContent
+            value="docx"
+            className="grow min-h-0 flex flex-col gap-1 mt-2"
+          >
+            {refreshing && (
+              <div
+                id="PreviewLoadingIndicator"
+                className="absolute flex items-center bg-neutral-800   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30"
+              >
+                <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+              </div>
+            )}
+
+            {/* insert docx preview here */}
+          </TabsContent>
+
+          <TabsContent
+            value="epub"
+            className="grow min-h-0 flex flex-col gap-1 mt-2"
+          >
+            {refreshing && (
+              <div
+                id="PreviewLoadingIndicator"
+                className="absolute flex items-center bg-neutral-800   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30"
+              >
+                <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+              </div>
+            )}
+
+            {/* insert epub preview here */}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

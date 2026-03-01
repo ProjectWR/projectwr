@@ -807,7 +807,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
     <div
       id="FormatPreviewContent"
       ref={ref}
-      className="w-full h-full relative overflow-y-auto bg-gray-100 flex flex-col items-center p-4 overflow-x-hidden"
+      className="w-full grow basis-0 rounded-lg relative overflow-y-auto bg-gray-100 flex flex-col items-center p-4 overflow-x-hidden"
     >
       {loading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50">
