@@ -119,6 +119,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
     const formattedWordCount100 = new Intl.NumberFormat().format(
       Math.round(wordCountToDisplay / 100) * 100,
     );
+    const contactInfo = resolve("metadata.contactInfo") || "";
 
     // Base Global Style
     css += `
@@ -173,7 +174,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       #FormatPreviewContent [data-category="title_page"] {
         text-align: ${resolve("specialElements.titlePageCentered") ? "center" : "inherit"};
         font-size:  ${resolve("specialElements.titlePageFontSize")}pt;
-        ${resolve("layout.breakBefore", "title_page") !== "auto" || resolve("layout.breakAfter", "title_page") !== "auto" ? `margin-top: ${resolve("specialElements.titlePageSpacing")}pt;` : ""}
+        ${resolve("layout.isSeparatePage", "title_page") ? `margin-top: ${resolve("specialElements.titlePageSpacing")}pt;` : ""}
       }
       #FormatPreviewContent [data-category="part_divider"] {
         text-align: ${resolve("specialElements.partDividerCentered") ? "center" : "inherit"};
@@ -183,11 +184,6 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         font-style: ${resolve("specialElements.epigraphItalic") ? "italic" : "normal"};
         text-align: ${resolve("specialElements.epigraphAlignment")};
         font-size:  ${resolve("specialElements.epigraphFontSize")}pt;
-      }
-
-      .running-contact {
-        position: running(contactRunning);
-        white-space: pre-wrap;
       }
     `;
 
@@ -201,33 +197,29 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
 
       // Item Headers & Footers
       const hf = {
-        enabled: resolveItem("marginHeaderFooters.enabled") ?? true,
-        font: resolveItem("marginHeaderFooters.fontFamily") || "Inter",
-        headerSize: resolveItem("marginHeaderFooters.headerSize") || 9,
-        headerLineHeight:
-          resolveItem("marginHeaderFooters.headerLineHeight") || 1.2,
-        footerSize: resolveItem("marginHeaderFooters.footerSize") || 9,
-        footerLineHeight:
-          resolveItem("marginHeaderFooters.footerLineHeight") || 1.2,
-        vAlign: resolveItem("marginHeaderFooters.verticalAlign") || "middle",
-        topLeftCorner: resolveItem("marginHeaderFooters.topLeftCorner"),
-        topLeft: resolveItem("marginHeaderFooters.topLeft"),
-        topCenter: resolveItem("marginHeaderFooters.topCenter"),
-        topRight: resolveItem("marginHeaderFooters.topRight"),
-        topRightCorner: resolveItem("marginHeaderFooters.topRightCorner"),
-        bottomLeftCorner: resolveItem("marginHeaderFooters.bottomLeftCorner"),
-        bottomLeft: resolveItem("marginHeaderFooters.bottomLeft"),
-        bottomCenter: resolveItem("marginHeaderFooters.bottomCenter"),
-        bottomRight: resolveItem("marginHeaderFooters.bottomRight"),
-        bottomRightCorner: resolveItem("marginHeaderFooters.bottomRightCorner"),
-        leftTop: resolveItem("marginHeaderFooters.leftTop"),
-        leftMiddle: resolveItem("marginHeaderFooters.leftMiddle"),
-        leftBottom: resolveItem("marginHeaderFooters.leftBottom"),
-        rightTop: resolveItem("marginHeaderFooters.rightTop"),
-        rightMiddle: resolveItem("marginHeaderFooters.rightMiddle"),
-        rightBottom: resolveItem("marginHeaderFooters.rightBottom"),
+        enabled: resolveItem("headersFooters.enabled") ?? true,
+        font: resolveItem("headersFooters.fontFamily") || "Inter",
+        headerSize: resolveItem("headersFooters.headerSize") || 9,
+        footerSize: resolveItem("headersFooters.footerSize") || 9,
+        vAlign: resolveItem("headersFooters.verticalAlign") || "middle",
+        topLeftCorner: resolveItem("headersFooters.topLeftCorner"),
+        topLeft: resolveItem("headersFooters.topLeft"),
+        topCenter: resolveItem("headersFooters.topCenter"),
+        topRight: resolveItem("headersFooters.topRight"),
+        topRightCorner: resolveItem("headersFooters.topRightCorner"),
+        bottomLeftCorner: resolveItem("headersFooters.bottomLeftCorner"),
+        bottomLeft: resolveItem("headersFooters.bottomLeft"),
+        bottomCenter: resolveItem("headersFooters.bottomCenter"),
+        bottomRight: resolveItem("headersFooters.bottomRight"),
+        bottomRightCorner: resolveItem("headersFooters.bottomRightCorner"),
+        leftTop: resolveItem("headersFooters.leftTop"),
+        leftMiddle: resolveItem("headersFooters.leftMiddle"),
+        leftBottom: resolveItem("headersFooters.leftBottom"),
+        rightTop: resolveItem("headersFooters.rightTop"),
+        rightMiddle: resolveItem("headersFooters.rightMiddle"),
+        rightBottom: resolveItem("headersFooters.rightBottom"),
         pageNumberFormat:
-          resolveItem("marginHeaderFooters.pageNumberFormat") || "decimal",
+          resolveItem("headersFooters.pageNumberFormat") || "decimal",
       };
 
       const msTitle = resolveItem("metadata.title.main") || "Untitled";
@@ -249,7 +241,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
               return `"${msAuthor.replace(/"/g, '\\"')}"`;
             if (part === "{chapterTitle}") return "string(chapterTitle)";
             if (part === "{date}") return `"${msDate.replace(/"/g, '\\"')}"`;
-            if (part === "{contact}") return "element(contactRunning)";
+            if (part === "{contact}")
+              return `"${contactInfo.replace(/\n/g, "\\A ")}"`;
             if (part === "{words}")
               return `"about ${formattedWordCount} words"`;
             if (part === "{words100}")
@@ -333,6 +326,12 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
             v: "top",
             key: "leftTop",
           },
+          "@left-middle": {
+            content: hf.leftMiddle,
+            h: "left",
+            v: "middle",
+            key: "leftMiddle",
+          },
           "@left-bottom": {
             content: hf.leftBottom,
             h: "left",
@@ -345,6 +344,12 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
             v: "top",
             key: "rightTop",
           },
+          "@right-middle": {
+            content: hf.rightMiddle,
+            h: "right",
+            v: "middle",
+            key: "rightMiddle",
+          },
           "@right-bottom": {
             content: hf.rightBottom,
             h: "right",
@@ -356,67 +361,44 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         let rules = "";
         Object.entries(boxMap).forEach(([selector, config]) => {
           if (config.content) {
-            const hAlign = resolveItem(
-              `marginHeaderFooters.${config.key}HAlign`,
+            const hAlign = resolveItem(`headersFooters.${config.key}HAlign`);
+            const vAlign = resolveItem(`headersFooters.${config.key}VAlign`);
+            const paddingTop = resolveItem(
+              `headersFooters.${config.key}PaddingTop`,
             );
-            const vAlign = resolveItem(
-              `marginHeaderFooters.${config.key}VAlign`,
+            const paddingBottom = resolveItem(
+              `headersFooters.${config.key}PaddingBottom`,
             );
+            const paddingLeft = resolveItem(
+              `headersFooters.${config.key}PaddingLeft`,
+            );
+            const paddingRight = resolveItem(
+              `headersFooters.${config.key}PaddingRight`,
+            );
+
             const finalH = hAlign === "inherit" || !hAlign ? config.h : hAlign;
             const finalV = vAlign === "inherit" || !vAlign ? hf.vAlign : vAlign;
 
-            const isHeader =
-              selector.includes("top") ||
-              (selector.includes("corner") && selector.includes("top")) ||
-              selector.includes("left-top") ||
-              selector.includes("right-top");
-            const isFooter =
-              selector.includes("bottom") ||
-              (selector.includes("corner") && selector.includes("bottom")) ||
-              selector.includes("left-bottom") ||
-              selector.includes("right-bottom");
+            const finalSize = selector.includes("bottom")
+              ? hf.footerSize
+              : hf.headerSize;
 
-            // Conditional rendering logic:
-            // - if break before then display header
-            // - if break after then display footer
-            // (Always display in global scope)
-            const hasBreakBefore =
-              breakBefore && breakBefore !== "auto" && breakBefore !== "avoid";
-            const hasBreakAfter =
-              breakAfter && breakAfter !== "auto" && breakAfter !== "avoid";
-
-            if (category !== "global") {
-              if (isHeader && !hasBreakBefore) return;
-              if (isFooter && !hasBreakAfter) return;
-            }
-
-            const finalSize = isFooter ? hf.footerSize : hf.headerSize;
-            const finalLH = isFooter
-              ? hf.footerLineHeight
-              : hf.headerLineHeight;
-
-            const pT =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingTop`) || 0;
-            const pB =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingBottom`) ||
-              0;
-            const pL =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingLeft`) || 0;
-            const pR =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingRight`) || 0;
+            let paddingRule = "";
+            if (paddingTop) paddingRule += `padding-top: ${paddingTop}pt; `;
+            if (paddingBottom)
+              paddingRule += `padding-bottom: ${paddingBottom}pt; `;
+            if (paddingLeft) paddingRule += `padding-left: ${paddingLeft}pt; `;
+            if (paddingRight)
+              paddingRule += `padding-right: ${paddingRight}pt; `;
 
             rules += `
             ${selector} {
               content: ${processContent(config.content)};
               font-family: "${hf.font}";
               font-size: ${finalSize}pt;
-              line-height: ${finalLH};
-              padding-top: ${pT}mm;
-              padding-bottom: ${pB}mm;
-              padding-left: ${pL}mm;
-              padding-right: ${pR}mm;
               vertical-align: ${finalV};
               text-align: ${finalH};
+              ${paddingRule}
               white-space: pre-wrap;
             }
           `;
@@ -494,8 +476,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
       const resolvedSubFont =
         subFont === "inherit" || !subFont ? fontFamily : subFont;
 
-      const breakBefore = resolveItem("layout.breakBefore") || "auto";
-      const breakAfter = resolveItem("layout.breakAfter") || "auto";
+      const isSepPage = resolveItem("layout.isSeparatePage") ?? true;
 
       css += `
         @page item-${id} {
@@ -519,9 +500,8 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
           border-radius:    ${borderRadius}px;
           background-color: ${bgColor};
           padding:          ${padding}pt;
-          break-before:     ${index === firstPaperIndex ? "avoid" : breakBefore} !important;
-          break-after:      ${breakAfter} !important;
-          page:             item-${id};
+          break-before:     ${index === firstPaperIndex ? "avoid" : isSepPage ? "page" : "auto"} !important;
+          ${isSepPage ? `break-after: page !important; page: item-${id};` : ""}
         }
 
         [data-id="${id}"] p {
@@ -594,14 +574,12 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         const bookTitle = metadata.title?.text || "";
         const bookAuthor = metadata.creator?.text || "";
         const pubDate = metadata.publication?.date || "";
-        const contactInfo = metadata.contactInfo || "";
 
         const metadataStoreHtml = `
           <div class="metadata-store" style="visibility: hidden; height: 0; overflow: hidden; position: absolute;">
             <div class="metadata-title">${bookTitle}</div>
             <div class="metadata-author">${bookAuthor}</div>
             <div class="metadata-date">${pubDate}</div>
-            <div class="running-contact">${contactInfo.replace(/\n/g, "<br>")}</div>
           </div>
         `;
 

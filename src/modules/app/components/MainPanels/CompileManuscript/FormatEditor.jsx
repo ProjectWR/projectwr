@@ -257,7 +257,8 @@ FormatCategory.propTypes = {
 };
 
 const LABEL_OVERRIDES = {
-  "layout.isSeparatePage": "Is a Separate Page",
+  "layout.breakBefore": "Break Before",
+  "layout.breakAfter": "Break After",
   "layout.pageSize": "Page Size",
   "layout.orientation": "Orientation",
   "layout.customWidth": "Custom Width (mm)",
@@ -278,9 +279,11 @@ const LABEL_OVERRIDES = {
   "typography.pSpaceBefore": "Paragraph Spacing Before (pt)",
   "typography.pSpaceAfter": "Paragraph Spacing After (pt)",
   "typography.list.listIndent": "List Indent (pt)",
-  "headersFooters.headerSize": "Header Font Size (pt)",
-  "headersFooters.footerSize": "Footer Font Size (pt)",
-  "headersFooters.startPageNumber": "Start Page Number",
+  "marginHeaderFooters.headerSize": "Header Font Size (pt)",
+  "marginHeaderFooters.headerLineHeight": "Header Line Height",
+  "marginHeaderFooters.footerSize": "Footer Font Size (pt)",
+  "marginHeaderFooters.footerLineHeight": "Footer Line Height",
+  "marginHeaderFooters.startPageNumber": "Start Page Number",
   "advanced.borderWidth": "Border Width (px)",
   "advanced.borderRadius": "Border Radius (px)",
   "advanced.padding": "Padding (pt)",
@@ -318,26 +321,23 @@ const LABEL_OVERRIDES = {
   "normalTitleFormat.subtitleFontFamily": "Subtitle Font Family",
   "normalTitleFormat.subtitleFontSize": "Subtitle Font Size (pt)",
   "normalTitleFormat.subtitleLineHeight": "Subtitle Line Height",
-  "headersFooters.enabled": "Headers & Footers Enabled",
-  "headersFooters.fontFamily": "Header/Footer Font",
-  "headersFooters.fontSize": "Header/Footer Size (pt)",
-  "headersFooters.verticalAlign": "Vertical Alignment",
-  "headersFooters.topLeftCorner": "Top Left Corner",
-  "headersFooters.topLeft": "Top Left",
-  "headersFooters.topCenter": "Top Center",
-  "headersFooters.topRight": "Top Right",
-  "headersFooters.topRightCorner": "Top Right Corner",
-  "headersFooters.bottomLeftCorner": "Bottom Left Corner",
-  "headersFooters.bottomLeft": "Bottom Left",
-  "headersFooters.bottomCenter": "Bottom Center",
-  "headersFooters.bottomRight": "Bottom Right",
-  "headersFooters.bottomRightCorner": "Bottom Right Corner",
-  "headersFooters.leftTop": "Left Side (Top)",
-  "headersFooters.leftMiddle": "Left Side (Middle)",
-  "headersFooters.leftBottom": "Left Side (Bottom)",
-  "headersFooters.rightTop": "Right Side (Top)",
-  "headersFooters.rightMiddle": "Right Side (Middle)",
-  "headersFooters.rightBottom": "Right Side (Bottom)",
+  "marginHeaderFooters.enabled": "Headers & Footers Enabled",
+  "marginHeaderFooters.fontFamily": "Header/Footer Font",
+  "marginHeaderFooters.verticalAlign": "Vertical Alignment",
+  "marginHeaderFooters.topLeftCorner": "Top Left Corner",
+  "marginHeaderFooters.topLeft": "Top Left",
+  "marginHeaderFooters.topCenter": "Top Center",
+  "marginHeaderFooters.topRight": "Top Right",
+  "marginHeaderFooters.topRightCorner": "Top Right Corner",
+  "marginHeaderFooters.bottomLeftCorner": "Bottom Left Corner",
+  "marginHeaderFooters.bottomLeft": "Bottom Left",
+  "marginHeaderFooters.bottomCenter": "Bottom Center",
+  "marginHeaderFooters.bottomRight": "Bottom Right",
+  "marginHeaderFooters.bottomRightCorner": "Bottom Right Corner",
+  "marginHeaderFooters.leftTop": "Left Side (Top)",
+  "marginHeaderFooters.leftBottom": "Left Side (Bottom)",
+  "marginHeaderFooters.rightTop": "Right Side (Top)",
+  "marginHeaderFooters.rightBottom": "Right Side (Bottom)",
   "metadata.contactInfo": "Contact Information",
   "metadata.wordCount": "Manually Override Word Count",
   "specialElements.titlePageFontSize": "Title Page Font Size (pt)",
@@ -390,16 +390,28 @@ const SettingsList = ({
       if (pageSize !== "custom") return false;
     }
 
-    // 2. Deactivation logic based on isSeparatePage
-    const isSeparatePage = getResolvedValue(
+    // 2. Deactivation logic based on break settings
+    const breakBefore = getResolvedValue(
       scope,
       id,
       itemCategory,
       "layout",
-      "isSeparatePage",
+      "breakBefore",
+    ).value;
+    const breakAfter = getResolvedValue(
+      scope,
+      id,
+      itemCategory,
+      "layout",
+      "breakAfter",
     ).value;
 
-    if (scope !== "global" && !isSeparatePage) {
+    const hasBreakBefore =
+      breakBefore && breakBefore !== "auto" && breakBefore !== "avoid";
+    const hasBreakAfter =
+      breakAfter && breakAfter !== "auto" && breakAfter !== "avoid";
+
+    if (scope !== "global") {
       const hiddenNonPageFields = [
         "layout.marginGutter",
         "layout.marginTop",
@@ -408,12 +420,60 @@ const SettingsList = ({
         "layout.marginRight",
       ];
 
+      // Hide layout margins if no breaks are set (not a separate page/start of section)
       if (
-        section === "headersFooters" ||
-        hiddenNonPageFields.includes(`${section}.${key}`) ||
-        hiddenNonPageFields.includes(key)
+        !hasBreakBefore &&
+        !hasBreakAfter &&
+        (hiddenNonPageFields.includes(`${section}.${key}`) ||
+          hiddenNonPageFields.includes(key))
       ) {
         return false;
+      }
+
+      // Margin Header/Footer visibility
+      if (section === "marginHeaderFooters") {
+        if (!hasBreakBefore && !hasBreakAfter) return false;
+
+        const headerFields = [
+          "headerSize",
+          "headerLineHeight",
+          "topLeftCorner",
+          "topLeft",
+          "topCenter",
+          "topRight",
+          "topRightCorner",
+          "leftTop",
+          "rightTop",
+        ];
+        const footerFields = [
+          "footerSize",
+          "footerLineHeight",
+          "bottomLeftCorner",
+          "bottomLeft",
+          "bottomCenter",
+          "bottomRight",
+          "bottomRightCorner",
+          "leftBottom",
+          "rightBottom",
+        ];
+
+        const isHeaderField = headerFields.some(
+          (f) =>
+            key === f ||
+            key.startsWith(`${f}Padding`) ||
+            key === `${f}HAlign` ||
+            key === `${f}VAlign`,
+        );
+        const isFooterField = footerFields.some(
+          (f) =>
+            key === f ||
+            key.startsWith(`${f}Padding`) ||
+            key === `${f}HAlign` ||
+            key === `${f}VAlign`,
+        );
+
+        if (isHeaderField && !hasBreakBefore) return false;
+        if (isFooterField && !hasBreakAfter) return false;
       }
     }
 
@@ -520,10 +580,12 @@ const SettingsList = ({
         return false;
     }
 
-    // 7. Hide per-field alignments from the main loop (they are rendered inline)
+    // 7. Hide per-field alignments and paddings from the main loop (they are rendered inline)
     if (
-      section === "headersFooters" &&
-      (key.endsWith("HAlign") || key.endsWith("VAlign"))
+      section === "marginHeaderFooters" &&
+      (key.endsWith("HAlign") ||
+        key.endsWith("VAlign") ||
+        key.includes("Padding"))
     ) {
       return false;
     }
@@ -619,15 +681,14 @@ const SettingsList = ({
         { value: "middle", label: "Middle" },
         { value: "bottom", label: "Bottom" },
       ],
-      "headersFooters.fontFamily": FONT_FAMILIES,
-      "headersFooters.pageNumberFormat": NUMBER_FORMATS,
-      "headersFooters.headerLeft": HEADER_FOOTER_VARIABLES,
-      "headersFooters.headerCenter": HEADER_FOOTER_VARIABLES,
-      "headersFooters.headerRight": HEADER_FOOTER_VARIABLES,
-      "headersFooters.footerLeft": HEADER_FOOTER_VARIABLES,
-      "headersFooters.footerCenter": HEADER_FOOTER_VARIABLES,
-      "headersFooters.footerRight": HEADER_FOOTER_VARIABLES,
+      "marginHeaderFooters.fontFamily": FONT_FAMILIES,
+      "marginHeaderFooters.pageNumberFormat": NUMBER_FORMATS,
+      "marginHeaderFooters.headerLeft": HEADER_FOOTER_VARIABLES,
+      "marginHeaderFooters.headerCenter": HEADER_FOOTER_VARIABLES,
+      "marginHeaderFooters.footerRight": HEADER_FOOTER_VARIABLES,
       "sectionBreaks.pageBreakAfter": PAGE_BREAK_OPTIONS,
+      "layout.breakBefore": PAGE_BREAK_OPTIONS,
+      "layout.breakAfter": PAGE_BREAK_OPTIONS,
       "titleFormat.numberStyle": NUMBER_STYLE_OPTIONS,
       "advanced.footnotes.style": [
         { value: "superscript", label: "Superscript" },
@@ -728,14 +789,12 @@ const SettingsList = ({
       "bottomRight",
       "bottomRightCorner",
       "leftTop",
-      "leftMiddle",
       "leftBottom",
       "rightTop",
-      "rightMiddle",
       "rightBottom",
     ];
 
-    if (section === "headersFooters" && marginBoxFields.includes(key)) {
+    if (section === "marginHeaderFooters" && marginBoxFields.includes(key)) {
       return (
         <div
           key={key}
@@ -799,6 +858,40 @@ const SettingsList = ({
               />
             </div>
           </div>
+          <div className="grid grid-cols-4 gap-2 mt-2">
+            {[
+              { k: "PaddingTop", l: "Pad T" },
+              { k: "PaddingBottom", l: "Pad B" },
+              { k: "PaddingLeft", l: "Pad L" },
+              { k: "PaddingRight", l: "Pad R" },
+            ].map((p) => (
+              <div key={p.k} className="flex flex-col gap-0.5">
+                <span className="text-[10px] text-appLayoutTextMuted">
+                  {p.l}
+                </span>
+                <input
+                  type="number"
+                  value={
+                    getResolvedValue(
+                      scope,
+                      id,
+                      itemCategory,
+                      section,
+                      `${key}${p.k}`,
+                    ).value || 0
+                  }
+                  onChange={(e) =>
+                    handleSettingChange(
+                      section,
+                      `${key}${p.k}`,
+                      Number(e.target.value),
+                    )
+                  }
+                  className="w-full bg-appLayoutBg px-1 py-0.5 rounded border border-appLayoutBorder text-[10px] focus:border-appLayoutAccent outline-none"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
@@ -841,6 +934,7 @@ const SettingsList = ({
         </div>
         <input
           type={typeof displayValue === "number" ? "number" : "text"}
+          step={typeof displayValue === "number" ? "any" : undefined}
           value={displayValue || ""}
           disabled={isFieldDisabled}
           onChange={(e) =>
