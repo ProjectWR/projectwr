@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useResizeObserver } from "@mantine/hooks";
 import PropTypes from "prop-types";
 import {
   Document,
@@ -22,6 +23,11 @@ import { PAGE_SIZE_PRESETS } from "./formatConstants";
  */
 const DocxPreview = ({ manuscriptData, libraryId }) => {
   const { getResolvedValue, loading: formatLoading } = useFormatInfo(libraryId);
+
+  // Resize observer for scaling
+  const [ref, rect] = useResizeObserver();
+  const [scale, setScale] = useState(1);
+  const [docxReady, setDocxReady] = useState(false);
 
   const containerRef = useRef(null);
 
@@ -424,7 +430,7 @@ const DocxPreview = ({ manuscriptData, libraryId }) => {
 
           await docxPreview.renderAsync(blob, containerRef.current, null, {
             inWrapper: true,
-            ignoreWidth: true,
+            ignoreWidth: false,
             ignoreHeight: false,
             ignoreFonts: false,
             breakPages: true,
@@ -434,6 +440,8 @@ const DocxPreview = ({ manuscriptData, libraryId }) => {
             renderFooters: true,
             renderFootnotes: true,
           });
+
+          setDocxReady(true);
         }
       } catch (err) {
         console.error("Docx Preview Error: ", err);
@@ -447,13 +455,52 @@ const DocxPreview = ({ manuscriptData, libraryId }) => {
     };
   }, [buildDocxDocument, formatLoading, libraryId, sortedData]);
 
+  // Calculate Scale to fit width
+  useEffect(() => {
+    if (!docxReady || !rect.width || !containerRef.current) return;
+
+    // docx-preview renders sections inside .docx-wrapper
+    const pages = containerRef.current.querySelectorAll("section");
+    if (pages.length > 0) {
+      const pageWidth = pages[0].offsetWidth;
+      // Add some padding buffer (e.g. 40px)
+      const availableWidth = rect.width - 40;
+
+      // Scale to match viewport width specifically
+      let newScale = availableWidth / pageWidth;
+
+      setScale(newScale);
+    }
+  }, [docxReady, rect.width]);
+
   return (
-    <div className="w-full h-full relative p-2 pr-0 pt-0 flex flex-col min-h-0 bg-[#e0e0e0] overflow-y-auto">
+    <div
+      className="w-full h-full relative p-4 pr-0 pt-0 flex flex-col min-h-0 bg-[#e0e0e0] overflow-y-auto items-center overflow-x-hidden custom-scroll"
+      ref={ref}
+    >
       <div
         ref={containerRef}
-        className="docx-preview-wrapper w-full custom-scroll"
-        style={{ minHeight: "100%" }}
+        className="docx-preview-container"
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: "top center",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       />
+      <style>{`
+        .docx-wrapper {
+          background: transparent !important;
+          padding: 0 !important;
+          width: auto !important;
+        }
+        .docx-wrapper > section {
+          margin-bottom: 2rem !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+        }
+      `}</style>
     </div>
   );
 };
