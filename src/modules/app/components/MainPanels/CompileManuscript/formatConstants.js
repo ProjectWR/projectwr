@@ -413,6 +413,10 @@ export const DEFAULT_FORMAT_SETTINGS = {
       accessibilitySummary: "",
     },
   },
+  dynamicContent: {
+    beforePageContent: "",
+    afterPageContent: "",
+  },
 };
 
 export const SETTINGS_CATEGORIES = [
@@ -439,6 +443,11 @@ export const SETTINGS_CATEGORIES = [
     icon: "icon-[mdi--format-header-pound]",
   },
   { key: "advanced", label: "Advanced", icon: "icon-[mdi--cog]" },
+  {
+    key: "dynamicContent",
+    label: "Dynamic Content",
+    icon: "icon-[mdi--code-tags]",
+  },
   {
     key: "specialElements",
     label: "Special Elements",

@@ -189,6 +189,9 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         position: running(contactRunning);
         white-space: pre-wrap;
       }
+
+      .dynamic-page::after { content: counter(page); }
+      .dynamic-pages::after { content: counter(pages); }
     `;
 
     // ─── PART 2: ITEM-SPECIFIC PASS ───────────────────────────────────────────
@@ -596,6 +599,26 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         const pubDate = metadata.publication?.date || "";
         const contactInfo = metadata.contactInfo || "";
 
+        let totalWords = 0;
+        manuscriptData?.forEach((item) => {
+          if (item.content) {
+            const text = item.content.replace(/<[^>]*>/g, " ").trim();
+            if (text) totalWords += text.split(/\s+/).length;
+          }
+        });
+
+        const manualWordCount =
+          getResolvedValue("global", null, null, "metadata", "wordCount")
+            ?.value || 0;
+        const wordCountToDisplay =
+          manualWordCount > 0 ? manualWordCount : totalWords;
+        const formattedWordCount = new Intl.NumberFormat().format(
+          wordCountToDisplay,
+        );
+        const formattedWordCount100 = new Intl.NumberFormat().format(
+          Math.round(wordCountToDisplay / 100) * 100,
+        );
+
         const metadataStoreHtml = `
           <div class="metadata-store" style="visibility: hidden; height: 0; overflow: hidden; position: absolute;">
             <div class="metadata-title">${bookTitle}</div>
@@ -695,13 +718,48 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
 
           const isFirstPaper = index === firstPaperIndex;
 
+          const resolveDynamic = (text) => {
+            if (!text) return "";
+            return String(text)
+              .replace(/{author}/g, bookAuthor)
+              .replace(/{words}/g, formattedWordCount)
+              .replace(/{words100}/g, formattedWordCount100)
+              .replace(/{contact}/g, contactInfo.replace(/\n/g, "<br>"))
+              .replace(/{page}/g, '<span class="dynamic-page"></span>')
+              .replace(/{pages}/g, '<span class="dynamic-pages"></span>');
+          };
+
+          const dynBefore = getResolvedValue(
+            "item",
+            item.id,
+            item.category,
+            "dynamicContent",
+            "beforePageContent",
+          ).value;
+          const dynAfter = getResolvedValue(
+            "item",
+            item.id,
+            item.category,
+            "dynamicContent",
+            "afterPageContent",
+          ).value;
+
+          const beforeHtml = dynBefore
+            ? `<div class="dynamic-before-content">${resolveDynamic(dynBefore)}</div>`
+            : "";
+          const afterHtml = dynAfter
+            ? `<div class="dynamic-after-content">${resolveDynamic(dynAfter)}</div>`
+            : "";
+
           return `
                 <div class="${classes.join(" ")}" 
                      data-category="${item.category}"
                      data-id="${item.id}">
                     ${isFirstPaper ? metadataStoreHtml : ""}
+                    ${beforeHtml}
                     ${titleBlock}
                     ${processedHtml}
+                    ${afterHtml}
                 </div>
             `;
         });
@@ -739,6 +797,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
     generateCss,
     getResolvedValue,
     formatData,
+    manuscriptData,
   ]);
 
   // Paged.js Rendering

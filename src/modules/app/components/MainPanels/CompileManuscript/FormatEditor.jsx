@@ -344,6 +344,8 @@ const LABEL_OVERRIDES = {
   "specialElements.titlePageSpacing": "Title Page Spacing (pt)",
   "specialElements.partDividerFontSize": "Part Divider Font Size (pt)",
   "specialElements.epigraphFontSize": "Epigraph Font Size (pt)",
+  "dynamicContent.beforePageContent": "Before Page Content",
+  "dynamicContent.afterPageContent": "After Page Content",
 };
 
 const SettingsList = ({
@@ -896,7 +898,11 @@ const SettingsList = ({
       );
     }
 
-    if (key === "contactInfo") {
+    if (
+      key === "contactInfo" ||
+      key === "beforePageContent" ||
+      key === "afterPageContent"
+    ) {
       return (
         <div key={key} className="flex flex-col gap-1 py-1">
           <div className="flex justify-between items-baseline">
@@ -910,8 +916,45 @@ const SettingsList = ({
             value={displayValue}
             disabled={isFieldDisabled}
             onChange={(val) => handleSettingChange(section, key, val)}
-            placeholder="Name, Address, Phone, Email..."
+            placeholder={
+              key === "contactInfo"
+                ? "Name, Address, Phone, Email..."
+                : "Text to inject"
+            }
           />
+          {(key === "beforePageContent" || key === "afterPageContent") && (
+            <div className="mt-2 p-2 bg-appLayoutBg border border-appLayoutBorder rounded text-[10px] text-appLayoutTextMuted space-y-1">
+              <p className="font-semibold text-appLayoutText mb-1">
+                Available Variables:
+              </p>
+              <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5">
+                <span className="text-appLayoutAccent font-mono">
+                  {"{author}"}
+                </span>
+                <span>Creator Name</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{words}"}
+                </span>
+                <span>Total Word Count</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{words100}"}
+                </span>
+                <span>Total Word Count rounded to 100</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{contact}"}
+                </span>
+                <span>Contact Information</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{page}"}
+                </span>
+                <span>Current Page</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{pages}"}
+                </span>
+                <span>Total Pages</span>
+              </div>
+            </div>
+          )}
         </div>
       );
     }
