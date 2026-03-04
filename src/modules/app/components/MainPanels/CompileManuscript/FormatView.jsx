@@ -81,12 +81,21 @@ const FormatView = ({ manuscriptData, libraryId }) => {
       >
         <Tabs
           defaultValue="pdf"
-          className="w-full flex grow gap-0 mt-px flex-col overflow-hidden"
+          className="w-full flex grow gap-0 mt-px flex-col overflow-hidden relative"
         >
+          {refreshing && (
+            <div
+              id="PreviewLoadingIndicator"
+              className="absolute flex items-center   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-0 right-0  z-30"
+            >
+              <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+            </div>
+          )}
+
           <TabsList className="h-fit flex gap-1">
             <TabsTrigger value="pdf">PDF</TabsTrigger>
             <TabsTrigger value="docx">DOCX</TabsTrigger>
-            <TabsTrigger value="epub">epub</TabsTrigger>
+            <TabsTrigger value="epub">EPUB</TabsTrigger>
           </TabsList>
 
           <div className="h-px w-full bg-appLayoutBorder"></div>
@@ -95,15 +104,6 @@ const FormatView = ({ manuscriptData, libraryId }) => {
             value="pdf"
             className="grow min-h-0 flex flex-col gap-1 mt-2"
           >
-            {refreshing && (
-              <div
-                id="PreviewLoadingIndicator"
-                className="absolute flex items-center bg-neutral-800   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30"
-              >
-                <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-              </div>
-            )}
-
             <FormatPreview
               key={refreshKey}
               manuscriptData={manuscriptData}
@@ -115,15 +115,6 @@ const FormatView = ({ manuscriptData, libraryId }) => {
             value="docx"
             className="grow min-h-0 flex flex-col gap-1 mt-2"
           >
-            {refreshing && (
-              <div
-                id="PreviewLoadingIndicator"
-                className="absolute flex items-center bg-neutral-800   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30"
-              >
-                <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-              </div>
-            )}
-
             {/* insert docx preview here */}
             <DocxPreview
               key={refreshKey}
@@ -136,15 +127,6 @@ const FormatView = ({ manuscriptData, libraryId }) => {
             value="epub"
             className="grow min-h-0 flex flex-col gap-1 mt-2"
           >
-            {refreshing && (
-              <div
-                id="PreviewLoadingIndicator"
-                className="absolute flex items-center bg-neutral-800   justify-center rounded-md pointer-events-none h-fit w-fit p-1 top-[2px] right-[13px] bg-appBackgroundAccent/80 backdrop-blur-md  z-30"
-              >
-                <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
-              </div>
-            )}
-
             {/* insert epub preview here */}
           </TabsContent>
         </Tabs>
