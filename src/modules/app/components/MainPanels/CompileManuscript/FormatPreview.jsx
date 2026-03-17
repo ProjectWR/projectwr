@@ -195,9 +195,7 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
     `;
 
     // ─── PART 2: ITEM-SPECIFIC PASS ───────────────────────────────────────────
-    const firstPaperIndex = sortedData.findIndex((i) => i.type === "paper");
-
-    sortedData.forEach((item, index) => {
+    sortedData.forEach((item) => {
       if (item.type !== "paper") return;
       const { id, category } = item;
       const resolveItem = (p) => resolve(p, category, id);
@@ -228,10 +226,37 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
         leftBottom: resolveItem("marginHeaderFooters.leftBottom"),
         rightTop: resolveItem("marginHeaderFooters.rightTop"),
         rightMiddle: resolveItem("marginHeaderFooters.rightMiddle"),
-        rightBottom: resolveItem("marginHeaderFooters.rightBottom"),
         pageNumberFormat:
           resolveItem("marginHeaderFooters.pageNumberFormat") || "decimal",
       };
+
+      const dynBeforeFS = resolveItem("dynamicContent.beforeFontSize") || 12;
+      const dynBeforeLH = resolveItem("dynamicContent.beforeLineHeight") || 1.5;
+      const dynAfterFS = resolveItem("dynamicContent.afterFontSize") || 12;
+      const dynAfterLH = resolveItem("dynamicContent.afterLineHeight") || 1.5;
+
+      css += `
+        [data-id="${id}"] .dynamic-before-content {
+          display: inline-block;
+          width: 100%;
+          height: fit-content;
+          font-size: ${dynBeforeFS}pt;
+          line-height: ${dynBeforeLH};
+          white-space: pre-wrap;
+          overflow-wrap: break-word;
+          word-break: break-word;
+        }
+        [data-id="${id}"] .dynamic-after-content {
+          display: inline-block;
+          width: 100%;
+          height: fit-content;
+          font-size: ${dynAfterFS}pt;
+          line-height: ${dynAfterLH};
+          white-space: pre-wrap;
+          overflow-wrap: break-word;
+          word-break: break-word;
+        }
+      `;
 
       const msTitle = resolveItem("metadata.title.main") || "Untitled";
       const msAuthor = resolveItem("metadata.creator.name") || "Unknown Author";
@@ -258,7 +283,18 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
             if (part === "{words100}")
               return `"about ${formattedWordCount100} words"`;
             if (part === "{newline}") return '"\\A"';
+            if (part === "{tab}") return `"${"\\A0".repeat(4)}"`;
             if (part === "{sep}") return '"/"';
+            const spaceMatch = part.match(/^{(\d+)_spaces}$/);
+            if (spaceMatch) {
+              const count = parseInt(spaceMatch[1], 10);
+              return `"${"\\A0".repeat(count)}"`;
+            }
+            const newlineMatch = part.match(/^{(\d+)_newlines}$/i);
+            if (newlineMatch) {
+              const count = parseInt(newlineMatch[1], 10);
+              return `"${"\\A".repeat(count)}"`;
+            }
             if (part.match(/^{.*}$/)) return `"${part.replace(/"/g, '\\"')}"`;
             if (part === "") return null;
             return `"${part.replace(/"/g, '\\"')}"`;
@@ -398,26 +434,12 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
               ? hf.footerLineHeight
               : hf.headerLineHeight;
 
-            const pT =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingTop`) || 0;
-            const pB =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingBottom`) ||
-              0;
-            const pL =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingLeft`) || 0;
-            const pR =
-              resolveItem(`marginHeaderFooters.${config.key}PaddingRight`) || 0;
-
             rules += `
             ${selector} {
               content: ${processContent(config.content)};
               font-family: "${hf.font}";
               font-size: ${finalSize}pt;
               line-height: ${finalLH};
-              padding-top: ${pT}mm;
-              padding-bottom: ${pB}mm;
-              padding-left: ${pL}mm;
-              padding-right: ${pR}mm;
               vertical-align: ${finalV};
               text-align: ${finalH};
               white-space: pre-wrap;
@@ -726,7 +748,15 @@ const FormatPreview = ({ manuscriptData, libraryId }) => {
               .replace(/{words100}/g, formattedWordCount100)
               .replace(/{contact}/g, contactInfo.replace(/\n/g, "<br>"))
               .replace(/{page}/g, '<span class="dynamic-page"></span>')
-              .replace(/{pages}/g, '<span class="dynamic-pages"></span>');
+              .replace(/{pages}/g, '<span class="dynamic-pages"></span>')
+              .replace(/{tab}/gi, "&nbsp;&nbsp;&nbsp;&nbsp;")
+              .replace(/{(\d+)_spaces}/g, (_, count) =>
+                "&nbsp;".repeat(parseInt(count, 10)),
+              )
+              .replace(/{(\d+)_newlines}/gi, (_, count) =>
+                "<br>".repeat(parseInt(count, 10)),
+              )
+              .replace(/\n/g, "<br>");
           };
 
           const dynBefore = getResolvedValue(

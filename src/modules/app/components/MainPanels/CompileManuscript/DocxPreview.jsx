@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { useResizeObserver } from "@mantine/hooks";
+import { useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   Document,
@@ -10,7 +9,9 @@ import {
   AlignmentType,
   SectionType,
 } from "docx";
-import * as docxPreview from "docx-preview";
+import { tempDir, join } from "@tauri-apps/api/path";
+import { writeFile } from "@tauri-apps/plugin-fs";
+import { openPath } from "@tauri-apps/plugin-opener";
 import useFormatInfo from "../../../hooks/useFormatInfo";
 import dataManagerSubdocs from "../../../lib/dataSubDoc";
 import { getOrInitLibraryYTree } from "../../../lib/ytree";
@@ -19,17 +20,12 @@ import { PAGE_SIZE_PRESETS } from "./formatConstants";
 /**
  * A previewer that takes the manuscriptData and libraryId, resolves formatting
  * data, natively builds a `docx.Document`, generates a Blob via `Packer`, and
- * renders it using `docx-preview`.
+ * saves it to a temporary file which is opened in the user's local docx editor.
  */
 const DocxPreview = ({ manuscriptData, libraryId }) => {
   const { getResolvedValue, loading: formatLoading } = useFormatInfo(libraryId);
 
-  // Resize observer for scaling
-  const [ref, rect] = useResizeObserver();
-  const [scale, setScale] = useState(1);
-  const [docxReady, setDocxReady] = useState(false);
-
-  const containerRef = useRef(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Sort manuscript data (mirrors FormatPreview logic)
   const sortedData = useMemo(() => {
@@ -408,99 +404,47 @@ const DocxPreview = ({ manuscriptData, libraryId }) => {
     return doc;
   }, [getResolvedValue, sortedData, libraryId]);
 
-  // Render logic
-  useEffect(() => {
-    let active = true;
+  const handleOpenDocx = async () => {
+    if (formatLoading || !libraryId || !sortedData.length || isGenerating)
+      return;
+    setIsGenerating(true);
 
-    const renderPreview = async () => {
-      if (
-        formatLoading ||
-        !libraryId ||
-        !sortedData.length ||
-        !containerRef.current
-      )
-        return;
-      try {
-        const doc = await buildDocxDocument();
-        const blob = await Packer.toBlob(doc);
+    try {
+      const doc = await buildDocxDocument();
+      const blob = await Packer.toBlob(doc);
+      const buffer = await blob.arrayBuffer();
 
-        if (active) {
-          // Clear container before rendering
-          containerRef.current.innerHTML = "";
+      const tmpDirPath = await tempDir();
+      const filePath = await join(tmpDirPath, `preview_${Date.now()}.docx`);
 
-          await docxPreview.renderAsync(blob, containerRef.current, null, {
-            inWrapper: true,
-            ignoreWidth: false,
-            ignoreHeight: false,
-            ignoreFonts: false,
-            breakPages: true,
-            useBase64URL: false,
-            renderChanges: true,
-            renderHeaders: true,
-            renderFooters: true,
-            renderFootnotes: true,
-          });
-
-          setDocxReady(true);
-        }
-      } catch (err) {
-        console.error("Docx Preview Error: ", err);
-      }
-    };
-
-    renderPreview();
-
-    return () => {
-      active = false;
-    };
-  }, [buildDocxDocument, formatLoading, libraryId, sortedData]);
-
-  // Calculate Scale to fit width
-  useEffect(() => {
-    if (!docxReady || !rect.width || !containerRef.current) return;
-
-    // docx-preview renders sections inside .docx-wrapper
-    const pages = containerRef.current.querySelectorAll("section");
-    if (pages.length > 0) {
-      const pageWidth = pages[0].offsetWidth;
-      // Add some padding buffer (e.g. 40px)
-      const availableWidth = rect.width - 40;
-
-      // Scale to match viewport width specifically
-      let newScale = availableWidth / pageWidth;
-
-      setScale(newScale);
+      await writeFile(filePath, new Uint8Array(buffer));
+      await openPath(filePath);
+    } catch (err) {
+      console.error("Docx Open Error: ", err);
+    } finally {
+      setIsGenerating(false);
     }
-  }, [docxReady, rect.width]);
+  };
 
   return (
-    <div
-      className="w-full h-full relative p-4 pr-0 pt-0 flex flex-col min-h-0 bg-[#e0e0e0] overflow-y-auto items-center overflow-x-hidden custom-scroll"
-      ref={ref}
-    >
-      <div
-        ref={containerRef}
-        className="docx-preview-container"
-        style={{
-          transform: `scale(${scale})`,
-          transformOrigin: "top center",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      />
-      <style>{`
-        .docx-wrapper {
-          background: transparent !important;
-          padding: 0 !important;
-          width: auto !important;
-        }
-        .docx-wrapper > section {
-          margin-bottom: 2rem !important;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-        }
-      `}</style>
+    <div className="w-full h-full relative p-4 pr-0 pt-0 flex flex-col items-center justify-center min-h-0 overflow-y-auto">
+      <button
+        onClick={handleOpenDocx}
+        disabled={isGenerating || formatLoading}
+        className="flex items-center text-libraryDirectoryBookNodeFontSize gap-2 px-2 py-1 hover:bg-appLayoutInverseHover border border-appLayoutBorder  disabled:cursor-not-allowed text-appLayoutText hover:text-appLayoutHighlight rounded-md transition-colors w-fit"
+      >
+        {isGenerating ? (
+          <>
+            <span className="icon-[line-md--loading-twotone-loop] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+            Generating...
+          </>
+        ) : (
+          <>
+            <span className="icon-[line-md--external-link] w-libraryDirectoryBookNodeIconSize h-libraryDirectoryBookNodeIconSize"></span>
+            Open preview in local DOCX editor
+          </>
+        )}
+      </button>
     </div>
   );
 };

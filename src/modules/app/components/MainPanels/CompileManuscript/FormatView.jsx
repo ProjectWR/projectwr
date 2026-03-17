@@ -104,23 +104,26 @@ const FormatView = ({ manuscriptData, libraryId }) => {
             value="pdf"
             className="grow min-h-0 flex flex-col gap-1 mt-2"
           >
-            <FormatPreview
-              key={refreshKey}
-              manuscriptData={manuscriptData}
-              libraryId={libraryId}
-            />
+            {!refreshing && (
+              <FormatPreview
+                key={refreshKey}
+                manuscriptData={manuscriptData}
+                libraryId={libraryId}
+              />
+            )}
           </TabsContent>
 
           <TabsContent
             value="docx"
             className="grow min-h-0 flex flex-col gap-1 mt-2"
           >
-            {/* insert docx preview here */}
-            <DocxPreview
-              key={refreshKey}
-              manuscriptData={manuscriptData}
-              libraryId={libraryId}
-            />
+            {!refreshing && (
+              <DocxPreview
+                key={refreshKey}
+                manuscriptData={manuscriptData}
+                libraryId={libraryId}
+              />
+            )}
           </TabsContent>
 
           <TabsContent

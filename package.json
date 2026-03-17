@@ -122,6 +122,7 @@
     "react": "19",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
+    "react-doc-viewer": "^0.1.15",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.54.2",

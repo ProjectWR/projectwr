@@ -133,6 +133,9 @@ const HEADER_TAG_MAP = {
   "{pages}": "Total Pages",
   "{sep}": "/ separator",
   "{newline}": "newline separator",
+  "{5_spaces}": "5 spaces",
+  "{10_spaces}": "10 spaces",
+  "{5_newlines}": "5 newlines",
 };
 
 const HeaderTagInput = ({ value = "", onChange, disabled }) => {
@@ -345,7 +348,11 @@ const LABEL_OVERRIDES = {
   "specialElements.partDividerFontSize": "Part Divider Font Size (pt)",
   "specialElements.epigraphFontSize": "Epigraph Font Size (pt)",
   "dynamicContent.beforePageContent": "Before Page Content",
+  "dynamicContent.beforeFontSize": "Font Size (pt)",
+  "dynamicContent.beforeLineHeight": "Line Height",
   "dynamicContent.afterPageContent": "After Page Content",
+  "dynamicContent.afterFontSize": "Font Size (pt)",
+  "dynamicContent.afterLineHeight": "Line Height",
 };
 
 const SettingsList = ({
@@ -582,12 +589,10 @@ const SettingsList = ({
         return false;
     }
 
-    // 7. Hide per-field alignments and paddings from the main loop (they are rendered inline)
+    // 7. Hide per-field alignments from the main loop (they are rendered inline)
     if (
       section === "marginHeaderFooters" &&
-      (key.endsWith("HAlign") ||
-        key.endsWith("VAlign") ||
-        key.includes("Padding"))
+      (key.endsWith("HAlign") || key.endsWith("VAlign"))
     ) {
       return false;
     }
@@ -860,40 +865,6 @@ const SettingsList = ({
               />
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 mt-2">
-            {[
-              { k: "PaddingTop", l: "Pad T" },
-              { k: "PaddingBottom", l: "Pad B" },
-              { k: "PaddingLeft", l: "Pad L" },
-              { k: "PaddingRight", l: "Pad R" },
-            ].map((p) => (
-              <div key={p.k} className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-appLayoutTextMuted">
-                  {p.l}
-                </span>
-                <input
-                  type="number"
-                  value={
-                    getResolvedValue(
-                      scope,
-                      id,
-                      itemCategory,
-                      section,
-                      `${key}${p.k}`,
-                    ).value || 0
-                  }
-                  onChange={(e) =>
-                    handleSettingChange(
-                      section,
-                      `${key}${p.k}`,
-                      Number(e.target.value),
-                    )
-                  }
-                  className="w-full bg-appLayoutBg px-1 py-0.5 rounded border border-appLayoutBorder text-[10px] focus:border-appLayoutAccent outline-none"
-                />
-              </div>
-            ))}
-          </div>
         </div>
       );
     }
@@ -952,6 +923,14 @@ const SettingsList = ({
                   {"{pages}"}
                 </span>
                 <span>Total Pages</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{X_spaces}"}
+                </span>
+                <span>X number of spaces (e.g. {"{5_spaces}"})</span>
+                <span className="text-appLayoutAccent font-mono">
+                  {"{X_newlines}"}
+                </span>
+                <span>X number of newlines (e.g. {"{5_newlines}"})</span>
               </div>
             </div>
           )}
